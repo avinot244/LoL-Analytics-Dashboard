@@ -1,0 +1,19 @@
+.dashboard-champOverview-controlPannel{
+    width: 100%;
+}
+
+.dashboard-champOverview-controlPannel-list{
+    list-style-type: none;
+	padding: 32px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.dashboard-champOverview-controlPannel-list li {
+    padding: 5px;
+}
+
+h1 {
+    text-align: center;
+}

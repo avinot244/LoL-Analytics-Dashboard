@@ -5,7 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import "../styles/NavbarComp.css"
 import {Outlet, Link} from "react-router-dom";
 
-function BasicExample() {
+function NavBarComp() {
   return (
     <Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
       	<Container>
@@ -16,7 +16,8 @@ function BasicExample() {
 			<Navbar.Collapse id="basic-navbar-nav">
 			<Nav className="me-auto">
 				<Nav.Link as={Link} to="/">Home</Nav.Link>
-				<Nav.Link as={Link} to="/link">Link</Nav.Link>
+				<Nav.Link as={Link} to="/ChampionOverview">Champion Overview</Nav.Link>
+				<Nav.Link as={Link} to="/PlayerOverview">Player Overview</Nav.Link>
 				<NavDropdown title="Dropdown" id="basic-nav-dropdown">
 				<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
 				<NavDropdown.Item href="#action/3.2">
@@ -35,4 +36,4 @@ function BasicExample() {
   );
 }
 
-export default BasicExample;
+export default NavBarComp;

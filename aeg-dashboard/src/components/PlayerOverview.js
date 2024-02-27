@@ -1,13 +1,13 @@
 import NavBarComp from "./NavbarComp"
 
-function Home(){
+function PlayerOverview(){
     return(
         <div>
             <NavBarComp />
-            <h1> This is the home page </h1>
+            <h1> Player Overview </h1>
         </div>
         
     )
 }
 
-export default Home
+export default PlayerOverview

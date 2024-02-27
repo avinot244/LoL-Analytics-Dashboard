@@ -1,8 +1,8 @@
 import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import BasicExample from "./NavbarComp";
 import Home from "./Home"
-import LinkPage from "./LinkPage"
+import ChampionOverview from "./ChampionOverview"
+import PlayerOverview from "./PlayerOverview"
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -11,8 +11,12 @@ const router = createBrowserRouter([
 		element: <Home />
 	},
 	{
-		path:'/link',
-		element : <LinkPage />
+		path:'/ChampionOverview',
+		element: <ChampionOverview />
+	},
+	{
+		path:'/PlayerOverview',
+		element: <PlayerOverview/>
 	}
 ])
 
