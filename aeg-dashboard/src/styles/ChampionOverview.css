@@ -14,6 +14,13 @@
     padding: 5px;
 }
 
+
+.wrapper-overview{
+    background: rgba(43,48,53, 0.85);
+	height: 100vh;
+	color: white;
+}
+
 h1 {
     text-align: center;
 }
