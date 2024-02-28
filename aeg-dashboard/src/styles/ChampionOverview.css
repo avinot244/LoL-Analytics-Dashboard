@@ -1,3 +1,26 @@
+.wrapper-overview{
+    background: rgba(43,48,53, 0.85);
+	height: 100vh;
+	color: white;
+}
+
+@media all and (max-width: 1940px){
+	.wrapper-overview{
+		height: 100%;
+	}
+	
+}
+
+h1 {
+    text-align: center;
+}
+
+.champion-overview-content {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+
 .dashboard-champOverview-controlPannel{
     width: 100%;
 }
@@ -15,12 +38,27 @@
 }
 
 
-.wrapper-overview{
-    background: rgba(43,48,53, 0.85);
-	height: 100vh;
-	color: white;
+
+
+.champion-overview-content{
+	padding: 20px
 }
 
-h1 {
-    text-align: center;
+.champion-overview-content h2 {
+	width: auto;
+	text-align: center;
+}
+
+.champion-overview-list{
+	list-style-type: none;
+	padding: 32px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.champion-overview-list li {
+	padding: 5px;
+	margin-right: 5px;
 }

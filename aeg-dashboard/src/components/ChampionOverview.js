@@ -2,11 +2,18 @@ import NavBarComp from "./NavbarComp";
 import SelectComp from "./SelectComp";
 import "../styles/ChampionOverview.css"
 import { useState } from "react";
+import ChampionIcon from "./ChampionIcon";
 
 function ChampionOverview() {
     const patchList = [1.4, 1.14];
-    const side = ["Blue", "Red", "Both"]
-    const tournamentList = ["Tournament 1", "Tournament 2"]
+    const side = ["Blue", "Red", "Both"];
+    const tournamentList = ["Tournament 1", "Tournament 2"];
+
+    const championListToplane = ["Aatrox", "Renekton", "KSante"];
+    const championListJungle = ["Maokai", "Viego", "Lillia"];
+    const championListMidlane = ["Azir", "Tristana", "Hwei"];
+    const championListADC = ["Smolder", "Varus", "Senna"];
+    const championListSupport = ["Nautilus", "Leona", "Thresh"]
 
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeSide, setActiveSide] = useState('Select a side')
@@ -40,13 +47,75 @@ function ChampionOverview() {
                 </ul>
             </div>
 
-            <p>Selected patch : {activePatch}</p>
-            <p>Selected side : {activeSide}</p>
-            <p>Selected Tournament : {activeTournament}</p>
-            
-        
-        </div>
-     
+            <br/>
+
+            <div className="champion-overview-content">
+                <div className="champion-overview-content-toplane">
+                    <h2>Toplane</h2>
+                    <ul className="champion-overview-list">
+                        {championListToplane.map((championName) => 
+                            <ChampionIcon
+                                championName={championName}
+                                winRate={50}
+                                pickRate={60}
+                            />
+                        )}
+                    </ul>
+                </div>
+                
+                <div className="champion-overview-content-jungle">
+                    <h2>Jungle</h2>
+                    <ul className="champion-overview-list">
+                        {championListJungle.map((championName) => 
+                            <ChampionIcon
+                                championName={championName}
+                                winRate={50}
+                                pickRate={60}
+                            />
+                        )}
+                    </ul>
+                </div>
+                
+                <div className="champion-overview-content-midlane">
+                    <h2>Midlane</h2>
+                    <ul className="champion-overview-list">
+                        {championListMidlane.map((championName) => 
+                            <ChampionIcon
+                                championName={championName}
+                                winRate={50}
+                                pickRate={60}
+                            />
+                        )}
+                    </ul>
+                </div>
+                
+                <div className="champion-overview-content-adc">
+                    <h2>ADC</h2>
+                    <ul className="champion-overview-list">
+                        {championListADC.map((championName) => 
+                            <ChampionIcon
+                                championName={championName}
+                                winRate={50}
+                                pickRate={60}
+                            />
+                        )}
+                    </ul>
+                </div>
+                
+                <div className="champion-overview-content-support">
+                    <h2>Support</h2>
+                    <ul className="champion-overview-list">
+                        {championListSupport.map((championName) => 
+                            <ChampionIcon
+                                championName={championName}
+                                winRate={50}
+                                pickRate={60}
+                            />
+                        )}
+                    </ul>
+                </div>
+            </div>
+        </div>    
     )
 }
 
