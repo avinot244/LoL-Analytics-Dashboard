@@ -2,7 +2,7 @@ import NavBarComp from "./NavbarComp"
 
 function PlayerOverview(){
     return(
-        <div>
+        <div className="wrapper-overview">
             <NavBarComp />
             <h1> Player Overview </h1>
         </div>
