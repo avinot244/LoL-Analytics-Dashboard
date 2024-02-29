@@ -8,7 +8,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	background-image: url("../assets/background.webp");
 	background-position: 0 56px;
-	background-repeat: no-repeat;
+	background-repeat: repeat;
 	background-size: cover;
 }
 code {

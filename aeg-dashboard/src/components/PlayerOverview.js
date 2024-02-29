@@ -1,4 +1,5 @@
 import NavBarComp from "./NavbarComp"
+import "../styles/PlayerOverview.css"
 
 function PlayerOverview(){
     return(
