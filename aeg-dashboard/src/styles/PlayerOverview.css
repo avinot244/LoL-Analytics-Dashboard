@@ -1,11 +1,11 @@
-.wrapper-overview{
+.wrapper-overview-player{
     background: rgba(43,48,53, 0.85);
 	height: 100vh;
 	color: white;
 }
 
 @media all and (max-width: 1940px){
-	.wrapper-overview{
+	.wrapper-overview-player{
 		height: 100%;
 	}
 	
@@ -14,3 +14,45 @@
 h1 {
     text-align: center;
 }
+
+.playerOverview-content-wrapper{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.dashboard-playerOverview-controlPannel{
+    width: 100%;
+}
+
+.dashboard-playerOverview-controlPannel-list{
+    list-style-type: none;
+	padding: 32px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.dashboard-playerOverview-controlPannel-list li {
+    padding: 5px;
+}
+
+.playerOverview-champion-list{
+	list-style-type: none;
+	padding: 32px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.playerOverview-champion-list li {
+	padding: 5px;
+	margin-right: 5px;
+}
+
+.playerOverview-graph{
+	width: 400px;
+	height: 400px;
+	background-color: black;
+}
+
