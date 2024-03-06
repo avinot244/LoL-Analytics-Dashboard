@@ -49,6 +49,17 @@ function ChampionOverview() {
 
             <br/>
 
+            <div className="champion-caption">
+                <ChampionIcon 
+                    championName={""}
+                    winRate={"winrate"}
+                    pickRate={"pickrate"}
+                    banRate={"banrate"}
+                    pickOrder={"pickOrder"}
+                />
+
+            </div>
+
             <div className="champion-overview-content">
                 
                 <div className="champion-overview-content-toplane">
@@ -64,6 +75,7 @@ function ChampionOverview() {
                     </ul>
                 </div>
                 
+
                 <div className="champion-overview-content-jungle">
                     <h2>Jungle</h2>
                     <ul className="champion-overview-list">

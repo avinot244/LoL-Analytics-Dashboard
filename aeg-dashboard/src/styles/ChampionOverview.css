@@ -15,14 +15,11 @@ h1 {
 }
 
 .champion-overview-content {
-	display: flex;
-	flex-wrap: wrap;
 	padding: 20px;
 }
 
 .champion-overview-content h2 {
 	width: auto;
-	text-align: center;
 }
 
 
@@ -47,11 +44,15 @@ h1 {
 	padding: 32px;
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
 }
 
 .champion-overview-list li {
 	padding: 5px;
 	margin-right: 5px;
+}
+
+.champion-caption{
+	width: auto;
+	margin: 0 auto;
+	width: 100px;
 }

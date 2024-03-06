@@ -29,4 +29,10 @@
     padding-top: 5px;
 }
 
+.champion-icon{
+    width: 100px;
+    height: 100px;
+    clip-path: circle(50% at 50% 50%);
+    background-color: black;
+}
 
