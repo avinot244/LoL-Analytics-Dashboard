@@ -82,6 +82,8 @@ function ChampionOverview() {
                                     championName={championName}
                                     winRate={50}
                                     pickRate={60}
+                                    banRate={30}
+                                    pickOrder={1}
                                 />
                             </li> 
                         )}
@@ -98,6 +100,8 @@ function ChampionOverview() {
                                     championName={championName}
                                     winRate={50}
                                     pickRate={60}
+                                    banRate={30}
+                                    pickOrder={1}
                                 />
                             </li> 
                         )}
@@ -113,6 +117,8 @@ function ChampionOverview() {
                                     championName={championName}
                                     winRate={50}
                                     pickRate={60}
+                                    banRate={30}
+                                    pickOrder={1}
                                 />
                             </li> 
                         )}
@@ -128,6 +134,8 @@ function ChampionOverview() {
                                     championName={championName}
                                     winRate={50}
                                     pickRate={60}
+                                    banRate={30}
+                                    pickOrder={1}
                                 />
                             </li> 
                         )}
@@ -143,6 +151,8 @@ function ChampionOverview() {
                                     championName={championName}
                                     winRate={50}
                                     pickRate={60}
+                                    banRate={30}
+                                    pickOrder={1}
                                 />
                             </li> 
                         )}
