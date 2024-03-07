@@ -8,16 +8,18 @@ function ChampionOverview() {
     const patchList = [1.4, 1.14];
     const side = ["Blue", "Red", "Both"];
     const tournamentList = ["Tournament 1", "Tournament 2"];
+    const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
 
-    const championListToplane = ["Aatrox", "Renekton", "KSante"];
-    const championListJungle = ["Maokai", "Viego", "Lillia"];
-    const championListMidlane = ["Azir", "Tristana", "Hwei"];
-    const championListADC = ["Smolder", "Varus", "Senna"];
-    const championListSupport = ["Nautilus", "Leona", "Thresh"]
+    const championListToplane = ["Aatrox", "Renekton", "KSante", "Fiora", "Gragas", "Jax"];
+    const championListJungle = ["Maokai", "Viego", "Lillia", "LeeSin", "Volibear", "Belveth"];
+    const championListMidlane = ["Azir", "Tristana", "Hwei", "TwistedFate", "Ahri", "Taliyah"];
+    const championListADC = ["Smolder", "Varus", "Senna", "Kalista", "Ezreal", "Kaisa"];
+    const championListSupport = ["Nautilus", "Leona", "Thresh", "Rakan", "Alistar", "Blitzcrank"]
 
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeSide, setActiveSide] = useState('Select a side')
     const [activeTournament, setActiveTournament] = useState("Select a tournament")
+    const [activeFilter, setActiveFilter] = useState("Select a filter")
 
     // TODO: Make an API call to backend to get the list of Patches and Tournaments available
     return(
@@ -47,8 +49,6 @@ function ChampionOverview() {
                 </ul>
             </div>
 
-            <br/>
-
             <div className="champion-caption">
                 <ChampionIcon 
                     championName={""}
@@ -57,73 +57,94 @@ function ChampionOverview() {
                     banRate={"banrate"}
                     pickOrder={"pickOrder"}
                 />
-
             </div>
 
-            <div className="champion-overview-content">
-                
-                <div className="champion-overview-content-toplane">
+            <div className="sorter">
+                <ul>
+                    <li>Sort by</li>
+                    <li>
+                    <SelectComp 
+                        elementList={filterList}
+                        defaultValue={"-- Select Filter --"}
+                        setActive={setActiveFilter}
+                    />
+                    </li>
+                </ul>                
+            </div>
+
+            <div className="champion-overview">
+                <div className="champion-overview-content">
                     <h2>Toplane</h2>
                     <ul className="champion-overview-list">
-                        {championListToplane.map((championName) => 
-                            <ChampionIcon
-                                championName={championName}
-                                winRate={50}
-                                pickRate={60}
-                            />
+                        {championListToplane.map((championName) =>
+                            <li>
+                                <ChampionIcon
+                                    championName={championName}
+                                    winRate={50}
+                                    pickRate={60}
+                                />
+                            </li> 
                         )}
                     </ul>
                 </div>
                 
 
-                <div className="champion-overview-content-jungle">
+                <div className="champion-overview-content">
                     <h2>Jungle</h2>
                     <ul className="champion-overview-list">
                         {championListJungle.map((championName) => 
-                            <ChampionIcon
-                                championName={championName}
-                                winRate={50}
-                                pickRate={60}
-                            />
+                            <li>
+                                <ChampionIcon
+                                    championName={championName}
+                                    winRate={50}
+                                    pickRate={60}
+                                />
+                            </li> 
                         )}
                     </ul>
                 </div>
                 
-                <div className="champion-overview-content-midlane">
+                <div className="champion-overview-content">
                     <h2>Midlane</h2>
                     <ul className="champion-overview-list">
                         {championListMidlane.map((championName) => 
-                            <ChampionIcon
-                                championName={championName}
-                                winRate={50}
-                                pickRate={60}
-                            />
+                            <li>
+                                <ChampionIcon
+                                    championName={championName}
+                                    winRate={50}
+                                    pickRate={60}
+                                />
+                            </li> 
                         )}
                     </ul>
                 </div>
                 
-                <div className="champion-overview-content-adc">
+                <div className="champion-overview-content">
                     <h2>ADC</h2>
                     <ul className="champion-overview-list">
                         {championListADC.map((championName) => 
-                            <ChampionIcon
-                                championName={championName}
-                                winRate={50}
-                                pickRate={60}
-                            />
+                            <li>
+                                <ChampionIcon
+                                    championName={championName}
+                                    winRate={50}
+                                    pickRate={60}
+                                />
+                            </li> 
                         )}
                     </ul>
                 </div>
                 
-                <div className="champion-overview-content-support">
+                <div className="champion-overview-content">
                     <h2>Support</h2>
                     <ul className="champion-overview-list">
                         {championListSupport.map((championName) => 
-                            <ChampionIcon
-                                championName={championName}
-                                winRate={50}
-                                pickRate={60}
-                            />
+                            <li>
+                                <ChampionIcon
+                                    championName={championName}
+                                    winRate={50}
+                                    pickRate={60}
+                                />
+                            </li> 
                         )}
                     </ul>
                 </div>

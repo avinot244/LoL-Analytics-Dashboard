@@ -7,9 +7,12 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	background-image: url("../assets/background.webp");
-	background-position: 0 56px;
-	background-repeat: repeat;
-	background-size: cover;
+	background-position: center 0px;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	/* background-size: cover; */
+	/* background-position: center; */
+	height: 100%;
 }
 code {
   	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;

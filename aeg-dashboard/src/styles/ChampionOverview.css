@@ -1,5 +1,5 @@
 .wrapper-overview{
-    background: rgba(43,48,53, 0.85);
+    background: rgba(43,48,53, 0.95);
 	height: 100vh;
 	color: white;
 }
@@ -14,12 +14,13 @@ h1 {
     text-align: center;
 }
 
-.champion-overview-content {
+.champion-overview {
 	padding: 20px;
 }
 
-.champion-overview-content h2 {
+.champion-overview h2 {
 	width: auto;
+	text-align: center;
 }
 
 
@@ -44,15 +45,33 @@ h1 {
 	padding: 32px;
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .champion-overview-list li {
 	padding: 5px;
-	margin-right: 5px;
+	margin-right: 10px;
 }
 
 .champion-caption{
 	width: auto;
 	margin: 0 auto;
 	width: 100px;
+}
+
+.sorter{
+	padding-top: 20px;
+	width: 301.6px;
+	margin: 0 auto;
+}
+
+.sorter ul{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+}
+.sorter ul li{
+	padding: 10px;
+	list-style: none;
 }

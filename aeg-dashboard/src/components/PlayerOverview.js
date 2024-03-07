@@ -8,7 +8,7 @@ function PlayerOverview(){
     const patchList = [1.4, 1.14, 1.3];
     const weekList = ["Week 1", "Week 2", "Week 3"]
 
-    const championList = ["Hwei", "Thresh", "Leona", "Maokai", "Senna", "Leona", "Nautilus"]
+    const championList = ["Hwei", "Thresh", "Leona", "Maokai", "Senna", "Nautilus"]
 
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeWeek,  setActiveWeek] = useState('Select a week')
