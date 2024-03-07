@@ -3,6 +3,7 @@ import "../styles/PlayerOverview.css"
 import SelectComp from "./SelectComp";
 import { useState } from "react";
 import ChampionIcon from "./ChampionIcon";
+import PlayerSelectComp from "./PlayerSelectComp"
 
 function PlayerOverview(){
     const patchList = [1.4, 1.14, 1.3];
@@ -12,6 +13,7 @@ function PlayerOverview(){
 
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeWeek,  setActiveWeek] = useState('Select a week')
+    const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
 
     return(
         
@@ -34,6 +36,17 @@ function PlayerOverview(){
                     </li>
                 </ul>
             </div>
+
+            <br/>
+
+            <PlayerSelectComp
+                selectedPlayer={selectedPlayer}
+                setSelectedPlayer={setSelectedPlayer}
+            />
+            <p>{selectedPlayer}</p>
+
+            <br/>
+
             <div className="playerOverview-content-wrapper">
                 <div className="playerOverview-graph">
 

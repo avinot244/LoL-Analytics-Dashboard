@@ -1,74 +1,36 @@
-import React, { useState } from 'react';
 
 import Select from 'react-select';
-import { colourOptions } from '../data';
+import "../styles/PlayerSelectComp.css"
+import { useState } from 'react';
 
-const Checkbox = ({ children, ...props }) => (
-  <label style={{ marginRight: '1em' }}>
-    <input type="checkbox" {...props} />
-    {children}
-  </label>
-);
+function PlayerSelectComp({selectedPlayer, setSelectedPlayer}) {
 
-export default () => {
-  const [isClearable, setIsClearable] = useState(true);
-  const [isSearchable, setIsSearchable] = useState(true);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRtl, setIsRtl] = useState(false);
+	const playerList = [
+		{value: 'aeg_agresivoo', label: "AEG Agresivoo"},
+		{value: "aeg_ryuzaki", label: "AEG Ryuzaki"},
+		{value: "aeg_nafkelah", label: "AEG Nafkelah"},
+		{value: "aeg_hid0", label: "AEG Hid0"},
+		{value: "aeg_veignorem", label: "AEG Veignorem"},
+		{value: "g2_broken_blade", label: "G2 Broken Blade"},
+		{value: "g2_yike", label: "G2 Yike"},
+		{value: "g2_caps", label: "G2 Caps"},
+		{value: "g2_hans_sama", label: "G2 Hans Sama"},
+		{value: "g2_mikyx", label: "G2 Mikyx"}
+	]
 
-  return (
-    <>
-      <Select
-        className="basic-single"
-        classNamePrefix="select"
-        defaultValue={colourOptions[0]}
-        isDisabled={isDisabled}
-        isLoading={isLoading}
-        isClearable={isClearable}
-        isRtl={isRtl}
-        isSearchable={isSearchable}
-        name="color"
-        options={colourOptions}
-      />
+	return (	
+		<>
+			<Select
+				className="playerSelectComp"
+				classNamePrefix="select"
+				isClearable={true}
+				isSearchable={true}
+				options={playerList}
+				onChange={(playerName) => setSelectedPlayer(playerName.value)}
+				
+			/>
+		</>
+	);
+}
 
-      <div
-        style={{
-          color: 'hsl(0, 0%, 40%)',
-          display: 'inline-block',
-          fontSize: 12,
-          fontStyle: 'italic',
-          marginTop: '1em',
-        }}
-      >
-        <Checkbox
-          checked={isClearable}
-          onChange={() => setIsClearable((state) => !state)}
-        >
-          Clearable
-        </Checkbox>
-        <Checkbox
-          checked={isSearchable}
-          onChange={() => setIsSearchable((state) => !state)}
-        >
-          Searchable
-        </Checkbox>
-        <Checkbox
-          checked={isDisabled}
-          onChange={() => setIsDisabled((state) => !state)}
-        >
-          Disabled
-        </Checkbox>
-        <Checkbox
-          checked={isLoading}
-          onChange={() => setIsLoading((state) => !state)}
-        >
-          Loading
-        </Checkbox>
-        <Checkbox checked={isRtl} onChange={() => setIsRtl((state) => !state)}>
-          RTL
-        </Checkbox>
-      </div>
-    </>
-  );
-};
+export default PlayerSelectComp;
