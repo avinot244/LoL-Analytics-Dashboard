@@ -38,12 +38,15 @@ function PlayerOverview(){
             </div>
 
             <br/>
-
-            <PlayerSelectComp
-                selectedPlayer={selectedPlayer}
-                setSelectedPlayer={setSelectedPlayer}
-            />
-            <p>{selectedPlayer}</p>
+            <div className="playerOverview-playerSelect">
+                <PlayerSelectComp
+                    selectedPlayer={selectedPlayer}
+                    setSelectedPlayer={setSelectedPlayer}
+                />
+                <p>Selected player :</p>
+                <p>{selectedPlayer}</p>
+            </div>
+            
 
             <br/>
 
@@ -63,15 +66,15 @@ function PlayerOverview(){
                                     championName={championName}
                                     winRate={50}
                                     pickRate={60}
+                                    banRate={30}
+                                    pickOrder={1}
                                 />
                             )}
                         </ul>
                     </div>
                 </div>
-            </div>
-            
+            </div>  
         </div>
-        
     )
 }
 
