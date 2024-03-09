@@ -56,7 +56,8 @@ function PlayerOverview(){
                 </div>
                 <div className="playerOverview-other-content">
                     <div className="playerOverview-stats">
-
+                        <h2>Overall stats</h2>
+                        
                     </div>
                     <div className="playerOverview-champs">
                         <h2>Best champs</h2>
