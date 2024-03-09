@@ -62,20 +62,18 @@ function PlayerOverview(){
                 <div className="playerOverview-other-content">
                     <div className="playerOverview-stats">
                         <h2>Overall stats</h2>
-
                         <div className="playerOverview-stats-GD">
                             <p>
-                                AVG GD@15 : {gd15 > 0 ? `+ ${gd15} golds` : `- ${gd15} golds`}
+                                AVG GD@15 : {gd15 > 0 ? `+${gd15} golds` : `-${gd15} golds`}
                             </p>
                         </div>
                         <div className="playerOverview-stats-kda">
                             <p>
                                 AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
                             </p>
-                        </div>
-                        
-                        
+                        </div>  
                     </div>
+                    <br/>
                     <div className="playerOverview-champs">
                         <h2>Best champs</h2>
                         <ul className="playerOverview-champion-list">

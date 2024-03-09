@@ -18,8 +18,10 @@ function NavBarComp() {
 				<Nav.Link as={Link} to="/">Home</Nav.Link>
 				<Nav.Link as={Link} to="/ChampionOverview">Champion Overview</Nav.Link>
 				<Nav.Link as={Link} to="/PlayerOverview">Player Overview</Nav.Link>
-				<NavDropdown title="Dropdown" id="basic-nav-dropdown">
-				<NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+				<Nav.Link as={Link} to="/GameOverview">Game Overview</Nav.Link>
+				
+				{/* <NavDropdown title="Game Overview" id="basic-nav-dropdown">		
+				<NavDropdown.Item href="#action/3.1">Post-game stats</NavDropdown.Item>
 				<NavDropdown.Item href="#action/3.2">
 					Another action
 				</NavDropdown.Item>
@@ -28,7 +30,8 @@ function NavBarComp() {
 				<NavDropdown.Item href="#action/3.4">
 					Separated link
 				</NavDropdown.Item>
-				</NavDropdown>
+				</NavDropdown> */}
+
 			</Nav>
 			</Navbar.Collapse>
       	</Container>

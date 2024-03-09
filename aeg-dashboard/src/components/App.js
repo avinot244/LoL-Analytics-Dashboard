@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Home from "./Home"
 import ChampionOverview from "./ChampionOverview"
 import PlayerOverview from "./PlayerOverview"
+import GameOverview from './GameOverview';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
 	{
 		path:'/PlayerOverview',
 		element: <PlayerOverview/>
+	},
+	{
+		path:'/GameOverview',
+		element: <GameOverview/>
 	}
 ])
 
