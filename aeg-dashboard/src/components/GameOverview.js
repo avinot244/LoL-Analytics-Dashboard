@@ -22,7 +22,7 @@ function GameOverview(){
         {label: "ESPORTs G5 G2 vs FNC", value:"esports_g5_g2_vs_fnc"}
 
     ]
-
+    //
     return(
         <div className="wrapper-overview-game">
             <NavBarComp />
