@@ -60,10 +60,16 @@ h1 {
 	width: 200px;
 	margin: 0 auto;
 }
+
 .playerOverview-playerSelect p{
 	text-align: center;
 	margin-bottom: 0px;
 }
+
 .playerOverview-other-content{
 	margin-left: 10px;
+}
+
+.playerOverview-stats div p{
+	font-size: large;
 }

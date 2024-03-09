@@ -15,6 +15,11 @@ function PlayerOverview(){
     const [activeWeek,  setActiveWeek] = useState('Select a week')
     const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
 
+    const gd15 = 450
+    const k15 = 4
+    const d15 = 1
+    const a15 = 5
+
     return(
         
         <div className="wrapper-overview-player">
@@ -57,6 +62,18 @@ function PlayerOverview(){
                 <div className="playerOverview-other-content">
                     <div className="playerOverview-stats">
                         <h2>Overall stats</h2>
+
+                        <div className="playerOverview-stats-GD">
+                            <p>
+                                AVG GD@15 : {gd15 > 0 ? `+ ${gd15} golds` : `- ${gd15} golds`}
+                            </p>
+                        </div>
+                        <div className="playerOverview-stats-kda">
+                            <p>
+                                AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
+                            </p>
+                        </div>
+                        
                         
                     </div>
                     <div className="playerOverview-champs">
