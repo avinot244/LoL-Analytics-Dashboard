@@ -16,20 +16,31 @@ function NavBarComp() {
 			<Navbar.Collapse id="basic-navbar-nav">
 			<Nav className="me-auto">
 				<Nav.Link as={Link} to="/">Home</Nav.Link>
-				<Nav.Link as={Link} to="/ChampionOverview">Champion Overview</Nav.Link>
-				<Nav.Link as={Link} to="/PlayerOverview">Player Overview</Nav.Link>
-				<Nav.Link as={Link} to="/GameOverview">Game Overview</Nav.Link>
+
+				<NavDropdown title="Champion Overview">
+					<NavDropdown.Item href='/ChampionOverview/Scrims'>Scrims</NavDropdown.Item>
+					<NavDropdown.Item href='/ChampionOverview/Esports'>Esports</NavDropdown.Item>
+				</NavDropdown>
+
+				<NavDropdown title="Player Overview">
+					<NavDropdown.Item as={Link} to='/PlayerOverview/Scrims'>Scrims</NavDropdown.Item>
+					<NavDropdown.Item href='/PlayerOverview/Esports'>Esports</NavDropdown.Item>
+				</NavDropdown>
+
+				<NavDropdown title="Game Overview">
+					<NavDropdown.Item href='/GameOverview/Scrims'>Scrims</NavDropdown.Item>
+					<NavDropdown.Item href='/GameOverview/Esports'>Esports</NavDropdown.Item>
+				</NavDropdown>
 				
 				{/* <NavDropdown title="Game Overview" id="basic-nav-dropdown">		
-				<NavDropdown.Item href="#action/3.1">Post-game stats</NavDropdown.Item>
-				<NavDropdown.Item href="#action/3.2">
-					Another action
-				</NavDropdown.Item>
-				<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-				<NavDropdown.Divider />
-				<NavDropdown.Item href="#action/3.4">
-					Separated link
-				</NavDropdown.Item>
+					<NavDropdown.Item href="#action/3.1">Post-game stats</NavDropdown.Item>
+					<NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
+					<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+
+					<NavDropdown.Divider />
+					<NavDropdown.Item href="#action/3.4">
+						Separated link
+					</NavDropdown.Item>
 				</NavDropdown> */}
 
 			</Nav>

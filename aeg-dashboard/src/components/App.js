@@ -12,15 +12,27 @@ const router = createBrowserRouter([
 		element: <Home />
 	},
 	{
-		path:'/ChampionOverview',
+		path:'/ChampionOverview/Scrims',
 		element: <ChampionOverview />
 	},
 	{
-		path:'/PlayerOverview',
+		path:'/ChampionOverview/Esports',
+		element: <ChampionOverview />
+	},
+	{
+		path:'/PlayerOverview/Scrims',
 		element: <PlayerOverview/>
 	},
 	{
-		path:'/GameOverview',
+		path:'/PlayerOverview/Esports',
+		element: <PlayerOverview/>
+	},
+	{
+		path:'/GameOverview/Scrims',
+		element: <GameOverview/>
+	},
+	{
+		path:'/GameOverview/Esports',
 		element: <GameOverview/>
 	}
 ])
