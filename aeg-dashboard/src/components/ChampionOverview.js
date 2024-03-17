@@ -1,165 +1,118 @@
 import NavBarComp from "./NavbarComp";
-import SelectComp from "./SelectComp";
 import "../styles/ChampionOverview.css"
+
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
+import { amber,  brown,  grey} from '@mui/material/colors/'
+
 import { useState } from "react";
-import ChampionIcon from "./ChampionIcon";
+import { ThemeProvider, createTheme } from "@mui/material";
+
+function CustomTabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            className={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+        {value === index && (
+            <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+            </Box>
+        )}
+        </div>
+    );
+}
+
+const theme = createTheme({
+    palette: {
+        primary : {
+            main: '#fff',
+        }
+    },
+    action: {
+        active: grey
+    }
+})
+
 
 function ChampionOverview() {
-    const patchList = [1.4, 1.14];
-    const side = ["Blue", "Red", "Both"];
-    const tournamentList = ["Tournament 1", "Tournament 2"];
-    const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
+    const [value, setValue] = useState(0)
 
-    const championListToplane = ["Aatrox", "Renekton", "KSante", "Fiora", "Gragas", "Jax"];
-    const championListJungle = ["Maokai", "Viego", "Lillia", "LeeSin", "Volibear", "Belveth"];
-    const championListMidlane = ["Azir", "Tristana", "Hwei", "TwistedFate", "Ahri", "Taliyah"];
-    const championListADC = ["Smolder", "Varus", "Senna", "Kalista", "Ezreal", "Kaisa"];
-    const championListSupport = ["Nautilus", "Leona", "Thresh", "Rakan", "Alistar", "Blitzcrank"]
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    }
 
-    const [activePatch, setActivePatch] = useState('Select a patch')
-    const [activeSide, setActiveSide] = useState('Select a side')
-    const [activeTournament, setActiveTournament] = useState("Select a tournament")
-    const [activeFilter, setActiveFilter] = useState("Select a filter")
-
-    // TODO: Make an API call to backend to get the list of Patches and Tournaments available
     return(
         <div className="wrapper-overview">
             <NavBarComp />
-            <h1>Champion Overview</h1>
-            <div className="dashboard-champOverview-controlPannel">
-                <ul className="dashboard-champOverview-controlPannel-list">
-                    <li>
-                        <SelectComp 
-                            elementList={patchList}
-                            defaultValue={"-- Patch --"}
-                            setActive={setActivePatch}/>
-                    </li>
-                    <li>
-                        <SelectComp
-                            elementList={side}
-                            defaultValue={"-- Side --"}
-                            setActive={setActiveSide}/>
-                    </li>
-                    <li>
-                        <SelectComp 
-                            elementList={tournamentList}
-                            defaultValue={"-- Tournament --"}
-                            setActive={setActiveTournament}/>
-                    </li>
-                </ul>
-            </div>
-
-            <div className="champion-caption">
-                <ChampionIcon 
-                    championName={""}
-                    winRate={"winrate"}
-                    pickRate={"pickrate"}
-                    banRate={"banrate"}
-                    pickOrder={"pickOrder"}
-                />
-            </div>
-
-            <div className="sorter">
-                <ul>
-                    <li>Sort by</li>
-                    <li>
-                    <SelectComp 
-                        elementList={filterList}
-                        defaultValue={"-- Select Filter --"}
-                        setActive={setActiveFilter}
+            <h1> Champion overview </h1>
+            <Box sx={{ borderBottom: 1, borderColor: 'black', width: 468}}> 
+            <ThemeProvider theme={theme}>
+                <Tabs 
+                    value={value} 
+                    onChange={handleChange}
+                    textColor="primary"
+                    indicatorColor="primary"
+                >
+                    <Tab 
+                        label="Toplane"
+                        sx={{
+                            color:"gray"
+                        }}
                     />
-                    </li>
-                </ul>                
-            </div>
-
-            <div className="champion-overview">
-                <div className="champion-overview-content">
-                    <h2>Toplane</h2>
-                    <ul className="champion-overview-list">
-                        {championListToplane.map((championName) =>
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-
-                <div className="champion-overview-content">
-                    <h2>Jungle</h2>
-                    <ul className="champion-overview-list">
-                        {championListJungle.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Midlane</h2>
-                    <ul className="champion-overview-list">
-                        {championListMidlane.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>ADC</h2>
-                    <ul className="champion-overview-list">
-                        {championListADC.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Support</h2>
-                    <ul className="champion-overview-list">
-                        {championListSupport.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-            </div>
-        </div>    
+                    <Tab 
+                        label="Jungle"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="Midlane"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="ADC"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="Support"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                </Tabs>
+            </ThemeProvider>
+            </Box>
+        
+            
+            <CustomTabPanel value={value} index={0}>
+                Item Toplane
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={1}>
+                Item Jungle
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={2}>
+                Item Midlane
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
+                Item ADC
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={4}>
+                Item Support
+            </CustomTabPanel>
+        </div>
     )
 }
 
