@@ -22,13 +22,15 @@ import { visuallyHidden } from '@mui/utils';
 
 import { v4 as uuidv4 } from 'uuid';
 
-function createData(id, championName, winRate, pickRate1, pickRate2, banRate1, banRate2, blindP) {
+function createData(id, championName, winRate, pickRateGlobal, pickRate1, pickRate2, banRateGlobal, banRate1, banRate2, blindP) {
     return {
         id,
         championName, 
-        winRate, 
+        winRate,
+        pickRateGlobal, 
         pickRate1, 
-        pickRate2, 
+        pickRate2,
+        banRateGlobal,
         banRate1, 
         banRate2, 
         blindP
@@ -38,27 +40,27 @@ const rows = [
 
     ["Darius", "Aatrox", "Garen", "Mordekeiser", "Volibear", "Yone", "Malphite", "Sett", "Jax", "Yorick", "Renekton", "Teemo", "Illaoi", "Trundle", "Urgot", "Fiora", "Nasus", "Dr. Mundo", "Jayce", "Tryndamere"]
     .map((championName) =>(
-        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
     )),
     ["Lee Sin", "Kayn", "Viego", "Master Yi", "Volibear", "Nocturne", "Briar", "Kha'Zix", "Shaco", "Vi", "Graves", "Warwick", "Jax", "Jarvan IV", "Evelynn", "Ekko", "Amumu", "Xin Zao", "Bran", "Kindred"]
     .map((championName) =>(
-        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
     )),
     ["Ahri", "Yasuo", "Yone", "Karma", "Zed", "Akali", "Sylas", "Veigar", "Katarina", "Hwei", "Fizz", "Aurelion Sol", "Lux", "Twisted Fate", "Irelia", "LeBLanc", "Syndra", "Vex", "Orianna", "Diana"]
     .map((championName) =>(
-        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
     )),
     ["Smolder", "Ezreal", "Caitlyn", "Kai\'Sa", "Jinx", "Miss Fortune", "Jhin", "Ashe", "Lucian", "Vayne", "Senna", "Varus", "Tristana", "Twitch", "Zeri", "Draven", "Sivir", "Kog\'maw", "Aphelios", "Xayah"]
     .map((championName) =>(
-        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
     )),
     ["Lux", "Senna", "Thresh", "Nautilus", "Morgana", "Zyra", "Karma", "Leona", "Blitzcrank", "Pyke", "Maokai", "Brand", "Lulu", "Xerath", "Janna", "Nami", "Yuumi", "Seraphine", "Soraka", "Swain"]
     .map((championName) =>(
-        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
     )),
     ["Darius", "Aatrox", "Garen", "Mordekeiser", "Volibear", "Yone", "Malphite", "Sett", "Jax", "Yorick", "Renekton", "Teemo", "Illaoi", "Trundle", "Urgot", "Fiora", "Nasus", "Dr. Mundo", "Jayce", "Tryndamere", "Lee Sin", "Kayn", "Viego", "Master Yi", "Volibear", "Nocturne", "Briar", "Kha'Zix", "Shaco", "Vi", "Graves", "Warwick", "Jax", "Jarvan IV", "Evelynn", "Ekko", "Amumu", "Xin Zao", "Bran", "Kindred", "Ahri", "Yasuo", "Yone", "Karma", "Zed", "Akali", "Sylas", "Veigar", "Katarina", "Hwei", "Fizz", "Aurelion Sol", "Lux", "Twisted Fate", "Irelia", "LeBLanc", "Syndra", "Vex", "Orianna", "Diana", "Smolder", "Ezreal", "Caitlyn", "Kai\'Sa", "Jinx", "Miss Fortune", "Jhin", "Ashe", "Lucian", "Vayne", "Senna", "Varus", "Tristana", "Twitch", "Zeri", "Draven", "Sivir", "Kog\'maw", "Aphelios", "Xayah","Lux", "Senna", "Thresh", "Nautilus", "Morgana", "Zyra", "Karma", "Leona", "Blitzcrank", "Pyke", "Maokai", "Brand", "Lulu", "Xerath", "Janna", "Nami", "Yuumi", "Seraphine", "Soraka", "Swain"]
     .map((championName) =>(
-        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
     )),
     
     
@@ -109,6 +111,12 @@ const headCells = [
         label: 'Win Rate (%)',
     },
     {
+        id: 'pickRateGlobal',
+        numeric: true,
+        disablePadding: false,
+        label: 'Global Pick Rate (%)',
+    },
+    {
         id: 'pickRate1',
         numeric: true,
         disablePadding: false,
@@ -119,6 +127,12 @@ const headCells = [
         numeric: true,
         disablePadding: false,
         label: 'Pick Rate 2nd  Rotation (%)',
+    },
+    {
+        id: 'banRateGlobal',
+        numeric: true,
+        disablePadding: false,
+        label: 'Global Ban Rate (%)',
     },
     {
         id: 'banRate1',
@@ -380,8 +394,10 @@ export default function ChampionOverviewPanel(props) {
                             {row.championName}
                             </TableCell>
                             <TableCell align="right">{row.winRate}</TableCell>
+                            <TableCell align="right">{row.pickRateGlobal}</TableCell>
                             <TableCell align="right">{row.pickRate1}</TableCell>
                             <TableCell align="right">{row.pickRate2}</TableCell>
+                            <TableCell align="right">{row.banRateGlobal}</TableCell>
                             <TableCell align="right">{row.banRate1}</TableCell>
                             <TableCell align="right">{row.banRate2}</TableCell>
                             <TableCell align="right">{row.blindP}</TableCell>
