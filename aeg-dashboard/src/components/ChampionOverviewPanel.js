@@ -16,37 +16,52 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
-function createData(id, name, calories, fat, carbs, protein) {
+import { v4 as uuidv4 } from 'uuid';
+
+function createData(id, championName, winRate, pickRate1, pickRate2, banRate1, banRate2, blindP) {
     return {
         id,
-        name,
-        calories,
-        fat,
-        carbs,
-        protein,
+        championName, 
+        winRate, 
+        pickRate1, 
+        pickRate2, 
+        banRate1, 
+        banRate2, 
+        blindP
     };
 }
-
 const rows = [
-    createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-    createData(2, 'Donut', 452, 25.0, 51, 4.9),
-    createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-    createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-    createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-    createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-    createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-    createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-    createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-    createData(13, 'Oreo', 437, 18.0, 63, 4.0),
+
+    ["Darius", "Aatrox", "Garen", "Mordekeiser", "Volibear", "Yone", "Malphite", "Sett", "Jax", "Yorick", "Renekton", "Teemo", "Illaoi", "Trundle", "Urgot", "Fiora", "Nasus", "Dr. Mundo", "Jayce", "Tryndamere"]
+    .map((championName) =>(
+        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+    )),
+    ["Lee Sin", "Kayn", "Viego", "Master Yi", "Volibear", "Nocturne", "Briar", "Kha'Zix", "Shaco", "Vi", "Graves", "Warwick", "Jax", "Jarvan IV", "Evelynn", "Ekko", "Amumu", "Xin Zao", "Bran", "Kindred"]
+    .map((championName) =>(
+        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+    )),
+    ["Ahri", "Yasuo", "Yone", "Karma", "Zed", "Akali", "Sylas", "Veigar", "Katarina", "Hwei", "Fizz", "Aurelion Sol", "Lux", "Twisted Fate", "Irelia", "LeBLanc", "Syndra", "Vex", "Orianna", "Diana"]
+    .map((championName) =>(
+        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+    )),
+    ["Smolder", "Ezreal", "Caitlyn", "Kai\'Sa", "Jinx", "Miss Fortune", "Jhin", "Ashe", "Lucian", "Vayne", "Senna", "Varus", "Tristana", "Twitch", "Zeri", "Draven", "Sivir", "Kog\'maw", "Aphelios", "Xayah"]
+    .map((championName) =>(
+        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+    )),
+    ["Lux", "Senna", "Thresh", "Nautilus", "Morgana", "Zyra", "Karma", "Leona", "Blitzcrank", "Pyke", "Maokai", "Brand", "Lulu", "Xerath", "Janna", "Nami", "Yuumi", "Seraphine", "Soraka", "Swain"]
+    .map((championName) =>(
+        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+    )),
+    ["Darius", "Aatrox", "Garen", "Mordekeiser", "Volibear", "Yone", "Malphite", "Sett", "Jax", "Yorick", "Renekton", "Teemo", "Illaoi", "Trundle", "Urgot", "Fiora", "Nasus", "Dr. Mundo", "Jayce", "Tryndamere", "Lee Sin", "Kayn", "Viego", "Master Yi", "Volibear", "Nocturne", "Briar", "Kha'Zix", "Shaco", "Vi", "Graves", "Warwick", "Jax", "Jarvan IV", "Evelynn", "Ekko", "Amumu", "Xin Zao", "Bran", "Kindred", "Ahri", "Yasuo", "Yone", "Karma", "Zed", "Akali", "Sylas", "Veigar", "Katarina", "Hwei", "Fizz", "Aurelion Sol", "Lux", "Twisted Fate", "Irelia", "LeBLanc", "Syndra", "Vex", "Orianna", "Diana", "Smolder", "Ezreal", "Caitlyn", "Kai\'Sa", "Jinx", "Miss Fortune", "Jhin", "Ashe", "Lucian", "Vayne", "Senna", "Varus", "Tristana", "Twitch", "Zeri", "Draven", "Sivir", "Kog\'maw", "Aphelios", "Xayah","Lux", "Senna", "Thresh", "Nautilus", "Morgana", "Zyra", "Karma", "Leona", "Blitzcrank", "Pyke", "Maokai", "Brand", "Lulu", "Xerath", "Janna", "Nami", "Yuumi", "Seraphine", "Soraka", "Swain"]
+    .map((championName) =>(
+        createData(uuidv4(), championName, Math.random()*100,  Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100, Math.random()*100,)
+    )),
+    
+    
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -80,37 +95,48 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis.map((el) => el[0]);
 }
-
 const headCells = [
     {
-        id: 'name',
+        id: 'championName',
         numeric: false,
         disablePadding: true,
-        label: 'Dessert (100g serving)',
+        label: 'Champion Name',
     },
     {
-        id: 'calories',
+        id: 'winRate',
         numeric: true,
         disablePadding: false,
-        label: 'Calories',
+        label: 'Win Rate (%)',
     },
     {
-        id: 'fat',
+        id: 'pickRate1',
         numeric: true,
         disablePadding: false,
-        label: 'Fat (g)',
+        label: 'Pick Rate 1st Rotation (%)',
     },
     {
-        id: 'carbs',
+        id: 'pickRate2',
         numeric: true,
         disablePadding: false,
-        label: 'Carbs (g)',
+        label: 'Pick Rate 2nd  Rotation (%)',
     },
     {
-        id: 'protein',
+        id: 'banRate1',
         numeric: true,
         disablePadding: false,
-        label: 'Protein (g)',
+        label: 'Ban Rate 1st  Rotation (%)',
+    },
+    {
+        id: 'banRate2',
+        numeric: true,
+        disablePadding: false,
+        label: 'Ban Rate 2nd  Rotation (%)',
+    },
+    {
+        id: 'blindP',
+        numeric: true,
+        disablePadding: false,
+        label: 'Blind Pick (%)',
     },
 ];
 
@@ -172,7 +198,7 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
     const { numSelected } = props;
-
+    console.log(rows)
     return (
         <Toolbar
         sx={{
@@ -200,14 +226,14 @@ function EnhancedTableToolbar(props) {
             id="tableTitle"
             component="div"
             >
-            Nutrition
+            Champion stats
             </Typography>
         )}
 
         {numSelected > 0 ? (
-            <Tooltip title="Delete">
+            <Tooltip title="Search related drafts">
             <IconButton>
-                <DeleteIcon />
+                <SearchIcon />
             </IconButton>
             </Tooltip>
         ) : (
@@ -242,9 +268,9 @@ export default function ChampionOverviewPanel(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-        const newSelected = rows.map((n) => n.id);
-        setSelected(newSelected);
-        return;
+            const newSelected = rows[panelIndex].map((n) => n.id);
+            setSelected(newSelected);
+            return;
         }
         setSelected([]);
     };
@@ -285,11 +311,11 @@ export default function ChampionOverviewPanel(props) {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows[panelIndex].length) : 0;
 
     const visibleRows = React.useMemo(
         () =>
-        stableSort(rows, getComparator(order, orderBy)).slice(
+        stableSort(rows[panelIndex], getComparator(order, orderBy)).slice(
             page * rowsPerPage,
             page * rowsPerPage + rowsPerPage,
         ),
@@ -310,15 +336,15 @@ export default function ChampionOverviewPanel(props) {
                 <Table
                     sx={{ minWidth: 750 }}
                     aria-labelledby="tableTitle"
-                    size={dense ? 'small' : 'medium'}
+                    size={'small'}
                 >
                     <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={rows[panelIndex].length}
                     />
                     <TableBody>
                     {visibleRows.map((row, index) => {
@@ -351,12 +377,14 @@ export default function ChampionOverviewPanel(props) {
                             scope="row"
                             padding="none"
                             >
-                            {row.name}
+                            {row.championName}
                             </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
+                            <TableCell align="right">{row.winRate}</TableCell>
+                            <TableCell align="right">{row.pickRate1}</TableCell>
+                            <TableCell align="right">{row.pickRate2}</TableCell>
+                            <TableCell align="right">{row.banRate1}</TableCell>
+                            <TableCell align="right">{row.banRate2}</TableCell>
+                            <TableCell align="right">{row.blindP}</TableCell>
                         </TableRow>
                         );
                     })}
@@ -375,17 +403,13 @@ export default function ChampionOverviewPanel(props) {
                 <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={rows.length}
+                count={rows[panelIndex].length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-            <FormControlLabel
-                control={<Switch checked={dense} onChange={handleChangeDense} />}
-                label="Dense padding"
-            />
             </Box>
         </div>
     );

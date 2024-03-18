@@ -1,6 +1,7 @@
 import NavBarComp from "./NavbarComp";
 import ChampionOverviewPanel from "./ChampionOverviewPanel"
 import "../styles/ChampionOverview.css"
+import SelectComp from "./SelectComp";
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -25,6 +26,12 @@ const theme = createTheme({
 
 function ChampionOverview() {
     const [value, setValue] = useState(0)
+    const patchList = [1.4, 1.14];
+    const side = ["Blue", "Red", "Both"];
+    const tournamentList = ["Tournament 1", "Tournament 2"];
+    const [activePatch, setActivePatch] = useState('Select a patch')
+    const [activeSide, setActiveSide] = useState('Select a side')
+    const [activeTournament, setActiveTournament] = useState("Select a tournament")
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -34,7 +41,32 @@ function ChampionOverview() {
         <div className="wrapper-overview">
             <NavBarComp />
             <h1> Champion overview </h1>
-            <Box sx={{ borderBottom: 1, borderColor: 'black', width: 468}}> 
+
+            <div className="dashboard-champOverview-controlPannel">
+                <ul className="dashboard-champOverview-controlPannel-list">
+                    <li>
+                        <SelectComp 
+                            elementList={patchList}
+                            defaultValue={"-- Patch --"}
+                            setActive={setActivePatch}/>
+                    </li>
+                    <li>
+                        <SelectComp
+                            elementList={side}
+                            defaultValue={"-- Side --"}
+                            setActive={setActiveSide}/>
+                    </li>
+                    <li>
+                        <SelectComp 
+                            elementList={tournamentList}
+                            defaultValue={"-- Tournament --"}
+                            setActive={setActiveTournament}/>
+                    </li>
+                </ul>
+            </div>
+
+
+            <Box sx={{ borderBottom: 1, borderColor: 'black', width: 574}}> 
             <ThemeProvider theme={theme}>
                 <Tabs 
                     value={value} 
@@ -72,6 +104,12 @@ function ChampionOverview() {
                             color:"gray"
                         }}
                     />
+                    <Tab 
+                        label="All Roles"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
                 </Tabs>
             </ThemeProvider>
             </Box>
@@ -82,6 +120,7 @@ function ChampionOverview() {
             <ChampionOverviewPanel value={value} panelIndex={2}/>
             <ChampionOverviewPanel value={value} panelIndex={3}/>
             <ChampionOverviewPanel value={value} panelIndex={4}/>
+            <ChampionOverviewPanel value={value} panelIndex={5}/>
         </div>
     )
 }
