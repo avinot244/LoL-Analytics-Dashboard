@@ -1,31 +1,47 @@
 import NavBarComp from "./NavbarComp";
-import SelectComp from "./SelectComp";
+import ChampionOverviewPanel from "./ChampionOverviewPanel"
 import "../styles/ChampionOverview.css"
+import SelectComp from "./SelectComp";
+
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+
+import { amber,  brown,  grey} from '@mui/material/colors/'
+
 import { useState } from "react";
-import ChampionIcon from "./ChampionIcon";
+import { ThemeProvider, createTheme } from "@mui/material";
+
+const theme = createTheme({
+    palette: {
+        primary : {
+            main: '#fff',
+        }
+    },
+    action: {
+        active: grey
+    }
+})
+
 
 function ChampionOverview() {
+    const [value, setValue] = useState(0)
     const patchList = [1.4, 1.14];
     const side = ["Blue", "Red", "Both"];
     const tournamentList = ["Tournament 1", "Tournament 2"];
-    const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
-
-    const championListToplane = ["Aatrox", "Renekton", "KSante", "Fiora", "Gragas", "Jax"];
-    const championListJungle = ["Maokai", "Viego", "Lillia", "LeeSin", "Volibear", "Belveth"];
-    const championListMidlane = ["Azir", "Tristana", "Hwei", "TwistedFate", "Ahri", "Taliyah"];
-    const championListADC = ["Smolder", "Varus", "Senna", "Kalista", "Ezreal", "Kaisa"];
-    const championListSupport = ["Nautilus", "Leona", "Thresh", "Rakan", "Alistar", "Blitzcrank"]
-
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeSide, setActiveSide] = useState('Select a side')
     const [activeTournament, setActiveTournament] = useState("Select a tournament")
-    const [activeFilter, setActiveFilter] = useState("Select a filter")
 
-    // TODO: Make an API call to backend to get the list of Patches and Tournaments available
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    }
+
     return(
         <div className="wrapper-overview">
             <NavBarComp />
-            <h1>Champion Overview</h1>
+            <h1> Champion overview </h1>
+
             <div className="dashboard-champOverview-controlPannel">
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
@@ -49,117 +65,63 @@ function ChampionOverview() {
                 </ul>
             </div>
 
-            <div className="champion-caption">
-                <ChampionIcon 
-                    championName={""}
-                    winRate={"winrate"}
-                    pickRate={"pickrate"}
-                    banRate={"banrate"}
-                    pickOrder={"pickOrder"}
-                />
-            </div>
 
-            <div className="sorter">
-                <ul>
-                    <li>Sort by</li>
-                    <li>
-                    <SelectComp 
-                        elementList={filterList}
-                        defaultValue={"-- Select Filter --"}
-                        setActive={setActiveFilter}
+            <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 574}}> 
+            <ThemeProvider theme={theme}>
+                <Tabs 
+                    value={value} 
+                    onChange={handleChange}
+                    textColor="primary"
+                    indicatorColor="primary"
+                >
+                    <Tab 
+                        label="Toplane"
+                        sx={{
+                            color:"gray"
+                        }}
                     />
-                    </li>
-                </ul>                
-            </div>
-
-            <div className="champion-overview">
-                <div className="champion-overview-content">
-                    <h2>Toplane</h2>
-                    <ul className="champion-overview-list">
-                        {championListToplane.map((championName) =>
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-
-                <div className="champion-overview-content">
-                    <h2>Jungle</h2>
-                    <ul className="champion-overview-list">
-                        {championListJungle.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Midlane</h2>
-                    <ul className="champion-overview-list">
-                        {championListMidlane.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>ADC</h2>
-                    <ul className="champion-overview-list">
-                        {championListADC.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Support</h2>
-                    <ul className="champion-overview-list">
-                        {championListSupport.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-            </div>
-        </div>    
+                    <Tab 
+                        label="Jungle"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="Midlane"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="ADC"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="Support"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab 
+                        label="All Roles"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                </Tabs>
+            </ThemeProvider>
+            </Box>
+        
+            
+            <ChampionOverviewPanel value={value} panelIndex={0}/>
+            <ChampionOverviewPanel value={value} panelIndex={1}/>
+            <ChampionOverviewPanel value={value} panelIndex={2}/>
+            <ChampionOverviewPanel value={value} panelIndex={3}/>
+            <ChampionOverviewPanel value={value} panelIndex={4}/>
+            <ChampionOverviewPanel value={value} panelIndex={5}/>
+        </div>
     )
 }
 
