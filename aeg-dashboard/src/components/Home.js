@@ -1,155 +1,69 @@
 import NavBarComp from "./NavbarComp"
 import "../styles/Home.css"
-import SelectComp from "./SelectComp";
-import ChampionIcon from "./ChampionIcon";
+import TopMetaPicksPanel from "./TopMetaPicksPanel";
+import LatestDraftsPanel from "./LatestDraftsPanel";
 
 import { useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import { amber,  brown,  grey} from '@mui/material/colors/'
+
+
+
+const theme = createTheme({
+    palette: {
+        primary : {
+            main: '#fff',
+        }
+    },
+    action: {
+        active: grey
+    }
+})
+
 
 function Home(){
-    const patchList = [1.4, 1.14];
-    const side = ["Blue", "Red", "Both"];
-    const tournamentList = ["Tournament 1", "Tournament 2"];
-    const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
+    const [value, setValue] = useState(0)
 
-    const championListToplane = ["Aatrox", "Renekton", "KSante", "Fiora", "Gragas", "Jax"];
-    const championListJungle = ["Maokai", "Viego", "Lillia", "LeeSin", "Volibear", "Belveth"];
-    const championListMidlane = ["Azir", "Tristana", "Hwei", "TwistedFate", "Ahri", "Taliyah"];
-    const championListADC = ["Smolder", "Varus", "Senna", "Kalista", "Ezreal", "Kaisa"];
-    const championListSupport = ["Nautilus", "Leona", "Thresh", "Rakan", "Alistar", "Blitzcrank"]
-
-    const [activePatch, setActivePatch] = useState('Select a patch')
-    const [activeSide, setActiveSide] = useState('Select a side')
-    const [activeTournament, setActiveTournament] = useState("Select a tournament")
-    const [activeFilter, setActiveFilter] = useState("Select a filter")
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+        
+    }
 
     // TODO: Make an API call to backend to get the list of Patches and Tournaments available
     return(
         <div className="wrapper-overview">
             <NavBarComp />
-            <h1>Top Meta Picks</h1>
-            <div className="dashboard-champOverview-controlPannel">
-                <ul className="dashboard-champOverview-controlPannel-list">
-                    <li>
-                        <SelectComp 
-                            elementList={patchList}
-                            defaultValue={"-- Patch --"}
-                            setActive={setActivePatch}/>
-                    </li>
-                    <li>
-                        <SelectComp
-                            elementList={side}
-                            defaultValue={"-- Side --"}
-                            setActive={setActiveSide}/>
-                    </li>
-                    <li>
-                        <SelectComp 
-                            elementList={tournamentList}
-                            defaultValue={"-- Tournament --"}
-                            setActive={setActiveTournament}/>
-                    </li>
-                </ul>
-            </div>
+            <br/>
+            <h1>Home Page</h1>
 
-            <div className="sorter">
-                <ul>
-                    <li>Sort by</li>
-                    <li>
-                    <SelectComp 
-                        elementList={filterList}
-                        defaultValue={"-- Select Filter --"}
-                        setActive={setActiveFilter}
+            <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
+            <ThemeProvider theme={theme}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    textColor="primary"
+                    indicatorColor="primary"
+                >
+                    <Tab
+                        label="Top Meta Picks"
+                        sx={{
+                            color:"gray"
+                        }}
                     />
-                    </li>
-                </ul>                
-            </div>
-
-            <div className="champion-overview">
-                <div className="champion-overview-content">
-                    <h2>Toplane</h2>
-                    <ul className="champion-overview-list">
-                        {championListToplane.map((championName) =>
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-
-                <div className="champion-overview-content">
-                    <h2>Jungle</h2>
-                    <ul className="champion-overview-list">
-                        {championListJungle.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Midlane</h2>
-                    <ul className="champion-overview-list">
-                        {championListMidlane.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>ADC</h2>
-                    <ul className="champion-overview-list">
-                        {championListADC.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Support</h2>
-                    <ul className="champion-overview-list">
-                        {championListSupport.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-            </div>
+                    <Tab
+                        label="Latest Drafts"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                </Tabs>
+            </ThemeProvider>
+            </Box>
+            <TopMetaPicksPanel value={value} panelIndex={0}/>
+            <LatestDraftsPanel value={value} panelIndex={1}/>
         </div>    
     )
 }

@@ -66,7 +66,7 @@ function ChampionOverview() {
             </div>
 
 
-            <Box sx={{ borderBottom: 1, borderColor: 'black', width: 574}}> 
+            <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 574}}> 
             <ThemeProvider theme={theme}>
                 <Tabs 
                     value={value} 
