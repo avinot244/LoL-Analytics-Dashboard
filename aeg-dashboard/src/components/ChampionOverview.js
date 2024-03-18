@@ -1,35 +1,15 @@
 import NavBarComp from "./NavbarComp";
+import ChampionOverviewPanel from "./ChampionOverviewPanel"
 import "../styles/ChampionOverview.css"
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import { amber,  brown,  grey} from '@mui/material/colors/'
 
 import { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
-
-function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            className={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-        {value === index && (
-            <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-            </Box>
-        )}
-        </div>
-    );
-}
 
 const theme = createTheme({
     palette: {
@@ -97,21 +77,11 @@ function ChampionOverview() {
             </Box>
         
             
-            <CustomTabPanel value={value} index={0}>
-                Item Toplane
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
-                Item Jungle
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
-                Item Midlane
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
-                Item ADC
-            </CustomTabPanel>
-            <CustomTabPanel value={value} index={4}>
-                Item Support
-            </CustomTabPanel>
+            <ChampionOverviewPanel value={value} panelIndex={0}/>
+            <ChampionOverviewPanel value={value} panelIndex={1}/>
+            <ChampionOverviewPanel value={value} panelIndex={2}/>
+            <ChampionOverviewPanel value={value} panelIndex={3}/>
+            <ChampionOverviewPanel value={value} panelIndex={4}/>
         </div>
     )
 }
