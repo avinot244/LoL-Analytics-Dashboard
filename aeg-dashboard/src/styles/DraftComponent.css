@@ -1,0 +1,116 @@
+.draft-header{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+}
+.draft-header h1, p{
+    margin-bottom: 0;
+    width: fit-content;
+}
+
+
+
+.draft-header h1:first-child{
+    padding-right:50px;
+}
+.draft-header h1:last-child{
+    padding-left: 50px;
+}
+
+
+
+ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 0;
+    padding-left: 0
+}
+ul li {
+    list-style: none;
+}
+
+
+.picksBlue, .picksRed, .bansBlue, .bansRed{
+    padding-bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+    height: fit-content;
+}
+
+
+.blue, .red{
+    width: fit-content
+}
+.blue{
+    margin-right: 50px;
+}
+.blue h1.teamName{
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 20px;
+    font-weight: bold;
+    color: #2196f3
+}
+.red{
+    margin-left: 50px;
+}
+.red h1.teamName{
+    text-align: left;
+    padding-left: 5px;
+    padding-right: 20px;
+    font-weight: bold;
+    color: #f50057
+}
+
+
+.draft-content{
+    width: fit-content;
+    margin: 50px auto;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 150px;
+}
+
+
+.bansBlue {
+    float: right;
+}
+
+
+.bansBlue, .bansRed{
+    margin-top: 5px;
+}
+
+.picksBlue2Rota, .bansBlue2Rota, .picksRed2Rota, .bansRed2Rota{
+    margin-left: 20px;
+}
+
+.bansBlue .champion-icon-small, .bansRed .champion-icon-small{
+    clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);;
+}
+
+
+h1.win, h1.lose {
+    width: fit-content;
+}
+h1.win{
+    color: #8bc34a;
+}
+h1.lose{
+    color: #f50057;
+}
+
+.header-team{
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+}
+
+.blue .header-team{
+    margin-left: auto;
+    margin-right: 0;
+}
