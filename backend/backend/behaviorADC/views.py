@@ -24,7 +24,7 @@ def behaviorADC_latest(request, limit : str):
 
 @api_view(['PATCH'])
 def behaviorADC_updatePatch(request):
-    csv_file_path = "./data_analysis/data/behavior_ADC.csv"
+    csv_file_path = "./databases/behavior/behavior/behavior_ADC.csv"
     df = pd.read_csv(csv_file_path, sep=";")
 
     for _, row in df.iterrows():
