@@ -10,17 +10,18 @@ from .globals import BEHAVIOR_ADC_HEADER
 
 import os
 import pandas as pd
-
+import json
 
 @api_view(['GET'])
-def behaviorADC_latest(request, limit : str):
-    data = BehaviorADC.objects.order_by("-seriesId")[:int(limit)]
-        
+def behaviorADC_get_player_list(request):
+    allObjects = BehaviorADC.objects.all()
+    summonnerNameList : list = list()
+
+    for ADCObject in allObjects:
+        summonnerNameList.append(ADCObject.summonnerName)
     
-    serializer = BehaviorADCSerializer(data, context={"request": request}, many=True)
-
-    return Response(serializer.data)
-
+    df = pd.DataFrame({"summonnerName": summonnerNameList})
+    return Response(df["summonnerName"].unique())
 
 @api_view(['PATCH'])
 def behaviorADC_updatePatch(request):
@@ -38,9 +39,18 @@ def behaviorADC_updatePatch(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+#TODO: behaviorADC_download view
+@api_view(['PATCH'])
+def behaviorADC_download(request, rawTournamentList:str):
+    print("Downloading stuff")
+    if rawTournamentList.__contains__(','):
+        print(rawTournamentList.split(','))
+        return Response(rawTournamentList.split(','))
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 def behaviorADC_stats(request, summonnerName):
-    print(summonnerName)
 
     summonnerNameList : list = list()
     allObjects = BehaviorADC.objects.all()
@@ -57,17 +67,6 @@ def behaviorADC_stats(request, summonnerName):
     serializer = BehaviorADCSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-def get_listPatch(request):
-    queryResult = BehaviorADC.objects.all()
-    patchList : list = list()
-
-    for res in queryResult:
-        patch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
-        patchList.append(patch)
-    df = pd.DataFrame({"patch": patchList})
-
-    return Response(df["patch"].unique())
 
 @api_view(['GET'])
 def behaviorADC_stats_latest(request, summonnerName, limit, tournament):
@@ -104,6 +103,33 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, patch__contains=patch, tournament__exact=tournament)
     serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def get_listPatch(request):
+    queryResult = BehaviorADC.objects.all()
+    patchList : list = list()
+
+    for res in queryResult:
+        patch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        patchList.append(patch)
+    df = pd.DataFrame({"patch": patchList})
+
+    return Response(df["patch"].unique())
+
+@api_view(['GET'])
+def get_listTournaments(request):
+    queryResult = BehaviorADC.objects.all()
+    tournamentList : list = list()
+
+    for res in queryResult:
+        tournamentList.append(res.tournament)
+    df = pd.DataFrame({'tournaments': tournamentList})
+    return Response(df['tournaments'].unique())
+
+
+
 
 
 

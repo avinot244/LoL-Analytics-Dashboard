@@ -16,15 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from behaviorADC import views
+from behaviorADC import views as ADCviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^api/behavior/ADC/latest/([0-9]*)$', views.behaviorADC_latest),
 
-    re_path(r'^api/behavior/ADC/patch/getList', views.get_listPatch),
-    re_path(r'^api/behavior/ADC/patch/update', views.behaviorADC_updatePatch),
-    path('api/behavior/ADC/stats/<str:summonnerName>', views.behaviorADC_stats),
-    path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>', views.behaviorADC_stats_latest),
-    path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>', views.behaviorADC_stats_patch),
+    # Behavior ADC
+    path('api/behavior/ADC/getSummonnerList', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
+    re_path(r'^api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch value sin the production database
+
+    # TODO: download endpoint
+    path('api/behavior/ADC/download/<str:rawTournamentList>/', ADCviews.behaviorADC_download),
+
+    path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
+    path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
+    path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
+
+
+    re_path(r'^api/behavior/ADC/patch/getList', ADCviews.get_listPatch),
+    path('api/behavior/ADC/tournament/getList', ADCviews.get_listTournaments),
 ]
