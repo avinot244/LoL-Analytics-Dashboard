@@ -9,8 +9,10 @@ import Box from '@mui/material/Box';
 
 import { amber,  brown,  grey} from '@mui/material/colors/'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
+
+import { API_URL } from "../constants";
 
 const theme = createTheme({
     palette: {
@@ -25,8 +27,8 @@ const theme = createTheme({
 
 
 function ChampionOverview() {
+    const [patchList, setPatchList] = useState([]);
     const [value, setValue] = useState(0)
-    const patchList = [1.4, 1.14];
     const side = ["Blue", "Red", "Both"];
     const tournamentList = ["Tournament 1", "Tournament 2"];
     const [activePatch, setActivePatch] = useState('Select a patch')
@@ -36,6 +38,20 @@ function ChampionOverview() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     }
+
+
+    useEffect(() => {
+        const fetchPatchList = async () => {
+            const result = await fetch(API_URL + "behavior/ADC/patch/getList", {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newPatchList = result;
+                setPatchList(newPatchList);
+            })
+        }
+        fetchPatchList();
+    }, [])
 
     return(
         <div className="wrapper-overview">
