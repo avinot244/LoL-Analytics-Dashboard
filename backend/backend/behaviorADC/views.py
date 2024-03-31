@@ -7,6 +7,7 @@ from rest_framework import status
 from .models import BehaviorADC
 from .serializers import *
 from .globals import BEHAVIOR_ADC_HEADER, DATA_PATH
+from .api_calls.GRID.api_calls import get_all_game_seriesId_tournament
 
 import os
 import pandas as pd
@@ -71,6 +72,13 @@ def behaviorADC_download(request, rawTournamentList : str):
             for tournament_name, tournament_id  in tournamentMapping.items():
                 if wantedTournamentName == tournament_name:
                     wantedTournamentMapping[tournament_name] = tournament_id
+        
+        
+        print(wantedTournamentMapping)
+        for tournament_name, tournament_id in wantedTournamentMapping.items():
+            print(tournament_id, tournament_name)
+            seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
+            print(seriesIdList)
 
         return Response(wantedTournamentMapping)
     else:
