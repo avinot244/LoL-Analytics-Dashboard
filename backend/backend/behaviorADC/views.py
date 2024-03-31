@@ -6,11 +6,12 @@ from rest_framework import status
 
 from .models import BehaviorADC
 from .serializers import *
-from .globals import BEHAVIOR_ADC_HEADER
+from .globals import BEHAVIOR_ADC_HEADER, DATA_PATH
 
 import os
 import pandas as pd
 import json
+import re
 
 @api_view(['GET'])
 def behaviorADC_get_player_list(request):
@@ -41,11 +42,37 @@ def behaviorADC_updatePatch(request):
 
 #TODO: behaviorADC_download view
 @api_view(['PATCH'])
-def behaviorADC_download(request, rawTournamentList:str):
-    print("Downloading stuff")
+def behaviorADC_download(request, rawTournamentList : str):
     if rawTournamentList.__contains__(','):
-        print(rawTournamentList.split(','))
-        return Response(rawTournamentList.split(','))
+        wantedTournamentList : list = rawTournamentList.split(",")
+        
+        # Getting the list of tournament in our database
+        tournamentList : list = list()
+        queryTournamentList = BehaviorADC.objects.all()
+        for res in queryTournamentList:
+            tournamentList.append(res.tournament)
+        df = pd.DataFrame({'tournaments': tournamentList})
+        tournamentList = df['tournaments'].unique().tolist()
+
+        # Testing if the tournament list are in our database
+        for res in wantedTournamentList:
+            if not(res in tournamentList):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # Opening our tournament mapping json
+        tournamentMapping : dict = None
+        with open(DATA_PATH + "tournament_mapping.json", "r") as json_file:
+            tournamentMapping = json.loads(json_file.read())
+
+
+        # Mapping our wanted tournament to get the list of wanted ids
+        wantedTournamentMapping : dict = dict()
+        for wantedTournamentName in wantedTournamentList:
+            for tournament_name, tournament_id  in tournamentMapping.items():
+                if wantedTournamentName == tournament_name:
+                    wantedTournamentMapping[tournament_name] = tournament_id
+
+        return Response(wantedTournamentMapping)
     else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
