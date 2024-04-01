@@ -7,7 +7,7 @@ from rest_framework import status
 from behaviorADC.models import BehaviorADC
 
 from .globals import DATA_PATH, BLACKLIST
-from .api_calls.GRID.api_calls import get_all_game_seriesId_tournament, get_all_download_links, download_from_link, get_nb_games_seriesId
+from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded
 
 import json
@@ -59,6 +59,7 @@ def behavior_latest(request, rawTournamentList : str):
                     for downloadDict in dlDict['files']:
                         fileType = downloadDict["fileName"].split(".")[-1]
                         fileName = downloadDict["fileName"].split(".")[0]
+                        print(fileName, fileName.split("_")[-1])
 
                         if fileType != "rofl" and downloadDict["status"] == "ready":
                             if i > 1:
@@ -81,6 +82,10 @@ def behavior_latest(request, rawTournamentList : str):
                         i += 1
                     # Save game metadata in csv and sqlite databases
                     
+                    date = get_date_from_seriesId(seriesId)
+                    name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, fileName.split("_")[-1])
+                    patch : str
+
 
         return Response(wantedTournamentMapping)
     else:
