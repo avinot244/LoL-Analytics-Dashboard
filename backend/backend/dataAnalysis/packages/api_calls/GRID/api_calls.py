@@ -346,7 +346,6 @@ def get_nb_games_seriesId(seriesId : int):
     if result["data"]:
         nbGames = len(result["data"]["seriesState"]["games"])
     
-        print("\t\tNumber of game of {} : {}".format(seriesId, nbGames))
         return nbGames
     else:
         return -1

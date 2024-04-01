@@ -8,7 +8,7 @@ import csv
 
 from dataAnalysis.packages.utils_stuff.globals import *
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
-from .globals import DATA_PATH
+from dataAnalysis.globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId
@@ -53,7 +53,7 @@ def getData(seriesId : int, gameNumber : int):
 
     if not(os.path.exists(pathData)):
         data = SeparatedData(rootdir + "/Separated")
-        pathData = DATA_PATH + match + "dataSeparatedRIOT"
+        pathData = DATA_PATH + "games/bin/" + match + "dataSeparatedRIOT"
         file = open(pathData, 'ab')
         pickle.dump(data, file)
         if os.path.exists(DATA_PATH + "games/bin/" + match + "/Separated/"):

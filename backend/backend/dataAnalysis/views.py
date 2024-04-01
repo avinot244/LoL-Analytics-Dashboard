@@ -57,7 +57,6 @@ def download_latest(request, rawTournamentList : str):
                 for downloadDict in dlDict['files']:
                     fileType = downloadDict["fileName"].split(".")[-1]
                     fileName = downloadDict["fileName"].split(".")[0]
-                    print(fileName, fileName.split("_")[-1])
 
                     if fileType != "rofl" and downloadDict["status"] == "ready":
                         if i > 1:
@@ -87,7 +86,7 @@ def download_latest(request, rawTournamentList : str):
                 date = get_date_from_seriesId(seriesId)
                 gameNumber = fileName.split("_")[-1]
                 name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumber)
-                summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}".format(name))
+                summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumber))
 
                 (data, _, _, _) = getData(seriesId, gameNumber)
                 patch : str = summaryData.patch
@@ -98,7 +97,7 @@ def download_latest(request, rawTournamentList : str):
                 # Saving game metadata to CSV database
                 CSVdata = [date, name, patch, teamBlue, teamRed, winningTeam]
                 with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
-                    writer = csv.writer(csv_file)
+                    writer = csv.writer(csv_file, delimiter=";")
                     writer.writerow(CSVdata)
 
                 # Saving game metadata to SQLite datbase
@@ -111,5 +110,11 @@ def download_latest(request, rawTournamentList : str):
 @api_view(['GET'])
 def get_tournament_mapping(request):
 
+    tournament_mapping : dict = get_all_tournament_ids("")
+    if os.path.exists(DATA_PATH + "tournament_mapping.json"):
+        os.remove(DATA_PATH + "tournament_mapping.json")
+    
+    with open(DATA_PATH + "tournament_mapping.json", "w") as json_file:
+        json.dump(tournament_mapping, json_file)
     
     return Response(status=status.HTTP_200_OK)

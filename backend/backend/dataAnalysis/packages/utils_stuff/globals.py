@@ -1,9 +1,7 @@
 from .Position import Position 
 
-DATA_PATH = "../data/"
 MINIMAP_WIDTH = 14750
 MINIMAP_HEIGHT = 14750
-YAML_PATH = ""
 
 TYPES = ["INFO", "SNAPSHOT", "GAME_EVENT"]
 GAME_TYPES = ["ESPORTS", "SCRIM", "COMPETITIVE"]
