@@ -1,5 +1,5 @@
-from utils_stuff.Position import Position
-from utils_stuff.Computation.Linear import Linear
+from dataAnalysis.packages.utils_stuff.Position import Position
+from dataAnalysis.packages.utils_stuff.Computation.Linear import Linear
 import math
 import numpy as np
 

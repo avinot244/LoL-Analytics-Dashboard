@@ -1,4 +1,4 @@
-from Parsers.Separated.Draft.PlayerDraft import PlayerDraft
+from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraft
 
 class TeamDraft:
     def __init__(self,

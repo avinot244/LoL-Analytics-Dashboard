@@ -1,10 +1,10 @@
 import json
 import pandas as pd
 
-from Parsers.EMH.Summary.PlayerEndGameStat import PlayerEndGameStat
-from Parsers.EMH.Summary.TeamEndGameStat import TeamEndGameStat
-from Parsers.EMH.Summary.Ban import Ban
-from Parsers.EMH.Summary.Objective import Objective
+from dataAnalysis.packages.Parsers.EMH.Summary.PlayerEndGameStat import PlayerEndGameStat
+from dataAnalysis.packages.Parsers.EMH.Summary.TeamEndGameStat import TeamEndGameStat
+from dataAnalysis.packages.Parsers.EMH.Summary.Ban import Ban
+from dataAnalysis.packages.Parsers.EMH.Summary.Objective import Objective
 
 
 class SummaryData:

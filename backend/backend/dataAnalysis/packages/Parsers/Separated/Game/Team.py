@@ -1,8 +1,8 @@
 import re
 
-from Parsers.Separated.Game.Player import Player
-from utils_stuff.Position import Position
-from utils_stuff.Computation.computation import *
+from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
+from dataAnalysis.packages.utils_stuff.Position import Position
+from dataAnalysis.packages.utils_stuff.Computation.computation import *
 
 class Team:
     def __init__(self,

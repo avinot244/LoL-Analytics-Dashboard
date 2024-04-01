@@ -1,4 +1,4 @@
-from API.DDragon.api_calls import get_champion_mapping_key, get_champion_mapping_key_reversed
+from dataAnalysis.packages.api_calls.DDragon.api_calls import get_champion_mapping_key, get_champion_mapping_key_reversed
 
 def convertToChampionName(id : int):
     if id > 0:

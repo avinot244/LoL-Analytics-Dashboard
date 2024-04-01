@@ -6,12 +6,12 @@ import pickle
 import shutil
 import csv
 
-from utils_stuff.globals import *
-from Parsers.EMH.Summary.SummaryData import SummaryData
+from dataAnalysis.packages.utils_stuff.globals import *
+from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
 from .globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
-from api_calls.GRID.api_calls import get_date_from_seriesId
+from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId
 
 def get_all_event_types(json_path_details:str) -> dict:
     with open(json_path_details, 'r') as f:

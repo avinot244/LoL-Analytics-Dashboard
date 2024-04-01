@@ -1,5 +1,5 @@
-from Parsers.Separated.Draft.Ban import Ban
-from Parsers.Separated.Draft.TeamDraft import TeamDraft
+from dataAnalysis.packages.Parsers.Separated.Draft.Ban import Ban
+from dataAnalysis.packages.Parsers.Separated.Draft.TeamDraft import TeamDraft
 
 class DraftSnapshot:
     def __init__(self,

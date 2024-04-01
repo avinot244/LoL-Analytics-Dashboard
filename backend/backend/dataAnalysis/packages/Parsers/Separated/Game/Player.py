@@ -1,6 +1,6 @@
-from utils_stuff.Position import Position
-from Parsers.Separated.Game.Item import Item
-from Parsers.Separated.Game.Stat import Stat
+from dataAnalysis.packages.utils_stuff.Position import Position
+from dataAnalysis.packages.Parsers.Separated.Game.Item import Item
+from dataAnalysis.packages.Parsers.Separated.Game.Stat import Stat
 class Player:
     def __init__(self,
                  championName : str,

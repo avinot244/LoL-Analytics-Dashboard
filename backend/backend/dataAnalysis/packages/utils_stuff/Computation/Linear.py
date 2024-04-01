@@ -1,4 +1,4 @@
-from utils_stuff.Position import Position
+from dataAnalysis.packages.utils_stuff.Position import Position
 class Linear:
     def __init__(self,
                  coo1 : Position = None,

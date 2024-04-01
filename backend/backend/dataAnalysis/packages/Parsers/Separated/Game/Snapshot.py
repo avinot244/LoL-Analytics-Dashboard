@@ -1,4 +1,4 @@
-from Parsers.Separated.Game.Team import Team
+from dataAnalysis.packages.Parsers.Separated.Game.Team import Team
 
 class Snapshot:
     def __init__(self,

@@ -1,5 +1,5 @@
-from Parsers.EMH.Summary.Ban import Ban
-from Parsers.EMH.Summary.Objective import Objective
+from dataAnalysis.packages.Parsers.EMH.Summary.Ban import Ban
+from dataAnalysis.packages.Parsers.EMH.Summary.Objective import Objective
 
 class TeamEndGameStat:
     def __init__(self,

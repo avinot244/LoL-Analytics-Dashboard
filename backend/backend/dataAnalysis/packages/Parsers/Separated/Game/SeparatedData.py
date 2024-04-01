@@ -4,19 +4,19 @@ import ujson
 import pandas as pd
 import csv
 
-from Parsers.Separated.Game.Snapshot import Snapshot
-from Parsers.Separated.Game.Player import Player
-from Parsers.Separated.Game.Team import Team
-from Parsers.Separated.Game.Stat import Stat
-from Parsers.Separated.Game.Item import Item
+from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
+from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
+from dataAnalysis.packages.Parsers.Separated.Game.Team import Team
+from dataAnalysis.packages.Parsers.Separated.Game.Stat import Stat
+from dataAnalysis.packages.Parsers.Separated.Game.Item import Item
 
-from Parsers.Separated.Draft.DraftSnapshot import DraftSnapshot
-from Parsers.Separated.Draft.Ban import Ban
-from Parsers.Separated.Draft.TeamDraft import TeamDraft
-from Parsers.Separated.Draft.PlayerDraft import PlayerDraft
+from dataAnalysis.packages.Parsers.Separated.Draft.DraftSnapshot import DraftSnapshot
+from dataAnalysis.packages.Parsers.Separated.Draft.Ban import Ban
+from dataAnalysis.packages.Parsers.Separated.Draft.TeamDraft import TeamDraft
+from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraft
 
-from utils_stuff.Position import Position
-from utils_stuff.converter.champion import convertToChampionName, convertToChampionID
+from dataAnalysis.packages.utils_stuff.Position import Position
+from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
 
 class SeparatedData:
     def __init__(self, root_dir : str = None,
