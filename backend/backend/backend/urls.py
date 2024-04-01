@@ -25,9 +25,6 @@ urlpatterns = [
     # Behavior ADC
     path('api/behavior/ADC/getSummonnerList', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
     re_path(r'^api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch value sin the production database
-
-    
-
     path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
     path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
     path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
@@ -37,6 +34,5 @@ urlpatterns = [
     path('api/behavior/ADC/tournament/getList', ADCviews.get_listTournaments),
 
 
-    # TODO: download endpoint
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.behavior_latest),
 ]

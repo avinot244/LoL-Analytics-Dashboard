@@ -6,7 +6,7 @@ from rest_framework import status
 
 from behaviorADC.models import BehaviorADC
 
-from globals import DATA_PATH, BLACKLIST
+from .globals import DATA_PATH, BLACKLIST
 from .api_calls.GRID.api_calls import get_all_game_seriesId_tournament, get_all_download_links, download_from_link, get_nb_games_seriesId
 from .utils import isGameDownloaded
 

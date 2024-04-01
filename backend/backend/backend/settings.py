@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'behaviorADC',
+    'dataAnalysis',
     'django_extensions',
 ]
 
