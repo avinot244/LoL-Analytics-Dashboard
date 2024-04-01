@@ -6,8 +6,9 @@ from rest_framework import status
 
 from .models import BehaviorADC
 from .serializers import *
-from .globals import BEHAVIOR_ADC_HEADER, DATA_PATH
-from .api_calls.GRID.api_calls import get_all_game_seriesId_tournament
+from .globals import BEHAVIOR_ADC_HEADER, DATA_PATH, BLACKLIST
+from .api_calls.GRID.api_calls import get_all_game_seriesId_tournament, get_all_download_links, download_from_link, get_nb_games_seriesId
+from .utils import isGameDownloaded
 
 import os
 import pandas as pd
@@ -41,9 +42,10 @@ def behaviorADC_updatePatch(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-#TODO: behaviorADC_download view
 @api_view(['PATCH'])
 def behaviorADC_download(request, rawTournamentList : str):
+    
+    #TODO: Add game metadata to csv file and sync it to sqlite database
     if rawTournamentList.__contains__(','):
         wantedTournamentList : list = rawTournamentList.split(",")
         
@@ -74,11 +76,39 @@ def behaviorADC_download(request, rawTournamentList : str):
                     wantedTournamentMapping[tournament_name] = tournament_id
         
         
-        print(wantedTournamentMapping)
         for tournament_name, tournament_id in wantedTournamentMapping.items():
             print(tournament_id, tournament_name)
             seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
-            print(seriesIdList)
+            
+            
+            for seriesId in seriesIdList:
+                if not(isGameDownloaded(seriesId)) and not(seriesId in BLACKLIST):
+                    dlDict : dict = get_all_download_links(seriesId)
+                    print("\tChecking game of seriesId :", seriesId)
+                    i = 0
+                    for downloadDict in dlDict['files']:
+                        fileType = downloadDict["fileName"].split(".")[-1]
+                        fileName = downloadDict["fileName"].split(".")[0]
+
+                        if fileType != "rofl" and downloadDict["status"] == "ready":
+                            if i > 1:
+                                # The first 2 files are global info about the Best-of
+                                # We have 4 files per games
+                                # We add 1 to start the gameNumber list at 1
+                                gameNumber = (i-2)//4 + 1
+
+                                path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
+                                print("\t\tDownloading {} files".format(fileName))
+                                download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+
+                            else:
+                                for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
+                                    path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
+                                    print("\t\tDownloading {} files".format(fileName))
+                                    download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+                        elif fileType == "rofl":
+                            print("\t\twe don't download rofl file")
+                        i += 1
 
         return Response(wantedTournamentMapping)
     else:
