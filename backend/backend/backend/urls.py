@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from behaviorADC import views as ADCviews
+from dataAnalysis import views as dataAnalysisViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,8 +26,7 @@ urlpatterns = [
     path('api/behavior/ADC/getSummonnerList', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
     re_path(r'^api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch value sin the production database
 
-    # TODO: download endpoint
-    path('api/behavior/ADC/download/<str:rawTournamentList>/', ADCviews.behaviorADC_download),
+    
 
     path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
     path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
@@ -35,4 +35,8 @@ urlpatterns = [
 
     re_path(r'^api/behavior/ADC/patch/getList', ADCviews.get_listPatch),
     path('api/behavior/ADC/tournament/getList', ADCviews.get_listTournaments),
+
+
+    # TODO: download endpoint
+    path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.behavior_latest),
 ]
