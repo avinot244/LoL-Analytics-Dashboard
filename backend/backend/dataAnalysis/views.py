@@ -50,7 +50,7 @@ def download_latest(request, rawTournamentList : str):
         
         
         for seriesId in seriesIdList:
-            if not(isGameDownloaded(seriesId)) and not(seriesId in BLACKLIST):
+            if not(isGameDownloaded(int(seriesId))) and not(seriesId in BLACKLIST):
                 dlDict : dict = get_all_download_links(seriesId)
                 print("\tChecking game of seriesId :", seriesId)
                 i = 0
@@ -88,18 +88,13 @@ def download_latest(request, rawTournamentList : str):
                 name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumber)
                 summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumber))
 
-                (data, _, _, _) = getData(seriesId, gameNumber)
+                (data, _, _, _) = getData(int(seriesId), gameNumber)
                 patch : str = summaryData.patch
                 teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
                 teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
                 winningTeam : int = data.winningTeam
 
-                # Saving game metadata to CSV database
-                CSVdata = [date, name, patch, teamBlue, teamRed, winningTeam]
-                with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
-                    writer = csv.writer(csv_file, delimiter=";")
-                    writer.writerow(CSVdata)
-
+                
                 # Saving game metadata to SQLite datbase
                 gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam)
                 gameMetadata.save()

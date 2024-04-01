@@ -12,6 +12,7 @@ from dataAnalysis.globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId
+from dataAnalysis.utils import isGameDownloaded
 
 def get_all_event_types(json_path_details:str) -> dict:
     with open(json_path_details, 'r') as f:
@@ -61,16 +62,18 @@ def getData(seriesId : int, gameNumber : int):
 
         file.close()
 
-        with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
-            writer = csv.writer(csv_file, delimiter=";")
-            matchDate = get_date_from_seriesId(seriesId)
-            matchName = match + "dataSeparatedRIOT"
-            patch = summaryData.patch
-            teamBlue = data.gameSnapshotList[0].teams[0].getTeamName()
-            teamRed = data.gameSnapshotList[0].teams[1].getTeamName()
-            winningTeam = data.winningTeam
-            dataCSV = [matchDate, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam]
-            writer.writerow(dataCSV)
+
+        if not(isGameDownloaded(seriesId)):
+            with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
+                writer = csv.writer(csv_file, delimiter=";")
+                matchDate = get_date_from_seriesId(seriesId)
+                matchName = match + "dataSeparatedRIOT"
+                patch = summaryData.patch
+                teamBlue = data.gameSnapshotList[0].teams[0].getTeamName()
+                teamRed = data.gameSnapshotList[0].teams[1].getTeamName()
+                winningTeam = data.winningTeam
+                dataCSV = [matchDate, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam]
+                writer.writerow(dataCSV)
     else:
         if os.path.exists(DATA_PATH + "games/bin/" + match + "/Separated/"):
             shutil.rmtree(DATA_PATH + "games/bin/" + match + "/Separated/")
