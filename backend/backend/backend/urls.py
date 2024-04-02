@@ -30,11 +30,10 @@ urlpatterns = [
     path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
 
 
-    re_path(r'^api/behavior/ADC/patch/getList', ADCviews.get_listPatch),
-    path('api/behavior/ADC/tournament/getList', ADCviews.get_listTournaments),
+    path('api/dataAnalysis/patch/getList', ADCviews.get_patch_list),
+    path('api/dataAnalysis/tournament/getList', ADCviews.get_tournament_list),
 
 
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
-
     path('api/dataAnalysis/getTournamentMapping/', dataAnalysisViews.get_tournament_mapping),
 ]

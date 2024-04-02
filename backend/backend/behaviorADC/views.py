@@ -98,7 +98,7 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
 
 
 @api_view(['GET'])
-def get_listPatch(request):
+def get_patch_list(request):
     queryResult = BehaviorADC.objects.all()
     patchList : list = list()
 
@@ -110,7 +110,7 @@ def get_listPatch(request):
     return Response(df["patch"].unique())
 
 @api_view(['GET'])
-def get_listTournaments(request):
+def get_tournament_list(request):
     queryResult = BehaviorADC.objects.all()
     tournamentList : list = list()
 

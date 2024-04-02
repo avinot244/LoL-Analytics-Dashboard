@@ -41,7 +41,7 @@ function PlayerOverview(){
 
     useEffect(() => {
         const fetchPatchList = async () => {
-            const result = await fetch(API_URL + "behavior/ADC/patch/getList", {
+            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
                 method: "GET"
             })
             result.json().then(result => {

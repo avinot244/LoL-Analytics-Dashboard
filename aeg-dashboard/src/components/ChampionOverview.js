@@ -30,7 +30,8 @@ function ChampionOverview() {
     const [patchList, setPatchList] = useState([]);
     const [value, setValue] = useState(0)
     const side = ["Blue", "Red", "Both"];
-    const tournamentList = ["Tournament 1", "Tournament 2"];
+    const [tournamentList, setTournamentList] = useState([])
+
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeSide, setActiveSide] = useState('Select a side')
     const [activeTournament, setActiveTournament] = useState("Select a tournament")
@@ -42,7 +43,7 @@ function ChampionOverview() {
 
     useEffect(() => {
         const fetchPatchList = async () => {
-            const result = await fetch(API_URL + "behavior/ADC/patch/getList", {
+            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
                 method: "GET"
             })
             result.json().then(result => {
@@ -50,7 +51,21 @@ function ChampionOverview() {
                 setPatchList(newPatchList);
             })
         }
+
+        const fetchTournamentList = async () => {
+            const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newTournamentList = result;
+                setTournamentList(newTournamentList)
+            })
+        }
+        
+
+
         fetchPatchList();
+        fetchTournamentList();
     }, [])
 
     return(
