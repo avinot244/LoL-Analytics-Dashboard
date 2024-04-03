@@ -113,3 +113,26 @@ def get_tournament_mapping(request):
         json.dump(tournament_mapping, json_file)
     
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_patch_list(request):
+    queryResult = BehaviorADC.objects.all()
+    patchList : list = list()
+
+    for res in queryResult:
+        patch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        patchList.append(patch)
+    df = pd.DataFrame({"patch": patchList})
+
+    return Response(df["patch"].unique())
+
+@api_view(['GET'])
+def get_tournament_list(request):
+    queryResult = BehaviorADC.objects.all()
+    tournamentList : list = list()
+
+    for res in queryResult:
+        tournamentList.append(res.tournament)
+    df = pd.DataFrame({'tournaments': tournamentList})
+    return Response(df['tournaments'].unique())
+
