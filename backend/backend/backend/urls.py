@@ -36,4 +36,6 @@ urlpatterns = [
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
     path('api/dataAnalysis/getTournamentMapping/', dataAnalysisViews.get_tournament_mapping),
+
+    path('api/dataAnalysis/test/', dataAnalysisViews.test_view),
 ]

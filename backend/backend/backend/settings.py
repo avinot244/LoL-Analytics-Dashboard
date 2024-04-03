@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'behaviorADC',
     'dataAnalysis',
+    'behaviorModels',
     'django_extensions',
 ]
 
