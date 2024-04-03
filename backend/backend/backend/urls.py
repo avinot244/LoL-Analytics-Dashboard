@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
     
 
+    # Behavior Models
+
 
 
     path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
