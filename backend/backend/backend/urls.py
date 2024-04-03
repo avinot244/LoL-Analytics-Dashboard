@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from behaviorADC import views as ADCviews
+from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
 
 urlpatterns = [
@@ -26,13 +27,14 @@ urlpatterns = [
     path('api/behavior/ADC/getSummonnerList', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
     re_path(r'^api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch value sin the production database
     path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
-    path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
-    path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
+    path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
+    path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
     
 
     # Behavior Models
+    path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
 
-
+    path('api/behaviorModels/<str:uuid>/<str:role>/getModel/', behaviorModelsViews.get_model),
 
     path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),

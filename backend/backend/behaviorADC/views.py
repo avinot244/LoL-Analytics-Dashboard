@@ -72,7 +72,7 @@ def behaviorADC_stats_latest(request, summonnerName, limit, tournament):
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).all()[:int(limit)]
+    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-seriesId")[:int(limit)]
     serializer = BehaviorADCSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
