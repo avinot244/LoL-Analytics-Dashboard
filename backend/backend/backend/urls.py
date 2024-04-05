@@ -33,9 +33,10 @@ urlpatterns = [
 
     # Behavior Models
     path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
-
+    path('api/behaviorModels/<str:role>/computeModel', behaviorModelsViews.compute_model),
     path('api/behaviorModels/<str:uuid>/<str:role>/getModel/', behaviorModelsViews.get_model),
 
+    # Data Analysis
     path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
@@ -43,3 +44,4 @@ urlpatterns = [
 
     path('api/dataAnalysis/test/', dataAnalysisViews.test_view),
 ]
+

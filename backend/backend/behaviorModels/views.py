@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from dataAnalysis.globals import DATA_PATH, ROLE_LIST
+from dataAnalysis.globals import DATA_PATH, ROLE_LIST, API_URL
 
 from .models import BehaviorModelsMetadata
 from .serializers import BehaviorModelsMetadataSerializer
 
 import pandas as pd
+import json
+import requests
 
 @api_view(['GET'])
 def get_best_model(request, role):
@@ -34,3 +36,34 @@ def get_model(request, uuid, role):
     return Response(serializer.data)
 
 
+@api_view(['POST'])
+def compute_model(request, role):
+    tournamentDict_unicode = request.body.decode("utf-8")
+    tournamentDict : dict = json.loads(tournamentDict_unicode)
+
+    if not(role in ROLE_LIST):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    # Checking if the tournaments in tournamentDict are in our database
+    response = requests.get(
+        API_URL + 'api/dataAnalysis/tournament/getList'
+    )
+
+    tournamentList : list = list()
+    for tournament in response.json():
+        tournamentList.append(tournament)
+    
+    flag : bool = True
+    i : int = 0
+    while (flag and i < len(list(tournamentDict.keys()))):
+        if (tournamentDict[list(tournamentDict.keys())[i]] != 0):
+            flag = flag and (list(tournamentDict.keys())[i] in tournamentList)
+        i += 1
+    
+    if not(flag):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+    return Response(tournamentDict)
