@@ -54,3 +54,9 @@ BLACKLIST = ["2620486", # bugged game
              "2624068",
 
             ] # upcoming match
+
+factorsPerRole : dict = {"Top" : 6,
+                         "Jungle" : 6,
+                         "Mid" : 8,
+                         "ADC" : 4,
+                         "Support" : 7}

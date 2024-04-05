@@ -4,14 +4,23 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from dataAnalysis.globals import DATA_PATH, ROLE_LIST, API_URL
+from dataAnalysis.globals import DATA_PATH, ROLE_LIST, API_URL, factorsPerRole
 
 from .models import BehaviorModelsMetadata
 from .serializers import BehaviorModelsMetadataSerializer
+from .utils import saveToDatabase
 
 import pandas as pd
 import json
 import requests
+import uuid
+
+from joblib import dump
+
+from sklearn.preprocessing import RobustScaler
+from factor_analyzer.factor_analyzer import FactorAnalyzer
+from factor_analyzer.factor_analyzer import calculate_kmo
+
 
 @api_view(['GET'])
 def get_best_model(request, role):
@@ -62,8 +71,49 @@ def compute_model(request, role):
     
     if not(flag):
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Building the dataset on which the factor analysis model will be operated
+    df = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role), sep=";")
 
+    splittedDfList : list[pd.DataFrame] = list()
 
+    for tournament_name, nb_lines in tournamentDict.items():
+        temp : pd.DataFrame = df[df["Tournament"] == tournament_name]
+        splittedDfList.append(temp.sample(nb_lines))
+    
+    wantedDB = pd.concat(splittedDfList)
+    
+    # Building our factor analysis model
+    factors = factorsPerRole[role]
+    header = [column for column in wantedDB.columns[6:]]
+    behavior = wantedDB[header]
 
+    X = RobustScaler().fit_transform(behavior)
+    
+    fa = FactorAnalyzer(n_factors=factors, rotation="varimax")
+    fa = fa.fit(X)
+    
+    print("Model successfully computed")
 
-    return Response(tournamentDict)
+    # Saving the model to our csv database
+    model_id : str = uuid.uuid1()
+    _, kmo = calculate_kmo(X)
+    model_name : str = "PCA_model_{}_{}".format(role, model_id)
+    s = dump(fa, DATA_PATH + "behavior/models/bin/" + model_name + ".joblib")
+    saveToDatabase(model_id, model_name, role, "PCA", kmo, tournamentDict)
+
+    print("Model successfully saved to csv database")
+
+    # Saving the model to our SQLite database
+    behaviorModelsMetadata = BehaviorModelsMetadata(
+        uuid = model_id,
+        modelType = "PCA",
+        modelName = model_name,
+        role = role,
+        kmo = kmo,
+        tournamentDict = str(tournamentDict)
+    )
+    behaviorModelsMetadata.save()
+
+    print("Model successfully saved to SQLite database")
+    return Response(BehaviorModelsMetadataSerializer(behaviorModelsMetadata).data)
