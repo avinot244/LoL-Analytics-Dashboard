@@ -1,15 +1,18 @@
 import SelectComp from "./SelectComp";
 import ChampionIcon from "./ChampionIcon";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { API_URL } from "../constants";
+
 
 function TopMetaPicksPanel(props) {
+    const [patchList, setPatchList] = useState([]);
+    
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeSide, setActiveSide] = useState('Select a side')
     const [activeTournament, setActiveTournament] = useState("Select a tournament")
     const [activeFilter, setActiveFilter] = useState("Select a filter")
 
     const {value, panelIndex} = props
-    const patchList = [1.4, 1.14];
     const side = ["Blue", "Red", "Both"];
     const tournamentList = ["Tournament 1", "Tournament 2"];
     const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
@@ -19,6 +22,20 @@ function TopMetaPicksPanel(props) {
     const championListMidlane = ["Azir", "Tristana", "Hwei", "TwistedFate", "Ahri", "Taliyah"];
     const championListADC = ["Smolder", "Varus", "Senna", "Kalista", "Ezreal", "Kaisa"];
     const championListSupport = ["Nautilus", "Leona", "Thresh", "Rakan", "Alistar", "Blitzcrank"]
+
+    useEffect(() => {
+        const fetchPatchList = async () => {
+            const result = await fetch(API_URL + "behavior/ADC/patch/getList", {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newPatchList = result;
+                setPatchList(newPatchList);
+            })
+        }
+        fetchPatchList();
+    }, [])
+
     return (
         <div
             role='tabpanbel'

@@ -1,12 +1,17 @@
 import NavBarComp from "./NavbarComp"
 import "../styles/PlayerOverview.css"
 import SelectComp from "./SelectComp";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChampionIcon from "./ChampionIcon";
 import SearchComp from "./SearchComp"
+import { API_URL, roleList} from "../constants";
+
+import Button from "@mui/material/Button"
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function PlayerOverview(){
-    const patchList = [1.4, 1.14, 1.3];
+    const [patchList, setPatchList] = useState([]);
+    
     const weekList = ["Week 1", "Week 2", "Week 3"]
 
     const championList = ["Hwei", "Thresh", "Leona", "Maokai", "Senna", "Nautilus"]
@@ -14,6 +19,7 @@ function PlayerOverview(){
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeWeek,  setActiveWeek] = useState('Select a week')
     const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
+    const [activeRole, setActiveRole] = useState('Select a role')
 
     const playerList = [
 		{value: 'aeg_agresivoo', label: "AEG Agresivoo"},
@@ -32,6 +38,21 @@ function PlayerOverview(){
     const k15 = 4
     const d15 = 1
     const a15 = 5
+
+    useEffect(() => {
+        const fetchPatchList = async () => {
+            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newPatchList = result;
+                setPatchList(newPatchList);
+            })
+        }
+        fetchPatchList();
+    }, [])
+
+
 
     return(
         
@@ -52,6 +73,12 @@ function PlayerOverview(){
                             defaultValue={"-- Patch --"}
                             setActive={setActivePatch}/>
                     </li>
+                    <li>
+                        <SelectComp
+                            elementList={roleList}
+                            defaultValue={"-- Role --"}
+                            setActive={setActiveRole}/>
+                    </li>
                 </ul>
             </div>
 
@@ -62,8 +89,17 @@ function PlayerOverview(){
                     setSelectedElement={setSelectedPlayer}
                     elementList={playerList}
                 />
-                <p>Selected player :</p>
-                <p>{selectedPlayer}</p>
+                <Button 
+                    variant="contained" 
+                    endIcon={<ArrowForwardIosIcon />}
+                    onClick={() => {
+                        alert(`Analyzing player ${selectedPlayer} during week ${activeWeek} at role ${activeRole} during patch ${activePatch}`)
+                    }}    
+                >
+                
+                    Analyze
+                
+                </Button>
             </div>
             
 
