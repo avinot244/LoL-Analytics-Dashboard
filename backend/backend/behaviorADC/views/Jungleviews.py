@@ -4,45 +4,45 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from .models import BehaviorTop
-from .serializers import *
-from .globals import API_URL
-from .utils import getDataBase, compute
+from behaviorADC.models import BehaviorJungle
+from behaviorADC.serializers import *
+from behaviorADC.globals import API_URL
+from behaviorADC.utils import getDataBase, compute
 
 import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorTop_get_player_list(request):
-    allObjects = BehaviorTop.objects.all()
+def behaviorJungle_get_player_list(request):
+    allObjects = BehaviorJungle.objects.all()
     summonnerNameList : list = list()
 
-    for TopObject in allObjects:
-        summonnerNameList.append(TopObject.summonnerName)
+    for JungleObject in allObjects:
+        summonnerNameList.append(JungleObject.summonnerName)
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
  
 @api_view(['PATCH'])
-def behaviorTop_updatePatch(request):
-    csv_file_path = "./databases/behavior/behavior/behavior_Top.csv"
+def behaviorJungle_updatePatch(request):
+    csv_file_path = "./databases/behavior/behavior/behavior_Jungle.csv"
     df = pd.read_csv(csv_file_path, sep=";")
 
     for _, row in df.iterrows():
-        queryResult = BehaviorTop.objects.filter(seriesId__exact=row["SeriesId"], summonnerName__exact=row["SummonnerName"], matchId__exact=row["MatchId"])
+        queryResult = BehaviorJungle.objects.filter(seriesId__exact=row["SeriesId"], summonnerName__exact=row["SummonnerName"], matchId__exact=row["MatchId"])
         print(queryResult)
 
-        data = BehaviorTop.objects.get(seriesId=row["SeriesId"], summonnerName=row["SummonnerName"], matchId=row["MatchId"])
+        data = BehaviorJungle.objects.get(seriesId=row["SeriesId"], summonnerName=row["SummonnerName"], matchId=row["MatchId"])
         data.delete()
         data.patch = row["Patch"]
         data.save()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-def behaviorTop_stats(request, summonnerName):
+def behaviorJungle_stats(request, summonnerName):
 
     summonnerNameList : list = list()
-    allObjects = BehaviorTop.objects.all()
+    allObjects = BehaviorJungle.objects.all()
     for res in allObjects:
         summonnerNameList.append(res.summonnerName)
 
@@ -52,14 +52,14 @@ def behaviorTop_stats(request, summonnerName):
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName)
-    serializer = BehaviorTopSerializer(queryResult,  context={"request": request}, many=True)
+    queryResult = BehaviorJungle.objects.filter(summonnerName__exact=summonnerName)
+    serializer = BehaviorJungleSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorTop_stats_latest(request, summonnerName, limit, tournament):
+def behaviorJungle_stats_latest(request, summonnerName, limit, tournament):
     summonnerNameList : list = list()
-    allObjects = BehaviorTop.objects.all()
+    allObjects = BehaviorJungle.objects.all()
     for res in allObjects:
         summonnerNameList.append(res.summonnerName)
 
@@ -70,14 +70,14 @@ def behaviorTop_stats_latest(request, summonnerName, limit, tournament):
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-seriesId")[:int(limit)]
-    serializer = BehaviorTopSerializer(queryResult,  context={"request": request}, many=True)
+    queryResult = BehaviorJungle.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-seriesId")[:int(limit)]
+    serializer = BehaviorJungleSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorTop_stats_patch(request, summonnerName, patch, tournament):
+def behaviorJungle_stats_patch(request, summonnerName, patch, tournament):
     #Getting all of the unique patches
-    queryListPatch = BehaviorTop.objects.all()
+    queryListPatch = BehaviorJungle.objects.all()
     patchList : list = list()
 
     for res in queryListPatch:
@@ -89,12 +89,12 @@ def behaviorTop_stats_patch(request, summonnerName, patch, tournament):
     if not(patch in dfPatchUnique.tolist()):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, patch__contains=patch, tournament__exact=tournament)
-    serializer = BehaviorTopSerializer(queryResult, context={"request": request}, many=True)
+    queryResult = BehaviorJungle.objects.filter(summonnerName__exact=summonnerName, patch__contains=patch, tournament__exact=tournament)
+    serializer = BehaviorJungleSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorTop_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
+def behaviorJungle_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -113,13 +113,13 @@ def behaviorTop_behavior_player(request, summonnerName, uuid, wantedTournament, 
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    wantedDB : pd.DataFrame = getDataBase("Top", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="Top")
+    wantedDB : pd.DataFrame = getDataBase("Jungle", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="Jungle")
 
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
-def behaviorTop_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
+def behaviorJungle_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -141,14 +141,14 @@ def behaviorTop_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
     
     # Getting the db we want given a player 
     response = requests.get(
-        API_URL + "api/behavior/Top/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
+        API_URL + "api/behavior/Jungle/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Top")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Jungle")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
-def behaviorTop_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
+def behaviorJungle_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -170,8 +170,8 @@ def behaviorTop_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     
     # Getting the db we want given a player and the patch
     response = requests.get(
-        API_URL + "api/behavior/Top/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+        API_URL + "api/behavior/Jungle/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Top")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Jungle")
     return Response(transformed_wantedDB_scaled)

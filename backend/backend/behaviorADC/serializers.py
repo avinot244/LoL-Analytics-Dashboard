@@ -15,4 +15,4 @@ class BehaviorTopSerializer(serializers.ModelSerializer):
 class BehaviorJungleSerializer(serializers.ModelSerializer):
     class Meta:
         model = BehaviorJungle
-        fields = ("pk", "date", "tournament", "matchId", "seriesId", "patch", "summonnerName", "xpd15", "gd15", "kills", "deaths", "assists", "kp" ,"dpm", "topLanePresence", "midLanePresence", "botLanePresence", "jungleAllyTopPresence", "jungleAllyBotPresence", "jungleEnemyTopPresence", "jungleEnemeyBotPresence", "riverBotPresence", "riverTopPresence")
+        fields = ("pk", "date", "tournament", "matchId", "seriesId", "patch", "summonnerName", "xpd15", "gd15", "kills", "deaths", "assists", "kp" ,"dpm", "topLanePresence", "midLanePresence", "botLanePresence", "jungleAllyTopPresence", "jungleAllyBotPresence", "jungleEnemyTopPresence", "jungleEnemyBotPresence", "riverBotPresence", "riverTopPresence")

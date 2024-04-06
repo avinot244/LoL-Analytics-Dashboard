@@ -4,45 +4,45 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from .models import BehaviorADC
-from .serializers import *
-from .globals import API_URL
-from .utils import getDataBase, compute
+from behaviorADC.models import BehaviorTop
+from behaviorADC.serializers import *
+from behaviorADC.globals import API_URL
+from behaviorADC.utils import getDataBase, compute
 
 import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorADC_get_player_list(request):
-    allObjects = BehaviorADC.objects.all()
+def behaviorTop_get_player_list(request):
+    allObjects = BehaviorTop.objects.all()
     summonnerNameList : list = list()
 
-    for ADCObject in allObjects:
-        summonnerNameList.append(ADCObject.summonnerName)
+    for TopObject in allObjects:
+        summonnerNameList.append(TopObject.summonnerName)
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
  
 @api_view(['PATCH'])
-def behaviorADC_updatePatch(request):
-    csv_file_path = "./databases/behavior/behavior/behavior_ADC.csv"
+def behaviorTop_updatePatch(request):
+    csv_file_path = "./databases/behavior/behavior/behavior_Top.csv"
     df = pd.read_csv(csv_file_path, sep=";")
 
     for _, row in df.iterrows():
-        queryResult = BehaviorADC.objects.filter(seriesId__exact=row["SeriesId"], summonnerName__exact=row["SummonnerName"], matchId__exact=row["MatchId"])
+        queryResult = BehaviorTop.objects.filter(seriesId__exact=row["SeriesId"], summonnerName__exact=row["SummonnerName"], matchId__exact=row["MatchId"])
         print(queryResult)
 
-        data = BehaviorADC.objects.get(seriesId=row["SeriesId"], summonnerName=row["SummonnerName"], matchId=row["MatchId"])
+        data = BehaviorTop.objects.get(seriesId=row["SeriesId"], summonnerName=row["SummonnerName"], matchId=row["MatchId"])
         data.delete()
         data.patch = row["Patch"]
         data.save()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-def behaviorADC_stats(request, summonnerName):
+def behaviorTop_stats(request, summonnerName):
 
     summonnerNameList : list = list()
-    allObjects = BehaviorADC.objects.all()
+    allObjects = BehaviorTop.objects.all()
     for res in allObjects:
         summonnerNameList.append(res.summonnerName)
 
@@ -52,31 +52,32 @@ def behaviorADC_stats(request, summonnerName):
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName)
-    serializer = BehaviorADCSerializer(queryResult,  context={"request": request}, many=True)
+    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName)
+    serializer = BehaviorTopSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorADC_stats_latest(request, summonnerName, limit, tournament):
+def behaviorTop_stats_latest(request, summonnerName, limit, tournament):
     summonnerNameList : list = list()
-    allObjects = BehaviorADC.objects.all()
+    allObjects = BehaviorTop.objects.all()
     for res in allObjects:
         summonnerNameList.append(res.summonnerName)
 
     df = pd.DataFrame({"summonnerName": summonnerNameList})
 
+    print(df["summonnerName"].unique().tolist())
 
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-seriesId")[:int(limit)]
-    serializer = BehaviorADCSerializer(queryResult,  context={"request": request}, many=True)
+    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-seriesId")[:int(limit)]
+    serializer = BehaviorTopSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
+def behaviorTop_stats_patch(request, summonnerName, patch, tournament):
     #Getting all of the unique patches
-    queryListPatch = BehaviorADC.objects.all()
+    queryListPatch = BehaviorTop.objects.all()
     patchList : list = list()
 
     for res in queryListPatch:
@@ -88,12 +89,12 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     if not(patch in dfPatchUnique.tolist()):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, patch__contains=patch, tournament__exact=tournament)
-    serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
+    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, patch__contains=patch, tournament__exact=tournament)
+    serializer = BehaviorTopSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
+def behaviorTop_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -112,13 +113,13 @@ def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, 
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    wantedDB : pd.DataFrame = getDataBase("ADC", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="ADC")
+    wantedDB : pd.DataFrame = getDataBase("Top", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="Top")
 
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
-def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
+def behaviorTop_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -140,14 +141,14 @@ def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
     
     # Getting the db we want given a player 
     response = requests.get(
-        API_URL + "api/behavior/ADC/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
+        API_URL + "api/behavior/Top/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Top")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
-def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
+def behaviorTop_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -169,9 +170,8 @@ def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     
     # Getting the db we want given a player and the patch
     response = requests.get(
-        API_URL + "api/behavior/ADC/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+        API_URL + "api/behavior/Top/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Top")
     return Response(transformed_wantedDB_scaled)
-

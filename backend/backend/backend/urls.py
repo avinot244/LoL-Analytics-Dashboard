@@ -16,8 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from behaviorADC import ADCviews
-from behaviorADC import Topviews
+from behaviorADC.views import ADCviews
+from behaviorADC.views import Topviews
+from behaviorADC.views import Jungleviews
 from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
 
@@ -34,9 +35,15 @@ urlpatterns = [
     path('api/behavior/Top/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/Top/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
 
-    # path('api/behavior/Top/getSummonnerList',),
-
     # Behavior Jungle
+    path('api/behavior/Jungle/getSummonnerList', Jungleviews.behaviorJungle_get_player_list), # Getting the list of unique players
+    path('api/behavior/Jungle/patch/update', Jungleviews.behaviorJungle_updatePatch), # Updating patch values in the production database
+    path('api/behavior/Jungle/stats/<str:summonnerName>', Jungleviews.behaviorJungle_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Jungle/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Jungleviews.behaviorJungle_stats_latest), # Getting last limit stats of a given summonnerName
+    path('api/behavior/Jungle/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Jungleviews.behaviorJungle_stats_patch), # Getting patch stats of a given summonnerName
+    path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_player), # Computing behavior analysis given a model and a player
+    path('api/behavior/Jungle/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_latest), # Computing latest behavior analysis given a model and a player
+    path('api/behavior/Jungle/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
 
     # Behavior Mid
     
