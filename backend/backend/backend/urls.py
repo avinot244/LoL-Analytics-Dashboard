@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from behaviorADC.views import ADCviews
+
 from behaviorADC.views import Topviews
 from behaviorADC.views import Jungleviews
+from behaviorADC.views import Midviews
+from behaviorADC.views import ADCviews
 from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
 
@@ -46,6 +48,14 @@ urlpatterns = [
     path('api/behavior/Jungle/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
 
     # Behavior Mid
+    path('api/behavior/Mid/getSummonnerList', Midviews.behaviorMid_get_player_list), # Getting the list of unique players
+    path('api/behavior/Mid/patch/update', Midviews.behaviorMid_updatePatch), # Updating patch values in the production database
+    path('api/behavior/Mid/stats/<str:summonnerName>', Midviews.behaviorMid_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Mid/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Midviews.behaviorMid_stats_latest), # Getting last limit stats of a given summonnerName
+    path('api/behavior/Mid/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Midviews.behaviorMid_stats_patch), # Getting patch stats of a given summonnerName
+    path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_player), # Computing behavior analysis given a model and a player
+    path('api/behavior/Mid/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_latest), # Computing latest behavior analysis given a model and a player
+    path('api/behavior/Mid/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     
     # Behavior ADC
     path('api/behavior/ADC/getSummonnerList', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
