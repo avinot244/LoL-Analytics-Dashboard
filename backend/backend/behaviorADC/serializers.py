@@ -26,4 +26,4 @@ class BehaviorADCSerializer(serializers.ModelSerializer):
 class BehaviorSupportSerializer(serializers.ModelSerializer):
     class Meta:
         model = BehaviorSupport
-        fields = ("pk", "date", "matchId", "seriesId", "patch", "summonnerName", "xpd15", "gd15", "deaths", "kp", "wardPlaced", "wardKilled", "dpm", "jungleProximity", "topLanePresence", "midLanePresence", "botLanePresence", "jungleAllyTopPresence", "jungleAllyBotPresence", "jungleEnemyTopPresence", "jungleEnemyBotPresence", "riverBotPresence", "riverTopPresence")
+        fields = ("pk", "date", "tournament", "matchId", "seriesId", "patch", "summonnerName", "xpd15", "gd15", "deaths", "kp", "wardPlaced", "wardKilled", "dpm", "jungleProximity", "topLanePresence", "midLanePresence", "botLanePresence", "jungleAllyTopPresence", "jungleAllyBotPresence", "jungleEnemyTopPresence", "jungleEnemyBotPresence", "riverBotPresence", "riverTopPresence")
