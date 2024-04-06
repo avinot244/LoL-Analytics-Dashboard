@@ -8,6 +8,7 @@ import { API_URL, roleList} from "../constants";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import SearchIcon from '@mui/icons-material/Search';
 
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
@@ -78,6 +79,17 @@ function PlayerOverview(){
                             elementList={roleList}
                             defaultValue={"-- Role --"}
                             setActive={setActiveRole}/>
+                    </li>
+                    <li>
+                        <Button
+                            variant="contained"
+                            endIcon={<SearchIcon />}
+                            onClick={() => {
+                                alert(`Fetching for players during ${activeWeek} in ${activePatch} patch in ${activeRole} `)
+                            }}
+                        >
+                            Search
+                        </Button>
                     </li>
                 </ul>
             </div>
