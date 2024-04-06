@@ -78,6 +78,7 @@ urlpatterns = [
     path('api/behavior/Support/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/Support/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     path('api/behavior/Support/deleteDuplicates', Supportviews.behaviorSupport_deleteDuplicates),
+    
     # Behavior Models
     path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
     path('api/behaviorModels/<str:role>/computeModel', behaviorModelsViews.compute_model),

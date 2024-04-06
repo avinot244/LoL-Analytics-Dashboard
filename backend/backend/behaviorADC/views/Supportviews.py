@@ -176,7 +176,6 @@ def behaviorSupport_behavior_patch(request, summonnerName, patch, uuid, wantedTo
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Support")
     return Response(transformed_wantedDB_scaled)
 
-
 @api_view(['DELETE'])
 def behaviorSupport_deleteDuplicates(request):
     csv_file_path = "./databases/behavior/behavior/behavior_Support.csv"
