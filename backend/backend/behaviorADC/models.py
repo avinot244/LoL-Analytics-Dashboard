@@ -100,4 +100,28 @@ class BehaviorADC(models.Model):
     
     def __str__(self) -> str:
         return "(" + self.date + ", " + self.tournament + ", " + self.matchId + ", " + str(self.seriesId) + ", " + self.patch + ", " + self.summonnerName + ")"
-    
+
+class BehaviorSupport(models.Model):
+    date = models.CharField("Date", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    matchId = models.CharField("MatchId", max_length=240)
+    seriesId = models.IntegerField("SeriesId")
+    patch = models.CharField("Patch", max_length=240)
+    summonnerName = models.CharField("SummonnerName", max_length=240)
+    xpd15 = models.IntegerField("XPD@15")
+    gd15 = models.IntegerField("GD@15")
+    deaths = models.IntegerField("Deaths")
+    kp = models.FloatField("KP%")
+    wardPlaced = models.IntegerField("WardPlaced")
+    wardKilled = models.IntegerField("WardKilled")
+    dpm = models.FloatField("Damage/Min")
+    jungleProximity = models.FloatField("JungleProximity")
+    topLanePresence = models.FloatField("topLanePresence")
+    midLanePresence = models.FloatField("midLanePresence")
+    botLanePresence = models.FloatField("botLanePresence")
+    jungleAllyTopPresence = models.FloatField("jungleAllyTopPresence")
+    jungleAllyBotPresence = models.FloatField("jungleAllyBotPresence")
+    jungleEnemyTopPresence = models.FloatField("jungleEnemyTopPresence")
+    jungleEnemyBotPresence = models.FloatField("jungleEnemyBotPresence")
+    riverBotPresence = models.FloatField("riverBotPresence")
+    riverTopPresence = models.FloatField("riverTopPresence")
