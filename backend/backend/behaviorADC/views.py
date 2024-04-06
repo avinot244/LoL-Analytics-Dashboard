@@ -6,17 +6,10 @@ from rest_framework import status
 
 from .models import BehaviorADC
 from .serializers import *
-from .globals import API_URL, DATA_PATH
-from .utils import getDataBase, project, compute
+from .globals import API_URL
+from .utils import getDataBase, compute
 
-from behaviorModels.models import BehaviorModelsMetadata
-
-from sklearn.preprocessing import StandardScaler
-from factor_analyzer.factor_analyzer import FactorAnalyzer
-
-import os
 import pandas as pd
-import json
 import requests
 
 @api_view(['GET'])
