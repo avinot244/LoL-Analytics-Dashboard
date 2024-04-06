@@ -47,3 +47,30 @@ class BehaviorTop(models.Model):
     jungleAllyTopPresence = models.FloatField("jungleAllyTopPresence")
     jungleEnemyTopPresence = models.FloatField("JungleEnemyTopPresence")
     riverTopPresence = models.FloatField("riverTopPresence")
+
+
+class BehaviorJungle(models.Model):
+    date = models.CharField("Date", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    matchId = models.CharField("MatchId", max_length=240)
+    seriesId = models.IntegerField("SeriesId")
+    patch = models.CharField("Patch", max_length=240)
+    summonnerName = models.CharField("SummonnerName", max_length=240)
+    xpd15 = models.IntegerField("XPD@15")
+    gd15 = models.IntegerField("GD@15")
+    kills = models.IntegerField("Kills")
+    deaths = models.IntegerField("Deaths")
+    assists = models.IntegerField("Assists")
+    kp = models.FloatField("KP%")
+    dpm = models.FloatField("Damage/Min")
+    topLanePresence = models.FloatField("topLanePresence")
+    midLanePresence = models.FloatField("midLanePresence")
+    botLanePresence = models.FloatField("botLanePresence")
+    jungleAllyTopPresence = models.FloatField("jungleAllyTopPresence")
+    jungleAllyBotPresence = models.FloatField("jungleAllyBotPresence")
+    jungleEnemyTopPresence = models.FloatField("jungleEnemyTopPresence")
+    jungleEnemyBotPresence = models.FloatField("jungleEnemyBotPresence")
+    riverBotPresence = models.FloatField("riverBotPresence")
+    riverTopPresence = models.FloatField("riverTopPresence")
+
+
