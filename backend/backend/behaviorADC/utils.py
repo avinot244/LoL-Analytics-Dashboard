@@ -6,11 +6,11 @@ from factor_analyzer.factor_analyzer import FactorAnalyzer
 from sklearn.preprocessing import StandardScaler
 from joblib import load
 
-def getDataBase(role : str, summonnerName : str, wantedTournamentList : list) -> pd.DataFrame:
+def getDataBase(role : str, summonnerName : str, wantedTournament : str) -> pd.DataFrame:
     df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role), sep=";")
 
     wantedDB : pd.DataFrame = df[df["SummonnerName"].isin([summonnerName])
-                                 & df["Tournament"].isin(wantedTournamentList)]
+                                 & df["Tournament"].isin([wantedTournament])]
 
     return wantedDB
 

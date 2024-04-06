@@ -104,11 +104,11 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
 
 
 @api_view(['GET'])
-def behaviorADC_behavior_player(request, summonnerName, uuid):
-    # Getting the wanted tournament list from body
-    tournamentDict_unicode = request.body.decode("utf-8")
-    tournamentDict : dict = json.loads(tournamentDict_unicode)
-
+def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
+    tournamentDict = {
+        "wanted" : wantedTournament,
+        "comparison" : comparisonTournament,
+    }
     # Checking if the tournaments in tournamentDict are in our database
     response = requests.get(
         API_URL + 'api/dataAnalysis/tournament/getList'
@@ -130,10 +130,12 @@ def behaviorADC_behavior_player(request, summonnerName, uuid):
 
 
 @api_view(['GET'])
-def behaviorADC_behavior_latest(request, summonnerName, limit, uuid):
+def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     # Getting the wanted tournament list from body
-    tournamentDict_unicode = request.body.decode("utf-8")
-    tournamentDict : dict = json.loads(tournamentDict_unicode)
+    tournamentDict = {
+        "wanted" : wantedTournament,
+        "comparison" : comparisonTournament,
+    }
 
     # Checking if the tournament in tournamentDict are in our database
     response = requests.get(
