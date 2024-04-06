@@ -12,6 +12,31 @@ from .utils import getDataBase, compute
 import pandas as pd
 import requests
 
+
+#########################
+#        FOR TOP        #
+#########################
+
+#TODO: views for Top endpoints
+
+
+########################
+#      FOR JUNGLE      #
+########################
+
+#TODO: views for Jungle endpoints
+
+
+#########################
+#        FOR MID        #
+#########################
+
+#TODO: views for Mid endpoints
+
+
+#########################
+#        FOR ADC        #
+#########################
 @api_view(['GET'])
 def behaviorADC_get_player_list(request):
     allObjects = BehaviorADC.objects.all()
@@ -22,7 +47,7 @@ def behaviorADC_get_player_list(request):
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
-
+ 
 @api_view(['PATCH'])
 def behaviorADC_updatePatch(request):
     csv_file_path = "./databases/behavior/behavior/behavior_ADC.csv"
@@ -37,7 +62,6 @@ def behaviorADC_updatePatch(request):
         data.patch = row["Patch"]
         data.save()
     return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 @api_view(['GET'])
 def behaviorADC_stats(request, summonnerName):
@@ -56,7 +80,6 @@ def behaviorADC_stats(request, summonnerName):
     queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName)
     serializer = BehaviorADCSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 def behaviorADC_stats_latest(request, summonnerName, limit, tournament):
@@ -94,8 +117,6 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
-
-
 @api_view(['GET'])
 def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
@@ -121,10 +142,8 @@ def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, 
 
     return Response(transformed_wantedDB_scaled)
 
-
 @api_view(['GET'])
 def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
-    # Getting the wanted tournament list from body
     tournamentDict = {
         "wanted" : wantedTournament,
         "comparison" : comparisonTournament,
@@ -151,3 +170,39 @@ def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
     wantedDB = pd.DataFrame(response.json())
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7)
     return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
+    tournamentDict = {
+        "wanted" : wantedTournament,
+        "comparison" : comparisonTournament,
+    }
+
+    # Checking if the tournament in tournamentDict are in our database
+    response = requests.get(
+        API_URL + 'api/dataAnalysis/tournament/getList'
+    )
+    tournamentListDB : list = list()
+    for tournament in response.json():
+        tournamentListDB.append(tournament)
+    
+    for key in tournamentDict.keys():
+        flag : bool = tournamentDict[key] in tournamentListDB
+    
+        if not(flag):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Getting the db we want given a player and the patch
+    response = requests.get(
+        API_URL + "api/behavior/ADC/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+    )
+    wantedDB = pd.DataFrame(response.json())
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7)
+    return Response(transformed_wantedDB_scaled)
+
+
+#########################
+#      FOR SUPPORT      #
+#########################
+
+#TODO: views for Support endpoints
