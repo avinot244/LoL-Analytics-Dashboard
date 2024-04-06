@@ -32,7 +32,6 @@ for index, row in df.iterrows():
         riverTopPresence = row["riverTopPresence"],
     )
 
-
     behaviorSupport.save()
 
 print("CSV data has been loaded into the Django database.")

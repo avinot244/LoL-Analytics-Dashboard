@@ -21,6 +21,7 @@ from behaviorADC.views import Topviews
 from behaviorADC.views import Jungleviews
 from behaviorADC.views import Midviews
 from behaviorADC.views import ADCviews
+from behaviorADC.views import Supportviews
 from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
 
@@ -68,7 +69,15 @@ urlpatterns = [
     path('api/behavior/ADC/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
 
     # Behavior Support
-
+    path('api/behavior/Support/getSummonnerList', Supportviews.behaviorSupport_get_player_list), # Getting the list of unique players
+    path('api/behavior/Support/patch/update', Supportviews.behaviorSupport_updatePatch), # Updating patch values in the production database
+    path('api/behavior/Support/stats/<str:summonnerName>', Supportviews.behaviorSupport_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Support/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Supportviews.behaviorSupport_stats_latest), # Getting last limit stats of a given summonnerName
+    path('api/behavior/Support/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Supportviews.behaviorSupport_stats_patch), # Getting patch stats of a given summonnerName
+    path('api/behavior/Support/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_player), # Computing behavior analysis given a model and a player
+    path('api/behavior/Support/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_latest), # Computing latest behavior analysis given a model and a player
+    path('api/behavior/Support/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
+    path('api/behavior/Support/deleteDuplicates', Supportviews.behaviorSupport_deleteDuplicates),
     # Behavior Models
     path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
     path('api/behaviorModels/<str:role>/computeModel', behaviorModelsViews.compute_model),
