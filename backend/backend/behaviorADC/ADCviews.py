@@ -12,31 +12,6 @@ from .utils import getDataBase, compute
 import pandas as pd
 import requests
 
-
-#########################
-#        FOR TOP        #
-#########################
-
-#TODO: views for Top endpoints
-
-
-########################
-#      FOR JUNGLE      #
-########################
-
-#TODO: views for Jungle endpoints
-
-
-#########################
-#        FOR MID        #
-#########################
-
-#TODO: views for Mid endpoints
-
-
-#########################
-#        FOR ADC        #
-#########################
 @api_view(['GET'])
 def behaviorADC_get_player_list(request):
     allObjects = BehaviorADC.objects.all()
@@ -138,7 +113,7 @@ def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, 
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     wantedDB : pd.DataFrame = getDataBase("ADC", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="ADC")
 
     return Response(transformed_wantedDB_scaled)
 
@@ -168,7 +143,7 @@ def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
         API_URL + "api/behavior/ADC/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -197,12 +172,6 @@ def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
         API_URL + "api/behavior/ADC/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
-
-#########################
-#      FOR SUPPORT      #
-#########################
-
-#TODO: views for Support endpoints

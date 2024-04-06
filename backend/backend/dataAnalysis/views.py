@@ -135,10 +135,3 @@ def get_tournament_list(request):
         tournamentList.append(res.tournament)
     df = pd.DataFrame({'tournaments': tournamentList})
     return Response(df['tournaments'].unique())
-
-@api_view(['GET'])
-def test_view(request):
-    body_unicode = request.body.decode('utf-8')
-    body_data = json.loads(body_unicode)
-
-    return Response(body_data)

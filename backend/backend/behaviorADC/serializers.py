@@ -10,4 +10,4 @@ class BehaviorADCSerializer(serializers.ModelSerializer):
 class BehaviorTopSerializer(serializers.ModelSerializer):
     class Meta:
         model = BehaviorTop
-        fields = ("pk", "Date", "Tournament", "MatchId", "SeriesId", "Patch", "SummonnerName", "XPD@15", "GD@15", "CS/Min", "Kills", "Deaths", "Assists", "KP%", "WardPlaced", "Damage/Min", "TotalDamageDealtToBuilding", "TotalDamageDealtToObjectives", "JungleProximity", "topLanePresence", "jungleAllyTopPresence", "jungleEnemyTopPresence", "riverTopPresence")
+        fields = ("pk", "date", "tournament", "matchId", "seriesId", "patch", "summonnerName", "xpd15", "gd15", "csMin", "kills", "deaths", "assists", "kp", "wardPlaced", "dpm", "totalDamageDealtToBuilding", "totalDamageDealtToObjectives", "jungleProximity", "topLanePresence", "jungleAllyTopPresence", "jungleEnemyTopPresence", "riverTopPresence")

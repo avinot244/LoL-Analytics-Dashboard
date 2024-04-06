@@ -42,16 +42,16 @@ def scaleDatabase(database : pd.DataFrame, scaler, header_offset : int):
     database_scaled = pd.DataFrame(data, columns = database.columns)
     return database_scaled
 
-def compute(wantedDB : pd.DataFrame, uuid : str, tournamentDict : dict, header_offset : int) -> pd.DataFrame:
+def compute(wantedDB : pd.DataFrame, uuid : str, tournamentDict : dict, header_offset : int, role : str) -> pd.DataFrame:
     # Getting the fa model
-    behaviorModelsMetadata = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, modelType__exact="PCA", role__exact="ADC")
+    behaviorModelsMetadata = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, modelType__exact="PCA", role__exact=role)
     fa_model : FactorAnalyzer = getFAModel(behaviorModelsMetadata)
-    transformed_wantedDB : pd.DataFrame = project(wantedDB, fa_model, "ADC", header_offset) # Transform the wanted database
+    transformed_wantedDB : pd.DataFrame = project(wantedDB, fa_model, role, header_offset) # Transform the wanted database
     
     # Scaling the wantedDB
     scaler : StandardScaler = StandardScaler()
-    df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_ADC.csv", sep=";")
-    transformed_scaled_df : pd.DataFrame = project(df, fa_model, "ADC", 6)
+    df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role), sep=";")
+    transformed_scaled_df : pd.DataFrame = project(df, fa_model, role, 6)
     database_for_scaler = transformed_scaled_df[transformed_scaled_df["Tournament"].isin([tournamentDict["comparison"]])]
     scaler.fit(database_for_scaler[database_for_scaler.columns[6:]])
 
