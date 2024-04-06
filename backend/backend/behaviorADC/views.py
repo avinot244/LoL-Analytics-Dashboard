@@ -6,12 +6,18 @@ from rest_framework import status
 
 from .models import BehaviorADC
 from .serializers import *
-from .globals import BEHAVIOR_ADC_HEADER, DATA_PATH, BLACKLIST
+from .globals import API_URL, DATA_PATH
+from .utils import getDataBase, getFAModel, project, scaleDatabase
+
+from behaviorModels.models import BehaviorModelsMetadata
+
+from sklearn.preprocessing import StandardScaler
+from factor_analyzer.factor_analyzer import FactorAnalyzer
 
 import os
 import pandas as pd
 import json
-import re
+import requests
 
 @api_view(['GET'])
 def behaviorADC_get_player_list(request):
@@ -96,6 +102,54 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     return Response(serializer.data)
 
 
+
+@api_view(['GET'])
+def behaviorADC_behavior_player(request, summonnerName, uuid):
+    # Getting the wanted tournament list from body
+    tournamentDict_unicode = request.body.decode("utf-8")
+    tournamentDict : dict = json.loads(tournamentDict_unicode)
+
+    # Checking if the tournaments in tournamentDict are in our database
+    response = requests.get(
+        API_URL + 'api/dataAnalysis/tournament/getList'
+    )
+    tournamentListDB : list = list()
+    for tournament in response.json():
+        tournamentListDB.append(tournament)
+    
+    
+    for key in tournamentDict.keys():
+        flag : bool = True
+        i : int = 0
+        while (flag and i < len(tournamentDict[key])):
+            
+            flag = flag and (tournamentDict[key][i] in tournamentListDB)
+            i += 1
+    
+        if not(flag):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    wantedDB : pd.DataFrame = getDataBase("ADC", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
+    
+    # Getting the fa model
+    behaviorModelsMetadata = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, modelType__exact="PCA", role__exact="ADC")
+    fa_model : FactorAnalyzer = getFAModel(behaviorModelsMetadata)
+    
+    transformed_wantedDB : pd.DataFrame = project(wantedDB, fa_model, "ADC") # Transform the wanted database
+    
+    # Scaling the wantedDB
+    scaler : StandardScaler = StandardScaler()
+    df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_ADC.csv", sep=";")
+    transformed_scaled_df : pd.DataFrame = project(df, fa_model, "ADC")
+    database_for_scaler = transformed_scaled_df[transformed_scaled_df["Tournament"].isin(tournamentDict["comparison"])]
+    scaler.fit(database_for_scaler[database_for_scaler.columns[6:]])
+
+    # Scaling the transformed_wantedDB with the same scaler used when scaling the transformed database 
+    # used when building the FactorAnalysis model
+    transformed_wantedDB_scaled : pd.DataFrame = scaleDatabase(transformed_wantedDB, scaler)
+    
+
+    return Response(transformed_wantedDB_scaled)
 
 
 
