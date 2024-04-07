@@ -1,7 +1,5 @@
 from django.db import models
 
-# "Date", "Patch", "SeriesId", "Winner", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"
-
 class DraftPickOrder(models.Model):
     date = models.CharField("Date", max_length=240)
     patch = models.CharField("Patch", max_length=240)
