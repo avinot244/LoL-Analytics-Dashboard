@@ -2,6 +2,7 @@ from django.db import models
 
 class DraftPickOrder(models.Model):
     date = models.CharField("Date", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
     patch = models.CharField("Patch", max_length=240)
     seriesId = models.IntegerField("SeriesId")
     winner = models.IntegerField("Winner")
@@ -33,6 +34,7 @@ class DraftPickOrder(models.Model):
 
 class DraftPlayerPick(models.Model):
     date = models.CharField("Date", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
     patch = models.CharField("Patch", max_length=240)
     seriesId = models.IntegerField("SeriesId")
     sumonnerName = models.CharField("SumonnerName", max_length=240)
