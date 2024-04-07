@@ -9,3 +9,4 @@ class GameMetadata(models.Model):
     teamBlue = models.CharField("teamBlue", max_length=240)
     teamRed = models.CharField("teamRed", max_length=240)
     winningTeam = models.IntegerField("winningTeam")
+    gameNumber = models.IntegerField("gameNumber")

@@ -91,6 +91,9 @@ urlpatterns = [
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
     path('api/dataAnalysis/getTournamentMapping/', dataAnalysisViews.get_tournament_mapping),
 
+    path('api/dataAnalysis/updateBins/', dataAnalysisViews.update_bins),
+    path('api/dataAnalysis/deleteAllMeta/', dataAnalysisViews.delete_all_gameMetadata),
+
     # Draft
     path('api/draft/saveDrafts/', draftViews.saveDrafts),
 ]

@@ -23,6 +23,7 @@ def saveDrafts(request):
         seriesId : int = row["SeriesId"]
         patch : str = row["Patch"]
         tournament : str = get_tournament_from_seriesId(seriesId)
+        print(row)
 
 
         (data, _, _, _) = getData(seriesId, gameNumber)

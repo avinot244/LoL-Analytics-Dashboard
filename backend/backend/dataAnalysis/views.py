@@ -16,7 +16,6 @@ from .models import GameMetadata
 
 import json
 import pandas as pd
-import csv
 
 @api_view(['PATCH'])
 def download_latest(request, rawTournamentList : str):
@@ -101,7 +100,6 @@ def download_latest(request, rawTournamentList : str):
     
     return Response(wantedTournamentMapping)
 
-
 @api_view(['GET'])
 def get_tournament_mapping(request):
 
@@ -135,3 +133,80 @@ def get_tournament_list(request):
         tournamentList.append(res.tournament)
     df = pd.DataFrame({'tournaments': tournamentList})
     return Response(df['tournaments'].unique())
+
+@api_view(['PATCH'])
+def update_bins(request):
+    df = pd.read_csv(DATA_PATH + "games/data_metadata.csv",sep=";")
+
+    for _, row in df.iterrows():
+        seriesId = row["SeriesId"]
+        if not(seriesId in BLACKLIST):
+            dlDict : dict = get_all_download_links(seriesId)
+            print("\tChecking game of seriesId :", seriesId)
+            i = 0
+            for downloadDict in dlDict['files']:
+                fileType = downloadDict["fileName"].split(".")[-1]
+                fileName = downloadDict["fileName"].split(".")[0]
+
+                if fileType != "rofl" and downloadDict["status"] == "ready":
+                    if i > 1:
+                        # The first 2 files are global info about the Best-of
+                        # We have 4 files per games
+                        # We add 1 to start the gameNumber list at 1
+                        gameNumber = (i-2)//4 + 1
+
+                        path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
+                        print("\t\tDownloading {} files".format(fileName))
+                        download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+
+                    else:
+                        for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
+                            path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
+                            print("\t\tDownloading {} files".format(fileName))
+                            download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+                elif fileType == "rofl":
+                    print("\t\twe don't download rofl file")
+                i += 1
+
+            # Save game metadata in csv and sqlite databases
+            
+            print("Saving to database")
+
+            # Getting relative information about the game
+            date = get_date_from_seriesId(seriesId)
+            gameNumber = fileName.split("_")[-1]
+            name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumber)
+            summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumber))
+
+            (data, _, _, _) = getData(int(seriesId), gameNumber)
+            patch : str = summaryData.patch
+            teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
+            teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
+            winningTeam : int = data.winningTeam
+
+            
+            # Saving game metadata to SQLite datbase
+            gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam)
+            gameMetadata.save()
+
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_all_gameMetadata(request):
+    df = pd.read_csv(DATA_PATH + "games/data_metadata.csv",sep=";")
+
+    for _, row in df.iterrows():
+        
+        query = GameMetadata.objects.filter(
+                                                date__exact = row["Date"], 
+                                                name__exact = row["Name"], 
+                                                patch__exact = row["Patch"], 
+                                                seriesId__exact = row["SeriesId"], 
+                                                teamBlue__exact = row["teamBlue"], 
+                                                teamRed__exact = row["teamRed"], 
+                                                winningTeam__exact = row["winningTeam"]
+                                            )
+        for gameMetadata in query:
+            gameMetadata.delete()
+
+    return Response(status=status.HTTP_200_OK)
