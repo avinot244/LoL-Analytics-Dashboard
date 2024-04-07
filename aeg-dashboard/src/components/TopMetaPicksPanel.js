@@ -14,7 +14,7 @@ function TopMetaPicksPanel(props) {
 
     const {value, panelIndex} = props
     const side = ["Blue", "Red", "Both"];
-    const tournamentList = ["Tournament 1", "Tournament 2"];
+    const [tournamentList, setTournamentList] = useState([])
     const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
 
     const championListToplane = ["Aatrox", "Renekton", "KSante", "Fiora", "Gragas", "Jax"];
@@ -25,7 +25,7 @@ function TopMetaPicksPanel(props) {
 
     useEffect(() => {
         const fetchPatchList = async () => {
-            const result = await fetch(API_URL + "behavior/ADC/patch/getList", {
+            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
                 method: "GET"
             })
             result.json().then(result => {
@@ -33,7 +33,19 @@ function TopMetaPicksPanel(props) {
                 setPatchList(newPatchList);
             })
         }
+
+        const fetchTournamentList = async () => {
+            const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newTournamentList = result;
+                setTournamentList(newTournamentList)
+            })
+        }
+        
         fetchPatchList();
+        fetchTournamentList();
     }, [])
 
     return (
