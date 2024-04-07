@@ -319,7 +319,7 @@ class SeparatedData:
             writer = csv.writer(csv_file, delimiter=";")
             data : list = list()
             if new :
-                header = ["Date", "Patch", "SeriesId", "SummonnerName", "ChampionName"]
+                header = ["Date", "Patch", "SeriesId", "SummonnerName", "ChampionName", "Role"]
                 writer.writerow(header)
 
             for playerPick in self.playerPicks:
@@ -329,5 +329,17 @@ class SeparatedData:
                     data.append(seriesId)
                     data.append(playerPick.summonerName)
                     data.append(convertToChampionName(playerPick.championID))
+
+                    # Geting role
+                    role : str = ""
+                    participantID : int = self.gameSnapshotList[-1].teams[0].getPlayerID(playerPick.summonerName)
+                    
+                    if participantID != -1:
+                        role = self.gameSnapshotList[-1].teams[0].getRole(playerPick.summonerName)
+                    else:
+                        role = self.gameSnapshotList[-1].teams[1].getRole(playerPick.summonerName)
+                    
+                    data.append(role)
+                    
                     writer.writerow(data)
                     data = []
