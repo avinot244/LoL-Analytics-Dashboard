@@ -265,7 +265,7 @@ class SeparatedData:
         return teamName
 
 
-    def draftToCSV(self, path : str, new : bool, patch : str, gameType : str, seriesId : int, tournament : str):
+    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int):
         draft : DraftSnapshot = self.draftSnapshotList[-1]
         # Asserting the right open option
         if new:
@@ -274,11 +274,11 @@ class SeparatedData:
             open_option = 'a'
 
         # Writing the draft pick order database
-        full_path = path  + "draft_pick_order_{}.csv".format(gameType)
+        full_path = path  + "draft_pick_order.csv"
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             if new:
-                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
+                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumner", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
                 writer.writerow(header)
             
             data : list = list()
@@ -287,6 +287,7 @@ class SeparatedData:
             data.append(patch)
             data.append(seriesId)
             data.append(self.winningTeam)
+            data.append(gameNumber)
 
             if len(draft.bans) < 10:
                 for _ in range(10-len(draft.bans)):
@@ -315,12 +316,12 @@ class SeparatedData:
             writer.writerow(data)
         
         # Writing the draft player picks database
-        full_path = path + "draft_player_picks_{}.csv".format(gameType)
+        full_path = path + "draft_player_picks.csv"
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             data : list = list()
             if new :
-                header = ["Date", "Tournament", "Patch", "SeriesId", "SummonnerName", "ChampionName", "Role"]
+                header = ["Date", "Tournament", "Patch", "SeriesId", "SummonnerName", "ChampionName", "Role", "GameNumber"]
                 writer.writerow(header)
 
             for playerPick in self.playerPicks:
@@ -331,6 +332,7 @@ class SeparatedData:
                     data.append(seriesId)
                     data.append(playerPick.summonerName)
                     data.append(convertToChampionName(playerPick.championID))
+                    data.append(gameNumber)
 
                     # Geting role
                     role : str = ""

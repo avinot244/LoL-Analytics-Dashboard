@@ -6,6 +6,7 @@ class DraftPickOrder(models.Model):
     patch = models.CharField("Patch", max_length=240)
     seriesId = models.IntegerField("SeriesId")
     winner = models.IntegerField("Winner")
+    gameNumner = models.IntegerField("GameNumber")
 
     bb1 = models.CharField("BB1", max_length=240)
     bb2 = models.CharField("BB2", max_length=240)
@@ -40,4 +41,5 @@ class DraftPlayerPick(models.Model):
     sumonnerName = models.CharField("SumonnerName", max_length=240)
     championName = models.CharField("ChampionName", max_length=240)
     role = models.CharField("Role", max_length=240)
+    gameNumber = models.IntegerField("GameNumber")
 
