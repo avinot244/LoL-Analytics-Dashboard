@@ -18,6 +18,8 @@ from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraf
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
 
+from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId
+
 class SeparatedData:
     def __init__(self, root_dir : str = None,
                  gameSnapshotList : list[Snapshot] = None,
@@ -276,14 +278,13 @@ class SeparatedData:
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             if new:
-                header = ["Patch", "MatchId", "MatchName", "Winner","BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
+                header = ["Date", "Patch", "SeriesId", "Winner", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
                 writer.writerow(header)
             
             data : list = list()
+            data.append(get_date_from_seriesId(seriesId))
             data.append(patch)
-            matchId = "{}_{}".format(self.draftSnapshotList[0].platformID, seriesId)
-            data.append(matchId)
-            data.append(self.matchName)
+            data.append(seriesId)
             data.append(self.winningTeam)
 
             if len(draft.bans) < 10:
@@ -318,15 +319,14 @@ class SeparatedData:
             writer = csv.writer(csv_file, delimiter=";")
             data : list = list()
             if new :
-                header = ['Patch', 'MatchId', 'MatchName', 'SummonerName', 'championName']
+                header = ["Date", "Patch", "SeriesId", "SummonnerName", "ChampionName"]
                 writer.writerow(header)
 
             for playerPick in self.playerPicks:
                 if playerPick.summonerName != "" and playerPick.championID != -1 :
+                    data.append(get_date_from_seriesId(seriesId))
                     data.append(patch)
-                    matchId = "{}_{}".format(self.draftSnapshotList[0].platformID, seriesId)
-                    data.append(matchId)
-                    data.append(self.matchName)
+                    data.append(seriesId)
                     data.append(playerPick.summonerName)
                     data.append(convertToChampionName(playerPick.championID))
                     writer.writerow(data)
