@@ -140,7 +140,8 @@ def getDraftChampion(request, championName, patch):
         Q(rp2=championName) |
         Q(rp3=championName) |
         Q(rp4=championName) |
-        Q(rp5=championName)
+        Q(rp5=championName),
+        patch__contains=patch
     )
     serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
 
