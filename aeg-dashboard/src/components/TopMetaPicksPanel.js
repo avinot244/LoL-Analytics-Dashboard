@@ -3,6 +3,9 @@ import ChampionIcon from "./ChampionIcon";
 import { useState, useEffect } from "react";
 import { API_URL } from "../constants";
 
+import Button from "@mui/material/Button"
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 
 function TopMetaPicksPanel(props) {
     const [patchList, setPatchList] = useState([]);
@@ -31,6 +34,7 @@ function TopMetaPicksPanel(props) {
             result.json().then(result => {
                 const newPatchList = result;
                 setPatchList(newPatchList);
+                setActivePatch(newPatchList[newPatchList.length - 1])
             })
         }
 
@@ -41,13 +45,16 @@ function TopMetaPicksPanel(props) {
             result.json().then(result => {
                 const newTournamentList = result;
                 setTournamentList(newTournamentList)
+                setActiveTournament(newTournamentList[newTournamentList.length - 1])
             })
         }
         
         fetchPatchList();
         fetchTournamentList();
+        setActiveSide(patchList[patchList.length - 1])
+        setActiveFilter(filterList[0])
     }, [])
-
+    
     return (
         <div
             role='tabpanbel'
@@ -75,6 +82,7 @@ function TopMetaPicksPanel(props) {
                             defaultValue={"-- Tournament --"}
                             setActive={setActiveTournament}/>
                     </li>
+                    
                 </ul>
             </div>
 
@@ -82,11 +90,22 @@ function TopMetaPicksPanel(props) {
                 <ul>
                     <li>Sort by</li>
                     <li>
-                    <SelectComp 
-                        elementList={filterList}
-                        defaultValue={"-- Select Filter --"}
-                        setActive={setActiveFilter}
-                    />
+                        <SelectComp 
+                            elementList={filterList}
+                            defaultValue={"-- Select Filter --"}
+                            setActive={setActiveFilter}
+                        />
+                    </li>
+                    <li>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<ArrowForwardIosIcon />}
+                            onClick={() => {
+                                alert(activePatch)
+                            }}    
+                        >
+                            Analyze
+                        </Button>
                     </li>
                 </ul>                
             </div>
@@ -179,7 +198,6 @@ function TopMetaPicksPanel(props) {
                 </div>
             </div>
         </div>
-
     )
 }
 

@@ -61,7 +61,7 @@ h1 {
 
 .sorter{
 	padding-top: 20px;
-	width: 301.6px;
+	width: fit-content;
 	margin: 0 auto;
 }
 
