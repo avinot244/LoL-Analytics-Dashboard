@@ -138,9 +138,9 @@ def get_tournament_list(request):
 def update_bins(request):
     df = pd.read_csv(DATA_PATH + "games/data_metadata.csv",sep=";")
 
-    for _, row in df.iterrows():
-        seriesId = row["SeriesId"]
-        if not(seriesId in BLACKLIST):
+    for seriesId in df["SeriesId"].unique().tolist():
+        gameNumber = 1
+        if not(seriesId in BLACKLIST) and not(os.path.exists(DATA_PATH + "games/bin/{}_ESPORTS_1dataSeparatedRIOT".format(seriesId))):
             dlDict : dict = get_all_download_links(seriesId)
             print("\tChecking game of seriesId :", seriesId)
             i = 0
@@ -154,40 +154,33 @@ def update_bins(request):
                         # We have 4 files per games
                         # We add 1 to start the gameNumber list at 1
                         gameNumber = (i-2)//4 + 1
-
-                        path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                        print("\t\tDownloading {} files".format(fileName))
-                        download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-
-                    else:
-                        for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
+                        if gameNumber < get_nb_games_seriesId(seriesId) + 1:
                             path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
                             print("\t\tDownloading {} files".format(fileName))
                             download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+
                 elif fileType == "rofl":
                     print("\t\twe don't download rofl file")
                 i += 1
 
             # Save game metadata in csv and sqlite databases
-            
-            print("Saving to database")
+            print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
+            for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
+                # Getting relative information about the game
+                date = get_date_from_seriesId(seriesId)
+                name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
+                summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumberIt))
 
-            # Getting relative information about the game
-            date = get_date_from_seriesId(seriesId)
-            gameNumber = fileName.split("_")[-1]
-            name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumber)
-            summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumber))
+                (data, _, _, _) = getData(int(seriesId), gameNumberIt)
+                patch : str = summaryData.patch
+                teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
+                teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
+                winningTeam : int = data.winningTeam
 
-            (data, _, _, _) = getData(int(seriesId), gameNumber)
-            patch : str = summaryData.patch
-            teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
-            teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
-            winningTeam : int = data.winningTeam
-
-            
-            # Saving game metadata to SQLite datbase
-            gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam)
-            gameMetadata.save()
+                
+                # Saving game metadata to SQLite datbase
+                gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber = gameNumber)
+                gameMetadata.save()
 
     return Response(status=status.HTTP_200_OK)
 
