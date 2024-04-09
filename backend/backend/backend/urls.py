@@ -96,5 +96,10 @@ urlpatterns = [
 
     # Draft
     path('api/draft/saveDrafts/', draftViews.saveDrafts),
+    path('api/draft/getLatest/<int:limit>/<int:scrim>/', draftViews.getLatestDraft),
+    path('api/draft/getPatch/<str:patch>/<int:scrim>/', draftViews.getDraftPatch),
+    path('api/draft/getTournament/<str:tournament>/', draftViews.getDraftTournament),
+    path('api/draft/getChampion/<str:championName>/<str:patch>/', draftViews.getDraftChampion),
+
 ]
 

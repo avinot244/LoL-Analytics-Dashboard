@@ -1,13 +1,18 @@
 from django.shortcuts import render
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import DraftPickOrder, DraftPlayerPick
+from .serializer import DraftPickOrderSerializer, DraftPlayerPickSerializer
+
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_seriesId
+from dataAnalysis.packages.api_calls.DDragon.api_calls import get_champion_mapping_key_reversed
 from dataAnalysis.packages.utils_stuff.utils_func import getData
 from dataAnalysis.globals import DATA_PATH
+from dataAnalysis.models import GameMetadata
 
 from .utils import isDraftDownloaded
 
@@ -44,65 +49,99 @@ def saveDrafts(request):
             print(seriesId)
             data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date)
 
-        # # Saving draftPickOrder to SQLite database
-        # draft_pick_order_df : pd.DataFrame = pd.read_csv(DATA_PATH + "drafts/draft_pick_order.csv", sep=";")
-        # draft_pick_order = draft_pick_order_df.loc[draft_pick_order_df["SeriesId"] == seriesId & 
-        #                                            draft_pick_order_df["GameNumber"] == gameNumber]
-        
-        # draftPickOrder = DraftPickOrder(
-        #     date = draft_pick_order["Date"],
-        #     tournament = draft_pick_order["Tournament"],
-        #     patch = draft_pick_order["Patch"],
-        #     seriesId = draft_pick_order["SeriesId"],
-        #     winner = draft_pick_order["Winner"],
-        #     gameNumber = draft_pick_order["GameNumber"],
-
-        #     bb1 = draft_pick_order["BB1"],
-        #     bb2 = draft_pick_order["BB2"],
-        #     bb3 = draft_pick_order["BB3"],
-        #     bb4 = draft_pick_order["BB4"],
-        #     bb5 = draft_pick_order["BB5"],
-
-        #     bp1 = draft_pick_order["BP1"],
-        #     bp2 = draft_pick_order["BP2"],
-        #     bp3 = draft_pick_order["BP3"],
-        #     bp4 = draft_pick_order["BP4"],
-        #     bp5 = draft_pick_order["BP5"],
-
-
-        #     rb1 = draft_pick_order["RB1"],
-        #     rb2 = draft_pick_order["RB2"],
-        #     rb3 = draft_pick_order["RB3"],
-        #     rb4 = draft_pick_order["RB4"],
-        #     rb5 = draft_pick_order["RB5"],
-
-        #     rp1 = draft_pick_order["RP1"],
-        #     rp2 = draft_pick_order["RP2"],
-        #     rp3 = draft_pick_order["RP3"],
-        #     rp4 = draft_pick_order["RP4"],
-        #     rp5 = draft_pick_order["RP5"],
-        # )
-        # # Check if object already in database before saving it
-        # if not(DraftPickOrder.objects.filter(seriesId = draftPickOrder.seriesId, gameNumber = draftPickOrder.gameNumner).exists()):
-        #     draftPickOrder.save()
-
-        # # Saving draftPlayerPick to SQLite database
-        # draft_player_picks_df : pd.DataFrame = pd.read_csv(DATA_PATH + "drafts/draft_player_picks", sep=";")
-        # draft_player_picks = draft_player_picks_df.loc[draft_player_picks_df["SeriesId"] == seriesId &
-        #                                                draft_player_picks_df["GameNumber"] == gameNumber]
-        
-        # draftPlayerPick = DraftPlayerPick(
-        #    date = draft_player_picks["Date"],
-        #    tournament = draft_player_picks["Tournament"],
-        #    patch = draft_player_picks["Patch"],
-        #    seriesId = draft_player_picks["SeriesId"],
-        #    summonnerName = draft_player_picks["SummonnerName"],
-        #    championName = draft_player_picks["ChampionName"],
-        #    role = draft_player_picks["Role"],
-        #    gameNumber = draft_player_picks["GameNumber"],
-        # )
-        # # Check if object already in database before saving it
-        # if not(DraftPlayerPick.objects.filter(seriesId = draftPlayerPick.seriesId, gameNumber = draftPlayerPick.gameNumber).exists()):
-        #     draftPickOrder.save()
-
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getLatestDraft(request, limit, scrim):
+    if not(scrim == 0 or scrim == 1):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if scrim == 0:
+        draftQuery = DraftPickOrder.objects.filter(tournament__exact="League of Legends Scrims").order_by("-seriesId")[:limit]
+        serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
+    else:
+        draftQuery = DraftPickOrder.objects.filter(~Q(tournament="League of Legends Scrims")).order_by("-seriesId")[:limit]
+        serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
+    
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getDraftPatch(request, patch, scrim):
+    #Getting all of the unique patches
+    queryListPatch = GameMetadata.objects.all()
+    patchList : list = list()
+
+    for res in queryListPatch:
+        tempPatch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        patchList.append(tempPatch)
+    
+    dfPatch = pd.DataFrame({"patch": patchList})
+    dfPatchUnique = dfPatch["patch"].unique()
+
+    if not(patch in dfPatchUnique.tolist()):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if not(scrim == 0 or scrim == 1):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if scrim == 0:
+        draftQuery = DraftPickOrder.objects.filter(tournament__exact="League of Legends Scrims", patch__contains=patch)
+        serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
+    else:
+        draftQuery = DraftPickOrder.objects.filter(~Q(tournament="League of Legends Scrims"), patch__contains=patch)
+        serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
+    
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getDraftTournament(request, tournament):
+    queryListTournament = DraftPickOrder.objects.all()
+    tournamentList : list = list()
+    for res in queryListTournament:
+        if not(res in tournamentList):
+            tournamentList.append(res.tournament)
+
+    if not(tournament in tournamentList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    draftQuery = DraftPickOrder.objects.filter(tournament__exact=tournament)
+    serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getDraftChampion(request, championName, patch):
+    # Checking if patch is correct
+    queryListPatch = GameMetadata.objects.all()
+    patchList : list = list()
+
+    for res in queryListPatch:
+        tempPatch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        patchList.append(tempPatch)
+    
+    dfPatch = pd.DataFrame({"patch": patchList})
+    dfPatchUnique = dfPatch["patch"].unique()
+
+    if not(patch in dfPatchUnique.tolist()):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Checking if championName is correct
+    if not(championName in list(get_champion_mapping_key_reversed().keys())):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    draftQuery = DraftPickOrder.objects.filter(
+        Q(bp1=championName) |
+        Q(bp2=championName) |
+        Q(bp3=championName) |
+        Q(bp4=championName) |
+        Q(bp5=championName) |
+        Q(rp1=championName) |
+        Q(rp2=championName) |
+        Q(rp3=championName) |
+        Q(rp4=championName) |
+        Q(rp5=championName)
+    )
+    serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
+
+    return Response(serializer.data)
