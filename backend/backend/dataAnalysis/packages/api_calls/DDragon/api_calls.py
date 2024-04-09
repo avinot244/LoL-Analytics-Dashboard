@@ -17,7 +17,7 @@ def get_champion_mapping_key():
     res : dict = dict()
     
     for championName, data in response.json()['data'].items():
-        res[int(data['key'])] = championName.lower()
+        res[int(data['key'])] = championName
     return res
 
 def get_champion_mapping_key_reversed():
@@ -30,7 +30,7 @@ def get_champion_mapping_key_reversed():
     res : dict = dict()
     for championName, data in response.json()['data'].items():
         
-        res[championName.lower()] = int(data['key'])
+        res[championName] = int(data['key'])
     return res
 
 def get_item_mapping_key():

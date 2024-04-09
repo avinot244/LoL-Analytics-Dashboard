@@ -18,7 +18,6 @@ from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraf
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
 
-from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId
 
 class SeparatedData:
     def __init__(self, root_dir : str = None,
@@ -265,7 +264,7 @@ class SeparatedData:
         return teamName
 
 
-    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int):
+    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str):
         draft : DraftSnapshot = self.draftSnapshotList[-1]
         # Asserting the right open option
         if new:
@@ -278,11 +277,11 @@ class SeparatedData:
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             if new:
-                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumner", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
+                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumber", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
                 writer.writerow(header)
             
             data : list = list()
-            data.append(get_date_from_seriesId(seriesId))
+            data.append(date)
             data.append(tournament)
             data.append(patch)
             data.append(seriesId)
@@ -326,13 +325,12 @@ class SeparatedData:
 
             for playerPick in self.playerPicks:
                 if playerPick.summonerName != "" and playerPick.championID != -1 :
-                    data.append(get_date_from_seriesId(seriesId))
+                    data.append(date)
                     data.append(tournament)
                     data.append(patch)
                     data.append(seriesId)
                     data.append(playerPick.summonerName)
                     data.append(convertToChampionName(playerPick.championID))
-                    data.append(gameNumber)
 
                     # Geting role
                     role : str = ""
@@ -344,6 +342,10 @@ class SeparatedData:
                         role = self.gameSnapshotList[-1].teams[1].getRole(playerPick.summonerName)
                     
                     data.append(role)
+
+                    data.append(gameNumber)
+
+                    
                     
                     writer.writerow(data)
                     data = []

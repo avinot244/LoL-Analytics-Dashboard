@@ -9,6 +9,8 @@ from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_s
 from dataAnalysis.packages.utils_stuff.utils_func import getData
 from dataAnalysis.globals import DATA_PATH
 
+from .utils import isDraftDownloaded
+
 import pandas as pd
 import requests
 import os
@@ -23,25 +25,24 @@ def saveDrafts(request):
         seriesId : int = row["SeriesId"]
         patch : str = row["Patch"]
         tournament : str = get_tournament_from_seriesId(seriesId)
-        print(row)
-
+        
 
         (data, _, _, _) = getData(seriesId, gameNumber)
+        date = row["Date"]
 
         # Saving the draft into our CSV database
 
         # Checking if the database exists
         if os.path.exists(DATA_PATH + "drafts/draft_pick_order.csv") and os.path.exists(DATA_PATH + "drafts/draft_player_picks.csv"):
-            draft_pick_order_df : pd.DataFrame = pd.read_csv(DATA_PATH + "drafts/draft_pick_order.csv", sep=";")
-            draft_player_picks_df : pd.DataFrame = pd.read_csv(DATA_PATH + "drafts/draft_player_picks", sep=";")
-
             # Checking if the draft we want to save is already in our database
-            if not(seriesId in draft_pick_order_df["SeriesId"].values and gameNumber in draft_pick_order_df["GameNumber"].values):
-                if not(seriesId in draft_player_picks_df["SeriesId"].values and gameNumber in draft_player_picks_df["GameNumber"].values):
-                    # Saving the draft into our csv database 
-                    data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber)
-        else: 
-            data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber)
+            if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_pick_order.csv")):
+                if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_player_picks.csv")):
+                    # Saving the draft into our csv database
+                    print(seriesId)
+                    data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date)
+        else:
+            print(seriesId)
+            data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date)
 
         # # Saving draftPickOrder to SQLite database
         # draft_pick_order_df : pd.DataFrame = pd.read_csv(DATA_PATH + "drafts/draft_pick_order.csv", sep=";")
