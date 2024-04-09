@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'behaviorADC',
     'dataAnalysis',
     'behaviorModels',
+    'Draft',
     'django_extensions',
 ]
 

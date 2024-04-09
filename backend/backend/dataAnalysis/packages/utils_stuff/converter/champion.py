@@ -8,6 +8,6 @@ def convertToChampionName(id : int):
 
 def convertToChampionID(championName : str):
     if championName != "":
-        return get_champion_mapping_key_reversed()[championName.lower()]
+        return get_champion_mapping_key_reversed()[championName]
     else:
         return -1

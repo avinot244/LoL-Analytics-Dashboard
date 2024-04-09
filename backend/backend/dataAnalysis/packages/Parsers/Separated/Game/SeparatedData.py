@@ -18,6 +18,7 @@ from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraf
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
 
+
 class SeparatedData:
     def __init__(self, root_dir : str = None,
                  gameSnapshotList : list[Snapshot] = None,
@@ -263,7 +264,7 @@ class SeparatedData:
         return teamName
 
 
-    def draftToCSV(self, path : str, new : bool, patch : str, gameType : str, seriesId):
+    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str):
         draft : DraftSnapshot = self.draftSnapshotList[-1]
         # Asserting the right open option
         if new:
@@ -272,19 +273,20 @@ class SeparatedData:
             open_option = 'a'
 
         # Writing the draft pick order database
-        full_path = path  + "draft_pick_order_{}.csv".format(gameType)
+        full_path = path  + "draft_pick_order.csv"
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             if new:
-                header = ["Patch", "MatchId", "MatchName", "Winner","BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
+                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumber", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
                 writer.writerow(header)
             
             data : list = list()
+            data.append(date)
+            data.append(tournament)
             data.append(patch)
-            matchId = "{}_{}".format(self.draftSnapshotList[0].platformID, seriesId)
-            data.append(matchId)
-            data.append(self.matchName)
+            data.append(seriesId)
             data.append(self.winningTeam)
+            data.append(gameNumber)
 
             if len(draft.bans) < 10:
                 for _ in range(10-len(draft.bans)):
@@ -313,21 +315,37 @@ class SeparatedData:
             writer.writerow(data)
         
         # Writing the draft player picks database
-        full_path = path + "draft_player_picks_{}.csv".format(gameType)
+        full_path = path + "draft_player_picks.csv"
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             data : list = list()
             if new :
-                header = ['Patch', 'MatchId', 'MatchName', 'SummonerName', 'championName']
+                header = ["Date", "Tournament", "Patch", "SeriesId", "SummonnerName", "ChampionName", "Role", "GameNumber"]
                 writer.writerow(header)
 
             for playerPick in self.playerPicks:
                 if playerPick.summonerName != "" and playerPick.championID != -1 :
+                    data.append(date)
+                    data.append(tournament)
                     data.append(patch)
-                    matchId = "{}_{}".format(self.draftSnapshotList[0].platformID, seriesId)
-                    data.append(matchId)
-                    data.append(self.matchName)
+                    data.append(seriesId)
                     data.append(playerPick.summonerName)
                     data.append(convertToChampionName(playerPick.championID))
+
+                    # Geting role
+                    role : str = ""
+                    participantID : int = self.gameSnapshotList[-1].teams[0].getPlayerID(playerPick.summonerName)
+                    
+                    if participantID != -1:
+                        role = self.gameSnapshotList[-1].teams[0].getRole(playerPick.summonerName)
+                    else:
+                        role = self.gameSnapshotList[-1].teams[1].getRole(playerPick.summonerName)
+                    
+                    data.append(role)
+
+                    data.append(gameNumber)
+
+                    
+                    
                     writer.writerow(data)
                     data = []

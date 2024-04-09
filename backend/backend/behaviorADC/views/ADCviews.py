@@ -9,6 +9,8 @@ from behaviorADC.serializers import *
 from behaviorADC.globals import API_URL
 from behaviorADC.utils import getDataBase, compute
 
+from dataAnalysis.models import GameMetadata
+
 import pandas as pd
 import requests
 
@@ -76,7 +78,7 @@ def behaviorADC_stats_latest(request, summonnerName, limit, tournament):
 @api_view(['GET'])
 def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     #Getting all of the unique patches
-    queryListPatch = BehaviorADC.objects.all()
+    queryListPatch = GameMetadata.objects.all()
     patchList : list = list()
 
     for res in queryListPatch:

@@ -4,6 +4,8 @@ from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.Computation.computation import *
 
+from dataAnalysis.globals import ROLE_LIST
+
 class Team:
     def __init__(self,
                  assists : int,
@@ -54,6 +56,7 @@ class Team:
         for player in self.players:
             if player.playerName == playerName:
                 return player.participantID
+        return -1
     
     def getTeamName(self) -> str:
         splits = re.split("\s", self.players[0].playerName)
@@ -70,3 +73,8 @@ class Team:
                     dist = distTemp
                     idx = i
         return self.players[idx]
+    
+    def getRole(self, summonnerName : str):
+        playerId : int = self.getPlayerID(summonnerName)
+        playerIdx : int = self.getPlayerIdx(playerId)
+        return ROLE_LIST[playerIdx]

@@ -24,6 +24,7 @@ from behaviorADC.views import ADCviews
 from behaviorADC.views import Supportviews
 from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
+from Draft import views as draftViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -89,5 +90,16 @@ urlpatterns = [
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
     path('api/dataAnalysis/getTournamentMapping/', dataAnalysisViews.get_tournament_mapping),
+
+    path('api/dataAnalysis/updateBins/', dataAnalysisViews.update_bins),
+    path('api/dataAnalysis/deleteAllMeta/', dataAnalysisViews.delete_all_gameMetadata),
+
+    # Draft
+    path('api/draft/saveDrafts/', draftViews.saveDrafts),
+    path('api/draft/getLatest/<int:limit>/<int:scrim>/', draftViews.getLatestDraft),
+    path('api/draft/getPatch/<str:patch>/<int:scrim>/', draftViews.getDraftPatch),
+    path('api/draft/getTournament/<str:tournament>/', draftViews.getDraftTournament),
+    path('api/draft/getChampion/<str:championName>/<str:patch>/', draftViews.getDraftChampion),
+
 ]
 
