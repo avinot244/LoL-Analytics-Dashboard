@@ -13,6 +13,7 @@ for index, row in df.iterrows():
         teamBlue = row["teamBlue"],
         teamRed = row["teamRed"],
         winningTeam = row["winningTeam"],
+        gameNumber = row["gameNumber"],
     )
     gameMetadata.save()
 

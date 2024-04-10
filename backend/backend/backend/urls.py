@@ -96,10 +96,12 @@ urlpatterns = [
 
     # Draft
     path('api/draft/saveDrafts/', draftViews.saveDrafts),
-    path('api/draft/getLatest/<int:limit>/<int:scrim>/', draftViews.getLatestDraft),
-    path('api/draft/getPatch/<str:patch>/<int:scrim>/', draftViews.getDraftPatch),
+    path('api/draft/getLatest/<int:limit>/<int:scrimStr>/', draftViews.getLatestDraft),
+    path('api/draft/getPatch/<str:patch>/<int:scrimStr>/', draftViews.getDraftPatch),
     path('api/draft/getTournament/<str:tournament>/', draftViews.getDraftTournament),
     path('api/draft/getChampion/<str:championName>/<str:patch>/', draftViews.getDraftChampion),
+    path('api/draft/getTeamNames/<int:seriesId>/<int:gameNumber>/', draftViews.getTeamNames),
+    path('api/draft/delete/', draftViews.deleteAllDrafts)
 
 ]
 

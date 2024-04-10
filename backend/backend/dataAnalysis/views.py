@@ -186,20 +186,8 @@ def update_bins(request):
 
 @api_view(['DELETE'])
 def delete_all_gameMetadata(request):
-    df = pd.read_csv(DATA_PATH + "games/data_metadata.csv",sep=";")
-
-    for _, row in df.iterrows():
-        
-        query = GameMetadata.objects.filter(
-                                                date__exact = row["Date"], 
-                                                name__exact = row["Name"], 
-                                                patch__exact = row["Patch"], 
-                                                seriesId__exact = row["SeriesId"], 
-                                                teamBlue__exact = row["teamBlue"], 
-                                                teamRed__exact = row["teamRed"], 
-                                                winningTeam__exact = row["winningTeam"]
-                                            )
-        for gameMetadata in query:
-            gameMetadata.delete()
+    query = GameMetadata.objects.all()
+    for res in query:
+        res.delete()
 
     return Response(status=status.HTTP_200_OK)

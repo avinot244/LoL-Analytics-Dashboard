@@ -311,7 +311,7 @@ class SeparatedData:
             
             # Getting picks fo red side
             for i in range(len(draft.teams[1].playerDraftList)):
-                data.append(convertToChampionName(draft.teams[0].playerDraftList[i].championID))
+                data.append(convertToChampionName(draft.teams[1].playerDraftList[i].championID))
             writer.writerow(data)
         
         # Writing the draft player picks database

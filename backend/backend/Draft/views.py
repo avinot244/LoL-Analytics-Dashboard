@@ -13,6 +13,7 @@ from dataAnalysis.packages.api_calls.DDragon.api_calls import get_champion_mappi
 from dataAnalysis.packages.utils_stuff.utils_func import getData
 from dataAnalysis.globals import DATA_PATH
 from dataAnalysis.models import GameMetadata
+from dataAnalysis.serializer import GameMetadataSerialize
 
 from .utils import isDraftDownloaded
 
@@ -52,7 +53,8 @@ def saveDrafts(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def getLatestDraft(request, limit, scrim):
+def getLatestDraft(request, limit, scrimStr):
+    scrim : int = int(scrimStr)
     if not(scrim == 0 or scrim == 1):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -66,7 +68,9 @@ def getLatestDraft(request, limit, scrim):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def getDraftPatch(request, patch, scrim):
+def getDraftPatch(request, patch, scrimStr):
+    scrim : int = int(scrimStr)
+    
     #Getting all of the unique patches
     queryListPatch = GameMetadata.objects.all()
     patchList : list = list()
@@ -146,3 +150,20 @@ def getDraftChampion(request, championName, patch):
     serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
 
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getTeamNames(request, seriesId, gameNumber):
+    wantedGame = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    return Response([wantedGame.teamBlue, wantedGame.teamRed])
+
+@api_view(['DELETE'])
+def deleteAllDrafts(request):
+    queryDrafPickOrder = DraftPickOrder.objects.all()
+    for res in queryDrafPickOrder:
+        res.delete()
+
+    queryPlayerPicks = DraftPlayerPick.objects.all()
+    for res in queryPlayerPicks:
+        res.delete()
+
+    return Response(status=status.HTTP_200_OK)
