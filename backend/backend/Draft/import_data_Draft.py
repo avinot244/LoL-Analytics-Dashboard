@@ -12,6 +12,8 @@ for index, row in df_draft_pick_order.iterrows():
         seriesId = row["SeriesId"],
         winner = row["Winner"],
         gameNumner = row["GameNumber"],
+        teamBlue = row["teamBlue"],
+        teamRed = row["teamRed"],
         bb1 = row["BB1"],
         bb2 = row["BB2"],
         bb3 = row["BB3"],
@@ -35,5 +37,19 @@ for index, row in df_draft_pick_order.iterrows():
     )
     draftPickOrder.save()
 
-
+csv_draft_player_pick : str = "./database/drafts/draft_player_picks.csv"
+df_draft_player_pick : pd.DataFrame = pd.read_csv(csv_draft_player_pick, sep=";")
+for index, row in df_draft_player_pick.iterrows():
+    draftPlayerPick = DraftPlayerPick(
+        date = row["Date"],
+        tournament = row["Tournament"],
+        patch = row["Patch"],
+        seriesId = row["SeriesId"],
+        sumonnerName = row["SumonnerName"],
+        championName = row["ChampionName"],
+        role = row["Role"],
+        gameNumber = row["GameNumber"],
+    )
+    draftPlayerPick.save()
+    
 print("Saved players picks")

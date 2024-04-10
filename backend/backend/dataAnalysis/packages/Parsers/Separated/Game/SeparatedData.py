@@ -264,7 +264,7 @@ class SeparatedData:
         return teamName
 
 
-    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str):
+    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str, teamBlue : str, teamRed : str):
         draft : DraftSnapshot = self.draftSnapshotList[-1]
         # Asserting the right open option
         if new:
@@ -277,7 +277,7 @@ class SeparatedData:
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             if new:
-                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumber", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
+                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumber", "teamBlue", "teamRed", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
                 writer.writerow(header)
             
             data : list = list()
@@ -287,6 +287,8 @@ class SeparatedData:
             data.append(seriesId)
             data.append(self.winningTeam)
             data.append(gameNumber)
+            data.append(teamBlue)
+            data.append(teamRed)
 
             if len(draft.bans) < 10:
                 for _ in range(10-len(draft.bans)):

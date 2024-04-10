@@ -7,6 +7,8 @@ class DraftPickOrder(models.Model):
     seriesId = models.IntegerField("SeriesId")
     winner = models.IntegerField("Winner")
     gameNumner = models.IntegerField("GameNumber")
+    teamBlue = models.CharField("teamBlue", max_length=240)
+    teamRed = models.CharField("teamRed", max_length=240)
 
     bb1 = models.CharField("BB1", max_length=240)
     bb2 = models.CharField("BB2", max_length=240)

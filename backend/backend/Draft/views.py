@@ -31,6 +31,8 @@ def saveDrafts(request):
         seriesId : int = row["SeriesId"]
         patch : str = row["Patch"]
         tournament : str = get_tournament_from_seriesId(seriesId)
+        teamBlue = row["teamBlue"]
+        teamRed = row["teamRed"]
         
 
         (data, _, _, _) = getData(seriesId, gameNumber)
@@ -45,10 +47,10 @@ def saveDrafts(request):
                 if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_player_picks.csv")):
                     # Saving the draft into our csv database
                     print(seriesId)
-                    data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date)
+                    data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
         else:
             print(seriesId)
-            data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date)
+            data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
 
     return Response(status=status.HTTP_200_OK)
 
