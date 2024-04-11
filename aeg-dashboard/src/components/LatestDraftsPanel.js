@@ -19,11 +19,7 @@ function LatestDraftsPanel(props) {
         fetchLatestDrafts();
     }, [])
 
-    
-    
-    draftList.map((draftObject) => {
-        console.log(draftObject)
-    })
+
     return (
         <div
             role='tabpanbel'

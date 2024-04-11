@@ -51,8 +51,9 @@ function TopMetaPicksPanel(props) {
         
         fetchPatchList();
         fetchTournamentList();
-        setActiveSide(patchList[patchList.length - 1])
+        setActiveSide("Blue")
         setActiveFilter(filterList[0])
+        
     }, [])
     
     return (
@@ -101,7 +102,10 @@ function TopMetaPicksPanel(props) {
                             variant="contained" 
                             endIcon={<ArrowForwardIosIcon />}
                             onClick={() => {
-                                alert(activePatch)
+                                console.log("active patch : ", activePatch)
+                                console.log("active side : ", activeSide)
+                                console.log("active tournament : ", activeTournament)
+                                console.log("active filter : ", activeFilter)
                             }}    
                         >
                             Analyze
