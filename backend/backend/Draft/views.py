@@ -155,8 +155,8 @@ def getDraftChampion(request, championName, patch):
 
 @api_view(['GET'])
 def getTeamNames(request, seriesId, gameNumber):
-    wantedGame = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
-    return Response([wantedGame.teamBlue, wantedGame.teamRed])
+    wantedDraft = DraftPickOrder.objects.get(seriesId__exact=seriesId, gameNumner__exact=gameNumber)
+    return Response([wantedDraft.teamBlue, wantedDraft.teamRed])
 
 @api_view(['DELETE'])
 def deleteAllDrafts(request):
