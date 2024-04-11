@@ -5,19 +5,7 @@ import { API_URL } from "../constants";
 function LatestDraftsPanel(props) {
     const {value, panelIndex} = props
     const [draftList, setActiveDraftList] = useState([])
-    const [teamNamesList, setActiveTeamNamesList] = useState([])
     useEffect(() => {
-
-        async function fetchTeamNames(seriesId, gameNumber) {
-            const teamNamesList = await fetch(API_URL + `draft/getTeamNames/${seriesId}/${gameNumber}/`, {
-                method: "GET"
-            })
-            teamNamesList.json().then(result => {
-                return result
-            })
-        }
-
-
         async function fetchLatestDrafts() {
             const result = await fetch(API_URL + "draft/getLatest/5/1/", {
                 method: "GET"
@@ -33,9 +21,9 @@ function LatestDraftsPanel(props) {
 
     
     
-    // draftList.map((draftObject) => {
-    //     console.log(fetchTeamNames(draftObject.seriesId, draftObject.gameNumner))
-    // })
+    draftList.map((draftObject) => {
+        console.log(draftObject)
+    })
     return (
         <div
             role='tabpanbel'
@@ -46,8 +34,8 @@ function LatestDraftsPanel(props) {
             {
                 draftList.map((draftObject) => 
                     <DraftComponent
-                        team1Name={"Team1"}
-                        team2Name={"Team2"}
+                        team1Name={draftObject.teamBlue}
+                        team2Name={draftObject.teamRed}
                         picksB1rota={[draftObject.bp1, draftObject.bp2, draftObject.bp3]}
                         picksB2rota={[draftObject.bp4, draftObject.bp5]}
                         picksR1rota={[draftObject.rp1, draftObject.rp2, draftObject.rp3]}
