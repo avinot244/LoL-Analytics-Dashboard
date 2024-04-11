@@ -179,16 +179,15 @@ def updateChampionDraftStats(request):
     for tournament in response.json():
         tournamentList.append(tournament)
     
-    print(tournamentList)
-
+    
     for tournament in tournamentList:
         # Getting the list of patches where the tournament was played
         assosiatedPatchList : list = list()
 
-        queryGameMetadata = GameMetadata.objects.filter(tournament__exact=tournament)
-        for gameMetadata in queryGameMetadata:
-            if not(gameMetadata.patch in assosiatedPatchList):
-                assosiatedPatchList.append(gameMetadata.patch)
+        queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
+        for draftPickOrder in queryDraftPickOrder:
+            if not(draftPickOrder.patch in assosiatedPatchList):
+                assosiatedPatchList.append(draftPickOrder.patch)
         
         for patch in assosiatedPatchList:
             # Getting the list of champions played in a given tournament on a given patch
@@ -198,37 +197,33 @@ def updateChampionDraftStats(request):
             for draftPlayerPicks in queryDraftPlayerPicks:
                 if not(draftPlayerPicks.championName in associatedChampionList):
                     associatedChampionList.append(draftPlayerPicks.championName)
-
-            for championName in assosiatedPatchList:
-                winRate : float = getChampionWinRate(championName, tournament, patch)
-                pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch)
-                banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch)
-                mostPopularPickOrder : int = getPickPosition(championName, tournament, patch)
-                blindPick : float = getBlindPick(championName, tournament, patch)
-                
-                path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
-                new : bool = not(os.path.exists(path))
-                saveChampionDraftStatsCSV(path,
-                                          new,
-                                          winRate,
-                                          pickRate,
-                                          pickRate1Rota,
-                                          pickRate2Rota,
-                                          banRate,
-                                          banRate1Rota,
-                                          banRate2Rota,
-                                          mostPopularPickOrder,
-                                          blindPick)
-                
-                updateChampionDraftStatsSQLite(winRate,
-                                               pickRate,
-                                               pickRate1Rota,
-                                               pickRate2Rota,
-                                               banRate,
-                                               banRate1Rota,
-                                               banRate2Rota,
-                                               mostPopularPickOrder,
-                                               blindPick)
+            
+            for championName in associatedChampionList:
+                for side in ["Blue", "Red"]:
+                    print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side))
+                    winRate : float = getChampionWinRate(championName, tournament, patch, side)
+                    pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
+                    banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch, side)
+                    mostPopularPickOrder : int = getMostPopularPickPosition(championName, tournament, patch, side)
+                    blindPick : float = getBlindPick(championName, tournament, patch, side)
+                    
+                    path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
+                    new : bool = not(os.path.exists(path))
+                    saveChampionDraftStatsCSV(path,
+                                              new,
+                                              championName,
+                                              patch,
+                                              tournament,
+                                              side,
+                                              winRate,
+                                              pickRate,
+                                              pickRate1Rota,
+                                              pickRate2Rota,
+                                              banRate,
+                                              banRate1Rota,
+                                              banRate2Rota,
+                                              mostPopularPickOrder,
+                                              blindPick)
 
         
     return Response(status=status.HTTP_200_OK)

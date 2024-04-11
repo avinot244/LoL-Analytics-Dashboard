@@ -179,7 +179,7 @@ def update_bins(request):
 
                 
                 # Saving game metadata to SQLite datbase
-                gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber = gameNumber)
+                gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumber)
                 gameMetadata.save()
 
     return Response(status=status.HTTP_200_OK)
@@ -191,3 +191,4 @@ def delete_all_gameMetadata(request):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)
+

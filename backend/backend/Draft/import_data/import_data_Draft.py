@@ -1,5 +1,5 @@
 import pandas as pd
-from .models import DraftPlayerPick, DraftPickOrder
+from ..models import DraftPlayerPick, DraftPickOrder
 
 csv_draft_pick_order : str = "./databases/drafts/draft_pick_order.csv"
 
