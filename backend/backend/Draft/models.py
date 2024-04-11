@@ -45,3 +45,18 @@ class DraftPlayerPick(models.Model):
     role = models.CharField("Role", max_length=240)
     gameNumber = models.IntegerField("GameNumber")
 
+class ChampionDraftStats(models.Model):
+    championName = models.CharField("ChampionName", max_length=240)
+    patch = models.CharField("Patch", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    side = models.CharField("Side", max_length=240)
+    winRate = models.FloatField("WinRate")
+    globalPickRate = models.FloatField("GlobalPickRate")
+    pickRate1Rota = models.FloatField("PickRate1Rota")
+    pickRate2Rota = models.FloatField("PickRate2Rota")
+    globalBanRate = models.FloatField("GlobalBanRate")
+    banRate1Rota = models.FloatField("BanRate1Rota")
+    banRate2Rota = models.FloatField("BanRate2Rota")
+    mostPopularPickOrder = models.IntegerField("MostPopularPickOrder")
+    blindPick = models.FloatField("BlindPick")
+

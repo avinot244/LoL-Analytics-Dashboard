@@ -169,3 +169,15 @@ def deleteAllDrafts(request):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def updateChampionDraftStats(request):
+    queryDraftPlayerPicks = DraftPlayerPick.objects.all()
+    
+    championNameList : list = list()
+    
+    for draftPlayerPicks in queryDraftPlayerPicks:
+        if not(draftPlayerPicks.championName in championNameList):
+            championNameList.append(draftPlayerPicks.championName)
+        
+    return Response(status=status.HTTP_200_OK)
