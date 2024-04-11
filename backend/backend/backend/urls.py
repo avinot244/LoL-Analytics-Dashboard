@@ -103,7 +103,7 @@ urlpatterns = [
     path('api/draft/getTeamNames/<int:seriesId>/<int:gameNumber>/', draftViews.getTeamNames),
     path('api/draft/delete/', draftViews.deleteAllDrafts),
 
-    path('api/draft/championStats/updateStats', draftViews.updateChampionDraftStats),
+    path('api/draft/championStats/updateStats/', draftViews.updateChampionDraftStats),
 
 ]
 

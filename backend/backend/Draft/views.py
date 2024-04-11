@@ -11,11 +11,12 @@ from .serializer import DraftPickOrderSerializer, DraftPlayerPickSerializer
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_seriesId
 from dataAnalysis.packages.api_calls.DDragon.api_calls import get_champion_mapping_key_reversed
 from dataAnalysis.packages.utils_stuff.utils_func import getData
-from dataAnalysis.globals import DATA_PATH
+from dataAnalysis.globals import DATA_PATH, API_URL
 from dataAnalysis.models import GameMetadata
 from dataAnalysis.serializer import GameMetadataSerialize
 
-from .utils import isDraftDownloaded
+from .packages.utils import isDraftDownloaded
+from .packages.championStats_utils import *
 
 import pandas as pd
 import requests
@@ -172,12 +173,62 @@ def deleteAllDrafts(request):
 
 @api_view(['PATCH'])
 def updateChampionDraftStats(request):
-    queryDraftPlayerPicks = DraftPlayerPick.objects.all()
+
+    tournamentList : list = list()
+    response = requests.get(API_URL + 'api/dataAnalysis/tournament/getList')
+    for tournament in response.json():
+        tournamentList.append(tournament)
     
-    championNameList : list = list()
-    
-    for draftPlayerPicks in queryDraftPlayerPicks:
-        if not(draftPlayerPicks.championName in championNameList):
-            championNameList.append(draftPlayerPicks.championName)
+    print(tournamentList)
+
+    for tournament in tournamentList:
+        # Getting the list of patches where the tournament was played
+        assosiatedPatchList : list = list()
+
+        queryGameMetadata = GameMetadata.objects.filter(tournament__exact=tournament)
+        for gameMetadata in queryGameMetadata:
+            if not(gameMetadata.patch in assosiatedPatchList):
+                assosiatedPatchList.append(gameMetadata.patch)
+        
+        for patch in assosiatedPatchList:
+            # Getting the list of champions played in a given tournament on a given patch
+            associatedChampionList : list = list()
+        
+            queryDraftPlayerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__exact=patch)
+            for draftPlayerPicks in queryDraftPlayerPicks:
+                if not(draftPlayerPicks.championName in associatedChampionList):
+                    associatedChampionList.append(draftPlayerPicks.championName)
+
+            for championName in assosiatedPatchList:
+                winRate : float = getChampionWinRate(championName, tournament, patch)
+                pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch)
+                banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch)
+                mostPopularPickOrder : int = getPickPosition(championName, tournament, patch)
+                blindPick : float = getBlindPick(championName, tournament, patch)
+                
+                path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
+                new : bool = not(os.path.exists(path))
+                saveChampionDraftStatsCSV(path,
+                                          new,
+                                          winRate,
+                                          pickRate,
+                                          pickRate1Rota,
+                                          pickRate2Rota,
+                                          banRate,
+                                          banRate1Rota,
+                                          banRate2Rota,
+                                          mostPopularPickOrder,
+                                          blindPick)
+                
+                updateChampionDraftStatsSQLite(winRate,
+                                               pickRate,
+                                               pickRate1Rota,
+                                               pickRate2Rota,
+                                               banRate,
+                                               banRate1Rota,
+                                               banRate2Rota,
+                                               mostPopularPickOrder,
+                                               blindPick)
+
         
     return Response(status=status.HTTP_200_OK)
