@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from .models import DraftPickOrder, DraftPlayerPick
+from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats
 from .serializer import DraftPickOrderSerializer, DraftPlayerPickSerializer
 
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_seriesId
@@ -226,4 +226,21 @@ def updateChampionDraftStats(request):
                                               blindPick)
 
         
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getChampionDraftStats(request, patch, side, tournament):
+    queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
+    availablePatchList : list = list()
+    for draftPickOrder in queryDraftPickOrder:
+        if not(draftPickOrder.patch in availablePatchList):
+            availablePatchList.append(draftPickOrder.patch)
+
+    if not(patch in availablePatchList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if not(side in ["Blue", "Red"]):
+        queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament)
+        
+    
     return Response(status=status.HTTP_200_OK)
