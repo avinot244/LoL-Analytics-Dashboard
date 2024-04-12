@@ -210,7 +210,8 @@ def getPatchListFromTournament(request, tournament):
     queryPatchList = BehaviorADC.objects.filter(tournament__exact=tournament)
     patchList : list = list()
     for res in queryPatchList:
-        if not(res.patch in patchList):
-            patchList.append(res.patch)
+        tempPatch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        if not(tempPatch in patchList):
+            patchList.append(tempPatch)
     
     return Response(patchList)

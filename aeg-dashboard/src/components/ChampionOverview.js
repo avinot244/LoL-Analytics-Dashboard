@@ -14,6 +14,10 @@ import { ThemeProvider, createTheme } from "@mui/material";
 
 import { API_URL } from "../constants";
 
+import Button from "@mui/material/Button"
+import SearchIcon from '@mui/icons-material/Search';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 const theme = createTheme({
     palette: {
         primary : {
@@ -32,6 +36,8 @@ function ChampionOverview() {
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
 
+    const [activeData, setData] = useState([])
+
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [activeSide, setActiveSide] = useState('Select a side')
     const [activeTournament, setActiveTournament] = useState("Select a tournament")
@@ -40,6 +46,25 @@ function ChampionOverview() {
         setValue(newValue);
     }
 
+    const fetchPatchListFromTournament = async (tournament) => {
+        const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            const newPatchList = result;
+            setPatchList(newPatchList)
+        })
+    }
+
+    const fetchChampionsDraftStats = async (tournament, patch, side) => {
+        const result = await fetch(API_URL + `draft/championStats/getStats/${patch}/${side}/${tournament}/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            const newData = result;
+            setData(newData)
+        })
+    }
 
     useEffect(() => {
         const fetchPatchList = async () => {
@@ -77,9 +102,11 @@ function ChampionOverview() {
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
                         <SelectComp 
-                            elementList={patchList}
-                            defaultValue={"-- Patch --"}
-                            setActive={setActivePatch}/>
+                            elementList={tournamentList}
+                            defaultValue={"-- Tournament --"}
+                            setActive={setActiveTournament}
+                        />
+                        
                     </li>
                     <li>
                         <SelectComp
@@ -88,10 +115,35 @@ function ChampionOverview() {
                             setActive={setActiveSide}/>
                     </li>
                     <li>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<SearchIcon />}
+                            onClick={() => {
+                                fetchPatchListFromTournament(activeTournament)
+                            }}    
+                        >
+                            Search Patches
+                        </Button>
+                    </li>
+                </ul>
+                <ul className="dashboard-champOverview-controlPannel-list">
+                    <li>
                         <SelectComp 
-                            elementList={tournamentList}
-                            defaultValue={"-- Tournament --"}
-                            setActive={setActiveTournament}/>
+                            elementList={patchList}
+                            defaultValue={"-- Patch --"}
+                            setActive={setActivePatch}
+                        />
+                    </li>
+                    <li>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<ArrowForwardIosIcon />}
+                            onClick={() => {
+                                fetchChampionsDraftStats(activeTournament, activePatch, activeSide)
+                            }}    
+                        >
+                            Analyze
+                        </Button>
                     </li>
                 </ul>
             </div>
@@ -146,12 +198,12 @@ function ChampionOverview() {
             </Box>
         
             
-            <ChampionOverviewPanel value={value} panelIndex={0}/>
-            <ChampionOverviewPanel value={value} panelIndex={1}/>
-            <ChampionOverviewPanel value={value} panelIndex={2}/>
-            <ChampionOverviewPanel value={value} panelIndex={3}/>
-            <ChampionOverviewPanel value={value} panelIndex={4}/>
-            <ChampionOverviewPanel value={value} panelIndex={5}/>
+            <ChampionOverviewPanel value={value} panelIndex={0} data={activeData}/>
+            <ChampionOverviewPanel value={value} panelIndex={1} data={activeData}/>
+            <ChampionOverviewPanel value={value} panelIndex={2} data={activeData}/>
+            <ChampionOverviewPanel value={value} panelIndex={3} data={activeData}/>
+            <ChampionOverviewPanel value={value} panelIndex={4} data={activeData}/>
+            <ChampionOverviewPanel value={value} panelIndex={5} data={activeData}/>
         </div>
     )
 }

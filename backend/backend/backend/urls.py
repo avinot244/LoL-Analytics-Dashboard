@@ -93,7 +93,7 @@ urlpatterns = [
 
     path('api/dataAnalysis/updateBins/', dataAnalysisViews.update_bins),
     path('api/dataAnalysis/deleteAllMeta/', dataAnalysisViews.delete_all_gameMetadata),
-    path('api/dataAnalysis/patch/getFromTournament/<str:tournament>', dataAnalysisViews.getPatchListFromTournament),
+    path('api/dataAnalysis/patch/getFromTournament/<str:tournament>/', dataAnalysisViews.getPatchListFromTournament),
 
 
     # Draft
@@ -106,7 +106,7 @@ urlpatterns = [
     path('api/draft/delete/', draftViews.deleteAllDrafts),
 
     path('api/draft/championStats/updateStats/', draftViews.updateChampionDraftStats),
-    path('api/draft/championStats/getStats/<str:patch>/<str:side>/<str:tournament>/', draftViews.getChampionDraftStats)
+    path('api/draft/championStats/getStats/<str:patch>/<str:side>/<str:tournament>/', draftViews.getChampionDraftStats),
 
 ]
 

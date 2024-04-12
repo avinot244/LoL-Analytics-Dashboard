@@ -212,7 +212,6 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
     const { numSelected } = props;
-    console.log(rows)
     return (
         <Toolbar
         sx={{
@@ -266,13 +265,18 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function ChampionOverviewPanel(props) {
-    const {value, panelIndex} = props
+    const {value, panelIndex, data} = props
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+    // let wantedData = []
+    // for (let championDraftStatData in data) {
+    //     if championDraftStatData.role
+    // }
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -294,16 +298,16 @@ export default function ChampionOverviewPanel(props) {
         let newSelected = [];
 
         if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, id);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
+            newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
+            newSelected = newSelected.concat(selected.slice(0, -1));
         } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-            selected.slice(0, selectedIndex),
-            selected.slice(selectedIndex + 1),
-        );
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1),
+            );
         }
         setSelected(newSelected);
     };
@@ -386,10 +390,10 @@ export default function ChampionOverviewPanel(props) {
                             />
                             </TableCell>
                             <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                                padding="none"
                             >
                             {row.championName}
                             </TableCell>
@@ -417,13 +421,13 @@ export default function ChampionOverviewPanel(props) {
                 </Table>
                 </TableContainer>
                 <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={rows[panelIndex].length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={rows[panelIndex].length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
             </Box>
