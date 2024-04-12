@@ -206,6 +206,8 @@ def updateChampionDraftStats(request):
                     banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch, side)
                     mostPopularPickOrder : int = getMostPopularPickPosition(championName, tournament, patch, side)
                     blindPick : float = getBlindPick(championName, tournament, patch, side)
+                    mostPopularRole : str = getMostPopularRole(championName, tournament, patch, side)                
+                    
                     
                     path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
                     new : bool = not(os.path.exists(path))
@@ -228,6 +230,14 @@ def updateChampionDraftStats(request):
         
     return Response(status=status.HTTP_200_OK)
 
+@api_view(['DELETE'])
+def deleteAllChampionDraftStats(request):
+    queryChampionDraftStats = ChampionDraftStats.objects.all()
+    for res in queryChampionDraftStats:
+        res.delete()
+
+    return Response(status=status.HTTP_200_OK)
+
 @api_view(['GET'])
 def getChampionDraftStats(request, patch, side, tournament):
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
@@ -239,8 +249,6 @@ def getChampionDraftStats(request, patch, side, tournament):
     
     if not(patch in availablePatchList):
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    print(side)
 
     if side in ["Blue", "Red"]:
         queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")

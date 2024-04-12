@@ -209,7 +209,7 @@ def getPickPosition(championName : str, draftPickOrder : DraftPickOrder, side : 
         elif championName == draftPickOrder.rp5:
             return 4
 
-def getRole(championName : str, queryPlayerPicks) -> str:
+def getRoleForBlind(championName : str, queryPlayerPicks) -> str:
     for playerPick in queryPlayerPicks:
         if championName == playerPick.championName:
             return playerPick.role
@@ -254,7 +254,7 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
         enemyRoleList : list = getEnemyRoleList(draftPickOrder, queryPlayerPicks, side)
         
         
-        role : str = getRole(championName, queryPlayerPicks)
+        role : str = getRoleForBlind(championName, queryPlayerPicks)
         if isBlind(pickPosition, role, enemyRoleList, side):
             counterBlinded += 1
         
@@ -282,7 +282,8 @@ def updateDatabase(path : str,
                    banRate1Rota : float,
                    banRate2Rota : float,
                    mostPopularPickOrder : int,
-                   blindPick : float) -> None:
+                   blindPick : float,
+                   mostPopularRole : str) -> None:
     df : pd.DataFrame = pd.read_csv(path)
     for index, row in df.iterrows():
         if row["ChampionName"] == championName and row["Patch"] == patch and row["Tournament"] == tournament and row["Side"] == side:
@@ -295,7 +296,51 @@ def updateDatabase(path : str,
             df.at[index, "BanRate2Rota"] = banRate2Rota
             df.at[index, "MostPopularPickOrder"] = mostPopularPickOrder
             df.at[index, "BlindPick"] = blindPick
+            df.at[index, "MostPopularRole"] = mostPopularRole
+
+def getMostPopularRole(championName : str, tournament : str, patch : str, side : str) -> float:
+    queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
+
+    roleCounterDict : dict = {
+        "Top" : 0,
+        "Jungle": 0,
+        "Mid": 0,
+        "ADC": 0,
+        "Support": 0
+    }
+
+    for draftPickOrder in queryDraftPickOrder:
+        bluePicks = [
+            draftPickOrder.bp1,
+            draftPickOrder.bp2,
+            draftPickOrder.bp3,
+            draftPickOrder.bp4,
+            draftPickOrder.bp5
+        ]
+        redPicks = [
+            draftPickOrder.rp1,
+            draftPickOrder.rp2,
+            draftPickOrder.rp3,
+            draftPickOrder.rp4,
+            draftPickOrder.rp5
+        ]
+        if championName in bluePicks and side == "Blue":
+            queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId,tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
+            role : str = getRoleForBlind(championName, queryPlayerPicks)
+            roleCounterDict[role] += 1
+        elif championName in redPicks and side == "Red":
+            queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId,tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
+            role : str = getRoleForBlind(championName, queryPlayerPicks)
+            roleCounterDict[role] += 1
+
+    mostPopularRole : str = "Top"
+    max = roleCounterDict[mostPopularRole]
+    for role, counter in roleCounterDict.items():
+        if counter > max:
+            mostPopularRole = role
     
+    return mostPopularRole
+ 
 def saveChampionDraftStatsCSV(path : str,
                               new : bool,
                               championName : str,
@@ -310,7 +355,8 @@ def saveChampionDraftStatsCSV(path : str,
                               banRate1Rota : float,
                               banRate2Rota : float,
                               mostPopularPickOrder : int,
-                              blindPick : float) -> None:
+                              blindPick : float,
+                              mostPopularRole : str) -> None:
     
     if new:
         write_option : str = "w"
@@ -320,7 +366,7 @@ def saveChampionDraftStatsCSV(path : str,
     with open(path, write_option) as csv_file:
         writer = csv.writer(csv_file, delimiter=";")
         if new:
-            header = ["ChampionName", "Patch", "Tournament", "Side", "WinRate", "GlobalPickRate", "PickRate1Rota", "PickRate2Rota", "GlobalBanRate", "BanRate1Rota", "BanRate2Rota", "MostPopularPickOrder", "BlindPick"]
+            header = ["ChampionName", "Patch", "Tournament", "Side", "WinRate", "GlobalPickRate", "PickRate1Rota", "PickRate2Rota", "GlobalBanRate", "BanRate1Rota", "BanRate2Rota", "MostPopularPickOrder", "BlindPick", "MostPopularRole"]
             writer.writerow(header)
         if isLineInDatbaase(path, championName, patch, tournament, side):
             updateDatabase(
@@ -337,10 +383,11 @@ def saveChampionDraftStatsCSV(path : str,
                 banRate1Rota,
                 banRate2Rota,
                 mostPopularPickOrder,
-                blindPick
+                blindPick,
+                mostPopularRole
             )
         else:
-            data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick]
+            data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
             writer.writerow(data)
     print("Saving to database")
