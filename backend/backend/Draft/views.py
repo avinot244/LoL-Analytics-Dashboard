@@ -225,7 +225,8 @@ def updateChampionDraftStats(request):
                                               banRate1Rota,
                                               banRate2Rota,
                                               mostPopularPickOrder,
-                                              blindPick)
+                                              blindPick,
+                                              mostPopularRole)
 
         
     return Response(status=status.HTTP_200_OK)

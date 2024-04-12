@@ -263,11 +263,15 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
 
 def isLineInDatbaase(path : str, championName : str, patch : str, tournament : str, side : str) -> bool:
     df : pd.DataFrame = pd.read_csv(path)
-    for _, row in df.iterrows():
-        if row["ChampionName"] == championName and row["Patch"] == patch and row["Tournament"] == tournament and row["Side"] == side:
-            return True
 
-    return False
+    if df.empty:
+        return False
+    else:
+        for _, row in df.iterrows():
+            if row["ChampionName"] == championName and row["Patch"] == patch and row["Tournament"] == tournament and row["Side"] == side:
+                return True
+
+        return False
 
 def updateDatabase(path : str,
                    championName : str,
@@ -368,24 +372,28 @@ def saveChampionDraftStatsCSV(path : str,
         if new:
             header = ["ChampionName", "Patch", "Tournament", "Side", "WinRate", "GlobalPickRate", "PickRate1Rota", "PickRate2Rota", "GlobalBanRate", "BanRate1Rota", "BanRate2Rota", "MostPopularPickOrder", "BlindPick", "MostPopularRole"]
             writer.writerow(header)
-        if isLineInDatbaase(path, championName, patch, tournament, side):
-            updateDatabase(
-                path,
-                championName,
-                patch,
-                tournament,
-                side,
-                winRate,
-                pickRate,
-                pickRate1Rota,
-                pickRate2Rota,
-                banRate,
-                banRate1Rota,
-                banRate2Rota,
-                mostPopularPickOrder,
-                blindPick,
-                mostPopularRole
-            )
+            data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
+
+            writer.writerow(data)
+        # elif isLineInDatbaase(path, championName, patch, tournament, side):
+        #     print("Is In database")
+        #     updateDatabase(
+        #         path,
+        #         championName,
+        #         patch,
+        #         tournament,
+        #         side,
+        #         winRate,
+        #         pickRate,
+        #         pickRate1Rota,
+        #         pickRate2Rota,
+        #         banRate,
+        #         banRate1Rota,
+        #         banRate2Rota,
+        #         mostPopularPickOrder,
+        #         blindPick,
+        #         mostPopularRole
+        #     )
         else:
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
