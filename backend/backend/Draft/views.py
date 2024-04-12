@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats
-from .serializer import DraftPickOrderSerializer, DraftPlayerPickSerializer
+from .serializer import DraftPickOrderSerializer, ChampionDraftStatsSerializer
 
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_seriesId
 from dataAnalysis.packages.api_calls.DDragon.api_calls import get_champion_mapping_key_reversed
@@ -232,15 +232,20 @@ def updateChampionDraftStats(request):
 def getChampionDraftStats(request, patch, side, tournament):
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
     availablePatchList : list = list()
-    for draftPickOrder in queryDraftPickOrder:
-        if not(draftPickOrder.patch in availablePatchList):
-            availablePatchList.append(draftPickOrder.patch)
-
+    for res in queryDraftPickOrder:
+        tempPatch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        if not(tempPatch in availablePatchList):
+            availablePatchList.append(tempPatch)
+    
     if not(patch in availablePatchList):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    if not(side in ["Blue", "Red"]):
-        queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament)
+    print(side)
+
+    if side in ["Blue", "Red"]:
+        queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")
+        seriliazer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
         
+        return Response(seriliazer.data)
     
     return Response(status=status.HTTP_200_OK)

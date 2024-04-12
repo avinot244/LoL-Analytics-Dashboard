@@ -14,4 +14,4 @@ class DraftPlayerPickSerializer(serializers.ModelSerializer):
 class ChampionDraftStatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChampionDraftStats
-        fields = ("pk", "championName", "patch", "tournament", "side", "winRate", "globalePickRate", "pickRate1Rota", "pickRate2Rota", "globalBanrate", "banRate1Rota", "banRate2Rota", "mostPopularPickOrder", "blindPick")
+        fields = ("pk", "championName", "patch", "tournament", "side", "winRate", "globalPickRate", "pickRate1Rota", "pickRate2Rota", "globalBanRate", "banRate1Rota", "banRate2Rota", "mostPopularPickOrder", "blindPick")
