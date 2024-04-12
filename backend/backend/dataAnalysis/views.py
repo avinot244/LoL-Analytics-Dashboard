@@ -12,6 +12,7 @@ from .utils import isGameDownloaded
 from .packages.utils_stuff.utils_func import getData, getSummaryData
 from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
 
+
 from .models import GameMetadata
 
 import json
@@ -192,3 +193,24 @@ def delete_all_gameMetadata(request):
 
     return Response(status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+def getPatchListFromTournament(request, tournament):
+    queryTournamentList = BehaviorADC.objects.all()
+    tournamentList : list = list()
+
+    for res in queryTournamentList:
+        if not(res.tournament in tournamentList):
+            tournamentList.append(res.tournament)
+
+    if not(tournament in tournamentList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+    queryPatchList = BehaviorADC.objects.filter(tournament__exact=tournament)
+    patchList : list = list()
+    for res in queryPatchList:
+        if not(res.patch in patchList):
+            patchList.append(res.patch)
+    
+    return Response(patchList)
