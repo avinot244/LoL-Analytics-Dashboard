@@ -200,35 +200,37 @@ def updateChampionDraftStats(request):
             
             for championName in associatedChampionList:
                 for side in ["Blue", "Red"]:
-                    print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side))
-                    winRate : float = getChampionWinRate(championName, tournament, patch, side)
-                    pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
-                    banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch, side)
-                    mostPopularPickOrder : int = getMostPopularPickPosition(championName, tournament, patch, side)
-                    blindPick : float = getBlindPick(championName, tournament, patch, side)
-                    mostPopularRole : str = getMostPopularRole(championName, tournament, patch, side)                
-                    
-                    
-                    path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
-                    new : bool = not(os.path.exists(path))
-                    saveChampionDraftStatsCSV(path,
-                                              new,
-                                              championName,
-                                              patch,
-                                              tournament,
-                                              side,
-                                              winRate,
-                                              pickRate,
-                                              pickRate1Rota,
-                                              pickRate2Rota,
-                                              banRate,
-                                              banRate1Rota,
-                                              banRate2Rota,
-                                              mostPopularPickOrder,
-                                              blindPick,
-                                              mostPopularRole)
+                    if isChampionPicked(championName, tournament, patch, side):
+                        print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side))
 
-        
+                        #TODO: only get champion stats if it's picked once during a draft
+                        winRate : float = getChampionWinRate(championName, tournament, patch, side)
+                        pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
+                        banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch, side)
+                        mostPopularPickOrder : int = getMostPopularPickPosition(championName, tournament, patch, side)
+                        blindPick : float = getBlindPick(championName, tournament, patch, side)
+                        mostPopularRole : str = getMostPopularRole(championName, tournament, patch, side)                
+                        
+                        
+                        path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
+                        new : bool = not(os.path.exists(path))
+                        saveChampionDraftStatsCSV(path,
+                                                new,
+                                                championName,
+                                                patch,
+                                                tournament,
+                                                side,
+                                                winRate,
+                                                pickRate,
+                                                pickRate1Rota,
+                                                pickRate2Rota,
+                                                banRate,
+                                                banRate1Rota,
+                                                banRate2Rota,
+                                                mostPopularPickOrder,
+                                                blindPick,
+                                                mostPopularRole)
+    
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])

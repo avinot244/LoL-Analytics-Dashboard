@@ -3,10 +3,8 @@ from ..models import DraftPlayerPick, DraftPickOrder, ChampionDraftStats
 import csv
 import pandas as pd
 
-def getChampionWinRate(championName : str, tournament : str, patch : str, side : str) -> float:
+def isChampionPicked(championName : str, tournament : str, patch : str, side : str) -> bool:
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
-    gameWinCounter : int = 0
-    amountOfGames = len(queryDraftPickOrder)
     for draftPickOrder in queryDraftPickOrder:
         bluePicks = [
             draftPickOrder.bp1,
@@ -22,10 +20,42 @@ def getChampionWinRate(championName : str, tournament : str, patch : str, side :
             draftPickOrder.rp4,
             draftPickOrder.rp5
         ]
+        if (championName in bluePicks) and side == "Blue":
+            return True
+        elif (championName in redPick) and side == "Red":
+            return True
+    return False
+
+
+def getChampionWinRate(championName : str, tournament : str, patch : str, side : str) -> float:
+    queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
+    gameWinCounter : int = 0
+    amountOfGames : int = 0
+    for draftPickOrder in queryDraftPickOrder:
+        bluePicks = [
+            draftPickOrder.bp1,
+            draftPickOrder.bp2,
+            draftPickOrder.bp3,
+            draftPickOrder.bp4,
+            draftPickOrder.bp5
+        ]
+        redPick = [
+            draftPickOrder.rp1,
+            draftPickOrder.rp2,
+            draftPickOrder.rp3,
+            draftPickOrder.rp4,
+            draftPickOrder.rp5
+        ]
+        if (championName in bluePicks) and side == "Blue":
+            amountOfGames += 1
+        elif (championName in redPick) and side == "Red":
+            amountOfGames += 1
+        
         if (championName in bluePicks) and draftPickOrder.winner == 0 and side == "Blue":
             gameWinCounter += 1
         elif (championName in redPick) and draftPickOrder.winner == 1 and side == "Red":
             gameWinCounter += 1
+        
         
     winRate : float = gameWinCounter/amountOfGames
 
@@ -78,6 +108,7 @@ def getPickRateInfo(championName : str, tournament : str, patch : str, side : st
         pickRate : float = totalTimesPicked/amountOfGames
         pickRate1Rota : float = pickCounter1Rota/totalTimesPicked
         pickRate2Rota : float = pickCounter2Rota/totalTimesPicked
+        print(pickRate)
 
     return (pickRate, pickRate1Rota, pickRate2Rota)
 
@@ -329,11 +360,13 @@ def getMostPopularRole(championName : str, tournament : str, patch : str, side :
             draftPickOrder.rp5
         ]
         if championName in bluePicks and side == "Blue":
-            queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId,tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
+            queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId, tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
+
             role : str = getRoleForBlind(championName, queryPlayerPicks)
             roleCounterDict[role] += 1
         elif championName in redPicks and side == "Red":
             queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId,tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
+
             role : str = getRoleForBlind(championName, queryPlayerPicks)
             roleCounterDict[role] += 1
 

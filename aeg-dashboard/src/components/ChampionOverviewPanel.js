@@ -303,8 +303,6 @@ export default function ChampionOverviewPanel(props) {
         fetchChampionsDraftStats(tournament, patch, side)
     }, [])
 
-
-
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -313,7 +311,7 @@ export default function ChampionOverviewPanel(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = rows[panelIndex].map((n) => n.id);
+            const newSelected = wantedRows.map((n) => n.id);
             setSelected(newSelected);
             return;
         }
@@ -356,11 +354,11 @@ export default function ChampionOverviewPanel(props) {
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
-        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows[panelIndex].length) : 0;
+        page > 0 ? Math.max(0, (1 + page) * rowsPerPage - wantedRows.length) : 0;
 
     const visibleRows = React.useMemo(
         () =>
-        stableSort(rows[panelIndex], getComparator(order, orderBy)).slice(
+        stableSort(wantedRows, getComparator(order, orderBy)).slice(
             page * rowsPerPage,
             page * rowsPerPage + rowsPerPage,
         ),
@@ -389,7 +387,7 @@ export default function ChampionOverviewPanel(props) {
                         orderBy={orderBy}
                         onSelectAllClick={handleSelectAllClick}
                         onRequestSort={handleRequestSort}
-                        rowCount={rows[panelIndex].length}
+                        rowCount={wantedRows.length}
                     />
                     <TableBody>
                     {visibleRows.map((row, index) => {
@@ -425,13 +423,13 @@ export default function ChampionOverviewPanel(props) {
                             {row.championName}
                             </TableCell>
                             <TableCell align="right">{row.winRate}</TableCell>
-                            <TableCell align="right">{row.pickRateGlobal}</TableCell>
-                            <TableCell align="right">{row.pickRate1}</TableCell>
-                            <TableCell align="right">{row.pickRate2}</TableCell>
-                            <TableCell align="right">{row.banRateGlobal}</TableCell>
-                            <TableCell align="right">{row.banRate1}</TableCell>
-                            <TableCell align="right">{row.banRate2}</TableCell>
-                            <TableCell align="right">{row.blindP}</TableCell>
+                            <TableCell align="right">{row.globalPickRate}</TableCell>
+                            <TableCell align="right">{row.pickRate1Rota}</TableCell>
+                            <TableCell align="right">{row.pickRate2Rota}</TableCell>
+                            <TableCell align="right">{row.globalBanRate}</TableCell>
+                            <TableCell align="right">{row.banRate1Rota}</TableCell>
+                            <TableCell align="right">{row.banRate2Rota}</TableCell>
+                            <TableCell align="right">{row.blindPick}</TableCell>
                         </TableRow>
                         );
                     })}
