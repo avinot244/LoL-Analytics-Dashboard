@@ -38,9 +38,9 @@ function ChampionOverview() {
 
     const [activeData, setData] = useState([])
 
-    const [activePatch, setActivePatch] = useState('Select a patch')
-    const [activeSide, setActiveSide] = useState('Select a side')
-    const [activeTournament, setActiveTournament] = useState("Select a tournament")
+    const [activePatch, setActivePatch] = useState('14.1')
+    const [activeSide, setActiveSide] = useState('Blue')
+    const [activeTournament, setActiveTournament] = useState("La Ligue Française - Spring 2024 (Regular Season: Regular Season)")
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -56,16 +56,7 @@ function ChampionOverview() {
         })
     }
 
-    const fetchChampionsDraftStats = async (tournament, patch, side) => {
-        const result = await fetch(API_URL + `draft/championStats/getStats/${patch}/${side}/${tournament}/`, {
-            method: "GET"
-        })
-        result.json().then(result => {
-            const newData = result;
-            setData(newData)
-            console.log(newData)
-        })
-    }
+    
 
     useEffect(() => {
         const fetchPatchList = async () => {
@@ -140,7 +131,6 @@ function ChampionOverview() {
                             variant="contained" 
                             endIcon={<ArrowForwardIosIcon />}
                             onClick={() => {
-                                fetchChampionsDraftStats(activeTournament, activePatch, activeSide)
                             }}    
                         >
                             Analyze
@@ -199,12 +189,12 @@ function ChampionOverview() {
             </Box>
         
             
-            <ChampionOverviewPanel value={value} panelIndex={0} data={activeData}/>
-            <ChampionOverviewPanel value={value} panelIndex={1} data={activeData}/>
-            <ChampionOverviewPanel value={value} panelIndex={2} data={activeData}/>
-            <ChampionOverviewPanel value={value} panelIndex={3} data={activeData}/>
-            <ChampionOverviewPanel value={value} panelIndex={4} data={activeData}/>
-            <ChampionOverviewPanel value={value} panelIndex={5} data={activeData}/>
+            <ChampionOverviewPanel value={value} panelIndex={0} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+            <ChampionOverviewPanel value={value} panelIndex={1} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+            <ChampionOverviewPanel value={value} panelIndex={2} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+            <ChampionOverviewPanel value={value} panelIndex={3} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+            <ChampionOverviewPanel value={value} panelIndex={4} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+            <ChampionOverviewPanel value={value} panelIndex={5} tournament={activeTournament} patch={activePatch} side={activeSide}/>
         </div>
     )
 }

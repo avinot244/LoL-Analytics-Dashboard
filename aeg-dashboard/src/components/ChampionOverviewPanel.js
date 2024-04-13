@@ -19,7 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-
+import { API_URL } from '../constants';
 import { v4 as uuidv4 } from 'uuid';
 
 function createData(id, championName, winRate, pickRateGlobal, pickRate1, pickRate2, banRateGlobal, banRate1, banRate2, blindP) {
@@ -265,18 +265,45 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function ChampionOverviewPanel(props) {
-    const {value, panelIndex, data} = props
+    const {value, panelIndex, tournament, patch, side} = props
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    
+    
+    const [wantedRows, setRows] = React.useState([])
 
-    // let wantedData = []
-    // for (let championDraftStatData in data) {
-    //     if championDraftStatData.role
-    // }
+    const roleList = ["Top", "Jungle", "Mid", "ADC", "Support"]
+
+    React.useEffect(() => {
+        const fetchChampionsDraftStats = async (tournament, patch, side) => {
+            const result = await fetch(API_URL + `draft/championStats/getStats/${patch}/${side}/${tournament}/`, {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newData = result;
+
+                let newWantedRows = []
+                newData.map((championDraftStats) => {
+                    if (championDraftStats.mostPopularRole === roleList[panelIndex]) {
+                        newWantedRows.push(championDraftStats)
+                    }
+                })
+                if (panelIndex > 4) {
+                    setRows(newData)
+                }else{
+                    setRows(newWantedRows)   
+                }
+            })
+        }
+
+        fetchChampionsDraftStats(tournament, patch, side)
+    }, [])
+
+
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
