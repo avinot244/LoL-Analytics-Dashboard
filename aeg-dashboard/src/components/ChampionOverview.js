@@ -17,6 +17,7 @@ import { API_URL } from "../constants";
 import Button from "@mui/material/Button"
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 const theme = createTheme({
     palette: {
@@ -35,12 +36,13 @@ function ChampionOverview() {
     const [value, setValue] = useState(0)
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
+    const [displayFlag, setDisplayFlag] = useState(false)
 
-    const [activeData, setData] = useState([])
 
     const [activePatch, setActivePatch] = useState('14.1')
     const [activeSide, setActiveSide] = useState('Blue')
     const [activeTournament, setActiveTournament] = useState("La Ligue Française - Spring 2024 (Regular Season: Regular Season)")
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -79,14 +81,12 @@ function ChampionOverview() {
             })
         }
         
-
-
         fetchPatchList();
         fetchTournamentList();
     }, [])
 
     return(
-        <div className="wrapper-overview">
+        <div className="wrapper-champOverview">
             <NavBarComp />
             <h1> Champion overview </h1>
 
@@ -131,70 +131,89 @@ function ChampionOverview() {
                             variant="contained" 
                             endIcon={<ArrowForwardIosIcon />}
                             onClick={() => {
+                                setDisplayFlag(true)
+                                
                             }}    
                         >
                             Analyze
                         </Button>
                     </li>
+                    <li>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<RestartAltIcon />}
+                            onClick={() => {
+                                setDisplayFlag(false)
+                            }}    
+                        >
+                            Reset
+                        </Button>
+                    </li>
                 </ul>
             </div>
 
+            {
+                displayFlag ?
+                <div className="dashboard-champOverview-rolePanel">
+                    <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 574}}> 
+                    <ThemeProvider theme={theme}>
+                        <Tabs 
+                            value={value} 
+                            onChange={handleChange}
+                            textColor="primary"
+                            indicatorColor="primary"
+                        >
+                            <Tab 
+                                label="Toplane"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="Jungle"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="Midlane"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="ADC"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="Support"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="All Roles"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                        </Tabs>
+                    </ThemeProvider>
+                    </Box>
+                    <ChampionOverviewPanel value={value} panelIndex={0} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={1} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={2} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={3} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={4} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={5} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                </div>
+                :
+                <div className="alt">
 
-            <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 574}}> 
-            <ThemeProvider theme={theme}>
-                <Tabs 
-                    value={value} 
-                    onChange={handleChange}
-                    textColor="primary"
-                    indicatorColor="primary"
-                >
-                    <Tab 
-                        label="Toplane"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                    <Tab 
-                        label="Jungle"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                    <Tab 
-                        label="Midlane"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                    <Tab 
-                        label="ADC"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                    <Tab 
-                        label="Support"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                    <Tab 
-                        label="All Roles"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                </Tabs>
-            </ThemeProvider>
-            </Box>
-        
-            
-            <ChampionOverviewPanel value={value} panelIndex={0} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-            <ChampionOverviewPanel value={value} panelIndex={1} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-            <ChampionOverviewPanel value={value} panelIndex={2} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-            <ChampionOverviewPanel value={value} panelIndex={3} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-            <ChampionOverviewPanel value={value} panelIndex={4} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-            <ChampionOverviewPanel value={value} panelIndex={5} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                </div>
+            }
         </div>
     )
 }

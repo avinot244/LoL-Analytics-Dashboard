@@ -186,14 +186,15 @@ def updateChampionDraftStats(request):
 
         queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
         for draftPickOrder in queryDraftPickOrder:
-            if not(draftPickOrder.patch in assosiatedPatchList):
-                assosiatedPatchList.append(draftPickOrder.patch)
+            tempPatch = draftPickOrder.patch.split(".")[0] + "." + draftPickOrder.patch.split(".")[1]
+            if not(tempPatch in assosiatedPatchList):
+                assosiatedPatchList.append(tempPatch)
         
         for patch in assosiatedPatchList:
             # Getting the list of champions played in a given tournament on a given patch
             associatedChampionList : list = list()
         
-            queryDraftPlayerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__exact=patch)
+            queryDraftPlayerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__contains=patch)
             for draftPlayerPicks in queryDraftPlayerPicks:
                 if not(draftPlayerPicks.championName in associatedChampionList):
                     associatedChampionList.append(draftPlayerPicks.championName)
@@ -203,7 +204,6 @@ def updateChampionDraftStats(request):
                     if isChampionPicked(championName, tournament, patch, side):
                         print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side))
 
-                        #TODO: only get champion stats if it's picked once during a draft
                         winRate : float = getChampionWinRate(championName, tournament, patch, side)
                         pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
                         banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch, side)

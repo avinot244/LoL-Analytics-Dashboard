@@ -20,51 +20,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { API_URL } from '../constants';
-import { v4 as uuidv4 } from 'uuid';
-
-function createData(id, championName, winRate, pickRateGlobal, pickRate1, pickRate2, banRateGlobal, banRate1, banRate2, blindP) {
-    return {
-        id,
-        championName, 
-        winRate,
-        pickRateGlobal, 
-        pickRate1, 
-        pickRate2,
-        banRateGlobal,
-        banRate1, 
-        banRate2, 
-        blindP
-    };
-}
-const rows = [
-
-    ["Darius", "Aatrox", "Garen", "Mordekeiser", "Volibear", "Yone", "Malphite", "Sett", "Jax", "Yorick", "Renekton", "Teemo", "Illaoi", "Trundle", "Urgot", "Fiora", "Nasus", "Dr. Mundo", "Jayce", "Tryndamere"]
-    .map((championName) =>(
-        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
-    )),
-    ["Lee Sin", "Kayn", "Viego", "Master Yi", "Volibear", "Nocturne", "Briar", "Kha'Zix", "Shaco", "Vi", "Graves", "Warwick", "Jax", "Jarvan IV", "Evelynn", "Ekko", "Amumu", "Xin Zao", "Bran", "Kindred"]
-    .map((championName) =>(
-        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
-    )),
-    ["Ahri", "Yasuo", "Yone", "Karma", "Zed", "Akali", "Sylas", "Veigar", "Katarina", "Hwei", "Fizz", "Aurelion Sol", "Lux", "Twisted Fate", "Irelia", "LeBLanc", "Syndra", "Vex", "Orianna", "Diana"]
-    .map((championName) =>(
-        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
-    )),
-    ["Smolder", "Ezreal", "Caitlyn", "Kai\'Sa", "Jinx", "Miss Fortune", "Jhin", "Ashe", "Lucian", "Vayne", "Senna", "Varus", "Tristana", "Twitch", "Zeri", "Draven", "Sivir", "Kog\'maw", "Aphelios", "Xayah"]
-    .map((championName) =>(
-        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
-    )),
-    ["Lux", "Senna", "Thresh", "Nautilus", "Morgana", "Zyra", "Karma", "Leona", "Blitzcrank", "Pyke", "Maokai", "Brand", "Lulu", "Xerath", "Janna", "Nami", "Yuumi", "Seraphine", "Soraka", "Swain"]
-    .map((championName) =>(
-        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
-    )),
-    ["Darius", "Aatrox", "Garen", "Mordekeiser", "Volibear", "Yone", "Malphite", "Sett", "Jax", "Yorick", "Renekton", "Teemo", "Illaoi", "Trundle", "Urgot", "Fiora", "Nasus", "Dr. Mundo", "Jayce", "Tryndamere", "Lee Sin", "Kayn", "Viego", "Master Yi", "Volibear", "Nocturne", "Briar", "Kha'Zix", "Shaco", "Vi", "Graves", "Warwick", "Jax", "Jarvan IV", "Evelynn", "Ekko", "Amumu", "Xin Zao", "Bran", "Kindred", "Ahri", "Yasuo", "Yone", "Karma", "Zed", "Akali", "Sylas", "Veigar", "Katarina", "Hwei", "Fizz", "Aurelion Sol", "Lux", "Twisted Fate", "Irelia", "LeBLanc", "Syndra", "Vex", "Orianna", "Diana", "Smolder", "Ezreal", "Caitlyn", "Kai\'Sa", "Jinx", "Miss Fortune", "Jhin", "Ashe", "Lucian", "Vayne", "Senna", "Varus", "Tristana", "Twitch", "Zeri", "Draven", "Sivir", "Kog\'maw", "Aphelios", "Xayah","Lux", "Senna", "Thresh", "Nautilus", "Morgana", "Zyra", "Karma", "Leona", "Blitzcrank", "Pyke", "Maokai", "Brand", "Lulu", "Xerath", "Janna", "Nami", "Yuumi", "Seraphine", "Soraka", "Swain"]
-    .map((championName) =>(
-        createData(uuidv4(), championName, Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100), Math.round(Math.random()*100),)
-    )),
-    
-    
-];
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -91,7 +46,7 @@ function stableSort(array, comparator) {
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) {
-        return order;
+            return order;
         }
         return a[1] - b[1];
     });
@@ -108,49 +63,49 @@ const headCells = [
         id: 'winRate',
         numeric: true,
         disablePadding: false,
-        label: 'Win Rate (%)',
+        label: 'Win Rate',
     },
     {
-        id: 'pickRateGlobal',
+        id: 'globalPickRate',
         numeric: true,
         disablePadding: false,
-        label: 'Global Pick Rate (%)',
+        label: 'Global Pick Rate',
     },
     {
-        id: 'pickRate1',
+        id: 'pickRate1Rota',
         numeric: true,
         disablePadding: false,
-        label: 'Pick Rate 1st Rotation (%)',
+        label: 'Pick Rate 1st Rotation',
     },
     {
-        id: 'pickRate2',
+        id: 'pickRate2Rota',
         numeric: true,
         disablePadding: false,
-        label: 'Pick Rate 2nd  Rotation (%)',
+        label: 'Pick Rate 2nd  Rotation',
     },
     {
-        id: 'banRateGlobal',
+        id: 'globalBanRate',
         numeric: true,
         disablePadding: false,
-        label: 'Global Ban Rate (%)',
+        label: 'Global Ban Rate',
     },
     {
-        id: 'banRate1',
+        id: 'banRate1Rota',
         numeric: true,
         disablePadding: false,
-        label: 'Ban Rate 1st  Rotation (%)',
+        label: 'Ban Rate 1st  Rotation',
     },
     {
-        id: 'banRate2',
+        id: 'banRate2Rota',
         numeric: true,
         disablePadding: false,
-        label: 'Ban Rate 2nd  Rotation (%)',
+        label: 'Ban Rate 2nd  Rotation',
     },
     {
-        id: 'blindP',
+        id: 'blindPick',
         numeric: true,
         disablePadding: false,
-        label: 'Blind Pick (%)',
+        label: 'Blind Pick',
     },
 ];
 
@@ -183,9 +138,9 @@ function EnhancedTableHead(props) {
                     sortDirection={orderBy === headCell.id ? order : false}
                 >
                     <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : 'asc'}
-                    onClick={createSortHandler(headCell.id)}
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : 'asc'}
+                        onClick={createSortHandler(headCell.id)}
                     >
                     {headCell.label}
                     {orderBy === headCell.id ? (
@@ -267,11 +222,10 @@ EnhancedTableToolbar.propTypes = {
 export default function ChampionOverviewPanel(props) {
     const {value, panelIndex, tournament, patch, side} = props
     const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
+    const [orderBy, setOrderBy] = React.useState('championName');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
     
     
     const [wantedRows, setRows] = React.useState([])
@@ -346,24 +300,19 @@ export default function ChampionOverviewPanel(props) {
         setPage(0);
     };
 
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
-
     const isSelected = (id) => selected.indexOf(id) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - wantedRows.length) : 0;
 
-    const visibleRows = React.useMemo(
-        () =>
-        stableSort(wantedRows, getComparator(order, orderBy)).slice(
-            page * rowsPerPage,
-            page * rowsPerPage + rowsPerPage,
-        ),
-        [order, orderBy, page, rowsPerPage],
-    );
+    
+    const visibleRows = stableSort(wantedRows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    // const visibleRows = React.useMemo(
+    //     () => stableSort(wantedRows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
+    //     [order, orderBy, page, rowsPerPage],
+    // );
+    console.log(orderBy)
 
     return (
         <div 
@@ -422,21 +371,21 @@ export default function ChampionOverviewPanel(props) {
                             >
                             {row.championName}
                             </TableCell>
-                            <TableCell align="right">{row.winRate}</TableCell>
-                            <TableCell align="right">{row.globalPickRate}</TableCell>
-                            <TableCell align="right">{row.pickRate1Rota}</TableCell>
-                            <TableCell align="right">{row.pickRate2Rota}</TableCell>
-                            <TableCell align="right">{row.globalBanRate}</TableCell>
-                            <TableCell align="right">{row.banRate1Rota}</TableCell>
-                            <TableCell align="right">{row.banRate2Rota}</TableCell>
-                            <TableCell align="right">{row.blindPick}</TableCell>
+                            <TableCell align="right">{row.winRate.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.globalPickRate.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.pickRate1Rota.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.pickRate2Rota.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.globalBanRate.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.banRate1Rota.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.banRate2Rota.toFixed(2)}</TableCell>
+                            <TableCell align="right">{row.blindPick.toFixed(2)}</TableCell>
                         </TableRow>
                         );
                     })}
                     {emptyRows > 0 && (
                         <TableRow
                         style={{
-                            height: (dense ? 33 : 53) * emptyRows,
+                            height: 33 * emptyRows,
                         }}
                         >
                         <TableCell colSpan={6} />
@@ -448,7 +397,7 @@ export default function ChampionOverviewPanel(props) {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={rows[panelIndex].length}
+                    count={wantedRows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

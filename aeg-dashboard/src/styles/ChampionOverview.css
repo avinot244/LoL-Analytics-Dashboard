@@ -1,14 +1,14 @@
-.wrapper-overview{
+.wrapper-champOverview{
     background: rgba(43,48,53, 0.95);
 	height: 100vh;
 	color: white;
 }
 
-@media all and (max-width: 1940px){
-	.wrapper-overview{
+/* @media all and (max-width: 1940px){
+	.wrapper-champOverview{
 		height: 100%;
 	}
-}
+} */
 
 h1 {
     text-align: center;
