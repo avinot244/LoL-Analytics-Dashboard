@@ -13,8 +13,8 @@ import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorSupport_get_player_list(request):
-    allObjects = BehaviorSupport.objects.all()
+def behaviorSupport_get_player_list(request, patch):
+    allObjects = BehaviorSupport.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
 
     for SupportObject in allObjects:

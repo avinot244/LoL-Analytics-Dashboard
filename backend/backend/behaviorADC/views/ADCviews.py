@@ -15,8 +15,8 @@ import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorADC_get_player_list(request):
-    allObjects = BehaviorADC.objects.all()
+def behaviorADC_get_player_list(request, patch):
+    allObjects = BehaviorADC.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
 
     for ADCObject in allObjects:

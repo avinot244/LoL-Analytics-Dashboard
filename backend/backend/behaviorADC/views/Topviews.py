@@ -13,8 +13,8 @@ import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorTop_get_player_list(request):
-    allObjects = BehaviorTop.objects.all()
+def behaviorTop_get_player_list(request, patch):
+    allObjects = BehaviorTop.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
 
     for TopObject in allObjects:

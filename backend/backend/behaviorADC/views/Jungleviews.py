@@ -13,8 +13,8 @@ import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorJungle_get_player_list(request):
-    allObjects = BehaviorJungle.objects.all()
+def behaviorJungle_get_player_list(request, patch):
+    allObjects = BehaviorJungle.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
 
     for JungleObject in allObjects:
