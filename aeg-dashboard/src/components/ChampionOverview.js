@@ -63,6 +63,7 @@ function ChampionOverview() {
         result.json().then(result => {
             const newData = result;
             setData(newData)
+            console.log(newData)
         })
     }
 

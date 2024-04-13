@@ -19,7 +19,8 @@ for index, row in df_champion_draft_stats.iterrows():
         banRate1Rota = row["BanRate1Rota"],
         banRate2Rota = row["BanRate2Rota"],
         mostPopularPickOrder = row["MostPopularPickOrder"],
-        blindPick = row["BlindPick"]
+        blindPick = row["BlindPick"],
+        mostPopularRole = row["MostPopularRole"]
     )
     championDraftStats.save()
 

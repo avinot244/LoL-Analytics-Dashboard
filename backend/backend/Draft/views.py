@@ -253,8 +253,8 @@ def getChampionDraftStats(request, patch, side, tournament):
 
     if side in ["Blue", "Red"]:
         queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")
-        seriliazer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
+        serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
         
-        return Response(seriliazer.data)
+        return Response(serializer.data)
     
     return Response(status=status.HTTP_200_OK)
