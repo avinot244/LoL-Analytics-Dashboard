@@ -1,12 +1,12 @@
 .playerOverview-content-wrapper{
 	display: flex;
 	flex-wrap: wrap;
+	justify-content: center;
 }
 
 .playerOverview-graph{
-	width: 400px;
-	height: 400px;
-	background-color: black;
+	width: 480px;
+	height: 480px;
 }
 
 .playerOverview-other-content{

@@ -1,7 +1,27 @@
 import "../styles/PlayerOverviewStat.css"
 import ChampionIcon from "./ChampionIcon";
-import { API_URL, behaviorModelUUID, factorNamePerRole, factorsPerRole} from "../constants";
+import { API_URL, behaviorModelUUID, factorNamePerRole} from "../constants";
 import { useEffect, useState } from "react";
+
+import {
+    Chart as ChartJS,
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Radar } from 'react-chartjs-2';
+import { display } from "@mui/system";
+ChartJS.register(
+    RadialLinearScale,
+    PointElement,
+    LineElement,
+    Filler,
+    Tooltip,
+    Legend,
+);
 
 export default function PlayerOverviewStat(props) {
     const {role, summonnerName, patch, wantedTournament, limit} = props
@@ -155,43 +175,73 @@ export default function PlayerOverviewStat(props) {
         }
     }
     
-    const [chartData, setChartData] = useState({
+    const data = {
         labels: factorNamePerRole[role],
         datasets: [
             {
                 label: `Behavior ${summonnerName} during patch ${patch}`,
-                data: [1, 2, 3, 4],
-                // data: dataBehaviorPatch,
-                fill: true,
+                data: dataBehaviorPatch,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgb(255, 99, 132)',
-                pointBackgroundColor: 'rgb(255, 99, 132)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgb(255, 99, 132)'
+                borderWidth: 1,
                             
             },
             {
                 label: `Behavior ${summonnerName} latest ${limit} games`,
-                data: [5, 6, 7, 8],
-                // data: dataBehaviorLatest,
-                fill: true,
+                data: dataBehaviorLatest,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgb(54, 162, 235)',
-                pointBackgroundColor: 'rgb(54, 162, 235)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgb(54, 162, 235)'
+                borderWidth: 1,
             }
         ]
-    })
+    }
 
+
+    const options = {
+        scales: {
+            r: {
+                max: 1,
+                min: -1,
+                ticks: {
+                    stepSize: 0.5,
+                    color: '#FFF',
+                    backdropColor: 'rgba(0, 0, 0, 0)'
+                },
+                angleLines: {
+                    display: true,
+                    color: "#FFF"
+                },
+                grid: {
+                    display: true,
+                    color: "#FFF"
+                },
+                pointLabels: {
+                    color: "#FFF"
+                }
+            },
+        },
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: '#FFF'
+                }
+            }
+        }
+    }
+
+    
 
 
     return (
         <div className="playerOverview-content-wrapper">
             <div className="playerOverview-graph">
+                <Radar 
+                    data={data}
+                    options={options}
+                />
             </div>
+            
             <div className="playerOverview-other-content">
                 <div className="playerOverview-stats">
                     <h2>Overall stats</h2>
