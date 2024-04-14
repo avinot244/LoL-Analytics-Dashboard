@@ -8,10 +8,6 @@ h1 {
     text-align: center;
 }
 
-.playerOverview-content-wrapper{
-	display: flex;
-	flex-wrap: wrap;
-}
 
 .dashboard-playerOverview-controlPannel{
     width: 100%;
@@ -28,25 +24,9 @@ h1 {
     padding: 5px;
 }
 
-.playerOverview-champion-list{
-	list-style-type: none;
-	padding: 32px;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-}
 
-.playerOverview-champion-list li {
-	padding: 5px;
-	margin-right: 5px;
-}
 
-.playerOverview-graph{
-	width: 400px;
-	height: 400px;
-	background-color: black;
-}
+
 
 .playerOverview-playerSelect{
 	width: fit-content;
@@ -61,13 +41,9 @@ h1 {
 .searchComp{
 	width: 250px;
 }
-.playerOverview-other-content{
-	margin-left: 10px;
-}
 
-.playerOverview-stats div p{
-	font-size: large;
-}
+
+
 
 .dashboard-playerOverview-playerSelect-list{
 	list-style: none;

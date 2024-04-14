@@ -312,7 +312,6 @@ export default function ChampionOverviewPanel(props) {
     //     () => stableSort(wantedRows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     //     [order, orderBy, page, rowsPerPage],
     // );
-    console.log(orderBy)
 
     return (
         <div 

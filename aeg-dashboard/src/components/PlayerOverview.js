@@ -2,8 +2,8 @@ import NavBarComp from "./NavbarComp"
 import "../styles/PlayerOverview.css"
 import SelectComp from "./SelectComp";
 import { useState, useEffect } from "react";
-import ChampionIcon from "./ChampionIcon";
-import { API_URL, roleList} from "../constants";
+import PlayerOverviewStat from "./PlayerOverviewStat";
+import { API_URL, roleList, behaviorModelUUID} from "../constants";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -13,10 +13,8 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
     
-    const weekList = ["Week 1", "Week 2", "Week 3"]
 
-    const championList = ["Hwei", "Thresh", "Leona", "Maokai", "Senna", "Nautilus"]
-
+    
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
     const [activeRole, setActiveRole] = useState('Select a role')
@@ -29,10 +27,9 @@ function PlayerOverview(){
     const [tournament, setActiveTournament] = useState([])
     const [activeLimit, setActiveLimit] = useState(5)
 
-    const gd15 = 450
-    const k15 = 4
-    const d15 = 1
-    const a15 = 5
+    
+
+    
 
     useEffect(() => {
         const fetchPatchList = async () => {
@@ -59,13 +56,15 @@ function PlayerOverview(){
 
     const fetchTournamentFromPlayer = async (summonnerName) => {
         const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/`, {
-            metho: "GET"
+            method: "GET"
         })
         result.json().then(result => {
             const newTournamentListPlayer = result
             setTournamentList(newTournamentListPlayer)
         })
     }
+
+    
 
     return(
         
@@ -172,7 +171,6 @@ function PlayerOverview(){
                                 endIcon={<ArrowForwardIosIcon/>}
                                 onClick={() => {
                                     setDisplayPlayerStat(true)
-                                    console.log(`Getting behavior analysis of player ${selectedPlayer} during tournament ${tournament} during patch ${activePatch} vs performance during latest ${activeLimit} games`)
                                 }}
                             >
                                 Analyse
@@ -185,40 +183,13 @@ function PlayerOverview(){
 
             {
                 flagDisplayPlayerStat && 
-                <div className="playerOverview-content-wrapper">
-                    <div className="playerOverview-graph">
-                    </div>
-                    <div className="playerOverview-other-content">
-                        <div className="playerOverview-stats">
-                            <h2>Overall stats</h2>
-                            <div className="playerOverview-stats-GD">
-                                <p>
-                                    AVG GD@15 : {gd15 > 0 ? `+${gd15} golds` : `-${gd15} golds`}
-                                </p>
-                            </div>
-                            <div className="playerOverview-stats-kda">
-                                <p>
-                                    AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
-                                </p>
-                            </div>  
-                        </div>
-                        <br/>
-                        <div className="playerOverview-champs">
-                            <h2>Best champs</h2>
-                            <ul className="playerOverview-champion-list">
-                                {championList.map((championName) => 
-                                    <ChampionIcon
-                                        championName={championName}
-                                        winRate={50}
-                                        pickRate={60}
-                                        banRate={30}
-                                        pickOrder={1}
-                                    />
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <PlayerOverviewStat 
+                    role={activeRole}
+                    summonnerName={selectedPlayer}
+                    patch={activePatch}
+                    wantedTournament={tournament}
+                    limit={activeLimit}
+                />
             }
             
         </div>
