@@ -2,33 +2,57 @@
 import Select from 'react-select';
 import "../styles/SelectComp.css"
 import { useState } from 'react';
+import { Autocomplete } from '@mui/material';
+import { TextField } from '@mui/material';
+import Box from '@mui/material/Box';
+
+import { amber,  brown,  grey} from '@mui/material/colors/'
+import { ThemeProvider, createTheme } from "@mui/material";
+
+
+const theme = createTheme ({
+	palette: {
+		primary : {
+			main: '#fff',
+		},
+		text : {
+			disabled: '#fff'
+		}
+		
+	},
+	action: {
+		active: '#fff'
+	}
+	
+})
 
 function SearchComp({selectedElement, setSelectedElement, elementList}) {
-
-	const playerList = [
-		{value: 'aeg_agresivoo', label: "AEG Agresivoo"},
-		{value: "aeg_ryuzaki", label: "AEG Ryuzaki"},
-		{value: "aeg_nafkelah", label: "AEG Nafkelah"},
-		{value: "aeg_hid0", label: "AEG Hid0"},
-		{value: "aeg_veignorem", label: "AEG Veignorem"},
-		{value: "g2_broken_blade", label: "G2 Broken Blade"},
-		{value: "g2_yike", label: "G2 Yike"},
-		{value: "g2_caps", label: "G2 Caps"},
-		{value: "g2_hans_sama", label: "G2 Hans Sama"},
-		{value: "g2_mikyx", label: "G2 Mikyx"}
-	]
-
 	return (	
-		<>
-			<Select
-				className="searchComp"
-				classNamePrefix="select"
-				isClearable={true}
-				isSearchable={true}
-				options={elementList}
-				onChange={(element) => setSelectedElement(element.value)}
+		<>	
+			<ThemeProvider theme={theme}>
+				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+					<Autocomplete
+						disablePortal
+						id="searchComp"
+						className="searchComp"
+						options={elementList}
+						renderInput={(params) => {
+							return (
+								<TextField 
+									sx={{color:'primary.main'}} 
+									className='textField-searchComp'
+									{...params} 
+									label="Player"
+								/>
+							)
+							
+						}}
+						onChange={(element) => setSelectedElement(element.value)}
+						sx={{color: 'primary.main', borderColor: 'primary.main'}}
+					/>
+				</Box>
 				
-			/>
+			</ThemeProvider>
 		</>
 	);
 }

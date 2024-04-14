@@ -18,22 +18,9 @@ function PlayerOverview(){
     const championList = ["Hwei", "Thresh", "Leona", "Maokai", "Senna", "Nautilus"]
 
     const [activePatch, setActivePatch] = useState('Select a patch')
-    const [activeWeek,  setActiveWeek] = useState('Select a week')
     const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
     const [activeRole, setActiveRole] = useState('Select a role')
-
-    const playerList = [
-		{value: 'aeg_agresivoo', label: "AEG Agresivoo"},
-		{value: "aeg_ryuzaki", label: "AEG Ryuzaki"},
-		{value: "aeg_nafkelah", label: "AEG Nafkelah"},
-		{value: "aeg_hid0", label: "AEG Hid0"},
-		{value: "aeg_veignorem", label: "AEG Veignorem"},
-		{value: "g2_broken_blade", label: "G2 Broken Blade"},
-		{value: "g2_yike", label: "G2 Yike"},
-		{value: "g2_caps", label: "G2 Caps"},
-		{value: "g2_hans_sama", label: "G2 Hans Sama"},
-		{value: "g2_mikyx", label: "G2 Mikyx"}
-	]
+    const [playerList, setPlayerList] = useState([])
 
     const gd15 = 450
     const k15 = 4
@@ -53,7 +40,15 @@ function PlayerOverview(){
         fetchPatchList();
     }, [])
 
-
+    const fetchPlayers = async (patch, role) => {
+        const result = await fetch(API_URL + `behavior/${role}/getSummonnerList/${patch}/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            const newPlayerList = result;
+            setPlayerList(newPlayerList)
+        })
+    }
 
     return(
         
@@ -62,12 +57,6 @@ function PlayerOverview(){
             <h1> Player Overview </h1>
             <div className="dashboard-playerOverview-controlPannel">
                 <ul className="dashboard-playerOverview-controlPannel-list">
-                    <li>
-                        <SelectComp 
-                            elementList={weekList}
-                            defaultValue={"-- Week --"}
-                            setActive={setActiveWeek}/>
-                    </li>
                     <li>
                         <SelectComp
                             elementList={patchList}
@@ -85,7 +74,7 @@ function PlayerOverview(){
                             variant="contained"
                             endIcon={<SearchIcon />}
                             onClick={() => {
-                                alert(`Fetching for players during ${activeWeek} in ${activePatch} patch in ${activeRole} `)
+                                fetchPlayers(activePatch, activeRole)
                             }}
                         >
                             Search
@@ -93,8 +82,6 @@ function PlayerOverview(){
                     </li>
                 </ul>
             </div>
-
-            <br/>
             <div className="playerOverview-playerSelect">
                 <SearchComp
                     selectedElement={selectedPlayer}
@@ -105,7 +92,7 @@ function PlayerOverview(){
                     variant="contained" 
                     endIcon={<ArrowForwardIosIcon />}
                     onClick={() => {
-                        alert(`Analyzing player ${selectedPlayer} during week ${activeWeek} at role ${activeRole} during patch ${activePatch}`)
+                        
                     }}    
                 >
                 
@@ -115,7 +102,6 @@ function PlayerOverview(){
             </div>
             
 
-            <br/>
 
             <div className="playerOverview-content-wrapper">
                 <div className="playerOverview-graph">

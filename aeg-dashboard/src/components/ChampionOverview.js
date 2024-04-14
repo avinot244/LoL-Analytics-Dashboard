@@ -37,6 +37,7 @@ function ChampionOverview() {
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
     const [displayFlag, setDisplayFlag] = useState(false)
+    const [displayPatchFlag, setDisplayPatchFlag] = useState(false)
 
 
     const [activePatch, setActivePatch] = useState('14.1')
@@ -112,44 +113,56 @@ function ChampionOverview() {
                             endIcon={<SearchIcon />}
                             onClick={() => {
                                 fetchPatchListFromTournament(activeTournament)
+                                setDisplayPatchFlag(true)
                             }}    
                         >
                             Search Patches
                         </Button>
                     </li>
                 </ul>
-                <ul className="dashboard-champOverview-controlPannel-list">
-                    <li>
-                        <SelectComp 
-                            elementList={patchList}
-                            defaultValue={"-- Patch --"}
-                            setActive={setActivePatch}
-                        />
-                    </li>
-                    <li>
-                        <Button 
-                            variant="contained" 
-                            endIcon={<ArrowForwardIosIcon />}
-                            onClick={() => {
-                                setDisplayFlag(true)
-                                
-                            }}    
-                        >
-                            Analyze
-                        </Button>
-                    </li>
-                    <li>
-                        <Button 
-                            variant="contained" 
-                            endIcon={<RestartAltIcon />}
-                            onClick={() => {
-                                setDisplayFlag(false)
-                            }}    
-                        >
-                            Reset
-                        </Button>
-                    </li>
-                </ul>
+
+                {
+                    displayPatchFlag ?
+                    <ul className="dashboard-champOverview-controlPannel-list">
+                        <li>
+                            <SelectComp 
+                                elementList={patchList}
+                                defaultValue={"-- Patch --"}
+                                setActive={setActivePatch}
+                            />
+                        </li>
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<ArrowForwardIosIcon />}
+                                onClick={() => {
+                                    setDisplayFlag(true)
+                                    
+                                }}    
+                            >
+                                Analyze
+                            </Button>
+                        </li>
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<RestartAltIcon />}
+                                onClick={() => {
+                                    setDisplayFlag(false)
+                                    setDisplayPatchFlag(false)
+                                }}    
+                            >
+                                Reset
+                            </Button>
+                        </li>
+                    </ul>
+                    :
+                    <div className="alt">
+
+                    </div>
+
+                }
+                
             </div>
 
             {

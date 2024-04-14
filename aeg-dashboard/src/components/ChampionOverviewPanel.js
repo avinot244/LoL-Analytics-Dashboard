@@ -371,14 +371,14 @@ export default function ChampionOverviewPanel(props) {
                             >
                             {row.championName}
                             </TableCell>
-                            <TableCell align="right">{row.winRate.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.globalPickRate.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.pickRate1Rota.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.pickRate2Rota.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.globalBanRate.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.banRate1Rota.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.banRate2Rota.toFixed(2)}</TableCell>
-                            <TableCell align="right">{row.blindPick.toFixed(2)}</TableCell>
+                            <TableCell align="right">{(row.winRate*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.globalPickRate*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.pickRate1Rota*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.pickRate2Rota*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.globalBanRate*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.banRate1Rota*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.banRate2Rota*100).toFixed(2)}%</TableCell>
+                            <TableCell align="right">{(row.blindPick*100).toFixed(2)}%</TableCell>
                         </TableRow>
                         );
                     })}
