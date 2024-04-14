@@ -26,9 +26,6 @@ ChartJS.register(
 export default function PlayerOverviewStat(props) {
     const {role, summonnerName, patch, wantedTournament, limit} = props
 
-    const [behaviorPatch, setBehaviorPatch] = useState()
-    const [behaviorLatest, setBehaviorLatest] = useState()
-
     const [dataBehaviorPatch, setDataBehaviorPatch] = useState([])
     const [dataBehaviorLatest, setDataBehaviorLatest] = useState([])
 
@@ -46,7 +43,6 @@ export default function PlayerOverviewStat(props) {
             })
             result.json().then(result => {
                 const newBehaviorPatch = result
-                setBehaviorPatch(newBehaviorPatch)
                 console.log(newBehaviorPatch)
                 setDataBehaviorPatch(getAvgData(newBehaviorPatch, role))
             })
@@ -58,7 +54,6 @@ export default function PlayerOverviewStat(props) {
             })
             result.json().then(result => {
                 const newBehaviorLatest = result
-                setBehaviorLatest(newBehaviorLatest)
                 console.log(newBehaviorLatest)
                 setDataBehaviorLatest(getAvgData(newBehaviorLatest, role))
             })

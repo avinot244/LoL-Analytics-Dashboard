@@ -6,7 +6,7 @@
 .champion-icon-img{
     width: 100px;
     height: 100px;
-    clip-path: circle(50% at 50% 50%);
+    /* clip-path: circle(50% at 50% 50%); */
 }
 
 .champion-data{
@@ -23,6 +23,11 @@
 .champion-data p{
     padding-top: 0px;
     margin-bottom: 0px;
+    font-weight: lighter;
+}
+
+.champion-data p span{
+    font-weight: bolder;
 }
 
 .champion-data p:first-child{
@@ -32,7 +37,7 @@
 .champion-icon{
     width: 100px;
     height: 100px;
-    clip-path: circle(50% at 50% 50%);
+    /* clip-path: circle(50% at 50% 50%); */
     background-color: black;
 }
 

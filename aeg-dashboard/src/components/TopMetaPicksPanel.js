@@ -1,43 +1,43 @@
 import SelectComp from "./SelectComp";
-import ChampionIcon from "./ChampionIcon";
 import { useState, useEffect } from "react";
 import { API_URL } from "../constants";
+import ChampionOverviewListPanel from "./championOverviewListPanel";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import SearchIcon from '@mui/icons-material/Search';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 
 function TopMetaPicksPanel(props) {
     const [patchList, setPatchList] = useState([]);
     
-    const [activePatch, setActivePatch] = useState('Select a patch')
-    const [activeSide, setActiveSide] = useState('Select a side')
-    const [activeTournament, setActiveTournament] = useState("Select a tournament")
-    const [activeFilter, setActiveFilter] = useState("Select a filter")
+    const [activePatch, setActivePatch] = useState()
+    const [activeSide, setActiveSide] = useState()
+    const [activeTournament, setActiveTournament] = useState()
+    const [activeFilter, setActiveFilter] = useState()
+
+    const [flagChampionOverview, setFlagChampionOverview] = useState(false)
 
     const {value, panelIndex} = props
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
+    const [displayPatchFlag, setDisplayPatchFlag] = useState(false)
     const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
 
-    const championListToplane = ["Aatrox", "Renekton", "KSante", "Fiora", "Gragas", "Jax"];
-    const championListJungle = ["Maokai", "Viego", "Lillia", "LeeSin", "Volibear", "Belveth"];
-    const championListMidlane = ["Azir", "Tristana", "Hwei", "TwistedFate", "Ahri", "Taliyah"];
-    const championListADC = ["Smolder", "Varus", "Senna", "Kalista", "Ezreal", "Kaisa"];
-    const championListSupport = ["Nautilus", "Leona", "Thresh", "Rakan", "Alistar", "Blitzcrank"]
+
+    const fetchPatchListFromTournament = async (tournament) => {
+        const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            const newPatchList = result;
+            setPatchList(newPatchList)
+        })
+    }
+
 
     useEffect(() => {
-        const fetchPatchList = async () => {
-            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
-                method: "GET"
-            })
-            result.json().then(result => {
-                const newPatchList = result;
-                setPatchList(newPatchList);
-                setActivePatch(newPatchList[newPatchList.length - 1])
-            })
-        }
-
         const fetchTournamentList = async () => {
             const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
                 method: "GET"
@@ -49,7 +49,6 @@ function TopMetaPicksPanel(props) {
             })
         }
         
-        fetchPatchList();
         fetchTournamentList();
         setActiveSide("Blue")
         setActiveFilter(filterList[0])
@@ -67,9 +66,11 @@ function TopMetaPicksPanel(props) {
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
                         <SelectComp 
-                            elementList={patchList}
-                            defaultValue={"-- Patch --"}
-                            setActive={setActivePatch}/>
+                            elementList={tournamentList}
+                            defaultValue={"-- Tournament --"}
+                            setActive={setActiveTournament}
+                        />
+                        
                     </li>
                     <li>
                         <SelectComp
@@ -78,129 +79,79 @@ function TopMetaPicksPanel(props) {
                             setActive={setActiveSide}/>
                     </li>
                     <li>
-                        <SelectComp 
-                            elementList={tournamentList}
-                            defaultValue={"-- Tournament --"}
-                            setActive={setActiveTournament}/>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<SearchIcon />}
+                            onClick={() => {
+                                fetchPatchListFromTournament(activeTournament)
+                                setDisplayPatchFlag(true)
+                            }}    
+                        >
+                            Search Patches
+                        </Button>
                     </li>
-                    
                 </ul>
             </div>
 
-            <div className="sorter">
-                <ul>
-                    <li>Sort by</li>
-                    <li>
-                        <SelectComp 
-                            elementList={filterList}
-                            defaultValue={"-- Select Filter --"}
-                            setActive={setActiveFilter}
-                        />
-                    </li>
-                    <li>
-                        <Button 
-                            variant="contained" 
-                            endIcon={<ArrowForwardIosIcon />}
-                            onClick={() => {
-                                console.log("active patch : ", activePatch)
-                                console.log("active side : ", activeSide)
-                                console.log("active tournament : ", activeTournament)
-                                console.log("active filter : ", activeFilter)
-                            }}    
-                        >
-                            Analyze
-                        </Button>
-                    </li>
-                </ul>                
-            </div>
+            {
+                displayPatchFlag &&
 
-            <div className="champion-overview">
-                <div className="champion-overview-content">
-                    <h2>Toplane</h2>
-                    <ul className="champion-overview-list">
-                        {championListToplane.map((championName) =>
+                <div className="sorter">
+                    <ul>
+                        <li>
                             <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
+                                <SelectComp 
+                                    elementList={patchList}
+                                    defaultValue={"-- Patch --"}
+                                    setActive={setActivePatch}
                                 />
-                            </li> 
-                        )}
-                    </ul>
+                            </li>
+                        </li>
+                        <li>Sort by</li>
+                        <li>
+                            <SelectComp 
+                                elementList={filterList}
+                                defaultValue={"-- Select Filter --"}
+                                setActive={setActiveFilter}
+                            />
+                        </li>
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<ArrowForwardIosIcon />}
+                                onClick={() => {
+                                    setFlagChampionOverview(true)
+                                }}    
+                            >
+                                Analyze
+                            </Button>
+                        </li>
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<RestartAltIcon />}
+                                onClick={() => {
+                                    setDisplayPatchFlag(false)
+                                    setFlagChampionOverview(false)
+                                }}    
+                            >
+                                Reset
+                            </Button>
+                        </li>
+                    </ul>                
                 </div>
-                
-
-                <div className="champion-overview-content">
-                    <h2>Jungle</h2>
-                    <ul className="champion-overview-list">
-                        {championListJungle.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Midlane</h2>
-                    <ul className="champion-overview-list">
-                        {championListMidlane.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>ADC</h2>
-                    <ul className="champion-overview-list">
-                        {championListADC.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-                
-                <div className="champion-overview-content">
-                    <h2>Support</h2>
-                    <ul className="champion-overview-list">
-                        {championListSupport.map((championName) => 
-                            <li>
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            </li> 
-                        )}
-                    </ul>
-                </div>
-            </div>
+            }
+            
+            {
+                flagChampionOverview &&
+                <ChampionOverviewListPanel
+                    filter={activeFilter}
+                    side={activeSide}
+                    patch={activePatch}
+                    tournament={activeTournament}
+                />
+            }
+            
         </div>
     )
 }

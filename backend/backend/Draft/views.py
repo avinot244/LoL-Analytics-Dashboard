@@ -18,6 +18,7 @@ from dataAnalysis.serializer import GameMetadataSerialize
 from .packages.utils import isDraftDownloaded
 from .packages.championStats_utils import *
 
+
 import pandas as pd
 import requests
 import os
@@ -260,3 +261,17 @@ def getChampionDraftStats(request, patch, side, tournament):
         return Response(serializer.data)
     
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getTopChampions(request, role, filter, patch, side, tournament):
+    query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side)
+
+    if filter == "WinRate":
+        queryFiltered = query.order_by("-winRate")
+    elif filter == "PickRate":
+        queryFiltered = query.order_by("-globalPickRate")
+    elif filter == "BanRate":
+        queryFiltered = query.order_by("-globalBanRate")
+    
+    serializer = ChampionDraftStatsSerializer(queryFiltered, context={"request": request}, many=True)
+    return Response(serializer.data)

@@ -21,20 +21,20 @@ function ChampionIcon({championName, winRate, pickRate, banRate, pickOrder}){
         (<div className="champion-info">
             <img className="champion-icon-img" src={img}/>
             <div className="champion-data">
-                <p>{winRate}%</p>
-                <p>{pickRate}%</p>
-                <p>{banRate}%</p>
-                <p>{pickOrder}</p>
+                <p>WR : <span>{winRate}%</span></p>
+                <p>Pick : <span>{pickRate}%</span></p>
+                <p>Ban : <span>{banRate}%</span></p>
+                <p>Pickorder : <span>{pickOrder}</span></p>
             </div>
         </div>)
         :
         (<div className="champion-info">
             <div className="champion-icon"></div>
             <div className="champion-data">
-                <p>{winRate}%</p>
-                <p>{pickRate}%</p>
-                <p>{banRate}%</p>
-                <p>{pickOrder}</p>
+                <p>WR : <span>{winRate}%</span></p>
+                <p>Pick : <span>{pickRate}%</span></p>
+                <p>Ban : <span>{banRate}%</span></p>
+                <p>Pickorder : <span>{pickOrder}</span></p>
             </div>
         </div>)
     )
