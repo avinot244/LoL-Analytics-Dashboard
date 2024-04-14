@@ -19,7 +19,6 @@ h1 {
 
 .dashboard-playerOverview-controlPannel-list{
     list-style-type: none;
-	padding: 32px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -54,8 +53,9 @@ h1 {
 	margin: 0 auto;
 	display: flex;
 }
-.playerOverview-playerSelect .searchComp{
-	padding-right: 25px;
+
+.playerOverview-playerSelect ul li:last-child{
+	padding-left: 10px;
 }
 
 .searchComp{
@@ -67,4 +67,31 @@ h1 {
 
 .playerOverview-stats div p{
 	font-size: large;
+}
+
+.dashboard-playerOverview-playerSelect-list{
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.playerOverview-searchTournament{
+	width: fit-content;
+	margin: 5px auto;
+}
+
+.dashboard-playerOverview-searchTournament-list{
+	width: fit-content;
+	list-style-type: none;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.dashboard-playerOverview-searchTournament-list li{
+	margin-left: 10px;
 }

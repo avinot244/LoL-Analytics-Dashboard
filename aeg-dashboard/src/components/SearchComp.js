@@ -47,7 +47,7 @@ function SearchComp({selectedElement, setSelectedElement, elementList}) {
 							)
 							
 						}}
-						onChange={(element) => setSelectedElement(element.value)}
+						onChange={(element) => {console.log(element) ;return (setSelectedElement(element.value))}}
 						sx={{color: 'primary.main', borderColor: 'primary.main'}}
 					/>
 				</Box>

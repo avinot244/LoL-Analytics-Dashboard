@@ -12,6 +12,8 @@ from .utils import isGameDownloaded
 from .packages.utils_stuff.utils_func import getData, getSummaryData
 from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
 
+from Draft.models import DraftPlayerPick
+
 
 from .models import GameMetadata
 
@@ -215,3 +217,13 @@ def getPatchListFromTournament(request, tournament):
             patchList.append(tempPatch)
     
     return Response(patchList)
+
+@api_view(['GET'])
+def getTournamentFromPlayer(request, summonnerName):
+    query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName)
+    tournamentList : list = list()
+    for res in query:
+        if not(res.tournament in tournamentList):
+            tournamentList.append(res.tournament)
+
+    return Response(tournamentList)

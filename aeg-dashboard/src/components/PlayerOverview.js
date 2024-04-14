@@ -3,12 +3,12 @@ import "../styles/PlayerOverview.css"
 import SelectComp from "./SelectComp";
 import { useState, useEffect } from "react";
 import ChampionIcon from "./ChampionIcon";
-import SearchComp from "./SearchComp"
 import { API_URL, roleList} from "../constants";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
@@ -21,6 +21,13 @@ function PlayerOverview(){
     const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
     const [activeRole, setActiveRole] = useState('Select a role')
     const [playerList, setPlayerList] = useState([])
+    const [flagDisplayPlayerSearch, setDisplayPlayerSearch] = useState(false)
+    const [flagDisplayPlayerStat, setDisplayPlayerStat] = useState(false)
+    const [flagDisplayTournamentSearch, setDisplayTournamentSearch] = useState(false)
+
+    const [tournamentList, setTournamentList] = useState([])
+    const [tournament, setActiveTournament] = useState([])
+    const [activeLimit, setActiveLimit] = useState(5)
 
     const gd15 = 450
     const k15 = 4
@@ -50,6 +57,16 @@ function PlayerOverview(){
         })
     }
 
+    const fetchTournamentFromPlayer = async (summonnerName) => {
+        const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/`, {
+            metho: "GET"
+        })
+        result.json().then(result => {
+            const newTournamentListPlayer = result
+            setTournamentList(newTournamentListPlayer)
+        })
+    }
+
     return(
         
         <div className="wrapper-overview-player">
@@ -75,6 +92,7 @@ function PlayerOverview(){
                             endIcon={<SearchIcon />}
                             onClick={() => {
                                 fetchPlayers(activePatch, activeRole)
+                                setDisplayPlayerSearch(true)
                             }}
                         >
                             Search
@@ -82,62 +100,127 @@ function PlayerOverview(){
                     </li>
                 </ul>
             </div>
-            <div className="playerOverview-playerSelect">
-                <SearchComp
-                    selectedElement={selectedPlayer}
-                    setSelectedElement={setSelectedPlayer}
-                    elementList={playerList}
-                />
-                <Button 
-                    variant="contained" 
-                    endIcon={<ArrowForwardIosIcon />}
-                    onClick={() => {
+
+
+
+            {
+                flagDisplayPlayerSearch && 
+                <div className="playerOverview-playerSelect">
+                    <ul className="dashboard-playerOverview-playerSelect-list">
+                        <li>
+                            <SelectComp
+                                elementList={playerList}
+                                defaultValue={"-- Player --"}
+                                setActive={setSelectedPlayer}
+                            />
+                        </li>
+
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<SearchIcon />}
+                                onClick={() => {
+                                    setDisplayTournamentSearch(true)
+                                    fetchTournamentFromPlayer(selectedPlayer)
+                                }}    
+                            >
+                                Search tournament
+                            </Button>
+                        </li>
+
                         
-                    }}    
-                >
-                
-                    Analyze
-                
-                </Button>
-            </div>
+                    </ul>
+                </div>
+            }
+            
+            {
+                flagDisplayTournamentSearch &&
+                <div className="playerOverview-searchTournament">
+                    <ul className="dashboard-playerOverview-searchTournament-list">
+                        <li>
+                            <SelectComp 
+                                elementList={tournamentList}
+                                defaultValue={"-- Tournament --"}
+                                setActive={setActiveTournament}
+                            />
+                        </li>
+
+                        <li>
+                            <SelectComp
+                                elementList={[5, 10, 15]}
+                                defaultValue={"-- Select a value --"}
+                                setActive={setActiveLimit}
+                            />
+                        </li>
+
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<RestartAltIcon />}
+                                onClick={() => {
+                                    setDisplayPlayerSearch(false)
+                                    setDisplayPlayerStat(false)
+                                    setDisplayTournamentSearch(false)
+                                }}    
+                            >
+                                Reset
+                            </Button>
+                        </li>
+                        <li>
+                            <Button
+                                variant="contained"
+                                endIcon={<ArrowForwardIosIcon/>}
+                                onClick={() => {
+                                    setDisplayPlayerStat(true)
+                                    console.log(`Getting behavior analysis of player ${selectedPlayer} during tournament ${tournament} during patch ${activePatch} vs performance during latest ${activeLimit} games`)
+                                }}
+                            >
+                                Analyse
+                            </Button>
+                        </li>
+                    </ul>
+                </div>
+            }
             
 
-
-            <div className="playerOverview-content-wrapper">
-                <div className="playerOverview-graph">
-
-                </div>
-                <div className="playerOverview-other-content">
-                    <div className="playerOverview-stats">
-                        <h2>Overall stats</h2>
-                        <div className="playerOverview-stats-GD">
-                            <p>
-                                AVG GD@15 : {gd15 > 0 ? `+${gd15} golds` : `-${gd15} golds`}
-                            </p>
+            {
+                flagDisplayPlayerStat && 
+                <div className="playerOverview-content-wrapper">
+                    <div className="playerOverview-graph">
+                    </div>
+                    <div className="playerOverview-other-content">
+                        <div className="playerOverview-stats">
+                            <h2>Overall stats</h2>
+                            <div className="playerOverview-stats-GD">
+                                <p>
+                                    AVG GD@15 : {gd15 > 0 ? `+${gd15} golds` : `-${gd15} golds`}
+                                </p>
+                            </div>
+                            <div className="playerOverview-stats-kda">
+                                <p>
+                                    AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
+                                </p>
+                            </div>  
                         </div>
-                        <div className="playerOverview-stats-kda">
-                            <p>
-                                AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
-                            </p>
-                        </div>  
-                    </div>
-                    <br/>
-                    <div className="playerOverview-champs">
-                        <h2>Best champs</h2>
-                        <ul className="playerOverview-champion-list">
-                            {championList.map((championName) => 
-                                <ChampionIcon
-                                    championName={championName}
-                                    winRate={50}
-                                    pickRate={60}
-                                    banRate={30}
-                                    pickOrder={1}
-                                />
-                            )}
-                        </ul>
+                        <br/>
+                        <div className="playerOverview-champs">
+                            <h2>Best champs</h2>
+                            <ul className="playerOverview-champion-list">
+                                {championList.map((championName) => 
+                                    <ChampionIcon
+                                        championName={championName}
+                                        winRate={50}
+                                        pickRate={60}
+                                        banRate={30}
+                                        pickOrder={1}
+                                    />
+                                )}
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>  
+            }
+            
         </div>
     )
 }
