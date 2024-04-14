@@ -170,7 +170,7 @@ def behaviorSupport_behavior_patch(request, summonnerName, patch, uuid, wantedTo
     
     # Getting the db we want given a player and the patch
     response = requests.get(
-        API_URL + "api/behavior/Support/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+        API_URL + "api/behavior/Support/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Support")

@@ -170,7 +170,7 @@ def behaviorJungle_behavior_patch(request, summonnerName, patch, uuid, wantedTou
     
     # Getting the db we want given a player and the patch
     response = requests.get(
-        API_URL + "api/behavior/Jungle/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+        API_URL + "api/behavior/Jungle/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Jungle")

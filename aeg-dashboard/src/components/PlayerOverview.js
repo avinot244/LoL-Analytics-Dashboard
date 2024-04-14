@@ -13,8 +13,6 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
     
-
-    
     const [activePatch, setActivePatch] = useState('Select a patch')
     const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
     const [activeRole, setActiveRole] = useState('Select a role')
@@ -27,6 +25,7 @@ function PlayerOverview(){
     const [tournament, setActiveTournament] = useState([])
     const [activeLimit, setActiveLimit] = useState(5)
 
+    
     
 
     
@@ -64,6 +63,7 @@ function PlayerOverview(){
         })
     }
 
+    
     
 
     return(
