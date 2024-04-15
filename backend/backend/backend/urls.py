@@ -111,7 +111,8 @@ urlpatterns = [
 
     path('api/draft/championStats/deleteChampionGameStats/', draftViews.deleteAllChampionDraftStats),
 
-    path('api/draft/championStats/getTopChampions/<str:role>/<str:filter>/<str:side>/<str:patch>/<str:tournament>/', draftViews.getTopChampions)
+    path('api/draft/championStats/getTopChampions/<str:role>/<str:filter>/<str:side>/<str:patch>/<str:tournament>/', draftViews.getTopChampions),
+    path('api/draft/championStats/getTopChampions/<str:role>/<str:filter>/<str:side>/<str:patch>/<str:tournament>/<str:summonnerName>/', draftViews.getTopChampionsPlayer)
 
 ]
 

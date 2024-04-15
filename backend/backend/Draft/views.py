@@ -275,3 +275,19 @@ def getTopChampions(request, role, filter, patch, side, tournament):
     
     serializer = ChampionDraftStatsSerializer(queryFiltered, context={"request": request}, many=True)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def getTopChampionsPlayer(request, role, filter, side, patch, tournament, summonnerName):
+    print(patch)
+    queryPlayerPicks = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, tournament__exact=tournament, patch__contains=patch, role__exact=role)
+    
+    playedChampions : list = list()
+
+    for playerPick in queryPlayerPicks:
+        if not(playerPick.championName in playedChampions):
+            playedChampions.append(playerPick.championName)
+    
+
+    # queryChampionStats = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, role__exact=role, championName__contained_by=playedChampions)
+    
+    return Response(playedChampions)
