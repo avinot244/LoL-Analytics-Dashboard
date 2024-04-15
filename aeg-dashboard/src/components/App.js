@@ -4,6 +4,7 @@ import Home from "./Home"
 import ChampionOverview from "./ChampionOverview"
 import PlayerOverview from "./PlayerOverview"
 import GameOverview from './GameOverview';
+import Monitoring from './Monitoring';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
 	{
 		path:'/GameOverview/Esports',
 		element: <GameOverview/>
+	},
+	{
+		path:'/Monitoring',
+		element: <Monitoring/>
 	}
 ])
 

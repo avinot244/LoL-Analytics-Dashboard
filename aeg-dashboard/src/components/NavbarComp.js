@@ -31,6 +31,8 @@ function NavBarComp() {
 					<NavDropdown.Item href='/GameOverview/Scrims'>Scrims</NavDropdown.Item>
 					<NavDropdown.Item href='/GameOverview/Esports'>Esports</NavDropdown.Item>
 				</NavDropdown>
+
+				<Nav.Link as={Link} to="/Monitoring">Monitoring</Nav.Link>
 				
 				{/* <NavDropdown title="Game Overview" id="basic-nav-dropdown">		
 					<NavDropdown.Item href="#action/3.1">Post-game stats</NavDropdown.Item>
