@@ -108,7 +108,6 @@ def getPickRateInfo(championName : str, tournament : str, patch : str, side : st
         pickRate : float = totalTimesPicked/amountOfGames
         pickRate1Rota : float = pickCounter1Rota/totalTimesPicked
         pickRate2Rota : float = pickCounter2Rota/totalTimesPicked
-        print(pickRate)
 
     return (pickRate, pickRate1Rota, pickRate2Rota)
 
@@ -293,13 +292,13 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
     return blindPickRate
 
 def isLineInDatabase(path : str, championName : str, patch : str, tournament : str, side : str) -> bool:
-    df : pd.DataFrame = pd.read_csv(path)
+    df : pd.DataFrame = pd.read_csv(path, sep=";")
 
     if df.empty:
         return False
     else:
         for _, row in df.iterrows():
-            if row["ChampionName"] == championName and row["Patch"] == patch and row["Tournament"] == tournament and row["Side"] == side:
+            if row["ChampionName"] == championName and str(row["Patch"]) == patch and row["Tournament"] == tournament and row["Side"] == side:
                 return True
 
         return False
@@ -318,21 +317,31 @@ def updateDatabase(path : str,
                    banRate2Rota : float,
                    mostPopularPickOrder : int,
                    blindPick : float,
-                   mostPopularRole : str) -> None:
-    df : pd.DataFrame = pd.read_csv(path)
+                   mostPopularRole : str,
+                   csv_buffer) -> None:
+    df : pd.DataFrame = pd.read_csv(path, sep=";")
     for index, row in df.iterrows():
-        if row["ChampionName"] == championName and row["Patch"] == patch and row["Tournament"] == tournament and row["Side"] == side:
-            df.at[index, "WinRate"] = winRate
-            df.at[index, "GlobalPickRate"] = pickRate
-            df.at[index, "PickRate1Rota"] = pickRate1Rota
-            df.at[index, "PickRate2Rota"] = pickRate2Rota
-            df.at[index, "GlobalBanRate"] = banRate
-            df.at[index, "BanRate1Rota"] = banRate1Rota
-            df.at[index, "BanRate2Rota"] = banRate2Rota
-            df.at[index, "MostPopularPickOrder"] = mostPopularPickOrder
-            df.at[index, "BlindPick"] = blindPick
-            df.at[index, "MostPopularRole"] = mostPopularRole
-
+        # Getting the line we want
+        if row["ChampionName"] == championName and str(row["Patch"]) == patch and row["Tournament"] == tournament and row["Side"] == side:
+            # If input data is different than csv data
+            if (row["WinRate"] != winRate or row["GlobalPickRate"] != pickRate or row["PickRate1Rota"] != pickRate1Rota or row["PickRate2Rota"] != pickRate2Rota
+                or row["GlobalBanRate"] != banRate or row["BanRate1Rota"] != banRate1Rota or row["BanRate2Rota"] != banRate2Rota or row["MostPopularPickOrder"] != mostPopularPickOrder
+                or row["BlindPick"] != blindPick or row["MostPopularRole"] != mostPopularRole):
+                print("Updating row")
+                df.at[index, "WinRate"] = winRate
+                df.at[index, "GlobalPickRate"] = pickRate
+                df.at[index, "PickRate1Rota"] = pickRate1Rota
+                df.at[index, "PickRate2Rota"] = pickRate2Rota
+                df.at[index, "GlobalBanRate"] = banRate
+                df.at[index, "BanRate1Rota"] = banRate1Rota
+                df.at[index, "BanRate2Rota"] = banRate2Rota
+                df.at[index, "MostPopularPickOrder"] = mostPopularPickOrder
+                df.at[index, "BlindPick"] = blindPick
+                df.at[index, "MostPopularRole"] = mostPopularRole
+            
+            else:
+                print("Row not modified")
+                
 def getMostPopularRole(championName : str, tournament : str, patch : str, side : str) -> float:
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
 
@@ -400,6 +409,8 @@ def saveChampionDraftStatsCSV(path : str,
     else:
         write_option : str = "a"
 
+    
+    
     with open(path, write_option) as csv_file:
         writer = csv.writer(csv_file, delimiter=";")
         if new:
@@ -408,28 +419,31 @@ def saveChampionDraftStatsCSV(path : str,
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
             writer.writerow(data)
-        elif isLineInDatabase(path, championName, patch, tournament, side):
-            print("Is In database")
-            updateDatabase(
-                path,
-                championName,
-                patch,
-                tournament,
-                side,
-                winRate,
-                pickRate,
-                pickRate1Rota,
-                pickRate2Rota,
-                banRate,
-                banRate1Rota,
-                banRate2Rota,
-                mostPopularPickOrder,
-                blindPick,
-                mostPopularRole
-            )
+        # elif isLineInDatabase(path, championName, patch, tournament, side):
+        #     print("Is In database")
+        #     updateDatabase(
+        #         path,
+        #         championName,
+        #         patch,
+        #         tournament,
+        #         side,
+        #         winRate,
+        #         pickRate,
+        #         pickRate1Rota,
+        #         pickRate2Rota,
+        #         banRate,
+        #         banRate1Rota,
+        #         banRate2Rota,
+        #         mostPopularPickOrder,
+        #         blindPick,
+        #         mostPopularRole,
+        #         csv_file
+        #     )
         else:
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
             writer.writerow(data)
-    print("Saving to database")
+        
+        
+    print(" Saving to database")
 

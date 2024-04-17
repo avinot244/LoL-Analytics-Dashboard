@@ -195,6 +195,9 @@ def updateChampionDraftStats(request):
             if not(tempPatch in assosiatedPatchList):
                 assosiatedPatchList.append(tempPatch)
         
+        if os.path.exists(DATA_PATH + "draft/champion_draft_stats.csv"):
+            os.remove(DATA_PATH + "draft/champion_draft_stats.csv")
+
         for patch in assosiatedPatchList:
             # Getting the list of champions played in a given tournament on a given patch
             associatedChampionList : list = list()
@@ -207,7 +210,7 @@ def updateChampionDraftStats(request):
             for championName in associatedChampionList:
                 for side in ["Blue", "Red"]:
                     if isChampionPicked(championName, tournament, patch, side):
-                        print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side))
+                        print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="")
 
                         winRate : float = getChampionWinRate(championName, tournament, patch, side)
                         pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
