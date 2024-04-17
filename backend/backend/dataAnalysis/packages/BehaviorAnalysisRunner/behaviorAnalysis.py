@@ -431,7 +431,8 @@ def saveToDataBase(statDict : dict,
                    summonnerName : str,
                    role : str,
                    tournament : str,
-                   date : str):
+                   date : str,
+                   gameNumber : int):
     
     # Asserting the right open option
 
@@ -452,6 +453,8 @@ def saveToDataBase(statDict : dict,
                 header.append(key)
             for key in lanePresenceMapping.keys():
                 header.append(key)
+            
+            header.append("GameNumber")
             writer.writerow(header)
         
         elif not(isInDataBase(matchId, date, role, summonnerName)):
@@ -466,5 +469,5 @@ def saveToDataBase(statDict : dict,
                 data.append(v)
             for _, v in lanePresenceMapping.items():
                 data.append(v)
-            
+            data.append(gameNumber)
             writer.writerow(data)

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from behaviorADC.models import BehaviorADC
+from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
 
 from .globals import DATA_PATH, BLACKLIST
 from .packages.api_calls.GRID.api_calls import *
@@ -236,6 +236,35 @@ def getTournamentFromPlayer(request, summonnerName):
 
     return Response(tournamentList)
 
+@api_view(['DELETE'])
+def deleteAllBehaviorStats(request):
+    queryTop = BehaviorTop.objects.all()
+    for behaviorTop in queryTop:
+        behaviorTop.delete()
+    print("Deleted data from Top")
+
+    queryJungle = BehaviorJungle.objects.all()
+    for behaviorJungle in queryJungle:
+        behaviorJungle.delete()
+    print("Deleted data from Jungle")
+
+    queryMid = BehaviorMid.objects.all()
+    for behaviorMid in queryMid:
+        behaviorMid.delete()
+    print("Deleted data from Mid")
+
+    queryADC = BehaviorADC.objects.all()
+    for behaviorADC in queryADC:
+        behaviorADC.delete()
+    print("Deleted data from ADC")
+
+    querySupport = BehaviorSupport.objects.all()
+    for behaviorSupport in querySupport:
+        behaviorSupport.delete()
+    print("Deleted data from Support")
+
+    return Response(status=status.HTTP_200_OK)
+
 @api_view(['PATCH'])
 def computeNewBehaviorStats(request, time):
     queryAllGames = GameMetadata.objects.all()
@@ -246,12 +275,11 @@ def computeNewBehaviorStats(request, time):
             seriesId=game.seriesId,
             gameNumber=game.gameNumber
         ).count() > 0):
-            print("We Didn't analyzed this game yet")
             seriesId : int = game.seriesId
             gameNumber : int = game.gameNumber
             (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
 
-            match : str = game.name
+            match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
             rootdir : str = DATA_PATH + "games/bin/{}".format(match)
             summaryData : SummaryData = getSummaryData(rootdir)
 
@@ -283,6 +311,25 @@ def computeNewBehaviorStats(request, time):
                 if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
                     new = True
                 
-                save_path : str = DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role)
-                saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date)
+                save_path : str = DATA_PATH + "behavior/behavior/".format(role)
+                saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
+
+            for playerTeamTwo in dataBeforeTime.gameSnapshotList[0].teams[1].players:
+                summonnerName : str = playerTeamTwo.playerName
+                role = getRole(dataBeforeTime, summonnerName)
+
+                gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
+
+                (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
+
+                new = False
+                if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
+                    new = True
                 
+                save_path : str = DATA_PATH + "behavior/behavior/".format(role)
+                saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
+
+        else:
+            print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
+
+    return Response(status=status.HTTP_200_OK)
