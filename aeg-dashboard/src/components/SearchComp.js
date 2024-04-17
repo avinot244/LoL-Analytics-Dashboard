@@ -39,10 +39,11 @@ function SearchComp({selectedElement, setSelectedElement, elementList}) {
 						renderInput={(params) => {
 							return (
 								<TextField 
-									sx={{color:'primary.main'}} 
 									className='textField-searchComp'
 									{...params} 
 									label="Player"
+									color='primary'
+									focused
 								/>
 							)
 							

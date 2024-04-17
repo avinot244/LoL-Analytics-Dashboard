@@ -31,12 +31,6 @@ def saveDrafts(request):
         file_name : str = row["Name"]
         gameNumber : int = int(file_name.split("_")[2][0])
         seriesId : int = row["SeriesId"]
-        patch : str = row["Patch"]
-        tournament : str = get_tournament_from_seriesId(seriesId)
-        teamBlue = row["teamBlue"]
-        teamRed = row["teamRed"]
-        
-
         (data, _, _, _) = getData(seriesId, gameNumber)
         date = row["Date"]
 
@@ -48,9 +42,19 @@ def saveDrafts(request):
             if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_pick_order.csv")):
                 if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_player_picks.csv")):
                     # Saving the draft into our csv database
+                    patch : str = row["Patch"]
+                    tournament : str = get_tournament_from_seriesId(seriesId)
+                    teamBlue = row["teamBlue"]
+                    teamRed = row["teamRed"]
                     print(seriesId)
                     data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
+            else:
+                print("Game of seriesId {} n°{} already in databae".format(seriesId, gameNumber))
         else:
+            patch : str = row["Patch"]
+            tournament : str = get_tournament_from_seriesId(seriesId)
+            teamBlue = row["teamBlue"]
+            teamRed = row["teamRed"]
             print(seriesId)
             data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
 

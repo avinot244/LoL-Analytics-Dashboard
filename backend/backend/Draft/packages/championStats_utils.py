@@ -292,7 +292,7 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
     blindPickRate : float = counterBlinded/amountOfGames
     return blindPickRate
 
-def isLineInDatbaase(path : str, championName : str, patch : str, tournament : str, side : str) -> bool:
+def isLineInDatabase(path : str, championName : str, patch : str, tournament : str, side : str) -> bool:
     df : pd.DataFrame = pd.read_csv(path)
 
     if df.empty:
@@ -408,25 +408,25 @@ def saveChampionDraftStatsCSV(path : str,
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
             writer.writerow(data)
-        # elif isLineInDatbaase(path, championName, patch, tournament, side):
-        #     print("Is In database")
-        #     updateDatabase(
-        #         path,
-        #         championName,
-        #         patch,
-        #         tournament,
-        #         side,
-        #         winRate,
-        #         pickRate,
-        #         pickRate1Rota,
-        #         pickRate2Rota,
-        #         banRate,
-        #         banRate1Rota,
-        #         banRate2Rota,
-        #         mostPopularPickOrder,
-        #         blindPick,
-        #         mostPopularRole
-        #     )
+        elif isLineInDatabase(path, championName, patch, tournament, side):
+            print("Is In database")
+            updateDatabase(
+                path,
+                championName,
+                patch,
+                tournament,
+                side,
+                winRate,
+                pickRate,
+                pickRate1Rota,
+                pickRate2Rota,
+                banRate,
+                banRate1Rota,
+                banRate2Rota,
+                mostPopularPickOrder,
+                blindPick,
+                mostPopularRole
+            )
         else:
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 

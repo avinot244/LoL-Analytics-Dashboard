@@ -3,6 +3,11 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 
+import '../styles/Monitoring.css'
+
+import NavBarComp from './NavbarComp';
+import SearchComp from './SearchComp';
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -28,7 +33,7 @@ function ChildModal() {
 
     return (
         <React.Fragment>
-        <Button onClick={handleOpen}>Open Child Modal</Button>
+        <Button onClick={handleOpen} variant="contained">Open Child Modal</Button>
         <Modal
             open={open}
             onClose={handleClose}
@@ -40,7 +45,7 @@ function ChildModal() {
             <p id="child-modal-description">
                 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
             </p>
-            <Button onClick={handleClose}>Close Child Modal</Button>
+            <Button onClick={handleClose} variant='contained' color='error'>Close Child Modal</Button>
             </Box>
         </Modal>
         </React.Fragment>
@@ -49,6 +54,7 @@ function ChildModal() {
 
 export default function Monitoring() {
     const [open, setOpen] = React.useState(false);
+    const [selectedElement, setSelectedElement] = React.useState();
     const handleOpen = () => {
         setOpen(true);
     };
@@ -57,8 +63,21 @@ export default function Monitoring() {
     };
 
     return (
-        <div>
-        <Button onClick={handleOpen}>Open modal</Button>
+        <div className='wrapper-Monitoring'>
+        <NavBarComp/>
+
+        <h1>Monitoring</h1>
+        <SearchComp
+            elementList={["Aymeric", "Vinot", "Aegis", "Aymeric", "Vinot", "Aegis"]}
+            setSelectedElement={setSelectedElement}
+        />
+
+        <Button
+            onClick={handleOpen}
+            variant='contained'
+        >
+            Open modal
+        </Button>
         <Modal
             open={open}
             onClose={handleClose}
@@ -66,11 +85,18 @@ export default function Monitoring() {
             aria-describedby="parent-modal-description"
         >
             <Box sx={{ ...style, width: 400 }}>
-            <h2 id="parent-modal-title">Text in a modal</h2>
-            <p id="parent-modal-description">
-                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </p>
-            <ChildModal />
+                <h2 id="parent-modal-title">Text in a modal</h2>
+                <p id="parent-modal-description">
+                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                </p>
+                <Button
+                    onClick={handleClose}
+                    variant='contained'
+                    color='error'
+                >
+                    Close Modal    
+                </Button>
+                <ChildModal />
             </Box>
         </Modal>
         </div>

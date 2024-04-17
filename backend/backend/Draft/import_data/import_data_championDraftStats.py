@@ -22,6 +22,7 @@ for index, row in df_champion_draft_stats.iterrows():
         blindPick = row["BlindPick"],
         mostPopularRole = row["MostPopularRole"]
     )
+    
     championDraftStats.save()
 
 print("CSV saved to database")

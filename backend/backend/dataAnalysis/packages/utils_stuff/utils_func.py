@@ -63,7 +63,7 @@ def getData(seriesId : int, gameNumber : int):
         file.close()
 
 
-        if not(isGameDownloaded(seriesId)):
+        if not(isGameDownloaded(seriesId, gameNumber)):
             with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
                 writer = csv.writer(csv_file, delimiter=";")
                 matchDate = get_date_from_seriesId(seriesId)
@@ -72,7 +72,7 @@ def getData(seriesId : int, gameNumber : int):
                 teamBlue = data.gameSnapshotList[0].teams[0].getTeamName()
                 teamRed = data.gameSnapshotList[0].teams[1].getTeamName()
                 winningTeam = data.winningTeam
-                dataCSV = [matchDate, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam]
+                dataCSV = [matchDate, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam, gameNumber]
                 writer.writerow(dataCSV)
     else:
         if os.path.exists(DATA_PATH + "games/bin/" + match + "/Separated/"):
