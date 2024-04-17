@@ -9,8 +9,12 @@ from behaviorADC.models import BehaviorADC
 from .globals import DATA_PATH, BLACKLIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded
-from .packages.utils_stuff.utils_func import getData, getSummaryData
+from .packages.utils_stuff.utils_func import getData, getSummaryData, getRole
 from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
+from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
+from .packages.AreaMapping.AreaMapping import AreaMapping
+from .packages.GameStat import GameStat
+from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
 
 from Draft.models import DraftPlayerPick
 
@@ -233,7 +237,7 @@ def getTournamentFromPlayer(request, summonnerName):
     return Response(tournamentList)
 
 @api_view(['PATCH'])
-def computeNewBehaviorStats(request):
+def computeNewBehaviorStats(request, time):
     queryAllGames = GameMetadata.objects.all()
 
     for game in queryAllGames:
@@ -243,3 +247,42 @@ def computeNewBehaviorStats(request):
             gameNumber=game.gameNumber
         ).count() > 0):
             print("We Didn't analyzed this game yet")
+            seriesId : int = game.seriesId
+            gameNumber : int = game.gameNumber
+            (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
+
+            match : str = game.name
+            rootdir : str = DATA_PATH + "games/bin/{}".format(match)
+            summaryData : SummaryData = getSummaryData(rootdir)
+
+            date = game.date
+            matchId = data.matchId
+
+            # usually time = 840s i.e 14min
+            # Splitting our data so we get the interval between [840s; gameDuration]
+            splitList : list[int] = [120, time, gameDuration]
+            splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+            areaMapping : AreaMapping = AreaMapping()
+
+            dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
+            areaMapping.computeMapping(dataBeforeTime)
+
+            tournamentName : str = get_tournament_from_seriesId(seriesId)
+            patch : str = summaryData.gameVersion
+            print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
+
+            for playerTeamOne in dataBeforeTime.gameSnapshotList[0].teams[0].players:
+                summonnerName : str = playerTeamOne.playerName
+                role = getRole(dataBeforeTime, summonnerName)
+
+                gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
+
+                (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
+
+                new = False
+                if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
+                    new = True
+                
+                save_path : str = DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role)
+                saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date)
+                
