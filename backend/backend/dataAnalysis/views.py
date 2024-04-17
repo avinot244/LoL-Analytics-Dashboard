@@ -231,3 +231,15 @@ def getTournamentFromPlayer(request, summonnerName):
             tournamentList.append(res.tournament)
 
     return Response(tournamentList)
+
+@api_view(['PATCH'])
+def computeNewBehaviorStats(request):
+    queryAllGames = GameMetadata.objects.all()
+
+    for game in queryAllGames:
+        if not(BehaviorADC.objects.filter(
+            date=game.date,
+            seriesId=game.seriesId,
+            gameNumber=game.gameNumber
+        ).count() > 0):
+            print("We Didn't analyzed this game yet")
