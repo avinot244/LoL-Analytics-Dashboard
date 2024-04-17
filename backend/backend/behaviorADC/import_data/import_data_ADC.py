@@ -23,6 +23,7 @@ for index, row in df.iterrows():
         jungleProximity = row["JungleProximity"],
         botLanePresence = row["botLanePresence"],
         riverBotPresence = row["riverBotPresence"],
+        gameNumber = row["GameNumber"]
     )
 
 

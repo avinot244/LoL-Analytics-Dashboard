@@ -28,6 +28,7 @@ for index, row in df.iterrows():
         jungleAllyTopPresence = row["jungleAllyTopPresence"],
         jungleEnemyTopPresence = row["jungleEnemyTopPresence"],
         riverTopPresence = row["riverTopPresence"],
+        gameNumber = row["GameNumber"]
     )
 
 
