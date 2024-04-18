@@ -2,6 +2,7 @@ import "../styles/PlayerOverviewStat.css"
 import ChampionIcon from "./ChampionIcon";
 import { API_URL, behaviorModelUUID, factorNamePerRole} from "../constants";
 import { useEffect, useState } from "react";
+import NormalDistribution from "normal-distribution"
 
 import {
     Chart as ChartJS,
@@ -13,7 +14,6 @@ import {
     Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
-import { display } from "@mui/system";
 ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -144,7 +144,7 @@ export default function PlayerOverviewStat(props) {
             sum = behaviorObject.Factor_4.reduce((a, b) => a + b, 0)
             temp = result.push(sum / behaviorObject.Factor_4.length) || 0
             return result
-        }else if (role == "Support") {
+        }else if (role === "Support") {
             let result = []
             let sum = behaviorObject.Factor_1.reduce((a, b) => a + b, 0)
             let temp = result.push(sum / behaviorObject.Factor_1.length) || 0
@@ -174,7 +174,7 @@ export default function PlayerOverviewStat(props) {
         labels: factorNamePerRole[role],
         datasets: [
             {
-                label: `Behavior ${summonnerName} during patch ${patch}`,
+                label: `Behavior ${summonnerName} during patch ${patch} at ${wantedTournament}`,
                 data: dataBehaviorPatch,
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgb(255, 99, 132)',
@@ -182,7 +182,7 @@ export default function PlayerOverviewStat(props) {
                             
             },
             {
-                label: `Behavior ${summonnerName} latest ${limit} games`,
+                label: `Behavior ${summonnerName} latest ${limit} games at ${wantedTournament}`,
                 data: dataBehaviorLatest,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgb(54, 162, 235)',
@@ -190,7 +190,6 @@ export default function PlayerOverviewStat(props) {
             }
         ]
     }
-
 
     const options = {
         scales: {
@@ -200,7 +199,12 @@ export default function PlayerOverviewStat(props) {
                 ticks: {
                     stepSize: 0.5,
                     color: '#FFF',
-                    backdropColor: 'rgba(0, 0, 0, 0)'
+                    backdropColor: 'rgba(0, 0, 0, 0)',
+                    callback: (value, tick, values) => {
+                        const normDist = new NormalDistribution(0, 1)
+
+                        return `${(1-normDist.cdf(value)).toFixed(2)}%`
+                    }
                 },
                 angleLines: {
                     display: true,
@@ -221,17 +225,19 @@ export default function PlayerOverviewStat(props) {
                 labels: {
                     color: '#FFF'
                 }
+            },
+            customCanvasBackgroundColor: {
+                color: 'black'
             }
         }
     }
 
-    
 
 
     return (
         <div className="playerOverview-content-wrapper">
             <div className="playerOverview-graph">
-                <Radar 
+                <Radar
                     data={data}
                     options={options}
                 />

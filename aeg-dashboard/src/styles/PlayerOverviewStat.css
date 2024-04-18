@@ -5,8 +5,9 @@
 }
 
 .playerOverview-graph{
-	width: 480px;
-	height: 480px;
+	width: 680px;
+	height: 680px;
+	background-color: black;
 }
 
 .playerOverview-other-content{
