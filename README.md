@@ -15,10 +15,6 @@ For more information about this repository and the author, see the following:
 [![Twitter Badge](https://img.shields.io/badge/Twitter-1DA1F2?style=flat&logo=twitter&logoColor=white)](https://twitter.com/Warock42)
 [![GitHub Badge](https://img.shields.io/badge/GitHub-100000?style=flat&logo=github&logoColor=white)](https://github.com/avinot244)
 
-
-:grinning:
-
-
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/water.png)
 
 <!-- TABLE OF CONTENTS -->
@@ -48,4 +44,7 @@ For more information about this repository and the author, see the following:
 </details>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/water.png)
-<h2 id="behavior-analysis">:monocle_face: Data Mining/Machine Learning models</h2>
+<h2 id="models">:monocle_face: Data Mining/Machine Learning models</h2>
+In order to perform data analysis I have used my knowledge in data science in order to retrieve relevant informations about players, games, drafts and so on... In this section I roughly explain what each models does.
+
+<h3 id="behavior-analysis">:eye_speech_bubble: Behavior Analysis</h3>
