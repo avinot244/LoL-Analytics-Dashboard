@@ -144,7 +144,7 @@ def behaviorJungle_behavior_latest(request, summonnerName, limit, uuid, wantedTo
         API_URL + "api/behavior/Jungle/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Jungle")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -173,5 +173,5 @@ def behaviorJungle_behavior_patch(request, summonnerName, patch, uuid, wantedTou
         API_URL + "api/behavior/Jungle/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Jungle")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
     return Response(transformed_wantedDB_scaled)

@@ -448,7 +448,7 @@ def saveToDataBase(statDict : dict,
         
         writer = csv.writer(csv_file, delimiter=";")
         if new :
-            header = ["Date", "Tournament", "MatchId", "SeriesId", "Patch", "SummonnerName"]
+            header = ["Date", "Tournament", "MatchId", "SeriesId", "Patch", "GameNumber", "SummonnerName"]
             for key in statDict.keys():
                 header.append(key)
             for key in lanePresenceMapping.keys():
@@ -464,10 +464,11 @@ def saveToDataBase(statDict : dict,
             data.append(matchId)
             data.append(seriesId)
             data.append(patch)
+            data.append(gameNumber)
             data.append(summonnerName)
             for _, v in statDict.items():
                 data.append(v)
             for _, v in lanePresenceMapping.items():
                 data.append(v)
-            data.append(gameNumber)
+            
             writer.writerow(data)

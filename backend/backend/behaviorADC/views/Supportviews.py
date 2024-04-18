@@ -144,7 +144,7 @@ def behaviorSupport_behavior_latest(request, summonnerName, limit, uuid, wantedT
         API_URL + "api/behavior/Support/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Support")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Support")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -173,7 +173,7 @@ def behaviorSupport_behavior_patch(request, summonnerName, patch, uuid, wantedTo
         API_URL + "api/behavior/Support/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Support")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Support")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['DELETE'])

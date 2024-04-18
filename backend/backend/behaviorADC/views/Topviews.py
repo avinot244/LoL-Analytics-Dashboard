@@ -144,7 +144,7 @@ def behaviorTop_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
         API_URL + "api/behavior/Top/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Top")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Top")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -173,5 +173,5 @@ def behaviorTop_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
         API_URL + "api/behavior/Top/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Top")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Top")
     return Response(transformed_wantedDB_scaled)

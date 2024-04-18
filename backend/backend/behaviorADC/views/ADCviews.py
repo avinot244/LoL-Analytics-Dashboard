@@ -18,12 +18,12 @@ import requests
 def behaviorADC_get_player_list(request, patch):
     allObjects = BehaviorADC.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
-
     for ADCObject in allObjects:
         summonnerNameList.append(ADCObject.summonnerName)
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
+
  
 @api_view(['PATCH'])
 def behaviorADC_updatePatch(request):
@@ -145,7 +145,8 @@ def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
         API_URL + "api/behavior/ADC/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
+    print(wantedDB.columns)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -174,6 +175,6 @@ def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
         API_URL + "api/behavior/ADC/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
