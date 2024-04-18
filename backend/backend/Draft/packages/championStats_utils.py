@@ -2,6 +2,7 @@ from ..models import DraftPlayerPick, DraftPickOrder, ChampionDraftStats
 
 import csv
 import pandas as pd
+import os
 
 def isChampionPicked(championName : str, tournament : str, patch : str, side : str) -> bool:
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
@@ -317,8 +318,7 @@ def updateDatabase(path : str,
                    banRate2Rota : float,
                    mostPopularPickOrder : int,
                    blindPick : float,
-                   mostPopularRole : str,
-                   csv_buffer) -> None:
+                   mostPopularRole : str) -> None:
     df : pd.DataFrame = pd.read_csv(path, sep=";")
     for index, row in df.iterrows():
         # Getting the line we want
@@ -338,6 +338,11 @@ def updateDatabase(path : str,
                 df.at[index, "MostPopularPickOrder"] = mostPopularPickOrder
                 df.at[index, "BlindPick"] = blindPick
                 df.at[index, "MostPopularRole"] = mostPopularRole
+
+                
+                os.remove(path)
+                df.to_csv(path, sep=";")
+                break
             
             else:
                 print("Row not modified")
@@ -419,26 +424,25 @@ def saveChampionDraftStatsCSV(path : str,
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
             writer.writerow(data)
-        # elif isLineInDatabase(path, championName, patch, tournament, side):
-        #     print("Is In database")
-        #     updateDatabase(
-        #         path,
-        #         championName,
-        #         patch,
-        #         tournament,
-        #         side,
-        #         winRate,
-        #         pickRate,
-        #         pickRate1Rota,
-        #         pickRate2Rota,
-        #         banRate,
-        #         banRate1Rota,
-        #         banRate2Rota,
-        #         mostPopularPickOrder,
-        #         blindPick,
-        #         mostPopularRole,
-        #         csv_file
-        #     )
+        elif isLineInDatabase(path, championName, patch, tournament, side):
+            print(" Is In database")
+            updateDatabase(
+                path,
+                championName,
+                patch,
+                tournament,
+                side,
+                winRate,
+                pickRate,
+                pickRate1Rota,
+                pickRate2Rota,
+                banRate,
+                banRate1Rota,
+                banRate2Rota,
+                mostPopularPickOrder,
+                blindPick,
+                mostPopularRole,
+            )
         else:
             data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
