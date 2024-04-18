@@ -20,7 +20,6 @@ def getFAModel(behaviorModelsMetadata : BehaviorModelsMetadata) -> FactorAnalyze
     return fa
     
 def project(database : pd.DataFrame, model : FactorAnalyzer, role : str, header_offset : int):
-    # Scaling database
     metadataBehavior = database[database.columns[:header_offset]]
     # Building our transformed database from the model
     transformed_database_content : list = list()

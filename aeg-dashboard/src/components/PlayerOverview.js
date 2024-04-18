@@ -53,8 +53,8 @@ function PlayerOverview(){
         })
     }
 
-    const fetchTournamentFromPlayer = async (summonnerName) => {
-        const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/`, {
+    const fetchTournamentFromPlayer = async (summonnerName, patch) => {
+        const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/${patch}`, {
             method: "GET"
         })
         result.json().then(result => {
@@ -120,7 +120,7 @@ function PlayerOverview(){
                                 endIcon={<SearchIcon />}
                                 onClick={() => {
                                     setDisplayTournamentSearch(true)
-                                    fetchTournamentFromPlayer(selectedPlayer)
+                                    fetchTournamentFromPlayer(selectedPlayer, activePatch)
                                 }}    
                             >
                                 Search tournament

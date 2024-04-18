@@ -285,7 +285,6 @@ def getTopChampions(request, role, filter, patch, side, tournament):
 
 @api_view(['GET'])
 def getTopChampionsPlayer(request, role, filter, side, patch, tournament, summonnerName):
-    print(patch)
     queryPlayerPicks = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, tournament__exact=tournament, patch__contains=patch, role__exact=role)
     
     playedChampions : list = list()

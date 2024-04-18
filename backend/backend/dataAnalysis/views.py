@@ -227,8 +227,8 @@ def getPatchListFromTournament(request, tournament):
     return Response(patchList)
 
 @api_view(['GET'])
-def getTournamentFromPlayer(request, summonnerName):
-    query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName)
+def getTournamentFromPlayer(request, summonnerName, patch):
+    query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, patch__contains=patch)
     tournamentList : list = list()
     for res in query:
         if not(res.tournament in tournamentList):

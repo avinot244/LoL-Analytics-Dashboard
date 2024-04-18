@@ -86,7 +86,7 @@ urlpatterns = [
     path('api/behaviorModels/<str:uuid>/<str:role>/getModel/', behaviorModelsViews.get_model),
 
     # Data Analysis
-    path('api/dataAnalysis/tournament/<str:summonnerName>/', dataAnalysisViews.getTournamentFromPlayer),
+    path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/', dataAnalysisViews.getTournamentFromPlayer),
     path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),

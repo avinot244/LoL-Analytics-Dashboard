@@ -454,7 +454,6 @@ def saveToDataBase(statDict : dict,
             for key in lanePresenceMapping.keys():
                 header.append(key)
             
-            header.append("GameNumber")
             writer.writerow(header)
         
         elif not(isInDataBase(matchId, date, role, summonnerName)):

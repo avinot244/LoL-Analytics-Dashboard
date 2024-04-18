@@ -195,8 +195,8 @@ export default function PlayerOverviewStat(props) {
     const options = {
         scales: {
             r: {
-                max: 1,
-                min: -1,
+                max: 1.5,
+                min: -1.5,
                 ticks: {
                     stepSize: 0.5,
                     color: '#FFF',
