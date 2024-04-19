@@ -61,4 +61,4 @@ All in all we extract ingame statistics (Gold diff, damage per minute, etc.) in 
 For more info you can read the article that I have written <a href="https://drive.google.com/file/d/1o6FcY_anyv7QE86N8dXMdxL2QZdNB26-/view?usp=sharing ">here</a>.
 
 Then by normalising these values with a gaussian distribution we obtain the following results :
-![dsdfsdfsd](https://gihub.com/avinot244/LoL-Analytics-Dashboard/blob/main/img/G2_Caps.jpg)
+<img src="img/G2_Caps.PNG">
