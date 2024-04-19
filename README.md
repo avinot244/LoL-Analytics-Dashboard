@@ -54,4 +54,11 @@ $$
 f_k = \sum_{i} λ_{i,k} x_{i,k}
 $$
 
-Where the λi,k are the "loadings" of our factors. These λi,k are computed in order to reduce the covariance between the xi,k. For more info you can read the article that I have written <a href="https://drive.google.com/file/d/1o6FcY_anyv7QE86N8dXMdxL2QZdNB26-/view?usp=sharing ">here</a>
+Where the λi,k are the "loadings" of our factors. These λi,k are computed in order to reduce the covariance between the xi,k. 
+
+All in all we extract ingame statistics (Gold diff, damage per minute, etc.) in order to extract thos underlying factors. In order to give an interpretation of these factors we analyse the loading matrix and tell which factors is "using" which observable variables and then with basic knowledge about the game we give the factor a meaning. 
+
+For more info you can read the article that I have written <a href="https://drive.google.com/file/d/1o6FcY_anyv7QE86N8dXMdxL2QZdNB26-/view?usp=sharing ">here</a>.
+
+Then by normalising these values with a gaussian distribution we obtain the following results :
+![dsdfsdfsd](https://gihub.com/avinot244/LoL-Analytics-Dashboard/blob/main/img/G2_Caps.jpg)
