@@ -203,7 +203,7 @@ export default function PlayerOverviewStat(props) {
                     callback: (value, tick, values) => {
                         const normDist = new NormalDistribution(0, 1)
 
-                        return `${(1-normDist.cdf(value)).toFixed(2)}%`
+                        return `${((1-normDist.cdf(value))*100).toFixed(2)}%`
                     }
                 },
                 angleLines: {
