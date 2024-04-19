@@ -61,6 +61,17 @@ All in all we extract ingame statistics (Gold diff, damage per minute, etc.) in 
 For more info you can read the article that I have written <a href="https://drive.google.com/file/d/1o6FcY_anyv7QE86N8dXMdxL2QZdNB26-/view?usp=sharing ">here</a>.
 
 Then by normalising these values with a gaussian distribution we obtain the following results :
-<img src="img/G2_Caps.PNG" align="center">
+<div align="center">
+  <img src="img/G2_Caps.PNG" align="center">
+</div>
 
 Here each of the axis are the value of the underlying factors that we have extracted. And the labels associated to it are done with the method described above
+
+<h3 id="draft-analysis">:control_knobs: Draft Analysis (WIP)</h3>
+
+<h2 id="Api-documentation">:open_book: API documentation</h2>
+
+<h3 id="dataAnalysis">:arrow_forward: dataAnalysis</h3>
+<h3 id="Behavior">:arrow_forward: Behavior</h3>
+<h3 id="Behavior-modelos">:arrow_forward: Behavior Models</h3>
+<h3 id="Draft">:arrow_forward: Draft</h3>
