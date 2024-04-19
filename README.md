@@ -48,3 +48,10 @@ For more information about this repository and the author, see the following:
 In order to perform data analysis I have used my knowledge in data science in order to retrieve relevant informations about players, games, drafts and so on... In this section I roughly explain what each models does.
 
 <h3 id="behavior-analysis">:eye_speech_bubble: Behavior Analysis</h3>
+The Behavior Analysis model is a data mining based on a Factor Analysis method. (Wikipedia page <a href="https://en.wikipedia.org/wiki/Factor_analysis">here</a>). Basically, given a set of observable variables (xi) we suppose that a set of underlying factors fk can be computed as a linear combinaison of the (xi)
+
+$$
+f_k = \sum_{i} λ_{i,k} x_{i,k}
+$$
+
+Where the λi,k are the "loadings" of our factors. These λi,k are computed in order to reduce the covariance between the xi,k. For more info you can read the article that I have written <a href="https://drive.google.com/file/d/1o6FcY_anyv7QE86N8dXMdxL2QZdNB26-/view?usp=sharing ">here</a>
