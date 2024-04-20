@@ -15,13 +15,14 @@ from dataAnalysis.globals import DATA_PATH, API_URL
 from dataAnalysis.models import GameMetadata
 from dataAnalysis.serializer import GameMetadataSerialize
 
-from .packages.utils import isDraftDownloaded
+from .packages.utils import isDraftDownloaded, isTournamentOngoing
 from .packages.championStats_utils import *
 
 
 import pandas as pd
 import requests
 import os
+import re
 
 @api_view(['POST'])
 def saveDrafts(request):
@@ -181,19 +182,34 @@ def updateChampionDraftStats(request):
 
     tournamentList : list = list()
     response = requests.get(API_URL + 'api/dataAnalysis/tournament/getList')
+
+
     for tournament in response.json():
-        tournamentList.append(tournament)
+        formated_tournament : str = re.sub(r'\([^)]*\)', '', tournament)
+        
+        if tournament != "League of Legends Scrims":
+            if not(isTournamentOngoing(formated_tournament[:-1])):
+                tournamentList.append(tournament)
+        else:
+            tournamentList.append(tournament)
+
+    
     
     
     for tournament in tournamentList:
         # Getting the list of patches where the tournament was played
         assosiatedPatchList : list = list()
 
+        # TODO: IF TOURNAMENT IS SCRIM, ONLY GET THE ONGOING PATCH
         queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
         for draftPickOrder in queryDraftPickOrder:
             tempPatch = draftPickOrder.patch.split(".")[0] + "." + draftPickOrder.patch.split(".")[1]
             if not(tempPatch in assosiatedPatchList):
                 assosiatedPatchList.append(tempPatch)
+
+        if tournament == "League of Legends Scrims":
+            assosiatedPatchList = [assosiatedPatchList[-1]]
+        
         
         if os.path.exists(DATA_PATH + "draft/champion_draft_stats.csv"):
             os.remove(DATA_PATH + "draft/champion_draft_stats.csv")

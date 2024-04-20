@@ -396,3 +396,25 @@ def get_date_from_seriesId(seriesId : int):
     
     result : dict = response.json()
     return result["data"]["series"]["startTimeScheduled"]
+
+def get_dates_tournament(tournamentId : int):
+    url = "https://api.grid.gg/central-data/graphql"
+    body = """
+        query Tournament {
+            tournament(id: """ + tournamentId + """) {
+                id
+                endDate
+                startDate
+            }
+        }
+    """
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    response = requests.post(url=url,json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+    
+    result : dict = response.json()
+    return result["data"]["tournament"]["startDate"], result["data"]["tournament"]["endDate"]
