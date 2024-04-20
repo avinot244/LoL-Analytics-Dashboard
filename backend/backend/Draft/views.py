@@ -211,8 +211,8 @@ def updateChampionDraftStats(request):
             assosiatedPatchList = [assosiatedPatchList[-1]]
         
         
-        if os.path.exists(DATA_PATH + "draft/champion_draft_stats.csv"):
-            os.remove(DATA_PATH + "draft/champion_draft_stats.csv")
+        # if os.path.exists(DATA_PATH + "draft/champion_draft_stats.csv"):
+        #     os.remove(DATA_PATH + "draft/champion_draft_stats.csv")
 
         for patch in assosiatedPatchList:
             # Getting the list of champions played in a given tournament on a given patch

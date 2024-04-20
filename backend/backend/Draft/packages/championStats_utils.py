@@ -435,7 +435,7 @@ def saveChampionDraftStatsCSV(path : str,
         writer.writerow(data)
         csv_file.close()
     elif isLineInDatabase(path, championName, patch, tournament, side):
-        print(" Is In database")
+        print(" Is In database ", end="")
         csv_file.close()
         updateDatabase(
             path,
@@ -455,11 +455,12 @@ def saveChampionDraftStatsCSV(path : str,
             mostPopularRole,
         )
     else:
+        print(" Saving to database")
         data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
         csv_file.close()
     
         
-    print(" Saving to database")
+    
 
