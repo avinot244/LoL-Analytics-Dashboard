@@ -44,7 +44,6 @@ export default function ChampionOverviewListPanel(props) {
     return (
         
         <div className="champion-overview">
-            <p>{championList.length}</p>
             {
                 (flagDisplay && championList.length > 4) &&
                 <>

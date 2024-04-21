@@ -4,3 +4,32 @@
 	color: white;
 	overflow: auto;
 }
+
+.wrapper-tournament-selectComp{
+	width: 500px;
+	padding-right: 20px;
+}
+
+.tournamentSelect-wrapper{
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.wrapper-button-tournamentSelect{
+	width: fit-content;
+	margin: 0 auto;
+	padding-bottom: 5px;
+}
+
+
+.tournamentSelectAdder{
+	display: flex;
+	flex-wrap: wrap;
+	padding-top: 5px;
+	padding-bottom: 10px;
+}
+
+.wrapper-Monitoring-downloadButton{
+	width: fit-content;
+	margin: 0 auto;
+}

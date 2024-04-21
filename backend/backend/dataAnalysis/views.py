@@ -23,6 +23,8 @@ from .models import GameMetadata
 
 import json
 import pandas as pd
+from datetime import datetime
+import re
 
 @api_view(['PATCH'])
 def download_latest(request, rawTournamentList : str):
@@ -333,3 +335,28 @@ def computeNewBehaviorStats(request, time):
             print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
 
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def getListOfDownloadableTournament(request, year):
+    
+    if not(os.path.exists(DATA_PATH + "tournament_downloadable.json")):
+        res : dict = dict()
+        with open(DATA_PATH + "tournament_mapping.json", "r") as json_file:
+            tournamentDict : dict = json.load(json_file)
+            for tournamentName, tournamentId in tournamentDict.items():
+                pattern = r"(?:LEC|LCK|La Ligue Française|LCS).*" + str(year)
+                match = re.search(pattern, tournamentName)
+                if match:
+                    _, cursorNext = get_game_seriesId_from_page_tournament("", 1, tournamentId)
+                    if cursorNext != '':
+                        res.update({tournamentName: tournamentId})
+    
+    
+        with open(DATA_PATH + "tournament_downloadable.json", "w") as json_file:
+            json.dump(res, json_file)
+    else:
+        with open(DATA_PATH + "tournament_downloadable.json", "r") as json_file:
+            res : dict = json.load(json_file)
+    
+    return Response(res)

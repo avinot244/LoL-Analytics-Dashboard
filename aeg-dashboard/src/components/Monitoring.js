@@ -1,104 +1,174 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import DownloadIcon from '@mui/icons-material/Download';
+
+import Form from 'react-bootstrap/Form';
 
 import '../styles/Monitoring.css'
 
 import NavBarComp from './NavbarComp';
-import SearchComp from './SearchComp';
+import { API_URL } from '../constants/index.js';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    pt: 2,
-    px: 4,
-    pb: 3,
-};
-
-function ChildModal() {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
+    const [selectedTournament, setSelectedTournament] = React.useState('')
+    const handleSelectChange = (event) => {
+        const newValue = event.target.value;
+        setSelectedTournament(newValue)
+        onSelectChange(newValue)
+    }
 
     return (
-        <React.Fragment>
-        <Button onClick={handleOpen} variant="contained">Open Child Modal</Button>
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="child-modal-title"
-            aria-describedby="child-modal-description"
-        >
-            <Box sx={{ ...style, width: 200 }}>
-            <h2 id="child-modal-title">Text in a child modal</h2>
-            <p id="child-modal-description">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            </p>
-            <Button onClick={handleClose} variant='contained' color='error'>Close Child Modal</Button>
-            </Box>
-        </Modal>
-        </React.Fragment>
+        <div className='tournamentSelectAdder'>
+            <div className='wrapper-tournament-selectComp'>
+                <Form.Select onChange={handleSelectChange}>
+                    <option>-- Select a Tournament --</option>
+                    {tournamentList.map((element) => (
+                        <option value={element}>{element}</option>
+                    ))}
+                </Form.Select>
+            </div>
+            
+
+            <Button
+                onClick={onRemove}
+                color='error'
+                variant='contained'
+                startIcon={<DeleteIcon/>}
+            >
+                Remove
+            </Button>
+
+        </div>
+    )
+}
+
+function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}) {
+    // State to store the paragraphs
+    const [paragraphs, setParagraphs] = React.useState([]);
+    
+
+    // Function to add a paragraph
+    const addParagraph = () => {
+        const newParagraphs = [...paragraphs, `Paragraph ${paragraphs.length + 1}`];
+        setParagraphs(newParagraphs);
+        setSelectedTournaments([...selectedTournaments, ''])
+    };
+
+    // Function to remove a paragraph by index
+    const removeParagraph = (index) => {
+        const newParagraphs = [...paragraphs];
+        newParagraphs.splice(index, 1);
+        setParagraphs(newParagraphs);
+
+        const newSelectTournaments = [...selectedTournaments];
+        newSelectTournaments.splice(index, 1);
+        setSelectedTournaments(newSelectTournaments)
+    };
+
+    const handleSelectChange = (value, index) => {
+        const newSelectedTournaments = [...selectedTournaments]
+        newSelectedTournaments[index] = value;
+        setSelectedTournaments(newSelectedTournaments)
+    }
+
+    const handleDownload = () => {
+        let flag = true
+        if (selectedTournaments.length === 0) {
+            flag = false
+        }
+        for (let i = 0 ; i < selectedTournaments.length ; i++) {
+            if (selectedTournaments[i] === ""){
+                flag = false
+            }
+        }
+
+        if (flag) {
+            console.log("Downloading games from tournament : ", selectedTournaments)
+        }else{
+            alert("Please select a tournament in each fields")
+        }
+    }
+
+    return (
+        <div className='tournamentSelect-wrapper'>
+            <div>
+                {paragraphs.map((paragraph, index) => (
+                    <TournamentSelecter
+                        key={index}
+                        text={paragraph}
+                        onRemove={() => removeParagraph(index)}
+                        onSelectChange={(value) => handleSelectChange(value, index)}
+                        tournamentList={tournamentList}
+                    />
+                ))}
+            </div>
+
+            <div className='wrapper-button-tournamentSelect'>
+                <Button
+                    onClick={addParagraph}
+                    variant='contained'
+                    startIcon={<AddIcon/>}
+                    sx = {{
+                        mr: 2
+                    }}
+                >
+                    Add Tournament
+                </Button>
+
+                <Button
+                    variant='contained'
+                    endIcon={<DownloadIcon/>}
+                    color="success"
+                    onClick={() => handleDownload()}
+                >
+                    Download
+                </Button>
+            </div>
+        </div>
     );
 }
 
+
 export default function Monitoring() {
-    const [open, setOpen] = React.useState(false);
-    const [selectedElement, setSelectedElement] = React.useState();
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const [tournamentList, setTournamentList] = React.useState([]);
+    const [selectedTournaments, setSelectedTournaments] = React.useState([]);
+
+    const fetchTournamentList = async () => {
+        const today = new Date()
+        const year = today.getFullYear();
+        const result = await fetch(API_URL + `dataAnalysis/getListDownlodableTournament/${year}/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            let newTournamentList = Object.keys(result)
+            setTournamentList(newTournamentList)
+        })
+    }
+
+    React.useEffect(() => {
+        fetchTournamentList()
+    }, [])
 
     return (
         <div className='wrapper-Monitoring'>
-        <NavBarComp/>
+            <React.StrictMode></React.StrictMode>
+            <NavBarComp/>
 
-        <h1>Monitoring</h1>
-        <SearchComp
-            elementList={["Aymeric", "Vinot", "Aegis", "Aymeric", "Vinot", "Aegis"]}
-            setSelectedElement={setSelectedElement}
-        />
+            <h1>Monitoring</h1>
 
-        <Button
-            onClick={handleOpen}
-            variant='contained'
-        >
-            Open modal
-        </Button>
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="parent-modal-title"
-            aria-describedby="parent-modal-description"
-        >
-            <Box sx={{ ...style, width: 400 }}>
-                <h2 id="parent-modal-title">Text in a modal</h2>
-                <p id="parent-modal-description">
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                </p>
-                <Button
-                    onClick={handleClose}
-                    variant='contained'
-                    color='error'
-                >
-                    Close Modal    
-                </Button>
-                <ChildModal />
-            </Box>
-        </Modal>
+            <TextAdder
+                tournamentList={tournamentList}
+                selectedTournaments={selectedTournaments}
+                setSelectedTournaments={setSelectedTournaments}
+            />
+
+            <div className='wrapper-Monitoring-downloadButton'>
+                
+            </div>
+        
+        
         </div>
     );
 }

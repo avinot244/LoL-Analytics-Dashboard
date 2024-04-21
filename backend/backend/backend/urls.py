@@ -99,6 +99,8 @@ urlpatterns = [
     path('api/dataAnalysis/computeBehaviorStats/<int:time>/', dataAnalysisViews.computeNewBehaviorStats),
     path('api/dataAnalysis/deleteAllBehaviorStats/', dataAnalysisViews.deleteAllBehaviorStats),
 
+    path('api/dataAnalysis/getListDownlodableTournament/<int:year>/', dataAnalysisViews.getListOfDownloadableTournament),
+
 
     # Draft
     path('api/draft/saveDrafts/', draftViews.saveDrafts),
