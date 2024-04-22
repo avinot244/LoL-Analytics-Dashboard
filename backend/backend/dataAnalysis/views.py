@@ -63,7 +63,7 @@ def download_latest(request, rawTournamentList : str):
             if not(seriesId in BLACKLIST):
                 dlDict : dict = get_all_download_links(seriesId)
                 i = 0
-                # print("\tChecking game of seriesId :", seriesId)
+                print("\tChecking game of seriesId :", seriesId)
                 for downloadDict in dlDict['files']:
                     fileType = downloadDict["fileName"].split(".")[-1]
                     fileName = downloadDict["fileName"].split(".")[0]

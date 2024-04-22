@@ -244,7 +244,7 @@ def updateChampionDraftStats(request, tournamentListStr : str):
             # for championName in associatedChampionList:
                 for side in ["Blue", "Red"]:
                     if isChampionPicked(championName, tournament, patch, side):
-                        print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="\n")
+                        # print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="\n")
 
                         winRate : float = getChampionWinRate(championName, tournament, patch, side)
                         pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
