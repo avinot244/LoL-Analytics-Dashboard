@@ -8,7 +8,7 @@ from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, Behavio
 
 from .globals import DATA_PATH, BLACKLIST, API_URL
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded
+from .utils import isGameDownloaded, import_Behavior
 from .packages.utils_stuff.utils_func import getData, getSummaryData, getRole
 from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -58,7 +58,7 @@ def download_latest(request, rawTournamentList : str):
         seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
         
         
-        for seriesId in tqdm(seriesIdList):
+        for seriesId in seriesIdList:
         # for seriesId in seriesIdList:
             if not(seriesId in BLACKLIST):
                 dlDict : dict = get_all_download_links(seriesId)
@@ -78,17 +78,17 @@ def download_latest(request, rawTournamentList : str):
                             if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1:
 
                                 path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                # print("\t\tDownloading {} files".format(fileName))
+                                print("\t\tDownloading {} files".format(fileName))
                                 download_from_link(downloadDict['fullURL'], fileName, path, fileType)
 
                         else:
                             for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
                                 if not(isGameDownloaded(int(seriesId), gameNumber)):
                                     path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                    # print("\t\tDownloading {} files".format(fileName))
+                                    print("\t\tDownloading {} files".format(fileName))
                                     download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-                    # elif fileType == "rofl":
-                    #     print("\t\twe don't download rofl file")
+                    elif fileType == "rofl":
+                        print("\t\twe don't download rofl file")
                     i += 1
 
                 # Save game metadata in csv and sqlite databases
@@ -235,6 +235,7 @@ def getPatchListFromTournament(request, tournament):
 @api_view(['GET'])
 def getTournamentFromPlayer(request, summonnerName, patch):
     query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, patch__contains=patch)
+    print(len(query))
     tournamentList : list = list()
     for res in query:
         if not(res.tournament in tournamentList):
@@ -313,6 +314,7 @@ def computeNewBehaviorStats(request, time):
                 gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
 
                 (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
+                # print(statDict.keys(), lanePresenceMapping.keys())
 
                 new = False
                 if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
@@ -328,6 +330,8 @@ def computeNewBehaviorStats(request, time):
                 gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
 
                 (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
+                # print(statDict.keys(), lanePresenceMapping.keys())
+
 
                 new = False
                 if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
@@ -336,8 +340,11 @@ def computeNewBehaviorStats(request, time):
                 save_path : str = DATA_PATH + "behavior/behavior/".format(role)
                 saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
 
-        else:
-            print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
+        # else:
+        #     print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
+
+    # Importing data into SQLite database
+    import_Behavior()
 
     return Response(status=status.HTTP_200_OK)
 

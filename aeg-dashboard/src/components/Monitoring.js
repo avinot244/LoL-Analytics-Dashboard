@@ -159,6 +159,7 @@ export default function Monitoring() {
         })
         result.json().then(result => {
             let newTournamentList = Object.keys(result)
+            newTournamentList = newTournamentList.sort()
             setTournamentList(newTournamentList)
         })
     }

@@ -18,6 +18,8 @@ from dataAnalysis.serializer import GameMetadataSerialize
 from .packages.utils import isDraftDownloaded, isTournamentOngoing
 from .packages.championStats_utils import *
 
+from .utils import import_draft
+
 
 import pandas as pd
 import requests
@@ -66,6 +68,9 @@ def saveDrafts(request):
             teamRed = game.teamRed
             # print(seriesId)
             data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
+    
+    import_draft()
+
 
     return Response(status=status.HTTP_200_OK)
 

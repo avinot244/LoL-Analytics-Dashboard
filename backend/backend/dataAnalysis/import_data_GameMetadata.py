@@ -17,4 +17,6 @@ for index, row in df.iterrows():
     )
     gameMetadata.save()
 
+print(GameMetadata.objects.count())
+
 print("CSV data has been loaded into the Django database.")
