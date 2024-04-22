@@ -6,7 +6,7 @@ from rest_framework import status
 
 from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
 
-from .globals import DATA_PATH, BLACKLIST
+from .globals import DATA_PATH, BLACKLIST, API_URL
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded
 from .packages.utils_stuff.utils_func import getData, getSummaryData, getRole
@@ -25,10 +25,10 @@ import json
 import pandas as pd
 from datetime import datetime
 import re
+from tqdm import tqdm
 
 @api_view(['PATCH'])
 def download_latest(request, rawTournamentList : str):
-    print("yo")
     wantedTournamentList : list = rawTournamentList.split(",")
     
     # Getting the list of tournament in our database
@@ -58,11 +58,12 @@ def download_latest(request, rawTournamentList : str):
         seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
         
         
-        for seriesId in seriesIdList:
+        for seriesId in tqdm(seriesIdList):
+        # for seriesId in seriesIdList:
             if not(seriesId in BLACKLIST):
                 dlDict : dict = get_all_download_links(seriesId)
                 i = 0
-                print("\tChecking game of seriesId :", seriesId)
+                # print("\tChecking game of seriesId :", seriesId)
                 for downloadDict in dlDict['files']:
                     fileType = downloadDict["fileName"].split(".")[-1]
                     fileName = downloadDict["fileName"].split(".")[0]
@@ -77,39 +78,42 @@ def download_latest(request, rawTournamentList : str):
                             if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1:
 
                                 path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                print("\t\tDownloading {} files".format(fileName))
+                                # print("\t\tDownloading {} files".format(fileName))
                                 download_from_link(downloadDict['fullURL'], fileName, path, fileType)
 
                         else:
                             for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
                                 if not(isGameDownloaded(int(seriesId), gameNumber)):
                                     path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                    print("\t\tDownloading {} files".format(fileName))
+                                    # print("\t\tDownloading {} files".format(fileName))
                                     download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-                    elif fileType == "rofl":
-                        print("\t\twe don't download rofl file")
+                    # elif fileType == "rofl":
+                    #     print("\t\twe don't download rofl file")
                     i += 1
 
                 # Save game metadata in csv and sqlite databases
                 
-                print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
+                # print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
                 for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
+                    if not(isGameDownloaded(int(seriesId), gameNumberIt)):
+                        # print("saving to db")
+                        # Getting relative information about the game
+                        date = get_date_from_seriesId(seriesId)
+                        name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
+                        summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumberIt))
 
-                    # Getting relative information about the game
-                    date = get_date_from_seriesId(seriesId)
-                    name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
-                    summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(seriesId, gameNumberIt))
+                        (data, _, _, _) = getData(int(seriesId), gameNumberIt)
+                        patch : str = summaryData.patch
+                        teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
+                        teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
+                        winningTeam : int = data.winningTeam
 
-                    (data, _, _, _) = getData(int(seriesId), gameNumberIt)
-                    patch : str = summaryData.patch
-                    teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
-                    teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
-                    winningTeam : int = data.winningTeam
-
-                    
-                    # Saving game metadata to SQLite datbase
-                    gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumberIt)
-                    gameMetadata.save()
+                        
+                        # Saving game metadata to SQLite datbase
+                        gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumberIt)
+                        gameMetadata.save()
+                    # else :
+                    #     print("game already downloaded")
     
     return Response(wantedTournamentMapping)
 
@@ -271,7 +275,8 @@ def deleteAllBehaviorStats(request):
 def computeNewBehaviorStats(request, time):
     queryAllGames = GameMetadata.objects.all()
 
-    for game in queryAllGames:
+    for game in tqdm(queryAllGames):
+    # for game in queryAllGames:
         if not(BehaviorADC.objects.filter(
             date=game.date,
             seriesId=game.seriesId,
@@ -299,7 +304,7 @@ def computeNewBehaviorStats(request, time):
 
             tournamentName : str = get_tournament_from_seriesId(seriesId)
             patch : str = summaryData.gameVersion
-            print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
+            # print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
 
             for playerTeamOne in dataBeforeTime.gameSnapshotList[0].teams[0].players:
                 summonnerName : str = playerTeamOne.playerName
@@ -336,7 +341,6 @@ def computeNewBehaviorStats(request, time):
 
     return Response(status=status.HTTP_200_OK)
 
-
 @api_view(['GET'])
 def getListOfDownloadableTournament(request, year):
     
@@ -360,3 +364,24 @@ def getListOfDownloadableTournament(request, year):
             res : dict = json.load(json_file)
     
     return Response(res)
+
+
+@api_view(['PATCH'])
+def updateDatabase(request, tournamentList : str):
+    # 1 Download Bins
+    print(f"{' Downloading bins ' :#^50}")
+    requests.patch(API_URL + "api/dataAnalysis/download/{}/".format(tournamentList))
+
+    # 2 Save Drafts
+    print(f"{' Saving Drafts ' :#^50}")
+    requests.post(API_URL + "api/draft/saveDrafts/")
+
+    # 3 Compute Behavior Stats
+    print(f"{' Computing Behavior Stats ' :#^50}")
+    requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/950/")
+
+    # 4 Update draft stats
+    print(f"{' Updating draft stats ' :#^50}")
+    requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
+
+    return Response(tournamentList)

@@ -23,40 +23,48 @@ import pandas as pd
 import requests
 import os
 import re
+from tqdm import tqdm
 
 @api_view(['POST'])
 def saveDrafts(request):
     data_metadata : pd.DataFrame = pd.read_csv(DATA_PATH + "games/data_metadata.csv", sep=";")
+    data_base_exists : bool = os.path.exists(DATA_PATH + "drafts/draft_pick_order.csv") and os.path.exists(DATA_PATH + "drafts/draft_player_picks.csv")
 
-    for idx, row in data_metadata.iterrows():
-        file_name : str = row["Name"]
+    # for idx, row in tqdm(data_metadata.iterrows(), total=data_metadata.shape[0]):
+    queryAllGames = GameMetadata.objects.all()
+
+    for game in tqdm(queryAllGames):
+    # for game in queryAllGames:
+        file_name : str = game.name
         gameNumber : int = int(file_name.split("_")[2][0])
-        seriesId : int = row["SeriesId"]
-        (data, _, _, _) = getData(seriesId, gameNumber)
-        date = row["Date"]
-
+        seriesId : int = game.seriesId
+        
+        
         # Saving the draft into our CSV database
 
         # Checking if the database exists
-        if os.path.exists(DATA_PATH + "drafts/draft_pick_order.csv") and os.path.exists(DATA_PATH + "drafts/draft_player_picks.csv"):
+        if data_base_exists:
             # Checking if the draft we want to save is already in our database
-            if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_pick_order.csv")):
-                if not(isDraftDownloaded(seriesId, gameNumber, DATA_PATH + "drafts/draft_player_picks.csv")):
-                    # Saving the draft into our csv database
-                    patch : str = row["Patch"]
-                    tournament : str = get_tournament_from_seriesId(seriesId)
-                    teamBlue = row["teamBlue"]
-                    teamRed = row["teamRed"]
-                    print(seriesId)
-                    data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
-            else:
-                print("Game of seriesId {} n°{} already in databae".format(seriesId, gameNumber))
+            if not(isDraftDownloaded(seriesId, gameNumber)):
+                (data, _, _, _) = getData(seriesId, gameNumber)
+                date = game.date
+                # Saving the draft into our csv database
+                patch : str = game.patch
+                tournament : str = get_tournament_from_seriesId(seriesId)
+                teamBlue = game.teamBlue
+                teamRed = game.teamRed
+                # print(seriesId, "new game")
+                data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
+            # else:
+            #     print("Game of seriesId {} n°{} already in databae".format(seriesId, gameNumber))
         else:
-            patch : str = row["Patch"]
+            (data, _, _, _) = getData(seriesId, gameNumber)
+            date = game.date
+            patch : str = game.patch
             tournament : str = get_tournament_from_seriesId(seriesId)
-            teamBlue = row["teamBlue"]
-            teamRed = row["teamRed"]
-            print(seriesId)
+            teamBlue = game.teamBlue
+            teamRed = game.teamRed
+            # print(seriesId)
             data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
 
     return Response(status=status.HTTP_200_OK)
@@ -178,29 +186,32 @@ def deleteAllDrafts(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['PATCH'])
-def updateChampionDraftStats(request):
-
-    tournamentList : list = list()
-    response = requests.get(API_URL + 'api/dataAnalysis/tournament/getList')
-
-
-    for tournament in response.json():
-        formated_tournament : str = re.sub(r'\([^)]*\)', '', tournament)
-        
-        if tournament != "League of Legends Scrims":
-            if not(isTournamentOngoing(formated_tournament[:-1])):
-                tournamentList.append(tournament)
-        else:
-            tournamentList.append(tournament)
-
+def updateChampionDraftStats(request, tournamentListStr : str):
     
+    if len(tournamentListStr) == 0:
+
+        tournamentList : list = list()
+        response = requests.get(API_URL + 'api/dataAnalysis/tournament/getList')
+
+
+        for tournament in response.json():
+            formated_tournament : str = re.sub(r'\([^)]*\)', '', tournament)
+            
+            if tournament != "League of Legends Scrims":
+                if not(isTournamentOngoing(formated_tournament[:-1])):
+                    tournamentList.append(tournament)
+            else:
+                tournamentList.append(tournament)
+
+    else:
+        tournamentList : list = tournamentListStr.split(",")
     
     
     for tournament in tournamentList:
+        print(tournament)
         # Getting the list of patches where the tournament was played
         assosiatedPatchList : list = list()
 
-        # TODO: IF TOURNAMENT IS SCRIM, ONLY GET THE ONGOING PATCH
         queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
         for draftPickOrder in queryDraftPickOrder:
             tempPatch = draftPickOrder.patch.split(".")[0] + "." + draftPickOrder.patch.split(".")[1]
@@ -215,6 +226,7 @@ def updateChampionDraftStats(request):
         #     os.remove(DATA_PATH + "draft/champion_draft_stats.csv")
 
         for patch in assosiatedPatchList:
+            print("\t{}".format(patch))
             # Getting the list of champions played in a given tournament on a given patch
             associatedChampionList : list = list()
         
@@ -223,10 +235,11 @@ def updateChampionDraftStats(request):
                 if not(draftPlayerPicks.championName in associatedChampionList):
                     associatedChampionList.append(draftPlayerPicks.championName)
             
-            for championName in associatedChampionList:
+            for championName in tqdm(associatedChampionList):
+            # for championName in associatedChampionList:
                 for side in ["Blue", "Red"]:
                     if isChampionPicked(championName, tournament, patch, side):
-                        print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="")
+                        print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="\n")
 
                         winRate : float = getChampionWinRate(championName, tournament, patch, side)
                         pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)

@@ -44,6 +44,19 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
     )
 }
 
+const fetchData = async (tournamentList) => {
+    try {
+        const strTournamentList = tournamentList.join(',')
+        const response = await fetch(API_URL + `dataAnalysis/updateDatabase/${strTournamentList}/`,{
+            method: "PATCH"
+        });
+        const data = await response.json();
+        console.log(data)
+    } catch (error) {
+        console.error('Error fetrch data:', error)
+    }
+}
+
 function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}) {
     // State to store the paragraphs
     const [paragraphs, setParagraphs] = React.useState([]);
@@ -85,11 +98,12 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
         }
 
         if (flag) {
-            console.log("Downloading games from tournament : ", selectedTournaments)
+            fetchData(selectedTournaments)
         }else{
             alert("Please select a tournament in each fields")
         }
     }
+
 
     return (
         <div className='tournamentSelect-wrapper'>
@@ -131,6 +145,8 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
 }
 
 
+
+
 export default function Monitoring() {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
@@ -151,6 +167,8 @@ export default function Monitoring() {
         fetchTournamentList()
     }, [])
 
+
+
     return (
         <div className='wrapper-Monitoring'>
             <React.StrictMode></React.StrictMode>
@@ -163,10 +181,7 @@ export default function Monitoring() {
                 selectedTournaments={selectedTournaments}
                 setSelectedTournaments={setSelectedTournaments}
             />
-
-            <div className='wrapper-Monitoring-downloadButton'>
-                
-            </div>
+            
         
         
         </div>
