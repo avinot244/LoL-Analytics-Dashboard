@@ -1,9 +1,9 @@
 import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Home from "./Home"
-import ChampionOverview from "./ChampionOverview"
-import PlayerOverview from "./PlayerOverview"
-import GameOverview from './GameOverview';
+import ChampionOverview from "./ChampionOverview/ChampionOverview"
+import PlayerOverview from "./PlayerOverview/PlayerOverview"
+import GameOverview from './GameOverview/GameOverview';
 import Monitoring from './Monitoring';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 

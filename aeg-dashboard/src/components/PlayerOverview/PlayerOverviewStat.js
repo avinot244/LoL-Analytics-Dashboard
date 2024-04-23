@@ -1,6 +1,6 @@
-import "../styles/PlayerOverviewStat.css"
-import ChampionIcon from "./ChampionIcon";
-import { API_URL, behaviorModelUUID, factorNamePerRole} from "../constants";
+import "../../styles/PlayerOverviewStat.css"
+import ChampionIcon from "../ChampionIcon";
+import { API_URL, behaviorModelUUID, factorNamePerRole} from "../../constants";
 import { useEffect, useState } from "react";
 import NormalDistribution from "normal-distribution"
 

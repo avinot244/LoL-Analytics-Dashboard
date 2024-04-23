@@ -1,5 +1,5 @@
-import { API_URL, roleList } from "../constants";
-import ChampionIcon from "./ChampionIcon";
+import { API_URL, roleList } from "../../constants/index";
+import ChampionIcon from "../ChampionIcon";
 import { useState, useEffect } from "react";
 
 export default function ChampionOverviewListPanel(props) {

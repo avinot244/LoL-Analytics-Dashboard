@@ -1,9 +1,9 @@
-import NavBarComp from "./NavbarComp"
-import "../styles/PlayerOverview.css"
-import SelectComp from "./SelectComp";
+import NavBarComp from "../NavbarComp"
+import "../../styles/PlayerOverview.css"
+import SelectComp from "../SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
-import { API_URL, roleList, behaviorModelUUID} from "../constants";
+import { API_URL, roleList, behaviorModelUUID} from "../../constants";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -25,11 +25,6 @@ function PlayerOverview(){
     const [tournament, setActiveTournament] = useState([])
     const [activeLimit, setActiveLimit] = useState(5)
 
-    
-    
-
-    
-
     useEffect(() => {
         const fetchPatchList = async () => {
             const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
@@ -48,7 +43,7 @@ function PlayerOverview(){
             method: "GET"
         })
         result.json().then(result => {
-            const newPlayerList = result;
+            const newPlayerList = result.sort();
             setPlayerList(newPlayerList)
         })
     }

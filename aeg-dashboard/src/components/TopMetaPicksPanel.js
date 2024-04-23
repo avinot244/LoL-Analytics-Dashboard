@@ -1,7 +1,7 @@
 import SelectComp from "./SelectComp";
 import { useState, useEffect } from "react";
 import { API_URL } from "../constants";
-import ChampionOverviewListPanel from "./championOverviewListPanel";
+import ChampionOverviewListPanel from "./ChampionOverview/championOverviewListPanel";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';

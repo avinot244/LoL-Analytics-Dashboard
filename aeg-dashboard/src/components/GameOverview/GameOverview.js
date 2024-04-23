@@ -1,6 +1,6 @@
-import NavBarComp from "./NavbarComp"
-import "../styles/GameOverview.css"
-import SearchComp from "./SearchComp"
+import NavBarComp from "../NavbarComp"
+import "../../styles/GameOverview.css"
+import SearchComp from "../SearchComp"
 
 import Stack from '@mui/material/Stack'
 import Button from "@mui/material/Button"

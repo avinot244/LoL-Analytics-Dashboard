@@ -1,18 +1,18 @@
-import NavBarComp from "./NavbarComp";
+import NavBarComp from "../NavbarComp";
 import ChampionOverviewPanel from "./ChampionOverviewPanel"
-import "../styles/ChampionOverview.css"
-import SelectComp from "./SelectComp";
+import "../../styles/ChampionOverview.css"
+import SelectComp from "../SelectComp";
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
-import { amber,  brown,  grey} from '@mui/material/colors/'
+import {grey} from '@mui/material/colors/'
 
 import { useState, useEffect } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
 
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 
 import Button from "@mui/material/Button"
 import SearchIcon from '@mui/icons-material/Search';
