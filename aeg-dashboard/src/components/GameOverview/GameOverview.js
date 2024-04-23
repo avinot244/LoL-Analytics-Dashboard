@@ -30,6 +30,7 @@ function GameOverview(){
             <br/>
             <Stack spacing={2} direction="row" justifyContent="center">
                 <SearchComp 
+                    label={"Games"}
                     elementList={gameList}
                     selectedElement={selectedGame}
                     setSelectedElement={setSelectedGame}

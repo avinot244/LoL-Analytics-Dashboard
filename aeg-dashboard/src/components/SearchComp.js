@@ -3,12 +3,11 @@ import Select from 'react-select';
 import "../styles/SelectComp.css"
 import { useState } from 'react';
 import { Autocomplete } from '@mui/material';
-import { TextField } from '@mui/material';
 import Box from '@mui/material/Box';
-
-import { amber,  brown,  grey} from '@mui/material/colors/'
+import TextField from '@mui/material/TextField';
 import { ThemeProvider, createTheme } from "@mui/material";
-
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const theme = createTheme ({
 	palette: {
@@ -26,29 +25,42 @@ const theme = createTheme ({
 	
 })
 
-function SearchComp({selectedElement, setSelectedElement, elementList}) {
+
+
+
+function SearchComp({selectedElement, setSelectedElement, elementList, label}) {
+	const handleChange = (value) => {
+		if (value != null) {
+			console.log(value)
+			setSelectedElement(value)
+		}
+	}
 	return (	
 		<>	
+			
 			<ThemeProvider theme={theme}>
 				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
 					<Autocomplete
-						disablePortal
+						clearIcon={<ClearIcon color="error"/>}
+						popupIcon={<ArrowDropDownIcon color="primary"/>}
 						id="searchComp"
 						className="searchComp"
 						options={elementList}
-						renderInput={(params) => {
-							return (
+						renderInput={(params) => (
 								<TextField 
 									className='textField-searchComp'
 									{...params} 
-									label="Player"
-									color='primary'
+									label={label}
+									sx={{ 
+										input: { color: 'white'},
+										borderColor: 'white'
+									}}
 									focused
+
 								/>
-							)
 							
-						}}
-						onChange={(element) => {console.log(element) ;return (setSelectedElement(element.value))}}
+							)}
+						onChange={(_, value) => {handleChange(value)}}
 						sx={{color: 'primary.main', borderColor: 'primary.main'}}
 					/>
 				</Box>
