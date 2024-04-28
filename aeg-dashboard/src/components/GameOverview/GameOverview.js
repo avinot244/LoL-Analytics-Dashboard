@@ -9,7 +9,6 @@ import { useState } from "react"
 
 function GameOverview(){
 
-    const [selectedGame, setSelectedGame] = useState('Select a game')
 
     const gameList = [
         {label: "SCRIM G1 AEG vs GO", value:"scrim_g1_aeg_vs_go"},
@@ -22,7 +21,8 @@ function GameOverview(){
         {label: "ESPORTs G5 G2 vs FNC", value:"esports_g5_g2_vs_fnc"}
 
     ]
-    //
+    const [selectedGame, setSelectedGame] = useState('')
+
     return(
         <div className="wrapper-overview-game">
             <NavBarComp />
@@ -32,9 +32,7 @@ function GameOverview(){
                 <SearchComp 
                     label={"Games"}
                     elementList={gameList}
-                    selectedElement={selectedGame}
                     setSelectedElement={setSelectedGame}
-                    
                 />
                 <Button 
                     variant="contained" 
@@ -43,7 +41,9 @@ function GameOverview(){
                     Analyze
                 
                 </Button>
+                
             </Stack>
+            <p>{selectedGame.value}</p>
         </div>
         
     )

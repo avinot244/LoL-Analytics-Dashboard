@@ -18,6 +18,7 @@ import Button from "@mui/material/Button"
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SearchComp from "../SearchComp";
 
 const theme = createTheme({
     palette: {
@@ -94,10 +95,11 @@ function ChampionOverview() {
             <div className="dashboard-champOverview-controlPannel">
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
-                        <SelectComp 
+                        <SearchComp
+                            setSelectedElement={setActiveTournament}
                             elementList={tournamentList}
-                            defaultValue={"-- Tournament --"}
-                            setActive={setActiveTournament}
+                            label={"Tournament"}
+                            width={550}
                         />
                         
                     </li>

@@ -1,7 +1,5 @@
 
-import Select from 'react-select';
 import "../styles/SelectComp.css"
-import { useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -28,10 +26,9 @@ const theme = createTheme ({
 
 
 
-function SearchComp({selectedElement, setSelectedElement, elementList, label}) {
+function SearchComp({setSelectedElement, elementList, label, width}) {
 	const handleChange = (value) => {
 		if (value != null) {
-			console.log(value)
 			setSelectedElement(value)
 		}
 	}
@@ -43,7 +40,6 @@ function SearchComp({selectedElement, setSelectedElement, elementList, label}) {
 					<Autocomplete
 						clearIcon={<ClearIcon color="error"/>}
 						popupIcon={<ArrowDropDownIcon color="primary"/>}
-						id="searchComp"
 						className="searchComp"
 						options={elementList}
 						renderInput={(params) => (
@@ -61,7 +57,7 @@ function SearchComp({selectedElement, setSelectedElement, elementList, label}) {
 							
 							)}
 						onChange={(_, value) => {handleChange(value)}}
-						sx={{color: 'primary.main', borderColor: 'primary.main'}}
+						sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
 					/>
 				</Box>
 				

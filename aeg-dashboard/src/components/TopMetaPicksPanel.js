@@ -7,6 +7,7 @@ import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SearchComp from "./SearchComp";
 
 
 function TopMetaPicksPanel(props) {
@@ -65,10 +66,11 @@ function TopMetaPicksPanel(props) {
             <div className="dashboard-champOverview-controlPannel">
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
-                        <SelectComp 
+                        <SearchComp
                             elementList={tournamentList}
-                            defaultValue={"-- Tournament --"}
-                            setActive={setActiveTournament}
+                            setSelectedElement={setActiveTournament}
+                            label={"Tournament"}
+                            width={550}
                         />
                         
                     </li>
@@ -92,7 +94,6 @@ function TopMetaPicksPanel(props) {
                     </li>
                 </ul>
             </div>
-
             {
                 displayPatchFlag &&
 

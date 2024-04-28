@@ -9,6 +9,7 @@ import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SearchComp from "../SearchComp";
 
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
@@ -102,10 +103,11 @@ function PlayerOverview(){
                 <div className="playerOverview-playerSelect">
                     <ul className="dashboard-playerOverview-playerSelect-list">
                         <li>
-                            <SelectComp
+                            <SearchComp
+                                setSelectedElement={setSelectedPlayer}
                                 elementList={playerList}
-                                defaultValue={"-- Player --"}
-                                setActive={setSelectedPlayer}
+                                label={"Player"}
+                                width={175}
                             />
                         </li>
 
