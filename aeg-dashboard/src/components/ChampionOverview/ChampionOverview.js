@@ -77,7 +77,7 @@ function ChampionOverview() {
                 method: "GET"
             })
             result.json().then(result => {
-                const newTournamentList = result;
+                const newTournamentList = result.sort();
                 setTournamentList(newTournamentList)
             })
         }

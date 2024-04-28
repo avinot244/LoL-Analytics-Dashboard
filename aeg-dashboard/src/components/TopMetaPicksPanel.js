@@ -43,7 +43,7 @@ function TopMetaPicksPanel(props) {
                 method: "GET"
             })
             result.json().then(result => {
-                const newTournamentList = result;
+                const newTournamentList = result.sort();
                 setTournamentList(newTournamentList)
                 setActiveTournament(newTournamentList[newTournamentList.length - 1])
             })
