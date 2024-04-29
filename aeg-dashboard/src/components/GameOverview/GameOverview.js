@@ -3,7 +3,7 @@ import "../../styles/GameOverview.css"
 import SearchComp from "../SearchComp"
 import { API_URL } from "../../constants"
 
-import { ThemeProvider, createTheme } from "@mui/material";
+import { Chip, ThemeProvider, createTheme } from "@mui/material";
 import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -44,6 +44,7 @@ function SearchGames({setSelectedElement, elementList}) {
             <ThemeProvider theme={theme}>
 				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
 					<Autocomplete
+                        multiple
 						clearIcon={<ClearIcon color="error"/>}
 						popupIcon={<ArrowDropDownIcon color="primary"/>}
 						options={elementList}
@@ -63,7 +64,20 @@ function SearchGames({setSelectedElement, elementList}) {
 							
 							)}
 						onChange={(_, gameObject) => {handleChange(gameObject)}}
-						sx={{color: 'primary.main', borderColor: 'primary.main', width: 275}}
+						sx={{color: 'primary.main', borderColor: 'primary.main', width: 425}}
+                        renderTags={(tagValue, getTagProps) => (
+                            tagValue.map((option, index) => {
+                                let label = `${option.seriesId} ${option.gameNumber}`
+                                return (
+                                    <Chip
+                                        label={label}
+                                        color="primary"
+                                        variant="outlined"
+                                        {...getTagProps({ index })}
+                                    />
+                                )
+                            })
+                        )}
 					/>
 				</Box>
 				
@@ -76,7 +90,7 @@ function SearchGames({setSelectedElement, elementList}) {
 function GameOverview(){
 
     const [gameList, setGameList] = useState([])
-    const [selectedGame, setSelectedGame] = useState('')
+    const [selectedGames, setSelectedGame] = useState('')
 
 
     const [tournamentList, setTournamentList] = useState([])
@@ -119,17 +133,40 @@ function GameOverview(){
         })
     }
 
+    const fetchPositionDensity = async (gameList) => {
+        const result = await fetch(API_URL + "dataAnalysis/getGamePositionDensity/", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(gameList)
+        })
+        
+
+    }
+
+    const handleAnalyze = (gameList) => {
+        if (gameList.length > 0) {
+            fetchPositionDensity(gameList)
+        }else{
+            alert("Please select at least one game")
+        }
+    }
+    
+
     return(
         <div className="wrapper-overview-game">
             <NavBarComp />
             <h1> Game overview </h1>
             <br/>
-            <Stack spacing={2} direction="row" justifyContent="center">
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                 <SearchComp
                     elementList={tournamentList}
                     setSelectedElement={setActiveTournament}
                     label={"Tournament"}
                     width={550}
+
                 />
 
                 <Button
@@ -149,17 +186,18 @@ function GameOverview(){
 
             {
                 flagGameSelecter && 
-                <Stack spacing={2} direction="row" justifyContent="center">
+                <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                     <SearchGames
                         setSelectedElement={setSelectedGame}
                         elementList={gameList}
                     />
                     <Button 
                         variant="contained" 
-                        endIcon={<ArrowForwardIosIcon />}
-                        
+                        endIcon={<ArrowForwardIosIcon />}         
+                        onClick = {() => {
+                            handleAnalyze(selectedGames)
+                        }}               
                     >
-                    
                         Analyze
                     </Button>
                     <Button
@@ -177,7 +215,15 @@ function GameOverview(){
 
             }
             
-            <p>{selectedGame.seriesId} {selectedGame.gameNumber}</p>
+            {
+                selectedGames.length > 0 &&
+                selectedGames.map((object) => {
+                    return (
+                        <p>{object.seriesId} {object.gameNumber}</p>
+                    )
+                })
+
+            }
         </div>
         
     )

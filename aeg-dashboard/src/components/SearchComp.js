@@ -26,7 +26,7 @@ const theme = createTheme ({
 
 
 
-function SearchComp({setSelectedElement, elementList, label, width}) {
+function SearchComp({setSelectedElement, elementList, label, width, multiple}) {
 	const handleChange = (value) => {
 		if (value != null) {
 			setSelectedElement(value)
@@ -38,26 +38,29 @@ function SearchComp({setSelectedElement, elementList, label, width}) {
 			<ThemeProvider theme={theme}>
 				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
 					<Autocomplete
+						multiple={multiple}
 						clearIcon={<ClearIcon color="error"/>}
 						popupIcon={<ArrowDropDownIcon color="primary"/>}
 						className="searchComp"
 						options={elementList}
 						renderInput={(params) => (
-								<TextField 
-									className='textField-searchComp'
-									{...params} 
-									label={label}
-									sx={{ 
-										input: { color: 'white'},
-										borderColor: 'white'
-									}}
-									focused
+							<TextField 
+								className='textField-searchComp'
+								{...params} 
+								label={label}
+								sx={{ 
+									input: { color: 'white'},
+									borderColor: 'white'
+								}}
+								focused
+								fullWidth={true}
 
-								/>
+							/>
 							
-							)}
+						)}
 						onChange={(_, value) => {handleChange(value)}}
 						sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
+						fullWidth={true}
 					/>
 				</Box>
 				

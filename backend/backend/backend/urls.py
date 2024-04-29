@@ -103,6 +103,8 @@ urlpatterns = [
     path('api/dataAnalysis/updateDatabase/<str:tournamentList>/', dataAnalysisViews.updateDatabase),
     path('api/dataAnalysis/getGameList/<str:tournament>/', dataAnalysisViews.getGameList),
 
+    path('api/dataAnalysis/getGamePositionDensity/', dataAnalysisViews.getGamePositionDensity),
+
 
     # Draft
     path('api/draft/saveDrafts/', draftViews.saveDrafts),

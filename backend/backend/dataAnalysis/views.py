@@ -393,9 +393,13 @@ def updateDatabase(request, tournamentList : str):
 
     return Response(tournamentList)
 
-@api_view(['GET'])
-def getGamePositionDensity(request, gameNamesList):
-    print(gameNamesList)
+@api_view(['POST'])
+def getGamePositionDensity(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    print(body)
+    
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
