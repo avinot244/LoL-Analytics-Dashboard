@@ -3,13 +3,74 @@ import "../../styles/GameOverview.css"
 import SearchComp from "../SearchComp"
 import { API_URL } from "../../constants"
 
+import { ThemeProvider, createTheme } from "@mui/material";
+import { Autocomplete } from '@mui/material';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack'
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClearIcon from '@mui/icons-material/Clear';
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Fragment } from "react"
+
+const theme = createTheme ({
+	palette: {
+		primary : {
+			main: '#fff',
+		},
+		text : {
+			disabled: '#fff'
+		}
+		
+	},
+	action: {
+		active: '#fff'
+	}
+	
+})
+
+function SearchGames({setSelectedElement, elementList}) {
+    const handleChange = (value) => {
+        if (value != null) {
+            setSelectedElement(value)
+        }
+    }
+    return (
+        <>
+            <ThemeProvider theme={theme}>
+				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+					<Autocomplete
+						clearIcon={<ClearIcon color="error"/>}
+						popupIcon={<ArrowDropDownIcon color="primary"/>}
+						options={elementList}
+                        getOptionLabel={option => option.str}
+						renderInput={(params) => (
+								<TextField 
+									className='textField-searchComp'
+									{...params} 
+									label={"Games"}
+									sx={{ 
+										input: { color: 'white'},
+										borderColor: 'white'
+									}}
+									focused
+
+								/>
+							
+							)}
+						onChange={(_, gameObject) => {handleChange(gameObject)}}
+						sx={{color: 'primary.main', borderColor: 'primary.main', width: 275}}
+					/>
+				</Box>
+				
+			</ThemeProvider>
+        </>
+    )
+}
 
 
 function GameOverview(){
@@ -44,8 +105,15 @@ function GameOverview(){
             method: "GET"
         })
         result.json().then(result => {
-            console.log(result)
-            const newGameList = result.sort()
+            // let newGameList = []
+            // for (let i = 0 ; i < result.data.length ; i ++) {
+            //     let gameObject = result.data[i]
+            //     console.log(gameObject)
+            //     newGameList.push(gameObject.str)
+
+            // }
+            // setGameList(newGameList.sort())
+            const newGameList = result.data
             setGameList(newGameList)
             setSelectedGame(newGameList[newGameList.length - 1])
         })
@@ -82,15 +150,15 @@ function GameOverview(){
             {
                 flagGameSelecter && 
                 <Stack spacing={2} direction="row" justifyContent="center">
-                    <SearchComp 
-                        label={"Games"}
-                        elementList={gameList}
+                    <SearchGames
                         setSelectedElement={setSelectedGame}
-                        width={275}
+                        elementList={gameList}
                     />
                     <Button 
                         variant="contained" 
-                        endIcon={<ArrowForwardIosIcon />}>
+                        endIcon={<ArrowForwardIosIcon />}
+                        
+                    >
                     
                         Analyze
                     </Button>
@@ -109,7 +177,7 @@ function GameOverview(){
 
             }
             
-            <p>{selectedGame}</p>
+            <p>{selectedGame.seriesId} {selectedGame.gameNumber}</p>
         </div>
         
     )

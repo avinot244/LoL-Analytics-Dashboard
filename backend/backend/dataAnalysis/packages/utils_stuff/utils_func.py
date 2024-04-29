@@ -138,3 +138,15 @@ def isInDataBase(matchId : str, date : str, role : str, summonnerName : str):
     res = res or ((df["Date"] == date) & (df["MatchId"] == matchId) & df["SummonnerName"] == summonnerName).any()
 
     return res
+
+def splitPlayerNameListPerTeam(data : SeparatedData, playerNameList : list[str]):
+    playerNameListTeamOne : list = list()
+    playerNameListTeamTwo : list = list()
+
+    for playerName in playerNameList:
+        playerID = data.getPlayerID(playerName)
+        if data.gameSnapshotList[0].teams[0].isPlayerInTeam(playerID):
+            playerNameListTeamOne.append(playerName)
+        elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(playerID):
+            playerNameListTeamTwo.append(playerName)
+    return [playerNameListTeamOne, playerNameListTeamTwo]

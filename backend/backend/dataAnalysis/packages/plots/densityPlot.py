@@ -1,33 +1,11 @@
+from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
+from dataAnalysis.packages.utils_stuff.Position import Position
+from dataAnalysis.packages.utils_stuff.globals import MINIMAP_HEIGHT, MINIMAP_WIDTH, towerPositionBlueSide, towerPositionRedSide, inhibitorPositionBlueSide, inhibitorPositionRedSide
+
 import numpy as np
 from scipy.stats import gaussian_kde
 import matplotlib.pyplot as plt
 from PIL import Image
-
-from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
-from dataAnalysis.packages.utils_stuff.Position import Position
-from dataAnalysis.packages.utils_stuff.globals import *
-
-
-def getPositionsMultipleGames(participantNames : list[str], dataLst : list[SeparatedData]):
-    # Getting player positions
-    participantPositions : list[Position] = list()
-
-    for data in dataLst:
-        participantIds : list[int] = [data.getPlayerID(playerName) for playerName in participantNames]
-        for playerId in participantIds:
-            participantPositions += data.getPlayerPositionHistory(playerId)
-    
-    return participantPositions
-
-def getPositionsSingleGame(participantNames : list[str], data : SeparatedData):
-    # Getting player positions
-    participantIds : list[int] = [data.getPlayerID(playerName) for playerName in participantNames]
-    participantPositions : list[Position] = list()
-    
-    for playerId in participantIds:
-        participantPositions += data.getPlayerPositionHistory(playerId)
-
-    return participantPositions
 
 def getPositionsSingleGame(participantNames : list[str], data : SeparatedData):
     # Getting player positions

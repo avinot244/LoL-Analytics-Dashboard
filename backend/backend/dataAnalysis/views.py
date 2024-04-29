@@ -15,6 +15,8 @@ from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
+# from .packages.runners.pathing_runners import makeDensityPlot
+
 
 from Draft.models import DraftPlayerPick
 
@@ -209,7 +211,6 @@ def delete_all_gameMetadata(request):
 
     return Response(status=status.HTTP_200_OK)
 
-
 @api_view(['GET'])
 def getPatchListFromTournament(request, tournament):
     queryTournamentList = DraftPlayerPick.objects.all()
@@ -372,7 +373,6 @@ def getListOfDownloadableTournament(request, year):
     
     return Response(res)
 
-
 @api_view(['PATCH'])
 def updateDatabase(request, tournamentList : str):
     # 1 Download Bins
@@ -392,3 +392,32 @@ def updateDatabase(request, tournamentList : str):
     requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
 
     return Response(tournamentList)
+
+@api_view(['GET'])
+def getGamePositionDensity(request, gameNamesList):
+    print(gameNamesList)
+
+
+@api_view(['GET'])
+def getGameList(request, tournament):
+    tournamentList : list[str] = []
+    for temp in GameMetadata.objects.all():
+        if not(temp.tournament in tournamentList):
+            tournamentList.append(temp.tournament)
+    
+
+    if not(tournament in tournamentList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    gameData : dict = {"data": []}
+    queryGameMetadata = GameMetadata.objects.filter(tournament__exact=tournament)
+
+    for gameMetadata in queryGameMetadata:
+        temp_dict : dict = dict()
+        game_str = "{} vs {} Game {} {}".format(gameMetadata.teamBlue, gameMetadata.teamRed, gameMetadata.gameNumber, gameMetadata.date)
+        temp_dict["str"] = game_str
+        temp_dict["seriesId"] = gameMetadata.seriesId
+        temp_dict["gameNumber"] = gameMetadata.gameNumber
+        gameData["data"].append(temp_dict)
+    
+    return Response(gameData)

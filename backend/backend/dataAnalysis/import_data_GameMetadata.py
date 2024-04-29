@@ -8,6 +8,7 @@ for index, row in df.iterrows():
     gameMetadata = GameMetadata(
         date = row["Date"],
         name = row["Name"],
+        tournament = row["Tournament"],
         patch = row["Patch"],
         seriesId = row["SeriesId"],
         teamBlue = row["teamBlue"],
