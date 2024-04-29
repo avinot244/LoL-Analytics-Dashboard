@@ -1,27 +1,55 @@
 import NavBarComp from "../NavbarComp"
 import "../../styles/GameOverview.css"
 import SearchComp from "../SearchComp"
+import { API_URL } from "../../constants"
 
 import Stack from '@mui/material/Stack'
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { useState } from "react"
+import SearchIcon from '@mui/icons-material/Search';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
+import { useState, useEffect } from "react"
+
 
 function GameOverview(){
 
-
-    const gameList = [
-        {label: "SCRIM G1 AEG vs GO", value:"scrim_g1_aeg_vs_go"},
-        {label: "SCRIM G2 AEG vs GO", value:"scrim_g2_aeg_vs_go"},
-        {label: "SCRIM G3 AEG vs GO", value:"scrim_g3_aeg_vs_go"},
-        {label: "ESPORTs G1 G2 vs FNC", value:"esports_g1_g2_vs_fnc"},
-        {label: "ESPORTs G2 G2 vs FNC", value:"esports_g2_g2_vs_fnc"},
-        {label: "ESPORTs G3 G2 vs FNC", value:"esports_g3_g2_vs_fnc"},
-        {label: "ESPORTs G4 G2 vs FNC", value:"esports_g4_g2_vs_fnc"},
-        {label: "ESPORTs G5 G2 vs FNC", value:"esports_g5_g2_vs_fnc"}
-
-    ]
+    const [gameList, setGameList] = useState([])
     const [selectedGame, setSelectedGame] = useState('')
+
+
+    const [tournamentList, setTournamentList] = useState([])
+    const [tournament, setActiveTournament] = useState('')
+
+    const [flagGameSelecter, setFlagGameSelecter] = useState(false)
+    
+
+    useEffect(() => {
+        const fetchTournamentList = async () => {
+            const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newTournamentList = result.sort();
+                setTournamentList(newTournamentList)
+                setActiveTournament(newTournamentList[newTournamentList.length - 1])
+            })
+        }
+        
+        fetchTournamentList();
+    }, [])
+
+    const fetchGamesFromTournament = async () => {
+        const result = await fetch(API_URL + `dataAnalysis/getGameList/${tournament}/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            console.log(result)
+            const newGameList = result.sort()
+            setGameList(newGameList)
+            setSelectedGame(newGameList[newGameList.length - 1])
+        })
+    }
 
     return(
         <div className="wrapper-overview-game">
@@ -29,21 +57,59 @@ function GameOverview(){
             <h1> Game overview </h1>
             <br/>
             <Stack spacing={2} direction="row" justifyContent="center">
-                <SearchComp 
-                    label={"Games"}
-                    elementList={gameList}
-                    setSelectedElement={setSelectedGame}
+                <SearchComp
+                    elementList={tournamentList}
+                    setSelectedElement={setActiveTournament}
+                    label={"Tournament"}
+                    width={550}
                 />
-                <Button 
-                    variant="contained" 
-                    endIcon={<ArrowForwardIosIcon />}>
-                
-                    Analyze
-                
+
+                <Button
+                    variant="contained"
+                    endIcon={<SearchIcon />}
+                    onClick={() => {
+                        fetchGamesFromTournament(tournament)
+                        setFlagGameSelecter(true)
+                    }}
+                >
+                    Search Games
                 </Button>
-                
             </Stack>
-            <p>{selectedGame.value}</p>
+            
+            <br/>
+
+
+            {
+                flagGameSelecter && 
+                <Stack spacing={2} direction="row" justifyContent="center">
+                    <SearchComp 
+                        label={"Games"}
+                        elementList={gameList}
+                        setSelectedElement={setSelectedGame}
+                        width={275}
+                    />
+                    <Button 
+                        variant="contained" 
+                        endIcon={<ArrowForwardIosIcon />}>
+                    
+                        Analyze
+                    </Button>
+                    <Button
+                        variant="contained"
+                        endIcon={<RestartAltIcon/>}
+                        onClick={() => {
+                            setFlagGameSelecter(false)
+                            setSelectedGame('')
+                        }}
+                    >
+                        Reset
+                    </Button>
+                    
+                </Stack>
+
+            }
+            
+            <p>{selectedGame}</p>
         </div>
         
     )
