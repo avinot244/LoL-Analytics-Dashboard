@@ -44,7 +44,6 @@ function SearchGames({setSelectedElement, elementList}) {
             <ThemeProvider theme={theme}>
 				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
 					<Autocomplete
-                        multiple
 						clearIcon={<ClearIcon color="error"/>}
 						popupIcon={<ArrowDropDownIcon color="primary"/>}
 						options={elementList}
@@ -65,19 +64,7 @@ function SearchGames({setSelectedElement, elementList}) {
 							)}
 						onChange={(_, gameObject) => {handleChange(gameObject)}}
 						sx={{color: 'primary.main', borderColor: 'primary.main', width: 425}}
-                        renderTags={(tagValue, getTagProps) => (
-                            tagValue.map((option, index) => {
-                                let label = `${option.seriesId} ${option.gameNumber}`
-                                return (
-                                    <Chip
-                                        label={label}
-                                        color="primary"
-                                        variant="outlined"
-                                        {...getTagProps({ index })}
-                                    />
-                                )
-                            })
-                        )}
+                        
 					/>
 				</Box>
 				
@@ -90,7 +77,7 @@ function SearchGames({setSelectedElement, elementList}) {
 function GameOverview(){
 
     const [gameList, setGameList] = useState([])
-    const [selectedGames, setSelectedGame] = useState('')
+    const [selectedGame, setSelectedGame] = useState('')
 
 
     const [tournamentList, setTournamentList] = useState([])
@@ -119,14 +106,6 @@ function GameOverview(){
             method: "GET"
         })
         result.json().then(result => {
-            // let newGameList = []
-            // for (let i = 0 ; i < result.data.length ; i ++) {
-            //     let gameObject = result.data[i]
-            //     console.log(gameObject)
-            //     newGameList.push(gameObject.str)
-
-            // }
-            // setGameList(newGameList.sort())
             const newGameList = result.data
             setGameList(newGameList)
             setSelectedGame(newGameList[newGameList.length - 1])
@@ -146,12 +125,8 @@ function GameOverview(){
 
     }
 
-    const handleAnalyze = (gameList) => {
-        if (gameList.length > 0) {
-            fetchPositionDensity(gameList)
-        }else{
-            alert("Please select at least one game")
-        }
+    const handleAnalyze = (game) => {
+        fetchPositionDensity(game)
     }
     
 
@@ -195,7 +170,7 @@ function GameOverview(){
                         variant="contained" 
                         endIcon={<ArrowForwardIosIcon />}         
                         onClick = {() => {
-                            handleAnalyze(selectedGames)
+                            handleAnalyze(selectedGame)
                         }}               
                     >
                         Analyze
@@ -215,15 +190,13 @@ function GameOverview(){
 
             }
             
-            {
-                selectedGames.length > 0 &&
-                selectedGames.map((object) => {
-                    return (
-                        <p>{object.seriesId} {object.gameNumber}</p>
-                    )
-                })
+            
+                
 
-            }
+            <p>{selectedGame.seriesId} {selectedGame.gameNumber}</p>
+                    
+
+            
         </div>
         
     )

@@ -6,6 +6,7 @@ from PIL import Image
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.globals import *
+from dataAnalysis.globals import DATA_PATH
 
 
 def getPositionsMultipleGames(participantNames : list[str], dataLst : list[SeparatedData]):
@@ -63,7 +64,7 @@ def densityPlot(participantPositions : list[Position], graphName : str, save_pat
     plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', zorder=-1)
 
     # Plotting minimap
-    img = np.asarray(Image.open("../Summoner's_Rift_MinimapTransparent.png"))
+    img = np.asarray(Image.open(DATA_PATH + "plots/Summoner's_Rift_MinimapTransparent.png"))
     ax.imshow(img, extent=[0, MINIMAP_WIDTH, 0, MINIMAP_HEIGHT])
 
     towerRedX = [pos.x for pos in towerPositionRedSide]

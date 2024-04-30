@@ -1,12 +1,13 @@
 from django.shortcuts import render
 
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
 from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
 
-from .globals import DATA_PATH, BLACKLIST, API_URL
+from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior
 from .packages.utils_stuff.utils_func import getData, getSummaryData, getRole
@@ -15,7 +16,7 @@ from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
-# from .packages.runners.pathing_runners import makeDensityPlot
+from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 
 
 from Draft.models import DraftPlayerPick
@@ -396,10 +397,31 @@ def updateDatabase(request, tournamentList : str):
 @api_view(['POST'])
 def getGamePositionDensity(request):
     body_unicode = request.body.decode('utf-8')
-    body = json.loads(body_unicode)
-    print(body)
+    game = json.loads(body_unicode)
+    print(game)
     
-    return Response(status=status.HTTP_200_OK)
+    for role in ROLE_LIST:
+        (data, splitList, playerNameList) = getDataPathing(game, role)
+        print(splitList, playerNameList)
+        makeDensityPlot(game, playerNameList, data, splitList)
+    
+
+    imgList : list = list()
+    for file in os.listdir(DATA_PATH + "plots/Position/PositionDensity/{}_{}".format(game["seriesId"], game["gameNumber"])):
+        path = DATA_PATH + "plots/Position/PositionDensity/{}_{}/".format(game["seriesId"], game["gameNumber"]) + file
+        with open(path, "rb") as f:
+            # summonnerName = file.split("_")[0]
+            # data : dict = {
+            #     "summonnerName": summonnerName,
+
+            # }
+            imgList.append(f.read())
+            
+            
+    return HttpResponse(imgList, content_type="image/png")
+        
+    
+
 
 
 @api_view(['GET'])
