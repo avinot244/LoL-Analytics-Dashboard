@@ -37,11 +37,11 @@ function ChampionOverview() {
     const [value, setValue] = useState(0)
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
-    const [displayFlag, setDisplayFlag] = useState(false)
-    const [displayPatchFlag, setDisplayPatchFlag] = useState(false)
+    const [displayFlag, setDisplayFlag] = useState(true)
+    const [displayPatchFlag, setDisplayPatchFlag] = useState(true)
 
 
-    const [activePatch, setActivePatch] = useState('14.1')
+    const [activePatch, setActivePatch] = useState('14.4')
     const [activeSide, setActiveSide] = useState('Blue')
     const [activeTournament, setActiveTournament] = useState("La Ligue Française - Spring 2024 (Regular Season: Regular Season)")
 
@@ -96,6 +96,7 @@ function ChampionOverview() {
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
                         <SearchComp
+                            defaultValue={activeTournament}
                             setSelectedElement={setActiveTournament}
                             elementList={tournamentList}
                             label={"Tournament"}
@@ -106,7 +107,7 @@ function ChampionOverview() {
                     <li>
                         <SelectComp
                             elementList={side}
-                            defaultValue={"-- Side --"}
+                            defaultValue={activeSide}
                             setActive={setActiveSide}/>
                     </li>
                     <li>
@@ -129,7 +130,7 @@ function ChampionOverview() {
                         <li>
                             <SelectComp 
                                 elementList={patchList}
-                                defaultValue={"-- Patch --"}
+                                defaultValue={activePatch}
                                 setActive={setActivePatch}
                             />
                         </li>

@@ -26,7 +26,7 @@ const theme = createTheme ({
 
 
 
-function SearchComp({setSelectedElement, elementList, label, width, multiple}) {
+function SearchComp({setSelectedElement, elementList, label, width, multiple, defaultValue}) {
 	const handleChange = (value) => {
 		if (value != null) {
 			setSelectedElement(value)
@@ -38,6 +38,7 @@ function SearchComp({setSelectedElement, elementList, label, width, multiple}) {
 			<ThemeProvider theme={theme}>
 				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
 					<Autocomplete
+						defaultValue={defaultValue}
 						multiple={multiple}
 						clearIcon={<ClearIcon color="error"/>}
 						popupIcon={<ArrowDropDownIcon color="primary"/>}

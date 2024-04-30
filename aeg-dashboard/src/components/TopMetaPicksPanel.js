@@ -13,17 +13,17 @@ import SearchComp from "./SearchComp";
 function TopMetaPicksPanel(props) {
     const [patchList, setPatchList] = useState([]);
     
-    const [activePatch, setActivePatch] = useState()
-    const [activeSide, setActiveSide] = useState()
-    const [activeTournament, setActiveTournament] = useState()
-    const [activeFilter, setActiveFilter] = useState()
+    const [activePatch, setActivePatch] = useState("14.4")
+    const [activeSide, setActiveSide] = useState("Blue")
+    const [activeTournament, setActiveTournament] = useState("La Ligue Française - Spring 2024 (Regular Season: Regular Season)")
+    const [activeFilter, setActiveFilter] = useState("PickRate")
 
-    const [flagChampionOverview, setFlagChampionOverview] = useState(false)
+    const [flagChampionOverview, setFlagChampionOverview] = useState(true)
 
     const {value, panelIndex} = props
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
-    const [displayPatchFlag, setDisplayPatchFlag] = useState(false)
+    const [displayPatchFlag, setDisplayPatchFlag] = useState(true)
     const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
 
 
@@ -67,6 +67,7 @@ function TopMetaPicksPanel(props) {
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
                         <SearchComp
+                            defaultValue={activeTournament}
                             elementList={tournamentList}
                             setSelectedElement={setActiveTournament}
                             label={"Tournament"}
@@ -77,7 +78,7 @@ function TopMetaPicksPanel(props) {
                     <li>
                         <SelectComp
                             elementList={side}
-                            defaultValue={"-- Side --"}
+                            defaultValue={activeSide}
                             setActive={setActiveSide}/>
                     </li>
                     <li>
@@ -94,6 +95,7 @@ function TopMetaPicksPanel(props) {
                     </li>
                 </ul>
             </div>
+
             {
                 displayPatchFlag &&
 
@@ -101,9 +103,9 @@ function TopMetaPicksPanel(props) {
                     <ul>
                         <li>
                             <li>
-                                <SelectComp 
+                                <SelectComp
                                     elementList={patchList}
-                                    defaultValue={"-- Patch --"}
+                                    defaultValue={activePatch}
                                     setActive={setActivePatch}
                                 />
                             </li>
@@ -112,7 +114,7 @@ function TopMetaPicksPanel(props) {
                         <li>
                             <SelectComp 
                                 elementList={filterList}
-                                defaultValue={"-- Select Filter --"}
+                                defaultValue={activeFilter}
                                 setActive={setActiveFilter}
                             />
                         </li>
@@ -144,7 +146,7 @@ function TopMetaPicksPanel(props) {
             }
             
             {
-                flagChampionOverview &&
+                // flagChampionOverview &&
                 <ChampionOverviewListPanel
                     filter={activeFilter}
                     side={activeSide}
