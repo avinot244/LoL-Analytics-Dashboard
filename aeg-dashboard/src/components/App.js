@@ -1,6 +1,6 @@
 import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Home from "./Home"
+import Home from "./Home/Home"
 import ChampionOverview from "./ChampionOverview/ChampionOverview"
 import PlayerOverview from "./PlayerOverview/PlayerOverview"
 import GameOverview from './GameOverview/GameOverview';

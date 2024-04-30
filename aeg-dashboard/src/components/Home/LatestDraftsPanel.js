@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import DraftComponent from "./DraftComponent";
-import { API_URL } from "../constants";
+import DraftComponent from "../DraftComponent";
+import { API_URL } from "../../constants";
 
 function LatestDraftsPanel(props) {
     const {value, panelIndex} = props

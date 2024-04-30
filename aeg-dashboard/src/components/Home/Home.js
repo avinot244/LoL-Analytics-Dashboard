@@ -1,5 +1,5 @@
-import NavBarComp from "./NavbarComp"
-import "../styles/Home.css"
+import NavBarComp from "../NavbarComp"
+import "../../styles/Home.css"
 import TopMetaPicksPanel from "./TopMetaPicksPanel";
 import LatestDraftsPanel from "./LatestDraftsPanel";
 
