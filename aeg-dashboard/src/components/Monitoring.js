@@ -3,44 +3,87 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
+import { Autocomplete } from '@mui/material';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import { ThemeProvider, createTheme } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClearIcon from '@mui/icons-material/Clear'
+import Stack from '@mui/material/Stack';
 
-import Form from 'react-bootstrap/Form';
 
 import '../styles/Monitoring.css'
 
 import NavBarComp from './NavbarComp';
 import { API_URL } from '../constants/index.js';
+;
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
     const [selectedTournament, setSelectedTournament] = React.useState('')
-    const handleSelectChange = (event) => {
-        const newValue = event.target.value;
+    const handleSelectChange = (value) => {
+        const newValue = value;
         setSelectedTournament(newValue)
         onSelectChange(newValue)
     }
 
-    return (
-        <div className='tournamentSelectAdder'>
-            <div className='wrapper-tournament-selectComp'>
-                <Form.Select onChange={handleSelectChange}>
-                    <option>-- Select a Tournament --</option>
-                    {tournamentList.map((element) => (
-                        <option value={element}>{element}</option>
-                    ))}
-                </Form.Select>
-            </div>
+    const theme = createTheme ({
+        palette: {
+            primary : {
+                main: '#fff',
+            },
+            text : {
+                disabled: '#fff'
+            }
             
+        },
+        action: {
+            active: '#fff'
+        }
+        
+    })
 
-            <Button
-                onClick={onRemove}
-                color='error'
-                variant='contained'
-                startIcon={<DeleteIcon/>}
-            >
-                Remove
-            </Button>
 
-        </div>
+    return (
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+                <>	
+                    <ThemeProvider theme={theme}>
+                        <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+                            <Autocomplete
+                                clearIcon={<ClearIcon color="error"/>}
+                                popupIcon={<ArrowDropDownIcon color="primary"/>}
+                                className="searchComp"
+                                options={tournamentList}
+                                renderInput={(params) => (
+                                    <TextField 
+                                        className='textField-searchComp'
+                                        {...params} 
+                                        label={"Tournament"}
+                                        sx={{ 
+                                            input: { color: 'white'},
+                                            borderColor: 'white'
+                                        }}
+                                        focused
+                                        fullWidth={true}
+
+                                    />
+                                    
+                                )}
+                                onChange={(_, value) => {handleSelectChange(value)}}
+                                sx={{color: 'primary.main', borderColor: 'primary.main', width: 525}}
+                                fullWidth={true}
+                            />
+                        </Box> 
+                    </ThemeProvider>
+                </>
+                <Button
+                    onClick={onRemove}
+                    color='error'
+                    variant='contained'
+                    startIcon={<DeleteIcon/>}
+                >
+                    Remove
+                </Button>
+        </Stack>
     )
 }
 

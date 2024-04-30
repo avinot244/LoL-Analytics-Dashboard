@@ -5,10 +5,6 @@
 	overflow: auto;
 }
 
-.wrapper-tournament-selectComp{
-	width: 500px;
-	padding-right: 20px;
-}
 
 .tournamentSelect-wrapper{
 	width: fit-content;
@@ -21,13 +17,6 @@
 	padding-bottom: 5px;
 }
 
-
-.tournamentSelectAdder{
-	display: flex;
-	flex-wrap: wrap;
-	padding-top: 5px;
-	padding-bottom: 10px;
-}
 
 .wrapper-Monitoring-downloadButton{
 	width: fit-content;
