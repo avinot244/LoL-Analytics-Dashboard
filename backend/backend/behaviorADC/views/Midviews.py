@@ -22,7 +22,18 @@ def behaviorMid_get_player_list(request, patch):
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
- 
+
+@api_view(['GET'])
+def behaviorMid_get_player_list_tournament(request, patch, tournament):
+    allObjects = BehaviorMid.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    summonnerNameList : list = list()
+
+    for MidObject in allObjects:
+        if not(MidObject.summonnerName in summonnerNameList):
+            summonnerNameList.append(MidObject.summonnerName)
+        
+    return Response(summonnerNameList)
+
 @api_view(['PATCH'])
 def behaviorMid_updatePatch(request):
     csv_file_path = "./databases/behavior/behavior/behavior_Mid.csv"

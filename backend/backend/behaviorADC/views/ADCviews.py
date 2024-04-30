@@ -24,6 +24,16 @@ def behaviorADC_get_player_list(request, patch):
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
 
+@api_view(['GET'])
+def behaviorADC_get_player_list_tournament(request, patch, tournament):
+    allObjects = BehaviorADC.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    summonnerNameList : list = list()
+
+    for ADCObject in allObjects:
+        if not(ADCObject.summonnerName in summonnerNameList):
+            summonnerNameList.append(ADCObject.summonnerName)
+        
+    return Response(summonnerNameList)
  
 @api_view(['PATCH'])
 def behaviorADC_updatePatch(request):

@@ -15,10 +15,8 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import { API_URL } from "../../constants";
 
 import Button from "@mui/material/Button"
-import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchComp from "../SearchComp";
 
 const theme = createTheme({
     palette: {

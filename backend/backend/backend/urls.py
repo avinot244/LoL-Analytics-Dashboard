@@ -31,6 +31,7 @@ urlpatterns = [
 
     # Behavior Top
     path('api/behavior/Top/getSummonnerList/<str:patch>/', Topviews.behaviorTop_get_player_list), # Getting the list of unique players
+    path('api/behavior/Top/getSummonnerListTournament/<str:patch>/<str:tournament>/', Topviews.behaviorTop_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Top/patch/update', Topviews.behaviorTop_updatePatch), # Updating patch values in the production database
     path('api/behavior/Top/stats/<str:summonnerName>', Topviews.behaviorTop_stats), # Getting stats of a given summonnerName
     path('api/behavior/Top/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Topviews.behaviorTop_stats_latest), # Getting last limit stats of a given summonnerName
@@ -41,6 +42,7 @@ urlpatterns = [
 
     # Behavior Jungle
     path('api/behavior/Jungle/getSummonnerList/<str:patch>/', Jungleviews.behaviorJungle_get_player_list), # Getting the list of unique players
+    path('api/behavior/Jungle/getSummonnerListTournament/<str:patch>/<str:tournament>/', Jungleviews.behaviorJungle_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Jungle/patch/update', Jungleviews.behaviorJungle_updatePatch), # Updating patch values in the production database
     path('api/behavior/Jungle/stats/<str:summonnerName>', Jungleviews.behaviorJungle_stats), # Getting stats of a given summonnerName
     path('api/behavior/Jungle/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Jungleviews.behaviorJungle_stats_latest), # Getting last limit stats of a given summonnerName
@@ -51,6 +53,7 @@ urlpatterns = [
 
     # Behavior Mid
     path('api/behavior/Mid/getSummonnerList/<str:patch>/', Midviews.behaviorMid_get_player_list), # Getting the list of unique players
+    path('api/behavior/Mid/getSummonnerListTournament/<str:patch>/<str:tournament>/', Midviews.behaviorMid_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Mid/patch/update', Midviews.behaviorMid_updatePatch), # Updating patch values in the production database
     path('api/behavior/Mid/stats/<str:summonnerName>', Midviews.behaviorMid_stats), # Getting stats of a given summonnerName
     path('api/behavior/Mid/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Midviews.behaviorMid_stats_latest), # Getting last limit stats of a given summonnerName
@@ -61,6 +64,7 @@ urlpatterns = [
     
     # Behavior ADC
     path('api/behavior/ADC/getSummonnerList/<str:patch>/', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
+    path('api/behavior/ADC/getSummonnerListTournament/<str:patch>/<str:tournament>/', ADCviews.behaviorADC_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch values in the production database
     path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
     path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
@@ -71,6 +75,7 @@ urlpatterns = [
 
     # Behavior Support
     path('api/behavior/Support/getSummonnerList/<str:patch>/', Supportviews.behaviorSupport_get_player_list), # Getting the list of unique players
+    path('api/behavior/Support/getSummonnerListTournament/<str:patch>/<str:tournament>/', Supportviews.behaviorSupport_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Support/patch/update', Supportviews.behaviorSupport_updatePatch), # Updating patch values in the production database
     path('api/behavior/Support/stats/<str:summonnerName>', Supportviews.behaviorSupport_stats), # Getting stats of a given summonnerName
     path('api/behavior/Support/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Supportviews.behaviorSupport_stats_latest), # Getting last limit stats of a given summonnerName

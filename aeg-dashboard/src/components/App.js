@@ -4,6 +4,7 @@ import Home from "./Home/Home"
 import ChampionOverview from "./ChampionOverview/ChampionOverview"
 import ChampionOverviewScrim from './ChampionOverview/ChampionOverviewScrim';
 import PlayerOverview from "./PlayerOverview/PlayerOverview"
+import PlayerOverviewScrim from "./PlayerOverview/PlayerOverviewScrim"
 import GameOverview from './GameOverview/GameOverview';
 import Monitoring from './Monitoring';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path:'/PlayerOverview/Scrims',
-		element: <PlayerOverview/>
+		element: <PlayerOverviewScrim/>
 	},
 	{
 		path:'/PlayerOverview/Esports',

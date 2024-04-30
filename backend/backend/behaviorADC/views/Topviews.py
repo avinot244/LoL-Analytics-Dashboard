@@ -22,7 +22,18 @@ def behaviorTop_get_player_list(request, patch):
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
- 
+
+@api_view(['GET'])
+def behaviorTop_get_player_list_tournament(request, patch, tournament):
+    allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    summonnerNameList : list = list()
+
+    for TopObject in allObjects:
+        if not(TopObject.summonnerName in summonnerNameList):
+            summonnerNameList.append(TopObject.summonnerName)
+        
+    return Response(summonnerNameList)
+
 @api_view(['PATCH'])
 def behaviorTop_updatePatch(request):
     csv_file_path = "./databases/behavior/behavior/behavior_Top.csv"

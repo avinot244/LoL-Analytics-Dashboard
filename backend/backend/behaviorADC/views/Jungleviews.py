@@ -22,7 +22,18 @@ def behaviorJungle_get_player_list(request, patch):
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
- 
+
+@api_view(['GET'])
+def behaviorJungle_get_player_list_tournament(request, patch, tournament):
+    allObjects = BehaviorJungle.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    summonnerNameList : list = list()
+
+    for JungleObject in allObjects:
+        if not(JungleObject.summonnerName in summonnerNameList):
+            summonnerNameList.append(JungleObject.summonnerName)
+        
+    return Response(summonnerNameList)
+
 @api_view(['PATCH'])
 def behaviorJungle_updatePatch(request):
     csv_file_path = "./databases/behavior/behavior/behavior_Jungle.csv"
