@@ -2,6 +2,7 @@ import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Home from "./Home/Home"
 import ChampionOverview from "./ChampionOverview/ChampionOverview"
+import ChampionOverviewScrim from './ChampionOverview/ChampionOverviewScrim';
 import PlayerOverview from "./PlayerOverview/PlayerOverview"
 import GameOverview from './GameOverview/GameOverview';
 import Monitoring from './Monitoring';
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path:'/ChampionOverview/Scrims',
-		element: <ChampionOverview />
+		element: <ChampionOverviewScrim />
 	},
 	{
 		path:'/ChampionOverview/Esports',
