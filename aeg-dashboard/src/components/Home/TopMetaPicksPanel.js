@@ -146,7 +146,7 @@ function TopMetaPicksPanel(props) {
             }
             
             {
-                // flagChampionOverview &&
+                flagChampionOverview &&
                 <ChampionOverviewListPanel
                     filter={activeFilter}
                     side={activeSide}
