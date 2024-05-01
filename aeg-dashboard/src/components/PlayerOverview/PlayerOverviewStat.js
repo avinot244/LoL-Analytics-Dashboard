@@ -14,6 +14,7 @@ import {
     Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
+import { FormControlLabel, FormGroup, Stack, Switch } from "@mui/material";
 ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -28,6 +29,11 @@ export default function PlayerOverviewStat(props) {
 
     const [dataBehaviorPatch, setDataBehaviorPatch] = useState([])
     const [dataBehaviorLatest, setDataBehaviorLatest] = useState([])
+    const [dataBehaviorTournament, setDataBehaviorTournament] = useState([])
+
+    const [displayPatch, setDisplayPatch] = useState(true)
+    const [displayLatest, setDisplayLatest] = useState(true)
+    const [displayTournament, setDisplayTournament] = useState(true)
 
     const gd15 = 450
     const k15 = 4
@@ -58,8 +64,22 @@ export default function PlayerOverviewStat(props) {
                 setDataBehaviorLatest(getAvgData(newBehaviorLatest, role))
             })
         }
+
+        const fetchBehaviorTournamentPlayer = async (role, summonnerName, wantedTournament) => {
+            const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${behaviorModelUUID}/${wantedTournament}/${wantedTournament}/`, {
+                method: "GET"
+            })
+            result.json().then(result => {
+                const newBehaviorTournament = result
+                console.log(newBehaviorTournament)
+                setDataBehaviorTournament(getAvgData(newBehaviorTournament, role))
+            })
+        }
+
+
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
         fetchBehaviorTournamentLatestPlayer(role, summonnerName, limit, wantedTournament)
+        fetchBehaviorTournamentPlayer(role, summonnerName, wantedTournament)
 
     }, [])
 
@@ -179,6 +199,7 @@ export default function PlayerOverviewStat(props) {
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgb(255, 99, 132)',
                 borderWidth: 1,
+                hidden: !displayPatch
                             
             },
             {
@@ -187,6 +208,15 @@ export default function PlayerOverviewStat(props) {
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgb(54, 162, 235)',
                 borderWidth: 1,
+                hidden: !displayLatest
+            },
+            {
+                label: `Behavior ${summonnerName} at ${wantedTournament}`,
+                data: dataBehaviorTournament,
+                backgroundColor: 'rgba(74, 191, 192, 0.2)',
+                borderColor: 'rgb(74, 191, 192)',
+                borderWidth: 1,
+                hidden: !displayTournament
             }
         ]
     }
@@ -236,13 +266,24 @@ export default function PlayerOverviewStat(props) {
 
     return (
         <div className="playerOverview-content-wrapper">
-            <div className="playerOverview-graph">
-                <Radar
-                    data={data}
-                    options={options}
-                />
+            <div className="playerOverviewGraph">
+                <div className="graph-ControlPanel">
+                    <FormGroup row>
+                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayLatest(event.target.checked)}}/>} label={`Latest ${limit} games`}/>
+                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayPatch(event.target.checked)}}/>} label={`Patch ${patch}`}/>
+                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayTournament(event.target.checked)}}/>} label={`Tournament`}/>
+
+                    </FormGroup>
+                </div>
+
+                <div className="playerOverview-graph">
+                    <Radar
+                        data={data}
+                        options={options}
+                    />
+                </div>
             </div>
-            
+
             <div className="playerOverview-other-content">
                 <div className="playerOverview-stats">
                     <h2>Overall stats</h2>

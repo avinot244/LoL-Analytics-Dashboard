@@ -68,6 +68,20 @@ def behaviorJungle_stats(request, summonnerName):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def behaviorJungle_stats_tournament(request, summonnerName, tournament):
+    summonnerNameList : list = list()
+    allObjects = BehaviorJungle.objects.filter(tournament__exact=tournament)
+    for res in allObjects:
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    queryResult = BehaviorJungle.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
+    serializer = BehaviorJungleSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def behaviorJungle_stats_latest(request, summonnerName, limit, tournament):
     summonnerNameList : list = list()
     allObjects = BehaviorJungle.objects.all()
@@ -104,30 +118,6 @@ def behaviorJungle_stats_patch(request, summonnerName, patch, tournament):
     serializer = BehaviorJungleSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-def behaviorJungle_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
-    tournamentDict = {
-        "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
-    }
-    # Checking if the tournaments in tournamentDict are in our database
-    response = requests.get(
-        API_URL + 'api/dataAnalysis/tournament/getList'
-    )
-    tournamentListDB : list = list()
-    for tournament in response.json():
-        tournamentListDB.append(tournament)
-     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
-    
-        if not(flag):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    wantedDB : pd.DataFrame = getDataBase("Jungle", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="Jungle")
-
-    return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
 def behaviorJungle_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
@@ -182,6 +172,35 @@ def behaviorJungle_behavior_patch(request, summonnerName, patch, uuid, wantedTou
     # Getting the db we want given a player and the patch
     response = requests.get(
         API_URL + "api/behavior/Jungle/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
+    )
+    wantedDB = pd.DataFrame(response.json())
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
+    return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorJungle_behavior_tournament(request, summonnerName, uuid, wantedTournament, comparisonTournament):
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Checking if the tournament in tournamentDict are in our database
+    response = requests.get(
+        API_URL + 'api/dataAnalysis/tournament/getList'
+    )
+    tournamentListDB : list = list()
+    for tournament in response.json():
+        tournamentListDB.append(tournament)
+    
+    for key in tournamentDict.keys():
+        flag : bool = tournamentDict[key] in tournamentListDB
+    
+        if not(flag):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/Jungle/stats/{}/{}/".format(summonnerName, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
