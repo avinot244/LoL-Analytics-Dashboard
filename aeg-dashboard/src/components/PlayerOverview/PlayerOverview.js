@@ -3,7 +3,7 @@ import "../../styles/PlayerOverview.css"
 import SelectComp from "../SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
-import { API_URL, roleList, behaviorModelUUID} from "../../constants";
+import { API_URL, roleList} from "../../constants";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -14,16 +14,16 @@ import SearchComp from "../SearchComp";
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
     
-    const [activePatch, setActivePatch] = useState('Select a patch')
-    const [selectedPlayer, setSelectedPlayer] = useState('Select a player')
-    const [activeRole, setActiveRole] = useState('Select a role')
+    const [activePatch, setActivePatch] = useState('')
+    const [selectedPlayer, setSelectedPlayer] = useState('')
+    const [activeRole, setActiveRole] = useState('')
     const [playerList, setPlayerList] = useState([])
     const [flagDisplayPlayerSearch, setDisplayPlayerSearch] = useState(false)
     const [flagDisplayPlayerStat, setDisplayPlayerStat] = useState(false)
     const [flagDisplayTournamentSearch, setDisplayTournamentSearch] = useState(false)
 
     const [tournamentList, setTournamentList] = useState([])
-    const [tournament, setActiveTournament] = useState([])
+    const [tournament, setActiveTournament] = useState('')
     const [activeLimit, setActiveLimit] = useState(5)
 
     useEffect(() => {
@@ -86,8 +86,11 @@ function PlayerOverview(){
                             variant="contained"
                             endIcon={<SearchIcon />}
                             onClick={() => {
-                                fetchPlayers(activePatch, activeRole)
-                                setDisplayPlayerSearch(true)
+                                console.log(activePatch, activeRole)
+                                if (activePatch !== '' && activeRole !== '') {
+                                    fetchPlayers(activePatch, activeRole)
+                                    setDisplayPlayerSearch(true)
+                                }
                             }}
                         >
                             Search
@@ -116,8 +119,11 @@ function PlayerOverview(){
                                 variant="contained" 
                                 endIcon={<SearchIcon />}
                                 onClick={() => {
-                                    setDisplayTournamentSearch(true)
-                                    fetchTournamentFromPlayer(selectedPlayer, activePatch)
+                                    if (selectedPlayer !== '') {
+                                        setDisplayTournamentSearch(true)
+                                        fetchTournamentFromPlayer(selectedPlayer, activePatch)
+                                    }
+                                    
                                 }}    
                             >
                                 Search tournament
@@ -157,6 +163,7 @@ function PlayerOverview(){
                                     setDisplayPlayerSearch(false)
                                     setDisplayPlayerStat(false)
                                     setDisplayTournamentSearch(false)
+                                    setActiveLimit(5)
                                 }}    
                             >
                                 Reset
@@ -167,7 +174,9 @@ function PlayerOverview(){
                                 variant="contained"
                                 endIcon={<ArrowForwardIosIcon/>}
                                 onClick={() => {
-                                    setDisplayPlayerStat(true)
+                                    if (tournament !== '') {
+                                        setDisplayPlayerStat(true)
+                                    }
                                 }}
                             >
                                 Analyse

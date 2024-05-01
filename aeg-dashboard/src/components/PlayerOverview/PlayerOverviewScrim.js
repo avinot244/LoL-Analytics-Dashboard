@@ -3,7 +3,7 @@ import "../../styles/PlayerOverview.css"
 import SelectComp from "../SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
-import { API_URL, roleList, behaviorModelUUID} from "../../constants";
+import { API_URL, roleList} from "../../constants";
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -79,7 +79,7 @@ function PlayerOverviewScrim(){
                             variant="contained"
                             endIcon={<SearchIcon />}
                             onClick={() => {
-                                if (activePatch != '' && activeRole != '') {
+                                if (activePatch !== '' && activeRole !== '') {
                                     fetchPlayers(activePatch, activeRole)
                                     setDisplayPlayerSearch(true)
                                 }
@@ -128,7 +128,7 @@ function PlayerOverviewScrim(){
                                 variant="contained"
                                 endIcon={<ArrowForwardIosIcon/>}
                                 onClick={() => {
-                                    if (activePatch != '' && activeRole != '' && selectedPlayer != '') {
+                                    if (activePatch !== '' && activeRole !== '' && selectedPlayer !== '') {
                                         setDisplayPlayerStat(true)   
                                     }
                                 }}
