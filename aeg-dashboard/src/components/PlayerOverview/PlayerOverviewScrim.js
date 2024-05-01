@@ -4,12 +4,16 @@ import SelectComp from "../SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import { API_URL, roleList} from "../../constants";
+import { ThemeProvider, createTheme } from "@mui/material";
+import { TextField } from "@mui/material";
+
 
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchComp from "../SearchComp";
+
 
 function PlayerOverviewScrim(){
     const [patchList, setPatchList] = useState([]);
@@ -52,6 +56,21 @@ function PlayerOverviewScrim(){
         fetchPatchListFromScrim();
     }, [])
 
+    const theme = createTheme ({
+        palette: {
+            primary : {
+                main: '#fff',
+            },
+            text : {
+                disabled: '#fff'
+            }
+            
+        },
+        action: {
+            active: '#fff'
+        }
+        
+    })
     
     
 
@@ -104,11 +123,24 @@ function PlayerOverviewScrim(){
                         </li>
 
                         <li>
-                            <SelectComp
-                                elementList={[5, 10, 15]}
-                                defaultValue={"-- Select a value --"}
-                                setActive={setActiveLimit}
-                            />
+                            <ThemeProvider theme={theme}>
+                                <TextField
+                                    id="outlined-number"
+                                    label="Games"
+                                    type="number"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                    focused
+                                    onChange={(e) => {
+                                        setActiveLimit(e.target.value)
+                                    }}
+                                />
+                            </ThemeProvider>
                         </li>
 
                         <li>

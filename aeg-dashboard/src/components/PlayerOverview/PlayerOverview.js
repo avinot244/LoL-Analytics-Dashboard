@@ -10,6 +10,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchComp from "../SearchComp";
+import { TextField } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 
 function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
@@ -59,6 +61,22 @@ function PlayerOverview(){
         })
     }
 
+
+    const theme = createTheme ({
+        palette: {
+            primary : {
+                main: '#fff',
+            },
+            text : {
+                disabled: '#fff'
+            }
+            
+        },
+        action: {
+            active: '#fff'
+        }
+        
+    })
     
     
 
@@ -148,11 +166,24 @@ function PlayerOverview(){
                         </li>
 
                         <li>
-                            <SelectComp
-                                elementList={[5, 10, 15]}
-                                defaultValue={"-- Select a value --"}
-                                setActive={setActiveLimit}
-                            />
+                            <ThemeProvider theme={theme}>
+                                <TextField
+                                    id="outlined-number"
+                                    label="Games"
+                                    type="number"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                    focused
+                                    onChange={(e) => {
+                                        setActiveLimit(e.target.value)
+                                    }}
+                                />
+                            </ThemeProvider>
                         </li>
 
                         <li>
