@@ -2,6 +2,7 @@ import NavBarComp from "../NavbarComp"
 import "../../styles/GameOverview.css"
 import SearchComp from "../SearchComp"
 import { API_URL } from "../../constants"
+import GameOverviewStat from "./GameOverviewStat"
 
 import { Chip, ThemeProvider, createTheme } from "@mui/material";
 import { Autocomplete } from '@mui/material';
@@ -84,6 +85,7 @@ function GameOverview(){
     const [tournament, setActiveTournament] = useState('')
 
     const [flagGameSelecter, setFlagGameSelecter] = useState(false)
+    const [flagDisplayStat, setFlagDisplayState] = useState(false)
     
 
     useEffect(() => {
@@ -125,10 +127,6 @@ function GameOverview(){
 
     }
 
-    const handleAnalyze = (game) => {
-        fetchPositionDensity(game)
-    }
-    
 
     return(
         <div className="wrapper-overview-game">
@@ -170,7 +168,7 @@ function GameOverview(){
                         variant="contained" 
                         endIcon={<ArrowForwardIosIcon />}         
                         onClick = {() => {
-                            handleAnalyze(selectedGame)
+                            setFlagDisplayState(true)
                         }}               
                     >
                         Analyze
@@ -181,6 +179,7 @@ function GameOverview(){
                         onClick={() => {
                             setFlagGameSelecter(false)
                             setSelectedGame('')
+                            setFlagDisplayState(false)
                         }}
                     >
                         Reset
@@ -190,13 +189,15 @@ function GameOverview(){
 
             }
             
-            
-                
-
             <p>{selectedGame.seriesId} {selectedGame.gameNumber}</p>
-                    
-
             
+            {
+                flagDisplayStat &&
+                <GameOverviewStat 
+                    seriesId={selectedGame.seriesId}
+                    gameNumber={selectedGame.gameNumber}
+                />
+            }            
         </div>
         
     )

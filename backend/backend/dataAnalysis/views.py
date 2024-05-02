@@ -446,69 +446,87 @@ def getGameList(request, tournament):
     return Response(gameData)
 
 @api_view(['GET'])
-def getGameStats(request, seriesId : int, gameNumber : int):
+def getGameStatsPlayers(request, seriesId : int, gameNumber : int):
     (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
     
-    teamBluePlayersData : dict = dict()
+    playerIdx : dict = dict()
+    resultData : dict = {
+        "data" : [],
+        "gameLength": gameDuration//60
+    }
+    i = 0
     for playerBlue in data.gameSnapshotList[0].teams[0].players:
         tempDict : dict = {
-            playerBlue.playerName: {
-                "DPM": [],
-                "currentGold": [],
-                "GPM": [],
-                "XPM": [],
-                "CSM": [],
-            }
+            "playerName": playerBlue.playerName,
+            "DPM": [],
+            "currentGold": [],
+            "GPM": [],
+            "XPM": [],
+            "CSM": [],
         }
-        teamBluePlayersData.update(tempDict)
+        resultData["data"].append(tempDict)
+        playerIdx[playerBlue.playerName] = i
+        i += 1
 
-    teamRedPlayersData : dict = dict()
     for playerRed in data.gameSnapshotList[1].teams[1].players:
         tempDict : dict = {
-            playerRed.playerName: {
-                "DPM": [],
-                "currentGold": [],
-                "GPM": [],
-                "XPM": [],
-                "CSM": [],
-            }
+            "playerName": playerRed.playerName,
+            "DPM": [],
+            "currentGold": [],
+            "GPM": [],
+            "XPM": [],
+            "CSM": [],
         }
-        teamRedPlayersData.update(tempDict)
+        resultData["data"].append(tempDict)
+        playerIdx[playerRed.playerName] = i
+        i += 1
     
-    resultData : dict = {
-        "teamBlue": teamBluePlayersData,
-        "teamRed": teamRedPlayersData
-    }
 
-    print(resultData)
+
     snapshotList : list[Snapshot] = [data.getSnapShotByTime(i*60, gameDuration) for i in range(gameDuration//60)]
     snapshotList.append(data.gameSnapshotList[-1])
 
     for gameSnapshot in snapshotList:
         for playerBlue in gameSnapshot.teams[0].players:
-            DPM = 60*playerBlue.stats.totalDamageDealtChampions/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            if int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)) == 0:
+                time = 1
+            else:
+                time = int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime))
+            
+            DPM = 60*playerBlue.stats.totalDamageDealtChampions/time
             currentGold = playerBlue.currentGold
-            GPM = 60*playerBlue.totalGold/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
-            XPM = 60*playerBlue.XP/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
-            CSM = 60*playerBlue.stats.minionsKilled/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
-
-            resultData["teamBlue"][playerBlue.playerName]["DPM"].append(DPM)
-            resultData["teamBlue"][playerBlue.playerName]["currentGold"].append(currentGold)
-            resultData["teamBlue"][playerBlue.playerName]["GPM"].append(GPM)
-            resultData["teamBlue"][playerBlue.playerName]["XPM"].append(XPM)
-            resultData["teamBlue"][playerBlue.playerName]["CSM"].append(CSM)
+            if time == 1:
+                GPM = 500
+            else:
+                GPM = 60*playerBlue.totalGold/time
+            XPM = 60*playerBlue.XP/time
+            CSM = 60*playerBlue.stats.minionsKilled/time
+                       
+            resultData["data"][playerIdx[playerBlue.playerName]]["DPM"].append(DPM)
+            resultData["data"][playerIdx[playerBlue.playerName]]["currentGold"].append(currentGold)
+            resultData["data"][playerIdx[playerBlue.playerName]]["GPM"].append(GPM)
+            resultData["data"][playerIdx[playerBlue.playerName]]["XPM"].append(XPM)
+            resultData["data"][playerIdx[playerBlue.playerName]]["CSM"].append(CSM)
 
         for playerRed in gameSnapshot.teams[1].players:
-            DPM = 60*playerRed.stats.totalDamageDealtChampions/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
-            currentGold = playerRed.currentGold
-            GPM = 60*playerRed.totalGold/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
-            XPM = 60*playerRed.XP/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
-            CSM = 60*playerRed.stats.minionsKilled/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            if int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)) == 0:
+                time = 1
+            else:
+                time = int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime))
 
-            resultData["teamRed"][playerRed.playerName]["DPM"].append(DPM)
-            resultData["teamRed"][playerRed.playerName]["currentGold"].append(currentGold)
-            resultData["teamRed"][playerRed.playerName]["GPM"].append(GPM)
-            resultData["teamRed"][playerRed.playerName]["XPM"].append(XPM)
-            resultData["teamRed"][playerRed.playerName]["CSM"].append(CSM)
+            DPM = 60*playerRed.stats.totalDamageDealtChampions/time
+            currentGold = playerRed.currentGold
+            if time == 1:
+                GPM = 500
+            else:
+                GPM = 60*playerRed.totalGold/time
+            XPM = 60*playerRed.XP/time
+            CSM = 60*playerRed.stats.minionsKilled/time
+
+            resultData["data"][playerIdx[playerRed.playerName]]["DPM"].append(DPM)
+            resultData["data"][playerIdx[playerRed.playerName]]["currentGold"].append(currentGold)
+            resultData["data"][playerIdx[playerRed.playerName]]["GPM"].append(GPM)
+            resultData["data"][playerIdx[playerRed.playerName]]["XPM"].append(XPM)
+            resultData["data"][playerIdx[playerRed.playerName]]["CSM"].append(CSM)
 
     return Response(resultData)
