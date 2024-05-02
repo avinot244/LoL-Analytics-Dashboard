@@ -160,7 +160,7 @@ function PlayerOverviewScrim(){
                                 variant="contained"
                                 endIcon={<ArrowForwardIosIcon/>}
                                 onClick={() => {
-                                    if (activePatch !== '' && activeRole !== '' && selectedPlayer !== '') {
+                                    if (activePatch !== '' && activeRole !== '' && selectedPlayer !== '' && activeLimit > 0) {
                                         setDisplayPlayerStat(true)   
                                     }
                                 }}

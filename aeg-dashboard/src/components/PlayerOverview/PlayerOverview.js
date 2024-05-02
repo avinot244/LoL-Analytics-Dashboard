@@ -205,7 +205,7 @@ function PlayerOverview(){
                                 variant="contained"
                                 endIcon={<ArrowForwardIosIcon/>}
                                 onClick={() => {
-                                    if (tournament !== '') {
+                                    if (tournament !== '' && activeLimit > 0) {
                                         setDisplayPlayerStat(true)
                                     }
                                 }}

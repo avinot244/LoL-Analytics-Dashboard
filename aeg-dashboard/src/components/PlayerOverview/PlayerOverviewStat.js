@@ -14,7 +14,9 @@ import {
     Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
-import { FormControlLabel, FormGroup, Stack, Switch } from "@mui/material";
+import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import { alpha, styled } from '@mui/material/styles';
+import { blue, teal, red, yellow, purple } from '@mui/material/colors';
 ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -23,6 +25,42 @@ ChartJS.register(
     Tooltip,
     Legend,
 );
+
+const BlueSwitch = styled(Switch)(({ theme }) => ({
+    '& .MuiSwitch-switchBase.Mui-checked': {
+        color: blue[600],
+        '&:hover': {
+            backgroundColor: alpha(blue[600], theme.palette.action.hoverOpacity),
+        },
+    },
+    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+        backgroundColor: blue[600],
+    },
+}));
+
+const TealSwitch = styled(Switch)(({ theme }) => ({
+    '& .MuiSwitch-switchBase.Mui-checked': {
+        color: teal[600],
+        '&:hover': {
+            backgroundColor: alpha(teal[600], theme.palette.action.hoverOpacity),
+        },
+    },
+    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+        backgroundColor: teal[600],
+    },
+}));
+
+const RedSwitch = styled(Switch)(({ theme }) => ({
+    '& .MuiSwitch-switchBase.Mui-checked': {
+        color: red[600],
+        '&:hover': {
+            backgroundColor: alpha(red[600], theme.palette.action.hoverOpacity),
+        },
+    },
+    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+        backgroundColor: red[600],
+    },
+}));
 
 export default function PlayerOverviewStat(props) {
     const {role, summonnerName, patch, wantedTournament, limit} = props
@@ -224,11 +262,38 @@ export default function PlayerOverviewStat(props) {
         ]
     }
 
+    const computeMax = () => {
+        const maxPatch = Math.max(...dataBehaviorPatch)
+        const maxLatest = Math.max(...dataBehaviorLatest)
+        const maxTournament = Math.max(...dataBehaviorTournament)
+
+        const max = Math.max(maxPatch, maxLatest, maxTournament)
+        if (max > 1.5) {
+            return Math.ceil(max)
+        }else{
+            return 1.5
+        }
+
+    }
+
+    const computeMin = () => {
+        const minPatch = Math.min(...dataBehaviorPatch)
+        const minLatest = Math.min(...dataBehaviorLatest)
+        const minTournament = Math.min(...dataBehaviorTournament)
+
+        const min = Math.min(minPatch, minLatest, minTournament)
+        if (min < -1.5) {
+            return Math.floor(min)
+        }else{
+            return -1.5
+        }
+    }
+
     const options = {
         scales: {
             r: {
-                max: 1.5,
-                min: -1.5,
+                max: computeMax(),
+                min: computeMin(),
                 ticks: {
                     stepSize: 0.5,
                     color: '#FFF',
@@ -272,10 +337,9 @@ export default function PlayerOverviewStat(props) {
             <div className="playerOverviewGraph">
                 <div className="graph-ControlPanel">
                     <FormGroup row>
-                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayLatest(event.target.checked)}}/>} label={`Latest ${limit} games`}/>
-                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayPatch(event.target.checked)}}/>} label={`Patch ${patch}`}/>
-                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayTournament(event.target.checked)}}/>} label={`Tournament`}/>
-
+                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayPatch(event.target.checked)}}/>} label={`Patch ${patch}`}/>
+                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayLatest(event.target.checked)}}/>} label={`Latest ${limit} games`}/>
+                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayTournament(event.target.checked)}}/>} label={`Tournament`}/>
                     </FormGroup>
                 </div>
 
