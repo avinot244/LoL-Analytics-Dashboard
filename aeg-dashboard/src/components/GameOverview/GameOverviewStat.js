@@ -112,11 +112,17 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
 
 
 
-    const [displayTop, setDisplayTop] = useState(true)
-    const [displayJungle, setDisplayJungle] = useState(true)
-    const [displayMid, setDisplayMid] = useState(true)
-    const [displayADC, setDisplayADC] = useState(true)
-    const [displaySupport, setDisplaySupport] = useState(true)
+    const [displayTopRed, setDisplayTopRed] = useState(true)
+    const [displayJungleRed, setDisplayJungleRed] = useState(true)
+    const [displayMidRed, setDisplayMidRed] = useState(true)
+    const [displayADCRed, setDisplayADCRed] = useState(true)
+    const [displaySupportRed, setDisplaySupportRed] = useState(true)
+
+    const [displayTopBlue, setDisplayTopBlue] = useState(true)
+    const [displayJungleBlue, setDisplayJungleBlue] = useState(true)
+    const [displayMidBlue, setDisplayMidBlue] = useState(true)
+    const [displayADCBlue, setDisplayADCBlue] = useState(true)
+    const [displaySupportBlue, setDisplaySupportBlue] = useState(true)
 
     
     useEffect(() => {
@@ -203,15 +209,21 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             "backgroundColor": "rgba(160, 94, 254, 0.5)"
         }
     ]
+    let pointStyle = ["circle", "circle", "circle", "circle", "circle", "crossRot", "crossRot", "crossRot", "crossRot", "crossRot"]
     for (let i = 0 ; i < dataGamePlayer.length ; i++) {
         let playerObject = dataGamePlayer[i]
-        let displayRole = (displayTop && (i === 0 || i === 5)) || (displayJungle && (i === 1 || i === 6)) || (displayMid && (i === 2 || i === 7)) ||  (displayADC && (i === 3 || i === 8)) || (displaySupport && (i === 4 || i === 9))
+        let displayRoleBlue = (displayTopBlue && i === 0) || (displayJungleBlue && i === 1) || (displayMidBlue && i === 2) || (displayADCBlue && i === 3) || (displaySupportBlue && i === 4) 
+        let displayRoleRed = (displayTopRed && i === 5) || (displayJungleRed && i === 6) || (displayMidRed && i === 7) || (displayADCRed && i === 8) || (displaySupportRed && i === 9)
+
+        
         let tempDPM = {
             label: `DPM ${playerObject.playerName}`,
             data: playerObject.DPM,
             borderColor: colorList[i].borderColor,
             backgroundColor: colorList[i].backgroundColor,
-            hidden: !(displayDPM && ((displayTeamBluePlayer && i < 5) || (displayTeamRedPlayer && i > 4)) && (displayRole))
+            pointStyle: pointStyle[i],
+            borderWidth: 1,
+            hidden: !(displayDPM && (displayRoleBlue || displayRoleRed))
         }
         datasetsPlayer.push(tempDPM)
         let tempCurrentGold = {
@@ -219,7 +231,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: playerObject.currentGold,
             borderColor: colorList[i].borderColor,
             backgroundColor: colorList[i].backgroundColor,
-            hidden: !(displayCurrentGold && ((displayTeamBluePlayer && i < 5) || (displayTeamRedPlayer && i > 4)) && (displayRole))
+            pointStyle: pointStyle[i],
+            borderWidth: 1,
+            hidden: !(displayCurrentGold && (displayRoleBlue || displayRoleRed))
         }
         datasetsPlayer.push(tempCurrentGold)
         let tempGPM = {
@@ -227,7 +241,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: playerObject.GPM,
             borderColor: colorList[i].borderColor,
             backgroundColor: colorList[i].backgroundColor,
-            hidden: !(displayGPM && ((displayTeamBluePlayer && i < 5) || (displayTeamRedPlayer && i > 4)) && (displayRole))
+            pointStyle: pointStyle[i],
+            borderWidth: 1,
+            hidden: !(displayGPM && (displayRoleBlue || displayRoleRed))
         }
         datasetsPlayer.push(tempGPM)
         let tempXPM = {
@@ -235,7 +251,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: playerObject.XPM,
             borderColor: colorList[i].borderColor,
             backgroundColor: colorList[i].backgroundColor,
-            hidden: !(displayXPM && ((displayTeamBluePlayer && i < 5) || (displayTeamRedPlayer && i > 4)) && (displayRole))
+            pointStyle: pointStyle[i],
+            borderWidth: 1,
+            hidden: !(displayXPM && (displayRoleBlue || displayRoleRed))
         }
         datasetsPlayer.push(tempXPM)
         let tempCSM = {
@@ -243,7 +261,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: playerObject.CSM,
             borderColor: colorList[i].borderColor,
             backgroundColor: colorList[i].backgroundColor,
-            hidden: !(displayCSM && ((displayTeamBluePlayer && i < 5) || (displayTeamRedPlayer && i > 4)) && (displayRole))
+            pointStyle: pointStyle[i],
+            borderWidth: 1,
+            hidden: !(displayCSM && (displayRoleBlue || displayRoleRed))
         }
         datasetsPlayer.push(tempCSM)
     }
@@ -256,6 +276,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
         plugins: {
             legend: {
                 display: false,
+                labels: {
+                    usePointStyle: true,
+                }
             },
             title: {
                 display: true,
@@ -274,7 +297,7 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             "backgroundColor": 'rgba(255, 99, 132, 0.2)'
         }
     ]
-
+    let pointStyleTeam = ["circle", "crossRot"]
     let datasetsTeams = []
     for (let i = 0 ; i < dataGameTeams.length ; i++) {
         let teamObject = dataGameTeams[i]
@@ -285,7 +308,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: teamObject.DPM,
             borderColor: colorListTeams[i]["borderColor"],
             backgroundColor: colorListTeams[i]["backgroundColor"],
-            hidden: !(displayDPMTeam && displayTeam)
+            hidden: !(displayDPMTeam && displayTeam),
+            pointStyle: pointStyleTeam[i],
+            borderWidth: 1,
         }
         datasetsTeams.push(tempDPM)
 
@@ -294,7 +319,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: teamObject.currentGold,
             borderColor: colorListTeams[i]["borderColor"],
             backgroundColor: colorListTeams[i]["backgroundColor"],
-            hidden: !(displayCurrentGoldTeam && displayTeam)
+            hidden: !(displayCurrentGoldTeam && displayTeam),
+            pointStyle: pointStyleTeam[i],
+            borderWidth: 1,
         }
         datasetsTeams.push(tempCurrentGold)
 
@@ -303,7 +330,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: teamObject.GPM,
             borderColor: colorListTeams[i]["borderColor"],
             backgroundColor: colorListTeams[i]["backgroundColor"],
-            hidden: !(displayGPMTeam && displayTeam)
+            hidden: !(displayGPMTeam && displayTeam),
+            pointStyle: pointStyleTeam[i],
+            borderWidth: 1,
         }
         datasetsTeams.push(tempGPM)
 
@@ -312,7 +341,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: teamObject.XPM,
             borderColor: colorListTeams[i]["borderColor"],
             backgroundColor: colorListTeams[i]["backgroundColor"],
-            hidden: !(displayXPMTeam && displayTeam)
+            hidden: !(displayXPMTeam && displayTeam),
+            pointStyle: pointStyleTeam[i],
+            borderWidth: 1,
         }
         datasetsTeams.push(tempXPM)
 
@@ -321,7 +352,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             data: teamObject.CSM,
             borderColor: colorListTeams[i]["borderColor"],
             backgroundColor: colorListTeams[i]["backgroundColor"],
-            hidden: !(displayCSMTeam && displayTeam)
+            hidden: !(displayCSMTeam && displayTeam),
+            pointStyle: pointStyleTeam[i],
+            borderWidth: 1,
         }
         datasetsTeams.push(tempCSM)
     }
@@ -334,6 +367,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
         plugins: {
             legend: {
                 display: false,
+                labels: {
+                    usePointStyle: true,
+                }
             },
             title: {
                 display: true,
@@ -358,8 +394,8 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
                         <FormControlLabel control={<Switch onChange={(event) => {setDisplayCSMTeam(event.target.checked)}}/>} label={`CSM`}/>
                     </FormGroup>
                     <FormGroup row>
-                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayTeamBlue(event.target.checked)}}/>} label={`Team Blue`}/>
-                        <FormControlLabel control={<RedSwitch onChange={(event) => {setDisplayTeamRed(event.target.checked)}}/>} label={`Team Red`}/>
+                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayTeamBlue(event.target.checked)}}/>} label={`Team Blue o`}/>
+                        <FormControlLabel control={<RedSwitch onChange={(event) => {setDisplayTeamRed(event.target.checked)}}/>} label={`Team Red x`}/>
                     </FormGroup>
                     <Line options={optionsTeam} data={dataTeam}/>
                     
@@ -374,16 +410,19 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
                     </FormGroup>
 
                     <FormGroup row>
-                        <FormControlLabel control={<Switch defaultChecked onChange={(event) => {setDisplayTeamBluePlayer(event.target.checked)}}/>} label={`Team Blue`}/>
-                        <FormControlLabel control={<RedSwitch onChange={(event) => {setDisplayTeamRedPlayer(event.target.checked)}}/>} label={`Team Red`}/>
+                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTopBlue(event.target.checked)}}/>} label={`Top o`} color=""/>
+                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungleBlue(event.target.checked)}}/>} label={`Jungle o`}/>
+                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMidBlue(event.target.checked)}}/>} label={`Mid o`}/>
+                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADCBlue(event.target.checked)}}/>} label={`ADC o`}/>
+                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupportBlue(event.target.checked)}}/>} label={`Support o`}/>
                     </FormGroup>
 
                     <FormGroup row>
-                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTop(event.target.checked)}}/>} label={`Top`} color=""/>
-                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungle(event.target.checked)}}/>} label={`Jungle`}/>
-                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMid(event.target.checked)}}/>} label={`Mid`}/>
-                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADC(event.target.checked)}}/>} label={`ADC`}/>
-                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupport(event.target.checked)}}/>} label={`Support`}/>
+                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTopRed(event.target.checked)}}/>} label={`Top x`} color=""/>
+                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungleRed(event.target.checked)}}/>} label={`Jungle x`}/>
+                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMidRed(event.target.checked)}}/>} label={`Mid x`}/>
+                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADCRed(event.target.checked)}}/>} label={`ADC x`}/>
+                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupportRed(event.target.checked)}}/>} label={`Support x`}/>
                     </FormGroup>
                     <Line options={optionsPlayer} data={dataPlayer}/>
                 </div>
