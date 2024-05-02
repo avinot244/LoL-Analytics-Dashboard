@@ -530,3 +530,92 @@ def getGameStatsPlayers(request, seriesId : int, gameNumber : int):
             resultData["data"][playerIdx[playerRed.playerName]]["CSM"].append(CSM)
 
     return Response(resultData)
+
+@api_view(['GET'])
+def getGameStatsTeams(request, seriesId : int, gameNumber):
+    (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
+    resultData : dict = {
+        "data" : [
+            {
+                "teamSide": "Blue",
+                "DPM": [],
+                "currentGold": [],
+                "GPM": [],
+                "XPM": [],
+                "CSM": [],
+            },
+            {
+                "teamSide": "Red",
+                "DPM": [],
+                "currentGold": [],
+                "GPM": [],
+                "XPM": [],
+                "CSM": [],
+            }
+        ],
+        "gameLength": gameDuration//60
+    }
+
+    snapshotList : list[Snapshot] = [data.getSnapShotByTime(i*60, gameDuration) for i in range(gameDuration//60)]
+    snapshotList.append(data.gameSnapshotList[-1])
+
+    for gameSnapshot in snapshotList:
+        DPM = 0
+        currentGold = 0
+        GPM = 0
+        XPM = 0
+        CSM = 0
+        for playerBlue in gameSnapshot.teams[0].players:
+            if int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)) == 0:
+                time = 1
+            else:
+                time = int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime))
+            
+            DPM += 60*playerBlue.stats.totalDamageDealtChampions/time
+            currentGold += playerBlue.currentGold
+
+            if time == 1:
+                GPM += 500
+            else:
+                GPM += 60*playerBlue.totalGold/time
+            
+            XPM += 60*playerBlue.XP/time
+            CSM += 60*playerBlue.stats.minionsKilled/time
+
+        resultData["data"][0]["DPM"].append(DPM/5)
+        resultData["data"][0]["currentGold"].append(currentGold/5)
+        resultData["data"][0]["GPM"].append(GPM/5)
+        resultData["data"][0]["XPM"].append(XPM/5)
+        resultData["data"][0]["CSM"].append(CSM/5)
+
+        DPM = 0
+        currentGold = 0
+        GPM = 0
+        XPM = 0
+        CSM = 0
+        for playerRed in gameSnapshot.teams[1].players:
+            if int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)) == 0:
+                time = 1
+            else:
+                time = int(gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime))
+            
+            DPM += 60*playerRed.stats.totalDamageDealtChampions/time
+            currentGold += playerRed.currentGold
+
+            if time == 1:
+                GPM += 500
+            else:
+                GPM += 60*playerRed.totalGold/time
+            
+            XPM += 60*playerRed.XP/time
+            CSM += 60*playerRed.stats.minionsKilled/time
+
+        resultData["data"][1]["DPM"].append(DPM/5)
+        resultData["data"][1]["currentGold"].append(currentGold/5)
+        resultData["data"][1]["GPM"].append(GPM/5)
+        resultData["data"][1]["XPM"].append(XPM/5)
+        resultData["data"][1]["CSM"].append(CSM/5)
+    
+    return Response(resultData)
+            
+

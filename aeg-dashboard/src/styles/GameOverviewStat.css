@@ -1,0 +1,18 @@
+.wrapper-charts-GameOverviewStat{
+    width : 100%;
+}
+
+.charts{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width : 100%;
+}
+
+.chart-team .chart-player{
+    width: 50%
+}
+
+.chart-team{
+    padding-right: 3%;
+}

@@ -120,6 +120,7 @@ urlpatterns = [
 
     path('api/dataAnalysis/getGamePositionDensity/', dataAnalysisViews.getGamePositionDensity),
     path('api/dataAnalysis/gameAnalysis/players/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsPlayers),
+    path('api/dataAnalysis/gameAnalysis/teams/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsTeams),
 
 
     # Draft

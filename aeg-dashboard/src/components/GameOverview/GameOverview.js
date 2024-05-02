@@ -189,7 +189,6 @@ function GameOverview(){
 
             }
             
-            <p>{selectedGame.seriesId} {selectedGame.gameNumber}</p>
             
             {
                 flagDisplayStat &&
