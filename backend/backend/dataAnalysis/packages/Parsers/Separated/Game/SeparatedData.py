@@ -194,8 +194,7 @@ class SeparatedData:
                 
             # self.begGameTime = self.gameSnapshotList[0].gameTime
             self.matchName = ""
-            
-                    
+    
     def getPlayerList(self):
         firstGameSnapshot = self.gameSnapshotList[0]
         playersTeamOne : list[str] = firstGameSnapshot.teams[0].getPlayerList()

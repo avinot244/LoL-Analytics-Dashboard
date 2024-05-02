@@ -119,6 +119,7 @@ urlpatterns = [
     path('api/dataAnalysis/getGameList/<str:tournament>/', dataAnalysisViews.getGameList),
 
     path('api/dataAnalysis/getGamePositionDensity/', dataAnalysisViews.getGamePositionDensity),
+    path('api/dataAnalysis/gameAnalysis/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStats),
 
 
     # Draft

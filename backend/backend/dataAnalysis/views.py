@@ -17,6 +17,7 @@ from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
 from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
+from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 
 
 from Draft.models import DraftPlayerPick
@@ -419,10 +420,6 @@ def getGamePositionDensity(request):
             
             
     return HttpResponse(imgList, content_type="image/png")
-        
-    
-
-
 
 @api_view(['GET'])
 def getGameList(request, tournament):
@@ -447,3 +444,71 @@ def getGameList(request, tournament):
         gameData["data"].append(temp_dict)
     
     return Response(gameData)
+
+@api_view(['GET'])
+def getGameStats(request, seriesId : int, gameNumber : int):
+    (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
+    
+    teamBluePlayersData : dict = dict()
+    for playerBlue in data.gameSnapshotList[0].teams[0].players:
+        tempDict : dict = {
+            playerBlue.playerName: {
+                "DPM": [],
+                "currentGold": [],
+                "GPM": [],
+                "XPM": [],
+                "CSM": [],
+            }
+        }
+        teamBluePlayersData.update(tempDict)
+
+    teamRedPlayersData : dict = dict()
+    for playerRed in data.gameSnapshotList[1].teams[1].players:
+        tempDict : dict = {
+            playerRed.playerName: {
+                "DPM": [],
+                "currentGold": [],
+                "GPM": [],
+                "XPM": [],
+                "CSM": [],
+            }
+        }
+        teamRedPlayersData.update(tempDict)
+    
+    resultData : dict = {
+        "teamBlue": teamBluePlayersData,
+        "teamRed": teamRedPlayersData
+    }
+
+    print(resultData)
+    snapshotList : list[Snapshot] = [data.getSnapShotByTime(i*60, gameDuration) for i in range(gameDuration//60)]
+    snapshotList.append(data.gameSnapshotList[-1])
+
+    for gameSnapshot in snapshotList:
+        for playerBlue in gameSnapshot.teams[0].players:
+            DPM = 60*playerBlue.stats.totalDamageDealtChampions/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            currentGold = playerBlue.currentGold
+            GPM = 60*playerBlue.totalGold/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            XPM = 60*playerBlue.XP/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            CSM = 60*playerBlue.stats.minionsKilled/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+
+            resultData["teamBlue"][playerBlue.playerName]["DPM"].append(DPM)
+            resultData["teamBlue"][playerBlue.playerName]["currentGold"].append(currentGold)
+            resultData["teamBlue"][playerBlue.playerName]["GPM"].append(GPM)
+            resultData["teamBlue"][playerBlue.playerName]["XPM"].append(XPM)
+            resultData["teamBlue"][playerBlue.playerName]["CSM"].append(CSM)
+
+        for playerRed in gameSnapshot.teams[1].players:
+            DPM = 60*playerRed.stats.totalDamageDealtChampions/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            currentGold = playerRed.currentGold
+            GPM = 60*playerRed.totalGold/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            XPM = 60*playerRed.XP/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+            CSM = 60*playerRed.stats.minionsKilled/gameSnapshot.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime)
+
+            resultData["teamRed"][playerRed.playerName]["DPM"].append(DPM)
+            resultData["teamRed"][playerRed.playerName]["currentGold"].append(currentGold)
+            resultData["teamRed"][playerRed.playerName]["GPM"].append(GPM)
+            resultData["teamRed"][playerRed.playerName]["XPM"].append(XPM)
+            resultData["teamRed"][playerRed.playerName]["CSM"].append(CSM)
+
+    return Response(resultData)

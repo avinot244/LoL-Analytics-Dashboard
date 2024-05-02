@@ -80,6 +80,9 @@ export default function PlayerOverviewStat(props) {
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
         fetchBehaviorTournamentLatestPlayer(role, summonnerName, limit, wantedTournament)
         fetchBehaviorTournamentPlayer(role, summonnerName, wantedTournament)
+        console.log(dataBehaviorLatest)
+        console.log(dataBehaviorPatch)
+        console.log(dataBehaviorTournament)
 
     }, [])
 
