@@ -97,10 +97,6 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
     const [displayXPM, setDisplayXPM] = useState(false)
     const [displayCSM, setDisplayCSM] = useState(false)
 
-    const [displayTeamBluePlayer, setDisplayTeamBluePlayer] = useState(true)
-    const [displayTeamRedPlayer, setDisplayTeamRedPlayer] = useState(false)
-
-
     const [displayTeamBlue, setDisplayTeamBlue] = useState(true)
     const [displayTeamRed, setDisplayTeamRed] = useState(false)
 
