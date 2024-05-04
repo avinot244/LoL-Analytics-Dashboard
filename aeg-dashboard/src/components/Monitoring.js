@@ -96,7 +96,7 @@ const fetchData = async (tournamentList) => {
         const data = await response.json();
         console.log(data)
     } catch (error) {
-        console.error('Error fetrch data:', error)
+        console.error('Error fetch data:', error)
     }
 }
 

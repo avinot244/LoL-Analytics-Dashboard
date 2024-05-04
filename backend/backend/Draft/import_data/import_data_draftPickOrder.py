@@ -63,6 +63,6 @@ for index, row in df_draft_pick_order.iterrows():
         rp2 = row["RP2"],
         rp3 = row["RP3"],
         rp4 = row["RP4"],
-        rp5 = row["RP5"]).count() > 1):
+        rp5 = row["RP5"]).count() > 0):
         
         draftPickOrder.save()

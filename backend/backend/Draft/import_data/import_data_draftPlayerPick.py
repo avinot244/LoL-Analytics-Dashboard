@@ -22,7 +22,7 @@ for index, row in df_draft_player_pick.iterrows():
         seriesId=row["SeriesId"], 
         championName=row["ChampionName"], 
         role=row["Role"], 
-        gameNumber=row["GameNumber"]).count()) > 0:
+        gameNumber=row["GameNumber"]).count() > 0):
         
         draftPlayerPick.save()
 

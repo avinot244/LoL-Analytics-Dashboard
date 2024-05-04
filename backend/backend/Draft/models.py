@@ -61,3 +61,12 @@ class ChampionDraftStats(models.Model):
     blindPick = models.FloatField("BlindPick")
     mostPopularRole = models.CharField("MostPopularRole", max_length=240)
 
+class ChampionPool(models.Model):
+    summonnerName = models.CharField("SummonnerName", max_length=240)
+    championName = models.CharField("ChampionName", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    globalPickRate = models.FloatField("GlobalPickRate")
+    winRate = models.FloatField("WinRate")
+    nbGames = models.IntegerField("NbGames")
+    kda = models.FloatField("KDA")
+

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats
+from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats, ChampionPool
 
 class DraftPickOrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,3 +15,8 @@ class ChampionDraftStatsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChampionDraftStats
         fields = ("pk", "championName", "patch", "tournament", "side", "mostPopularRole", "winRate", "globalPickRate", "pickRate1Rota", "pickRate2Rota", "globalBanRate", "banRate1Rota", "banRate2Rota", "mostPopularPickOrder", "blindPick", "mostPopularRole")
+
+class ChampionPoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChampionPool
+        fields = ("pk", "summonnerName", "championName", "tournament", "globalPickRate", "winRate", "nbGames", "kda")

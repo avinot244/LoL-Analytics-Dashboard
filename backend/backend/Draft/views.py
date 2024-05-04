@@ -6,17 +6,19 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats
-from .serializer import DraftPickOrderSerializer, ChampionDraftStatsSerializer
+from .serializer import DraftPickOrderSerializer, ChampionDraftStatsSerializer, ChampionPoolSerializer
+
 
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_seriesId
 from dataAnalysis.packages.api_calls.DDragon.api_calls import get_champion_mapping_key_reversed
 from dataAnalysis.packages.utils_stuff.utils_func import getData
 from dataAnalysis.globals import DATA_PATH, API_URL
 from dataAnalysis.models import GameMetadata
-from dataAnalysis.serializer import GameMetadataSerialize
+from dataAnalysis.serializer import GameMetadataSerializer
 
 from .packages.utils import isDraftDownloaded, isTournamentOngoing
 from .packages.championStats_utils import *
+from .packages.playerStats_utils import *
 
 from .utils import import_draft
 
@@ -331,3 +333,74 @@ def getTopChampionsPlayer(request, role, filter, side, patch, tournament, summon
     # queryChampionStats = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, role__exact=role, championName__contained_by=playedChampions)
     
     return Response(playedChampions)
+
+@api_view(['PATCH'])
+def updatePlayerStats(request):
+    # Getting the list of tournament
+    tournamentList : list = list()
+    queryTournament = GameMetadata.objects.all()
+    for res in queryTournament:
+        if not(res.tournament in tournamentList):
+            tournamentList.append(res.tournament)
+
+    for tournament in tournamentList:
+        
+        associatedPlayerList : list = list()
+        queryPlayer = DraftPlayerPick.objects.filter(tournament__exact=tournament)
+        for res in queryPlayer:
+            if not(res.sumonnerName in associatedPlayerList):
+                associatedPlayerList.append(res.sumonnerName)
+
+        for playerName in associatedPlayerList:
+            associatedChampionList : list = list()
+            queryChampion = DraftPlayerPick.objects.filter(tournament__exact=tournament, sumonnerName__exact=playerName)
+            for res in queryChampion:
+                if not(res.championName in associatedChampionList):
+                    associatedChampionList.append(res.championName)
+
+            for championName in associatedChampionList:
+                if not(isPlayerChampionStatInDatabase(playerName, championName, tournament)) or isTournamentOngoing(tournament):
+                    globalPickRate = getPlayerChampionPickRate(playerName, championName, tournament)
+                    globalWinRate = getPlayerChampionWinRate(playerName, championName, tournament)
+                    nbGames = getPlayerChampionNbGames(playerName, championName, tournament)
+                    kda = getPlayerChampionKDA(playerName, championName, tournament)
+                    
+                    path : str = DATA_PATH + "drafts/player_championPool.csv"
+                    new : bool = not(os.path.exists(path))
+                    saveChampionPoolCSV(
+                        path,
+                        new,
+                        playerName,
+                        championName,
+                        tournament,
+                        globalPickRate,
+                        globalWinRate,
+                        nbGames,
+                        kda
+                    )
+    return Response(status=status.HTTP_200_OK)
+
+        
+
+    
+
+@api_view(['GET'])
+def getPlayerStats(request, summonnerName, tournament, filter):
+    query = ChampionPool.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
+    if filter == "pickRate":
+        res = query.order_by("-globalPickRate")
+    elif filter == "winRate":
+        res = query.order_by("-winRate")
+
+    return_data = ChampionPoolSerializer(res, context={"request": request}, many=True)
+    
+    return Response(return_data.data)
+
+@api_view(['DELEtE'])
+def deleteAllChampionPool(request):
+    query = ChampionPool.objects.all()
+
+    for res in query:
+        res.delete()
+
+    return Response(status=status.HTTP_200_OK)
