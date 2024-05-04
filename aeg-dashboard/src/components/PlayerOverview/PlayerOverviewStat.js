@@ -17,6 +17,7 @@ import { Radar } from 'react-chartjs-2';
 import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 import { alpha, styled } from '@mui/material/styles';
 import { blue, teal, red, yellow, purple } from '@mui/material/colors';
+import ChampionCard from "./ChampionCard";
 ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -370,12 +371,13 @@ export default function PlayerOverviewStat(props) {
                     <h2>Best champs</h2>
                     <ul className="playerOverview-champion-list">
                         {championList.map((championName) => 
-                            <ChampionIcon
+                            <ChampionCard
                                 championName={championName}
+                                pickRate={50}
                                 winRate={50}
-                                pickRate={60}
-                                banRate={30}
-                                pickOrder={1}
+                                nbGames={10}
+                                kda={2.5}
+                                
                             />
                         )}
                     </ul>
