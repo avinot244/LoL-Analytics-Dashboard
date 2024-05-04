@@ -22,7 +22,15 @@ export default function ChampionCard({championName, pickRate, winRate, nbGames, 
     }, [])
 
     return (
-        <Card sx={{maxWidth: 345, ml: 2}}>
+        <Card 
+            sx={{
+                maxWidth: 345, 
+                ml: 2,
+                ':hover': {
+                    boxShadow: 20, // theme.shadows[20]
+                },
+            }}
+        >
             <CardMedia
                 sx={{height: 140}}
                 image={img}
