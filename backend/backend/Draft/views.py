@@ -391,6 +391,8 @@ def getPlayerStats(request, summonnerName, tournament, filter):
         res = query.order_by("-globalPickRate")
     elif filter == "winRate":
         res = query.order_by("-winRate")
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     return_data = ChampionPoolSerializer(res, context={"request": request}, many=True)
     

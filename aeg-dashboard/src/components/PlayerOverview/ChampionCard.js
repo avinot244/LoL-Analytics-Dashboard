@@ -35,7 +35,7 @@ export default function ChampionCard({championName, pickRate, winRate, nbGames, 
                 <Typography variant="body2" color="text.secondary" className='championPool-data'>
                     <p>PickRate : <span>{pickRate}%</span></p>
                     <p>WinRate : <span>{winRate}%</span></p>
-                    <p>NbGames : <span>{nbGames}%</span></p>
+                    <p>NbGames : <span>{nbGames}</span></p>
                     <p>KDA : <span>{kda}</span></p>
                 </Typography>
             </CardContent>

@@ -74,6 +74,9 @@ export default function PlayerOverviewStat(props) {
     const [displayLatest, setDisplayLatest] = useState(true)
     const [displayTournament, setDisplayTournament] = useState(true)
 
+    const [champPoolPickRate, setChampPoolPickRate] = useState([])
+    const [champPoolWinRate, setChampPoolWinRate] = useState([])
+
     const gd15 = 450
     const k15 = 4
     const d15 = 1
@@ -115,13 +118,64 @@ export default function PlayerOverviewStat(props) {
             })
         }
 
+        const fetchChampionPoolPickRate = async (summonnerName, tournament) => {
+            let championPoolPRListTemp = []
+            let newChampionPoolPRList = []
+            const result = await fetch(API_URL + `draft/playerStat/${summonnerName}/${tournament}/pickRate/`, {
+                method: "GET"
+            })
+            result.json().then(result => {
+                for (let i = 0 ; i < result.length ; i++) {
+                    let championPoolObject = result[i]
+                    let tempDict = {
+                        "championName": championPoolObject.championName,
+                        "pickRate": (championPoolObject.globalPickRate*100).toFixed(2),
+                        "winRate": (championPoolObject.winRate*100).toFixed(2),
+                        "nbGames": championPoolObject.nbGames,
+                        "kda": championPoolObject.kda.toFixed(2)
+                    }
+                    championPoolPRListTemp.push(tempDict)
+                }
+                return championPoolPRListTemp
+            }).then(list => {
+                newChampionPoolPRList.push(list.slice(0, 6))
+                console.log("wanted list:", newChampionPoolPRList)
+                setChampPoolPickRate(newChampionPoolPRList)
+            })
+        }
 
+        const fetchChampionPoolWinRate = async (summonnerName, tournament) => {
+            let championPoolWRListTemp = []
+            let newChampionPoolWRList = []
+            const result = await fetch(API_URL + `draft/playerStat/${summonnerName}/${tournament}/winRate/`, {
+                method: "GET"
+            })
+            result.json().then(result => {
+                for (let i = 0 ; i < result.length ; i++) {
+                    let championPoolObject = result[i]
+                    let tempDict = {
+                        "championName": championPoolObject.championName,
+                        "pickRate": (championPoolObject.globalPickRate*100).toFixed(2),
+                        "winRate": (championPoolObject.winRate*100).toFixed(2),
+                        "nbGames": championPoolObject.nbGames,
+                        "kda": championPoolObject.kda.toFixed(2)
+                    }
+                    championPoolWRListTemp.push(tempDict)
+                }
+                return championPoolWRListTemp
+            }).then(list => {
+                newChampionPoolWRList.push(list.slice(0, 6))
+                console.log("wanted list:", newChampionPoolWRList)
+                setChampPoolWinRate(newChampionPoolWRList)
+            })
+        }
+
+
+        fetchChampionPoolPickRate(summonnerName, wantedTournament)
+        fetchChampionPoolWinRate(summonnerName, wantedTournament)
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
         fetchBehaviorTournamentLatestPlayer(role, summonnerName, limit, wantedTournament)
         fetchBehaviorTournamentPlayer(role, summonnerName, wantedTournament)
-        console.log(dataBehaviorLatest)
-        console.log(dataBehaviorPatch)
-        console.log(dataBehaviorTournament)
 
     }, [])
 
@@ -360,7 +414,7 @@ export default function PlayerOverviewStat(props) {
             />
 
             <div className="playerOverview-other-content">
-                <div className="playerOverview-stats">
+                {/* <div className="playerOverview-stats">
                     <h2>Overall stats</h2>
                     <div className="playerOverview-stats-GD">
                         <p>
@@ -372,34 +426,41 @@ export default function PlayerOverviewStat(props) {
                             AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
                         </p>
                     </div>  
-                </div>
+                </div> */}
                 <br/>
                 <div className="playerOverview-champs">
-                    <h2>Best champs by pick rate</h2>
-                    <ul className="playerOverview-champion-list">
-                        {championList.map((championName) => 
-                            <ChampionCard
-                                championName={championName}
-                                pickRate={50}
-                                winRate={50}
-                                nbGames={10}
-                                kda={2.5}
-                            />
-                        )}
-                    </ul>
+                    <h2>Best champions by pick rate</h2>
+                    {
+                        champPoolPickRate.length > 0 && 
+                        <ul className="playerOverview-champion-list">
+                            {champPoolPickRate[0].map((object) => 
+                                <ChampionCard
+                                    championName={object.championName}
+                                    pickRate={object.pickRate}
+                                    winRate={object.winRate}
+                                    nbGames={object.nbGames}
+                                    kda={object.kda}
+                                />
+                            )}
+                        </ul>
+                    }
+                    
 
-                    <h2>Best champs by win rate</h2>
-                    <ul className="playerOverview-champion-list">
-                        {championList.map((championName) => 
-                            <ChampionCard
-                                championName={championName}
-                                pickRate={50}
-                                winRate={50}
-                                nbGames={10}
-                                kda={2.5}
-                            />
-                        )}
-                    </ul>
+                    <h2>Best champions by win rate</h2>
+                    {
+                        champPoolWinRate.length > 0 && 
+                        <ul className="playerOverview-champion-list">
+                            {champPoolWinRate[0].map((object) => 
+                                <ChampionCard
+                                    championName={object.championName}
+                                    pickRate={object.pickRate}
+                                    winRate={object.winRate}
+                                    nbGames={object.nbGames}
+                                    kda={object.kda}
+                                />
+                            )}
+                        </ul>
+                    }
                 </div>
             </div>
         </div>

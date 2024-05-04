@@ -32,7 +32,6 @@ function Home(){
         
     }
 
-    // TODO: Make an API call to backend to get the list of Patches and Tournaments available
     return(
         <div className="wrapper-overview">
             <NavBarComp />
