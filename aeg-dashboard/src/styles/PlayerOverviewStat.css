@@ -1,17 +1,27 @@
-.playerOverview-content-wrapper{
+/* .playerOverview-content-wrapper{
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-}
+} */
 
 .playerOverview-graph{
 	width: 680px;
 	height: 680px;
 	background-color: black;
+	margin: 0 auto;
+}
+
+.graph-ControlPanel{
+	width: fit-content;
+	margin: 0 auto;
 }
 
 .playerOverview-other-content{
-	margin-left: 10px;
+	margin: 10px;
+}
+
+.playerOverview-stats{
+	width: fit-content;
 }
 
 .playerOverview-stats div p{

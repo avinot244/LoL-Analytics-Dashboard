@@ -1,5 +1,4 @@
 import "../../styles/PlayerOverviewStat.css"
-import ChampionIcon from "../ChampionIcon";
 import { API_URL, behaviorModelUUID, factorNamePerRole} from "../../constants";
 import { useEffect, useState } from "react";
 import NormalDistribution from "normal-distribution"
@@ -17,6 +16,7 @@ import { Radar } from 'react-chartjs-2';
 import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 import { alpha, styled } from '@mui/material/styles';
 import { blue, teal, red, yellow, purple } from '@mui/material/colors';
+import Divider from "@mui/material/Divider";
 import ChampionCard from "./ChampionCard";
 ChartJS.register(
     RadialLinearScale,
@@ -352,6 +352,13 @@ export default function PlayerOverviewStat(props) {
                 </div>
             </div>
 
+            <br />
+
+            <Divider
+                style={{ background: 'white', borderWidth: 1}}
+                variant="middle"
+            />
+
             <div className="playerOverview-other-content">
                 <div className="playerOverview-stats">
                     <h2>Overall stats</h2>
@@ -368,7 +375,7 @@ export default function PlayerOverviewStat(props) {
                 </div>
                 <br/>
                 <div className="playerOverview-champs">
-                    <h2>Best champs</h2>
+                    <h2>Best champs by pick rate</h2>
                     <ul className="playerOverview-champion-list">
                         {championList.map((championName) => 
                             <ChampionCard
@@ -377,7 +384,19 @@ export default function PlayerOverviewStat(props) {
                                 winRate={50}
                                 nbGames={10}
                                 kda={2.5}
-                                
+                            />
+                        )}
+                    </ul>
+
+                    <h2>Best champs by win rate</h2>
+                    <ul className="playerOverview-champion-list">
+                        {championList.map((championName) => 
+                            <ChampionCard
+                                championName={championName}
+                                pickRate={50}
+                                winRate={50}
+                                nbGames={10}
+                                kda={2.5}
                             />
                         )}
                     </ul>
