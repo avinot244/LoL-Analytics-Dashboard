@@ -62,12 +62,12 @@ def download_latest(request, rawTournamentList : str):
         seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
         
         
-        for seriesId in seriesIdList:
+        for seriesId in tqdm(seriesIdList):
         # for seriesId in seriesIdList:
             if not(seriesId in BLACKLIST):
                 dlDict : dict = get_all_download_links(seriesId)
                 i = 0
-                print("\tChecking game of seriesId :", seriesId)
+                # print("\tChecking game of seriesId :", seriesId)
                 for downloadDict in dlDict['files']:
                     fileType = downloadDict["fileName"].split(".")[-1]
                     fileName = downloadDict["fileName"].split(".")[0]
@@ -82,17 +82,17 @@ def download_latest(request, rawTournamentList : str):
                             if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1:
 
                                 path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                print("\t\tDownloading {} files".format(fileName))
+                                # print("\t\tDownloading {} files".format(fileName))
                                 download_from_link(downloadDict['fullURL'], fileName, path, fileType)
 
                         else:
                             for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
                                 if not(isGameDownloaded(int(seriesId), gameNumber)):
                                     path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                    print("\t\tDownloading {} files".format(fileName))
+                                    # print("\t\tDownloading {} files".format(fileName))
                                     download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-                    elif fileType == "rofl":
-                        print("\t\twe don't download rofl file")
+                    # elif fileType == "rofl":
+                    #     print("\t\twe don't download rofl file")
                     i += 1
 
                 # Save game metadata in csv and sqlite databases
@@ -392,6 +392,10 @@ def updateDatabase(request, tournamentList : str):
     # 4 Update draft stats
     print(f"{' Updating draft stats ' :#^50}")
     requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
+
+    # 5 Update champion pools
+    print(f"{' Updating champion pools ' :#^50}")
+    requests.patch(API_URL + "api/draft/updatePlayerStat/{}/".format(tournamentList))
 
     return Response(tournamentList)
 

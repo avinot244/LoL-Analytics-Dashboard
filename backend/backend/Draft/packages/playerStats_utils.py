@@ -120,11 +120,10 @@ def updateDatabase(path : str,
                 df.at[index, "WinRate"] = globalWinRate
                 df.at[index, "KDA"] = kda
                 df.at[index, "NbGames"] = nbGames
+                
                 os.remove(path)
                 df.to_csv(path, sep=";", index=False)
                 break
-        else:
-            print("Row not modified")
 
 def saveChampionPoolCSV(path : str,
                         new : bool,
@@ -147,11 +146,11 @@ def saveChampionPoolCSV(path : str,
         header = ["SummonnerName", "ChampionName", "Tournament", "GlobalPickRate", "WinRate", "NbGames", "KDA"]
         writer.writerow(header)
         data = [playerName, championName, tournament, globalPickRate, globalWinRate, nbGames, kda]
+        
         writer.writerow(data)
         csv_file.close()
     
     elif isLineInDatabase(path, playerName, championName, tournament):
-        print(" Is In database ", end="")
         csv_file.close()
         updateDatabase(
             path,
@@ -164,7 +163,6 @@ def saveChampionPoolCSV(path : str,
             kda,
         )
     else:
-        print(" Saving to database")
         data = [playerName, championName, tournament, globalPickRate, globalWinRate, nbGames, kda]
 
         writer.writerow(data)

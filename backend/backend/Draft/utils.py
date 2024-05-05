@@ -67,7 +67,7 @@ def import_draftPickOrder():
             rp2 = row["RP2"],
             rp3 = row["RP3"],
             rp4 = row["RP4"],
-            rp5 = row["RP5"]).count() > 1):
+            rp5 = row["RP5"]).count() > 0):
             
             draftPickOrder.save()
     print("Draft Pick Order imported")
@@ -94,7 +94,7 @@ def import_draftPlayerPick():
             seriesId=row["SeriesId"], 
             championName=row["ChampionName"], 
             role=row["Role"], 
-            gameNumber=row["GameNumber"]).count()) > 0:
+            gameNumber=row["GameNumber"]).count() > 0):
             
             draftPlayerPick.save()
     print("Draft Player Pick imported")
@@ -102,3 +102,71 @@ def import_draftPlayerPick():
 def import_draft():
     import_draftPickOrder()
     import_draftPlayerPick()
+
+def import_draftStats():
+    csv_champion_draft_stats : str = "./databases/drafts/champion_draft_stats.csv"
+    df_champion_draft_stats : pd.DataFrame = pd.read_csv(csv_champion_draft_stats, sep=";")
+
+    for index, row in df_champion_draft_stats.iterrows():
+        championDraftStats = ChampionDraftStats(
+            championName = row["ChampionName"],
+            patch = row["Patch"],
+            tournament = row["Tournament"],
+            side = row["Side"],
+            winRate = row["WinRate"],
+            globalPickRate = row["GlobalPickRate"],
+            pickRate1Rota = row["PickRate1Rota"],
+            pickRate2Rota = row["PickRate2Rota"],
+            globalBanRate = row["GlobalBanRate"],
+            banRate1Rota = row["BanRate1Rota"],
+            banRate2Rota = row["BanRate2Rota"],
+            mostPopularPickOrder = row["MostPopularPickOrder"],
+            blindPick = row["BlindPick"],
+            mostPopularRole = row["MostPopularRole"]
+        )
+        
+        if not(ChampionDraftStats.objects.filter(
+            championName = row["ChampionName"],
+            patch = row["Patch"],
+            tournament = row["Tournament"],
+            side = row["Side"],
+            winRate = row["WinRate"],
+            globalPickRate = row["GlobalPickRate"],
+            pickRate1Rota = row["PickRate1Rota"],
+            pickRate2Rota = row["PickRate2Rota"],
+            globalBanRate = row["GlobalBanRate"],
+            banRate1Rota = row["BanRate1Rota"],
+            banRate2Rota = row["BanRate2Rota"],
+            mostPopularPickOrder = row["MostPopularPickOrder"],
+            blindPick = row["BlindPick"],
+            mostPopularRole = row["MostPopularRole"]
+        ).count() > 0):
+            championDraftStats.save()
+    print("Draft stats imported")
+
+def import_championPools():
+    csv_player_championPool : str = "./databases/drafts/player_championPool.csv"
+    df_player_championPool : pd.DataFrame = pd.read_csv(csv_player_championPool, sep=";")
+
+    for index, row in df_player_championPool.iterrows():
+        championPool = ChampionPool(
+            summonnerName=row["SummonnerName"],
+            championName=row["ChampionName"],
+            tournament=row["Tournament"],
+            globalPickRate=row["GlobalPickRate"],
+            winRate=row["WinRate"],
+            nbGames=row["NbGames"],
+            kda=row["KDA"],
+        )
+
+        if not(ChampionPool.objects.filter(
+            summonnerName=row["SummonnerName"],
+            championName=row["ChampionName"],
+            tournament=row["Tournament"],
+            globalPickRate=row["GlobalPickRate"],
+            winRate=row["WinRate"],
+            nbGames=row["NbGames"],
+            kda=row["KDA"],
+        ).count() > 0):
+            championPool.save()
+    print("Champion pools imported")

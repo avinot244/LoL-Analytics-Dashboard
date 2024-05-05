@@ -30,6 +30,7 @@ export default function ChampionOverviewListPanel(props) {
                 return championListTemp
                 
             }).then(list => {
+                console.log("data:", list)
                 newChampionList.push(list.slice(0, 6))
                 setChampionList(newChampionList)
             })

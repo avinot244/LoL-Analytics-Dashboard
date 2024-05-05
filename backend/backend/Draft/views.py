@@ -20,7 +20,7 @@ from .packages.utils import isDraftDownloaded, isTournamentOngoing
 from .packages.championStats_utils import *
 from .packages.playerStats_utils import *
 
-from .utils import import_draft
+from .utils import import_draft, import_draftStats, import_championPools
 
 
 import pandas as pd
@@ -274,7 +274,7 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                                                 mostPopularPickOrder,
                                                 blindPick,
                                                 mostPopularRole)
-    
+    import_draftStats()
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
@@ -335,16 +335,29 @@ def getTopChampionsPlayer(request, role, filter, side, patch, tournament, summon
     return Response(playedChampions)
 
 @api_view(['PATCH'])
-def updatePlayerStats(request):
+def updatePlayerStats(request, tournamentListStr):
     # Getting the list of tournament
-    tournamentList : list = list()
-    queryTournament = GameMetadata.objects.all()
-    for res in queryTournament:
-        if not(res.tournament in tournamentList):
-            tournamentList.append(res.tournament)
+    if len(tournamentListStr) == 0:
+
+        tournamentList : list = list()
+        response = requests.get(API_URL + 'api/dataAnalysis/tournament/getList')
+
+
+        for tournament in response.json():
+            formated_tournament : str = re.sub(r'\([^)]*\)', '', tournament)
+            
+            if tournament != "League of Legends Scrims":
+                if not(isTournamentOngoing(formated_tournament[:-1])):
+                    tournamentList.append(tournament)
+            else:
+                tournamentList.append(tournament)
+
+    else:
+        tournamentList : list = tournamentListStr.split(",")
+
 
     for tournament in tournamentList:
-        
+        print(tournament)
         associatedPlayerList : list = list()
         queryPlayer = DraftPlayerPick.objects.filter(tournament__exact=tournament)
         for res in queryPlayer:
@@ -352,37 +365,35 @@ def updatePlayerStats(request):
                 associatedPlayerList.append(res.sumonnerName)
 
         for playerName in associatedPlayerList:
+            print("\t{}".format(playerName))
             associatedChampionList : list = list()
             queryChampion = DraftPlayerPick.objects.filter(tournament__exact=tournament, sumonnerName__exact=playerName)
             for res in queryChampion:
                 if not(res.championName in associatedChampionList):
                     associatedChampionList.append(res.championName)
 
-            for championName in associatedChampionList:
-                if not(isPlayerChampionStatInDatabase(playerName, championName, tournament)) or isTournamentOngoing(tournament):
-                    globalPickRate = getPlayerChampionPickRate(playerName, championName, tournament)
-                    globalWinRate = getPlayerChampionWinRate(playerName, championName, tournament)
-                    nbGames = getPlayerChampionNbGames(playerName, championName, tournament)
-                    kda = getPlayerChampionKDA(playerName, championName, tournament)
-                    
-                    path : str = DATA_PATH + "drafts/player_championPool.csv"
-                    new : bool = not(os.path.exists(path))
-                    saveChampionPoolCSV(
-                        path,
-                        new,
-                        playerName,
-                        championName,
-                        tournament,
-                        globalPickRate,
-                        globalWinRate,
-                        nbGames,
-                        kda
-                    )
+            for championName in tqdm(associatedChampionList):
+                
+                globalPickRate = getPlayerChampionPickRate(playerName, championName, tournament)
+                globalWinRate = getPlayerChampionWinRate(playerName, championName, tournament)
+                nbGames = getPlayerChampionNbGames(playerName, championName, tournament)
+                kda = getPlayerChampionKDA(playerName, championName, tournament)
+                
+                path : str = DATA_PATH + "drafts/player_championPool.csv"
+                new : bool = not(os.path.exists(path))
+                saveChampionPoolCSV(
+                    path,
+                    new,
+                    playerName,
+                    championName,
+                    tournament,
+                    globalPickRate,
+                    globalWinRate,
+                    nbGames,
+                    kda
+                )
+    import_championPools()
     return Response(status=status.HTTP_200_OK)
-
-        
-
-    
 
 @api_view(['GET'])
 def getPlayerStats(request, summonnerName, tournament, filter):

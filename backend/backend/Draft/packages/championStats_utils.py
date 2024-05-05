@@ -337,7 +337,7 @@ def updateDatabase(path : str,
                    and abs(row["BlindPick"] - blindPick) < 0.01
                    and row["MostPopularRole"] == mostPopularRole):
                 
-                print("Updating row")
+                # print("Updating row")
                 df.at[index, "WinRate"] = winRate
                 df.at[index, "GlobalPickRate"] = pickRate
                 df.at[index, "PickRate1Rota"] = pickRate1Rota
@@ -351,37 +351,10 @@ def updateDatabase(path : str,
 
                 os.remove(path)
                 df.to_csv(path, sep=";", index=False)
-
-                toDelete = ChampionDraftStats.objects.filter(
-                    championName=championName,
-                    patch=patch,
-                    tournament=tournament,
-                    side=side
-                )
-                toDelete.delete()
-
-                newObject = ChampionDraftStats(
-                    championName=championName,
-                    patch=patch,
-                    tournament=tournament,
-                    side=side,
-                    winRate=winRate,
-                    globalPickRate=pickRate,
-                    pickRate1Rota=pickRate1Rota,
-                    pickRate2Rota=pickRate2Rota,
-                    globalBanRate=banRate,
-                    banRate1Rota=banRate1Rota,
-                    banRate2Rota=banRate2Rota,
-                    mostPopularPickOrder=mostPopularPickOrder,
-                    blindPick=blindPick,
-                    mostPopularRole=mostPopularRole,
-                )
-                newObject.save()
-
                 break
             
-            else:
-                print("Row not modified")
+            # else:
+            #     print("Row not modified")
                 
 def getMostPopularRole(championName : str, tournament : str, patch : str, side : str) -> float:
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
@@ -460,26 +433,9 @@ def saveChampionDraftStatsCSV(path : str,
         data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
-        newObject = ChampionDraftStats(
-            championName=championName,
-            patch=patch,
-            tournament=tournament,
-            side=side,
-            winRate=winRate,
-            globalPickRate=pickRate,
-            pickRate1Rota=pickRate1Rota,
-            pickRate2Rota=pickRate2Rota,
-            globalBanRate=banRate,
-            banRate1Rota=banRate1Rota,
-            banRate2Rota=banRate2Rota,
-            mostPopularPickOrder=mostPopularPickOrder,
-            blindPick=blindPick,
-            mostPopularRole=mostPopularRole,
-        )
-        newObject.save()
         csv_file.close()
     elif isLineInDatabase(path, championName, patch, tournament, side):
-        print(" Is In database ", end="")
+        # print(" Is In database ", end="")
         csv_file.close()
         updateDatabase(
             path,
@@ -499,27 +455,10 @@ def saveChampionDraftStatsCSV(path : str,
             mostPopularRole,
         )
     else:
-        print(" Saving to database")
+        # print(" Saving to database")
         data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
-        newObject = ChampionDraftStats(
-            championName=championName,
-            patch=patch,
-            tournament=tournament,
-            side=side,
-            winRate=winRate,
-            globalPickRate=pickRate,
-            pickRate1Rota=pickRate1Rota,
-            pickRate2Rota=pickRate2Rota,
-            globalBanRate=banRate,
-            banRate1Rota=banRate1Rota,
-            banRate2Rota=banRate2Rota,
-            mostPopularPickOrder=mostPopularPickOrder,
-            blindPick=blindPick,
-            mostPopularRole=mostPopularRole,
-        )
-        newObject.save()
         csv_file.close()
     
         
