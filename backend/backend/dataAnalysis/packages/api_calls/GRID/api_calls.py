@@ -1,9 +1,9 @@
 import requests
 import json
-import pandas as pd
 import os
 import zipfile
 import io
+import time
 
 from .get_token import get_token
 
@@ -126,8 +126,8 @@ def get_tournament_ids_from_page(cursor : str):
         body = """
                 query Tournaments {
                 tournaments(
-                    first: 50
-                    after: \"""" + cursor + """\"
+                    last: 50
+                    before: \"""" + cursor + """\"
                     filter: { titleId: "3" }) {
                     edges {
                         node {
@@ -157,7 +157,7 @@ def get_tournament_ids_from_page(cursor : str):
         body = """
                 query Tournaments {
                 tournaments(
-                    first: 50
+                    last: 50
                     filter: { titleId: "3" }) {
                     edges {
                         node {
@@ -202,25 +202,24 @@ def get_tournament_ids_from_page(cursor : str):
         tournamentMapping[node["name"]] = node["id"]
     
     # Computing the cursor for next page
-    if result["data"]["tournaments"]["pageInfo"]["hasNextPage"]:
-        cursorNextPage : str = result["data"]["tournaments"]["pageInfo"]["endCursor"]
+    if result["data"]["tournaments"]["pageInfo"]["hasPreviousPage"]:
+        cursorPreviousPage : str = result["data"]["tournaments"]["pageInfo"]["startCursor"]
     else:
-        cursorNextPage : str = ""
+        cursorPreviousPage : str = ""
     
-    return tournamentMapping, cursorNextPage
+    return tournamentMapping, cursorPreviousPage
 
 def get_all_tournament_ids(fromCursor : str):
     if fromCursor == "":
-        res, cursorNextPage = get_tournament_ids_from_page("")
+        res, cursorPreviousPage = get_tournament_ids_from_page("")
     else:
-        res, cursorNextPage = get_tournament_ids_from_page(fromCursor)
+        res, cursorPreviousPage = get_tournament_ids_from_page(fromCursor)
         
-    i = 0
     # Forced to do max 40 API calls or API thinks we DDOS'ing the server x)
-    while cursorNextPage != "":
-        temp, cursorNextPage = get_tournament_ids_from_page(cursorNextPage)
+    while cursorPreviousPage != "":
+        temp, cursorPreviousPage = get_tournament_ids_from_page(cursorPreviousPage)
         res.update(temp)
-        i += 1
+        time.sleep(1)
     
     return res
     

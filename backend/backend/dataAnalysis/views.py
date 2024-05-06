@@ -134,6 +134,25 @@ def get_tournament_mapping(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
+def get_tournament_list_shortened(request):
+    tournament_list = []
+    if os.path.exists(DATA_PATH + "tournament_list.json"):
+        os.remove(DATA_PATH + "tournament_list.json")
+    
+    with open(DATA_PATH + "tournament_mapping.json") as json_file:
+        tournament_mapping : dict = json.load(json_file)
+
+        for tournament_name, _ in tournament_mapping.items():
+            today_year = datetime.today().year
+            x = re.search(r"- .*(" + str(today_year) + r"|" + str(today_year-1) + r") \(.+\)", tournament_name)
+            
+            if x != None :
+                temp_name : str = tournament_name.split("-")[0][:-1]
+                if not(temp_name in tournament_list):
+                    tournament_list.append(temp_name)
+    return Response(tournament_list)
+
+@api_view(['GET'])
 def get_patch_list(request):
     queryResult = GameMetadata.objects.all()
     patchList : list = list()
