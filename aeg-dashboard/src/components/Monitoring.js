@@ -3,12 +3,13 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, Chip } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { ThemeProvider, createTheme } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear'
+import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 
 
@@ -188,27 +189,110 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
 }
 
 
+function TournamentFilter({tournamentFilterList, selectedFilters, setSelectedFilters}) {
+    const handleChange = (list) => {
+        const newFilters = list
+        setSelectedFilters(newFilters)
+        console.log(selectedFilters)
+    }
+    const theme = createTheme ({
+        palette: {
+            primary : {
+                main: '#fff',
+            },
+            text : {
+                disabled: '#fff'
+            }
+            
+        },
+        action: {
+            active: '#fff'
+        }
+    })
+
+    return (
+        <>	
+            <ThemeProvider theme={theme}>
+                <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+                    <Autocomplete
+                        multiple
+                        clearIcon={<ClearIcon color="error"/>}
+                        popupIcon={<ArrowDropDownIcon color="primary"/>}
+                        className="searchComp"
+                        options={tournamentFilterList}
+                        renderInput={(params) => (
+                            <TextField 
+                                {...params} 
+                                className='textField-searchComp'
+                                label={"Tournament Filter"}
+                                focused
+                                sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                
+                            />
+                        )}
+                        renderTags={(value, getTagProps) => 
+                            value.map((option, index) => (
+                                <Chip
+                                    color="primary"
+                                    variant='outlined'
+                                    label={option}
+                                    {...getTagProps({index})}
+                                />
+                            ))
+                        }
+                        onChange={(_, value) => {handleChange(value)}}
+                        sx={{color: 'primary.main', borderColor: 'primary.main', width: 200}}
+                        fullWidth={true}
+                    />
+                </Box>
+                
+            </ThemeProvider>
+        </>
+	);
+}
+
 
 
 export default function Monitoring() {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
+    const [tournamentListShortended, setTournamentListShortened] = React.useState([])
+    const [selectedFilters, setSelectedFilters] = React.useState([])
+
+
+    const [flagDisplay, setFlagDisplay] = React.useState(false)
 
     const fetchTournamentList = async () => {
         const today = new Date()
         const year = today.getFullYear();
         const result = await fetch(API_URL + `dataAnalysis/getListDownlodableTournament/${year}/`, {
-            method: "GET"
+            method: "POST",
+            body: JSON.stringify(selectedFilters)
         })
         result.json().then(result => {
+            console.log(result)
             let newTournamentList = Object.keys(result)
+            console.log(newTournamentList)
             newTournamentList = newTournamentList.sort()
             setTournamentList(newTournamentList)
         })
     }
 
+    const fetchTournamentFilterList = async () => {
+        const result = await fetch(API_URL + `dataAnalysis/getTournamentListShortened/`, {
+            method: "GET"
+        })
+        result.json().then(result => {
+            let newTournamentListShortended = result.sort()
+            setTournamentListShortened(newTournamentListShortended)
+        })
+    }
+
     React.useEffect(() => {
-        fetchTournamentList()
+        fetchTournamentFilterList()
     }, [])
 
 
@@ -217,14 +301,36 @@ export default function Monitoring() {
         <div className='wrapper-Monitoring'>
             <React.StrictMode></React.StrictMode>
             <NavBarComp/>
-
             <h1>Monitoring</h1>
+            
 
-            <TextAdder
-                tournamentList={tournamentList}
-                selectedTournaments={selectedTournaments}
-                setSelectedTournaments={setSelectedTournaments}
-            />
+            <h2>Select the tournament filter</h2>
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+                <TournamentFilter
+                    tournamentFilterList={tournamentListShortended}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                />
+                <Button
+                    endIcon={<SearchIcon/>}
+                    variant='contained'
+                    onClick={() => {fetchTournamentList(); setFlagDisplay(true)}}
+                    
+                >
+                    Get Tournaments
+                </Button>
+
+            </Stack>
+            
+
+            {
+                flagDisplay &&
+                <TextAdder
+                    tournamentList={tournamentList}
+                    selectedTournaments={selectedTournaments}
+                    setSelectedTournaments={setSelectedTournaments}
+                />
+            }
             
         
         

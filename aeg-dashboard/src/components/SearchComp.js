@@ -1,5 +1,4 @@
 
-import "../styles/SelectComp.css"
 import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -33,8 +32,7 @@ function SearchComp({setSelectedElement, elementList, label, width, multiple, de
 		}
 	}
 	return (	
-		<>	
-			
+		<>
 			<ThemeProvider theme={theme}>
 				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
 					<Autocomplete

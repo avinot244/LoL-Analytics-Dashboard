@@ -30,6 +30,7 @@ import pandas as pd
 from datetime import datetime
 import re
 from tqdm import tqdm
+import time
 
 @api_view(['PATCH'])
 def download_latest(request, rawTournamentList : str):
@@ -370,29 +371,65 @@ def computeNewBehaviorStats(request, time):
 
     return Response(status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getListOfDownloadableTournament(request, year):
     
-    if not(os.path.exists(DATA_PATH + "tournament_downloadable.json")):
+    tournamentList_unicode = request.body.decode("utf-8")
+    tournamentList : list = json.loads(tournamentList_unicode)
+    print(tournamentList)
+    
+    # Check if result is already computed given the fitler list
+    with open(DATA_PATH + "tournament_downloadable.json", "r") as json_file:
+        temp : dict = json.load(json_file)
+        filterList : list = temp["filter"]
+        
+        i = 0
+        flag = True
+        while (i < len(tournamentList) and flag):
+            flag = flag and (tournamentList[i] in filterList)
+            i += 1
+    print(flag)
+    if flag:
+        # Result is already computed no need to compute it again    
+        with open(DATA_PATH + "tournament_downloadable.json", "r") as json_file:
+            data : dict = json.load(json_file)
+            res : dict = dict()
+            for tname, tid in data["data"].items():
+                flag = True
+                for i in range(len(tournamentList)):
+                    if re.search(tournamentList[i], tname) != None:
+                        res.update({tname:tid})
+            return Response(res)
+    
+    else:
+        # We need to compute again
+        regex : str = r"(?:"
+        for tournament_name in tournamentList[:-1]:
+            regex += str(tournament_name) + '|'
+        regex += str(tournamentList[-1]) + r").*" + str(year)
+        
+
         res : dict = dict()
         with open(DATA_PATH + "tournament_mapping.json", "r") as json_file:
             tournamentDict : dict = json.load(json_file)
             for tournamentName, tournamentId in tournamentDict.items():
-                pattern = r"(?:LEC|LCK|La Ligue Française|LCS).*" + str(year)
-                match = re.search(pattern, tournamentName)
+                match = re.search(regex, tournamentName)
                 if match:
+
                     _, cursorNext = get_game_seriesId_from_page_tournament("", 1, tournamentId)
                     if cursorNext != '':
                         res.update({tournamentName: tournamentId})
-    
-    
+                    
+                    time.sleep(0.9)
         with open(DATA_PATH + "tournament_downloadable.json", "w") as json_file:
-            json.dump(res, json_file)
-    else:
-        with open(DATA_PATH + "tournament_downloadable.json", "r") as json_file:
-            res : dict = json.load(json_file)
-    
-    return Response(res)
+            res_dict : dict = {
+                "data": res,
+                "filter":tournamentList
+            }
+            json.dump(res_dict, json_file)
+        
+        
+        return Response(res)
 
 @api_view(['PATCH'])
 def updateDatabase(request, tournamentList : str):
