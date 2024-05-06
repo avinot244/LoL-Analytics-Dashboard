@@ -109,8 +109,8 @@ def download_latest(request, rawTournamentList : str):
 
                         (data, _, _, _) = getData(int(seriesId), gameNumberIt)
                         patch : str = summaryData.patch
-                        teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
-                        teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
+                        teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
+                        teamRed : str = data.gameSnapshotList[1].teams[1].getTeamName(seriesId)
                         winningTeam : int = data.winningTeam
 
                         
