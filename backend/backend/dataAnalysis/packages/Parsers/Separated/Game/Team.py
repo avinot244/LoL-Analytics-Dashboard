@@ -3,6 +3,7 @@ import re
 from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.Computation.computation import *
+from dataAnalysis.packages.api_calls.GRID.api_calls import get_team_info_from_seriesId, get_team_members_from_id
 
 from dataAnalysis.globals import ROLE_LIST
 
@@ -58,9 +59,19 @@ class Team:
                 return player.participantID
         return -1
     
-    def getTeamName(self) -> str:
-        splits = re.split("\s", self.players[0].playerName)
-        return splits[0]
+    def getTeamName(self, seriesId : int) -> str:
+        teamDict : dict = get_team_info_from_seriesId(seriesId)
+        
+        teamIdList : list = list(teamDict.keys())
+        teamNameList : list = list(teamDict.values())
+        playerListTeam1 : list = get_team_members_from_id(teamIdList[0])
+
+        playerName : str = self.players[0].playerName
+        if playerName in playerListTeam1:
+            return teamNameList[0]
+        else:
+            return teamNameList[1]
+
 
     def getClosesPlayerToJungler(self) -> Player:
         jungle = self.players[1]

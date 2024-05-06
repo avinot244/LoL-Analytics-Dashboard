@@ -411,9 +411,73 @@ def get_dates_tournament(tournamentId : int):
     headers = {
         "x-api-key": token
     }
-    response = requests.post(url=url,json={"query": body}, headers=headers)
+    response = requests.post(url=url, json={"query": body}, headers=headers)
     if response.status_code != 200:
         response.raise_for_status()
     
     result : dict = response.json()
     return result["data"]["tournament"]["startDate"], result["data"]["tournament"]["endDate"]
+
+
+def get_team_info_from_seriesId(seriesId : int):
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    url = "https://api.grid.gg/central-data/graphql"
+
+    body = """
+        query Series {
+            series(id: \"""" + str(seriesId) + """\") {
+                teams {
+                    baseInfo {
+                        id
+                        name
+                        nameShortened
+                    }
+                }
+            }
+        }
+    """
+    response = requests.post(url=url, json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+    
+    result : dict = response.json()
+    teamDict : dict = dict()
+    for team_dict in result["data"]["series"]["teams"]:
+        teamDict.update({team_dict["baseInfo"]["id"]:team_dict["baseInfo"]["name"]})
+    return teamDict
+
+def get_team_members_from_id(id : int):
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    url = "https://api.grid.gg/central-data/graphql"
+    body = """
+            query Players {
+            players(filter: { 
+                titleId: 3, 
+                teamIdFilter: { 
+                    id: """ + str(id) + """ 
+                } 
+            }) {
+                edges {
+                    node {
+                        nickname
+                    }
+                }
+            }
+        }
+    """
+    response = requests.post(url=url, json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+
+    result : dict = response.json()
+    playerNameList : list = list()
+    for edge in result["data"]["players"]["edges"]:
+        playerNameList.append(edge["node"]["nickname"])
+    
+    return playerNameList
