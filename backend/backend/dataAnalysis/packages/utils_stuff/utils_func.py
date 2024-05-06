@@ -11,7 +11,7 @@ from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
 from dataAnalysis.globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
-from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId
+from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId, get_tournament_from_seriesId
 from dataAnalysis.utils import isGameDownloaded
 
 def get_all_event_types(json_path_details:str) -> dict:
@@ -33,13 +33,18 @@ def get_all_event_types(json_path_details:str) -> dict:
         v.remove('type')
     
     return unique_event_type
-        
-def getSummaryData(rootdir : str) -> SummaryData:
+
+
+def getGameDuration(seriesId : int, gameNumber : int):
+    match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
+    rootdir = DATA_PATH + "games/bin/{}".format(match)
     for subdir, _, files in os.walk(rootdir):
         for file in files:
-            x = re.search("end_state_summary_riot", file)
+            x = re.search(r"end_state_.*_riot", file)
             if x != None:
-                return SummaryData(os.path.join(subdir, file))
+                with open(os.path.join(subdir, file), "r") as json_file:
+                    res : dict = json.load(json_file)
+                    return res["games"][gameNumber-1]["currentSeconds"]
 
 
 def getData(seriesId : int, gameNumber : int):
@@ -47,7 +52,6 @@ def getData(seriesId : int, gameNumber : int):
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
 
     rootdir = DATA_PATH + "games/bin/{}".format(match)
-    summaryData = getSummaryData(rootdir)
 
     pathData = DATA_PATH + "games/bin/" + match + "dataSeparatedRIOT"
     data : SeparatedData = None
@@ -68,11 +72,14 @@ def getData(seriesId : int, gameNumber : int):
                 writer = csv.writer(csv_file, delimiter=";")
                 matchDate = get_date_from_seriesId(seriesId)
                 matchName = match + "dataSeparatedRIOT"
-                patch = summaryData.patch
-                teamBlue = data.gameSnapshotList[0].teams[0].getTeamName()
-                teamRed = data.gameSnapshotList[0].teams[1].getTeamName()
+                patch = data.patch
+                print(len(data.gameSnapshotList))
+                teamBlue = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
+                teamRed = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
+                print(teamBlue, teamRed)
                 winningTeam = data.winningTeam
-                dataCSV = [matchDate, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam, gameNumber]
+                tournament = get_tournament_from_seriesId(seriesId)
+                dataCSV = [matchDate, tournament, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam, gameNumber]
                 writer.writerow(dataCSV)
     else:
         if os.path.exists(DATA_PATH + "games/bin/" + match + "/Separated/"):
@@ -82,10 +89,8 @@ def getData(seriesId : int, gameNumber : int):
         data : SeparatedData = pickle.load(file)
         file.close()
 
-    if summaryData != None:
-        gameDuration : int = summaryData.gameDuration
-    else:
-        gameDuration : int = -1
+    gameDuration : int = getGameDuration(seriesId, gameNumber)
+
     begGameTime : int = data.begGameTime
     endGameTime : int = data.endGameTime
 

@@ -36,6 +36,7 @@ class SeparatedData:
             self.gameSnapshotList : list[Snapshot] = list()
             self.begGameTime : int = 0
             self.endGameTime : int = 0
+            self.patch : str = ""
             self.draftSnapshotList : list[DraftSnapshot] = list()
             print("Parsing game snapshot files from root directory {}".format(root_dir))
 
@@ -47,7 +48,9 @@ class SeparatedData:
                         data = ujson.loads(f.read())
                     
                     df = pd.json_normalize(data)
-
+                    if df["rfc461Schema"][0] == "game_info":
+                        self.patch = df["gameVersion"][0]
+                    
                     if df['rfc461Schema'][0] == "stats_update":
                         teamPlayers : list[list[Player]] = [[],[]]
                         # Parsing players
@@ -261,7 +264,6 @@ class SeparatedData:
         teamName[teamNameOne] = 0
         teamName[teamNameTwo] = 1
         return teamName
-
 
     def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str, teamBlue : str, teamRed : str):
         draft : DraftSnapshot = self.draftSnapshotList[-1]

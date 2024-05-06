@@ -67,11 +67,11 @@ class Team:
         playerListTeam1 : list = get_team_members_from_id(teamIdList[0])
 
         playerName : str = self.players[0].playerName
-        if playerName in playerListTeam1:
-            return teamNameList[0]
-        else:
-            return teamNameList[1]
-
+        for player in playerListTeam1:
+            x = re.search(player, playerName)
+            if x != None:
+                return teamNameList[0]
+        return teamNameList[1]
 
     def getClosesPlayerToJungler(self) -> Player:
         jungle = self.players[1]

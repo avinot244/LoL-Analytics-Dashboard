@@ -2,7 +2,7 @@ from dataAnalysis.packages.utils_stuff.utils_func import splitPlayerNameListPerT
 from dataAnalysis.packages.utils_stuff.plots.densityPlot import getPositionsMultipleGames, getPositionsSingleGame, densityPlot
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
-from dataAnalysis.packages.utils_stuff.utils_func import getData, getSummaryData
+from dataAnalysis.packages.utils_stuff.utils_func import getData
 from dataAnalysis.globals import DATA_PATH
 
 from behaviorADC.models import *
@@ -15,7 +15,6 @@ def getDataPathing(game : dict, role : str):
     print("Loading game(s) data")
     
     # Getting global info of the game
-    summaryData : SummaryData = getSummaryData(DATA_PATH + "games/bin/{}_ESPORTS_{}".format(game["seriesId"], game["gameNumber"]))
     (tempData, gameDuration, _, _) = getData(game["seriesId"], game["gameNumber"])
 
     
@@ -25,7 +24,7 @@ def getDataPathing(game : dict, role : str):
     else:
         splitList.append(gameDuration)
     
-    splittedDataset : list[SeparatedData] = tempData.splitData(summaryData.gameDuration, splitList)
+    splittedDataset : list[SeparatedData] = tempData.splitData(gameDuration, splitList)
     if role == "Top":
         playerNameList = [[res.summonnerName] for res in BehaviorTop.objects.filter(seriesId__exact=game["seriesId"], gameNumber__exact=game["gameNumber"])]
     elif role == "Jungle":

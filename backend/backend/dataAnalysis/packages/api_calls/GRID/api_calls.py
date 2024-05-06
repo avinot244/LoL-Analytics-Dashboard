@@ -91,6 +91,7 @@ def download_from_link(url : str, fileName : str, path : str, fileType : str):
             with open(path + "/Separated/" + "{}.json".format(i), "w") as file:
                 # event_data = json.loads(event)
                 # json.dump(event, file)
+                
                 file.write(event)
             i += 1
 
@@ -446,7 +447,7 @@ def get_team_info_from_seriesId(seriesId : int):
     result : dict = response.json()
     teamDict : dict = dict()
     for team_dict in result["data"]["series"]["teams"]:
-        teamDict.update({team_dict["baseInfo"]["id"]:team_dict["baseInfo"]["name"]})
+        teamDict.update({team_dict["baseInfo"]["id"]:team_dict["baseInfo"]["nameShortened"]})
     return teamDict
 
 def get_team_members_from_id(id : int):
