@@ -305,8 +305,8 @@ def deleteAllBehaviorStats(request):
 def computeNewBehaviorStats(request, time):
     queryAllGames = GameMetadata.objects.all()
 
-    for game in tqdm(queryAllGames):
-    # for game in queryAllGames:
+    # for game in tqdm(queryAllGames):
+    for game in queryAllGames:
         if not(BehaviorADC.objects.filter(
             date=game.date,
             seriesId=game.seriesId,
@@ -332,7 +332,7 @@ def computeNewBehaviorStats(request, time):
 
             tournamentName : str = get_tournament_from_seriesId(seriesId)
             patch : str = data.patch
-            # print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
+            print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
 
             for playerTeamOne in dataBeforeTime.gameSnapshotList[0].teams[0].players:
                 summonnerName : str = playerTeamOne.playerName
@@ -341,7 +341,6 @@ def computeNewBehaviorStats(request, time):
                 gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
 
                 (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
-                # print(statDict.keys(), lanePresenceMapping.keys())
 
                 new = False
                 if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
@@ -357,7 +356,6 @@ def computeNewBehaviorStats(request, time):
                 gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
 
                 (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
-                # print(statDict.keys(), lanePresenceMapping.keys())
 
 
                 new = False
@@ -367,8 +365,8 @@ def computeNewBehaviorStats(request, time):
                 save_path : str = DATA_PATH + "behavior/behavior/".format(role)
                 saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
 
-        # else:
-        #     print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
+        else:
+            print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
 
     # Importing data into SQLite database
     import_Behavior()
@@ -437,25 +435,25 @@ def getListOfDownloadableTournament(request, year):
 
 @api_view(['PATCH'])
 def updateDatabase(request, tournamentList : str):
-    # 1 Download Bins
-    print(f"{' Downloading bins ' :#^50}")
-    requests.patch(API_URL + "api/dataAnalysis/download/{}/".format(tournamentList))
+    # # 1 Download Bins
+    # print(f"{' Downloading bins ' :#^50}")
+    # requests.patch(API_URL + "api/dataAnalysis/download/{}/".format(tournamentList))
 
     # 2 Save Drafts
     print(f"{' Saving Drafts ' :#^50}")
     requests.post(API_URL + "api/draft/saveDrafts/")
 
-    # 3 Compute Behavior Stats
-    print(f"{' Computing Behavior Stats ' :#^50}")
-    requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/950/")
+    # # 3 Compute Behavior Stats
+    # print(f"{' Computing Behavior Stats ' :#^50}")
+    # requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/950/")
 
-    # 4 Update draft stats
-    print(f"{' Updating draft stats ' :#^50}")
-    requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
+    # # 4 Update draft stats
+    # print(f"{' Updating draft stats ' :#^50}")
+    # requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
 
-    # 5 Update champion pools
-    print(f"{' Updating champion pools ' :#^50}")
-    requests.patch(API_URL + "api/draft/updatePlayerStat/{}/".format(tournamentList))
+    # # 5 Update champion pools
+    # print(f"{' Updating champion pools ' :#^50}")
+    # requests.patch(API_URL + "api/draft/updatePlayerStat/{}/".format(tournamentList))
 
     return Response(tournamentList)
 

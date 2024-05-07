@@ -37,8 +37,8 @@ def saveDrafts(request):
     # for idx, row in tqdm(data_metadata.iterrows(), total=data_metadata.shape[0]):
     queryAllGames = GameMetadata.objects.all()
 
-    for game in tqdm(queryAllGames):
-    # for game in queryAllGames:
+    # for game in tqdm(queryAllGames):
+    for game in queryAllGames:
         file_name : str = game.name
         gameNumber : int = int(file_name.split("_")[2][0])
         seriesId : int = game.seriesId
@@ -51,26 +51,32 @@ def saveDrafts(request):
             # Checking if the draft we want to save is already in our database
             if not(isDraftDownloaded(seriesId, gameNumber)):
                 (data, _, _, _) = getData(seriesId, gameNumber)
+                if len(data.draftSnapshotList) > 0:
+                    date = game.date
+                    # Saving the draft into our csv database
+                    patch : str = game.patch
+                    tournament : str = get_tournament_from_seriesId(seriesId)
+                    teamBlue = game.teamBlue
+                    teamRed = game.teamRed
+                    print(seriesId, "new game")
+                    data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
+                else:
+                    print("Draft not accessible")
+            else:
+                print("Game of seriesId {} n°{} already in databae".format(seriesId, gameNumber))
+        else:
+            (data, _, _, _) = getData(seriesId, gameNumber)
+            if len(data.draftSnapshotList) > 0:
                 date = game.date
-                # Saving the draft into our csv database
                 patch : str = game.patch
                 tournament : str = get_tournament_from_seriesId(seriesId)
                 teamBlue = game.teamBlue
                 teamRed = game.teamRed
-                # print(seriesId, "new game")
-                data.draftToCSV(DATA_PATH + "drafts/", new=False, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
-            # else:
-            #     print("Game of seriesId {} n°{} already in databae".format(seriesId, gameNumber))
-        else:
-            (data, _, _, _) = getData(seriesId, gameNumber)
-            date = game.date
-            patch : str = game.patch
-            tournament : str = get_tournament_from_seriesId(seriesId)
-            teamBlue = game.teamBlue
-            teamRed = game.teamRed
-            # print(seriesId)
-            data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
-    
+                print(seriesId)
+                data.draftToCSV(DATA_PATH + "drafts/", new=True, patch=patch, seriesId=seriesId, tournament=tournament, gameNumber=gameNumber, date=date, teamBlue=teamBlue, teamRed=teamRed)
+            else:
+                print("Draft not accessible")
+
     import_draft()
 
 

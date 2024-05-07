@@ -266,6 +266,7 @@ class SeparatedData:
         return teamName
 
     def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str, teamBlue : str, teamRed : str):
+        print(len(self.draftSnapshotList))
         draft : DraftSnapshot = self.draftSnapshotList[-1]
         # Asserting the right open option
         if new:
