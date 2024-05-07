@@ -36,7 +36,6 @@ def get_all_event_types(json_path_details:str) -> dict:
 
 
 def getGameDuration(seriesId : int, gameNumber : int):
-    print("Getting game duration")
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
     rootdir = DATA_PATH + "games/bin/{}".format(match)
     for subdir, _, files in os.walk(rootdir):
