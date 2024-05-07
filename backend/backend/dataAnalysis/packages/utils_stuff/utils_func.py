@@ -36,15 +36,16 @@ def get_all_event_types(json_path_details:str) -> dict:
 
 
 def getGameDuration(seriesId : int, gameNumber : int):
+    print("Getting game duration")
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
     rootdir = DATA_PATH + "games/bin/{}".format(match)
     for subdir, _, files in os.walk(rootdir):
         for file in files:
-            x = re.search(r"end_state_.*_riot", file)
+            x = re.search(r"end_state_" + str(seriesId) + r"_grid.json", file)
             if x != None:
                 with open(os.path.join(subdir, file), "r") as json_file:
                     res : dict = json.load(json_file)
-                    return res["games"][gameNumber-1]["currentSeconds"]
+                    return res["games"][gameNumber-1]["clock"]["currentSeconds"]
 
 
 def getData(seriesId : int, gameNumber : int):

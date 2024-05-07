@@ -315,9 +315,8 @@ def computeNewBehaviorStats(request, time):
             seriesId : int = game.seriesId
             gameNumber : int = game.gameNumber
             (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
+            print(seriesId, gameNumber, gameDuration)
 
-            match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
-            rootdir : str = DATA_PATH + "games/bin/{}".format(match)
             date = game.date
             matchId = data.matchId
 
@@ -435,25 +434,25 @@ def getListOfDownloadableTournament(request, year):
 
 @api_view(['PATCH'])
 def updateDatabase(request, tournamentList : str):
-    # # 1 Download Bins
-    # print(f"{' Downloading bins ' :#^50}")
-    # requests.patch(API_URL + "api/dataAnalysis/download/{}/".format(tournamentList))
+    # 1 Download Bins
+    print(f"{' Downloading bins ' :#^50}")
+    requests.patch(API_URL + "api/dataAnalysis/download/{}/".format(tournamentList))
 
     # 2 Save Drafts
     print(f"{' Saving Drafts ' :#^50}")
     requests.post(API_URL + "api/draft/saveDrafts/")
 
-    # # 3 Compute Behavior Stats
-    # print(f"{' Computing Behavior Stats ' :#^50}")
-    # requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/950/")
+    # 3 Compute Behavior Stats
+    print(f"{' Computing Behavior Stats ' :#^50}")
+    requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/950/")
 
-    # # 4 Update draft stats
-    # print(f"{' Updating draft stats ' :#^50}")
-    # requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
+    # 4 Update draft stats
+    print(f"{' Updating draft stats ' :#^50}")
+    requests.patch(API_URL + "api/draft/championStats/updateStats/{}/".format(tournamentList))
 
-    # # 5 Update champion pools
-    # print(f"{' Updating champion pools ' :#^50}")
-    # requests.patch(API_URL + "api/draft/updatePlayerStat/{}/".format(tournamentList))
+    # 5 Update champion pools
+    print(f"{' Updating champion pools ' :#^50}")
+    requests.patch(API_URL + "api/draft/updatePlayerStat/{}/".format(tournamentList))
 
     return Response(tournamentList)
 
