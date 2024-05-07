@@ -406,19 +406,19 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
                     </FormGroup>
 
                     <FormGroup row>
-                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTopBlue(event.target.checked)}}/>} label={`Top o`} color=""/>
-                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungleBlue(event.target.checked)}}/>} label={`Jungle o`}/>
-                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMidBlue(event.target.checked)}}/>} label={`Mid o`}/>
-                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADCBlue(event.target.checked)}}/>} label={`ADC o`}/>
-                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupportBlue(event.target.checked)}}/>} label={`Support o`}/>
+                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTopBlue(event.target.checked)}}/>} label={`Top Blue`} color=""/>
+                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungleBlue(event.target.checked)}}/>} label={`Jungle Blue`}/>
+                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMidBlue(event.target.checked)}}/>} label={`Mid Blue`}/>
+                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADCBlue(event.target.checked)}}/>} label={`ADC Blue`}/>
+                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupportBlue(event.target.checked)}}/>} label={`Support Blue`}/>
                     </FormGroup>
 
                     <FormGroup row>
-                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTopRed(event.target.checked)}}/>} label={`Top x`} color=""/>
-                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungleRed(event.target.checked)}}/>} label={`Jungle x`}/>
-                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMidRed(event.target.checked)}}/>} label={`Mid x`}/>
-                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADCRed(event.target.checked)}}/>} label={`ADC x`}/>
-                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupportRed(event.target.checked)}}/>} label={`Support x`}/>
+                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayTopRed(event.target.checked)}}/>} label={`Top Red`} color=""/>
+                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayJungleRed(event.target.checked)}}/>} label={`Jungle Red`}/>
+                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayMidRed(event.target.checked)}}/>} label={`Mid Red`}/>
+                        <FormControlLabel control={<YellowSwitch defaultChecked onChange={(event) => {setDisplayADCRed(event.target.checked)}}/>} label={`ADC Red`}/>
+                        <FormControlLabel control={<PurpleSwitch defaultChecked onChange={(event) => {setDisplaySupportRed(event.target.checked)}}/>} label={`Support Red`}/>
                     </FormGroup>
                     <Line options={optionsPlayer} data={dataPlayer}/>
                 </div>
