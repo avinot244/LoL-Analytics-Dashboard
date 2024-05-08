@@ -11,7 +11,7 @@ class AreaMapping:
         self.topLanePresenceGrid : Grid = Grid([Zone(topLaneBoundary)])
         self.botLanePresenceGrid : Grid = Grid([Zone(botLaneBoundary)])
 
-        self.jungleBlueTopPresenceGrid : Grid = Grid([Zone(jungleBlueBot),
+        self.jungleBlueTopPresenceGrid : Grid = Grid([Zone(jungleBlueTop),
                                                       Zone(jungleEntry1Blue),
                                                       Zone(jungleEntry2Blue)])
         

@@ -315,7 +315,6 @@ def computeNewBehaviorStats(request, time):
             seriesId : int = game.seriesId
             gameNumber : int = game.gameNumber
             (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
-            print(seriesId, gameNumber, gameDuration)
 
             date = game.date
             matchId = data.matchId
@@ -330,7 +329,25 @@ def computeNewBehaviorStats(request, time):
             areaMapping.computeMapping(dataBeforeTime)
 
             tournamentName : str = get_tournament_from_seriesId(seriesId)
-            patch : str = data.patch
+
+
+            # Getting game patch
+            match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
+            rootdir = DATA_PATH + "games/bin/{}".format(match)
+            flagOlderVersion : bool = False
+            for subdir, _, files in os.walk(rootdir):
+                for file in files:
+                    x = re.search(r"end_state_summary_riot_" + str(seriesId) + r"_" + str(gameNumber) + ".json", file)
+                    if x != None:
+                        with open(os.path.join(subdir, file), "r") as json_file:
+                            res : dict = json.load(json_file)
+                            patch : str = res["gameVersion"]
+                        flagOlderVersion = True
+                        break
+            
+            if not(flagOlderVersion):
+                patch : str = data.patch
+
             print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
 
             for playerTeamOne in dataBeforeTime.gameSnapshotList[0].teams[0].players:
@@ -444,7 +461,7 @@ def updateDatabase(request, tournamentList : str):
 
     # 3 Compute Behavior Stats
     print(f"{' Computing Behavior Stats ' :#^50}")
-    requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/950/")
+    requests.patch(API_URL + "api/dataAnalysis/computeBehaviorStats/840/")
 
     # 4 Update draft stats
     print(f"{' Updating draft stats ' :#^50}")

@@ -41,11 +41,15 @@ def getGameDuration(seriesId : int, gameNumber : int):
     for subdir, _, files in os.walk(rootdir):
         for file in files:
             x = re.search(r"end_state_" + str(seriesId) + r"_grid.json", file)
+            y = re.search(r"end_state_summary_riot_" + str(seriesId) + r"_" + str(gameNumber) + ".json", file)
             if x != None:
                 with open(os.path.join(subdir, file), "r") as json_file:
                     res : dict = json.load(json_file)
                     return res["games"][gameNumber-1]["clock"]["currentSeconds"]
-
+            elif y != None:
+                with open(os.path.join(subdir, file), "r") as json_file:
+                    res : dict = json.load(json_file)
+                    return res["gameDuration"]
 
 def getData(seriesId : int, gameNumber : int):
     
@@ -73,10 +77,8 @@ def getData(seriesId : int, gameNumber : int):
                 matchDate = get_date_from_seriesId(seriesId)
                 matchName = match + "dataSeparatedRIOT"
                 patch = data.patch
-                print(len(data.gameSnapshotList))
                 teamBlue = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
                 teamRed = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
-                print(teamBlue, teamRed)
                 winningTeam = data.winningTeam
                 tournament = get_tournament_from_seriesId(seriesId)
                 dataCSV = [matchDate, tournament, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam, gameNumber]
