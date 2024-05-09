@@ -99,6 +99,8 @@ urlpatterns = [
     path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
     path('api/behaviorModels/<str:role>/computeModel', behaviorModelsViews.compute_model),
     path('api/behaviorModels/<str:uuid>/<str:role>/getModel/', behaviorModelsViews.get_model),
+    path('api/behaviorModels/getLoadingMatrix/<str:uuid>/<str:role>/', behaviorModelsViews.get_loading_matrix),
+    path('api/behaviorModels/deleteAllMetadata/', behaviorModelsViews.deleteAllModelsMetadata),
 
     # Data Analysis
     path('api/dataAnalysis/deleteGame/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.deleteGame),

@@ -489,11 +489,6 @@ def getGamePositionDensity(request):
     for file in os.listdir(DATA_PATH + "plots/Position/PositionDensity/{}_{}".format(game["seriesId"], game["gameNumber"])):
         path = DATA_PATH + "plots/Position/PositionDensity/{}_{}/".format(game["seriesId"], game["gameNumber"]) + file
         with open(path, "rb") as f:
-            # summonnerName = file.split("_")[0]
-            # data : dict = {
-            #     "summonnerName": summonnerName,
-
-            # }
             imgList.append(f.read())
             
             
