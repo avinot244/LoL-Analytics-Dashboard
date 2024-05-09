@@ -101,6 +101,7 @@ urlpatterns = [
     path('api/behaviorModels/<str:uuid>/<str:role>/getModel/', behaviorModelsViews.get_model),
     path('api/behaviorModels/getLoadingMatrix/<str:uuid>/<str:role>/', behaviorModelsViews.get_loading_matrix),
     path('api/behaviorModels/deleteAllMetadata/', behaviorModelsViews.deleteAllModelsMetadata),
+    path('api/behaviorModels/getAll/', behaviorModelsViews.get_all_models),
 
     # Data Analysis
     path('api/dataAnalysis/deleteGame/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.deleteGame),

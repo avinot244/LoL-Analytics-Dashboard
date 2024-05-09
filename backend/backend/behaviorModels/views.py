@@ -28,6 +28,12 @@ from factor_analyzer.factor_analyzer import calculate_kmo
 
 
 @api_view(['GET'])
+def get_all_models(request):
+    queryResult = BehaviorModelsMetadata.objects.all()
+    serializer = BehaviorModelsMetadataSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
 def get_best_model(request, role):
     if not(role in ROLE_LIST):
         return Response(status=status.HTTP_400_BAD_REQUEST)
