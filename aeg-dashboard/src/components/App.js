@@ -6,7 +6,9 @@ import ChampionOverviewScrim from './ChampionOverview/ChampionOverviewScrim';
 import PlayerOverview from "./PlayerOverview/PlayerOverview"
 import PlayerOverviewScrim from "./PlayerOverview/PlayerOverviewScrim"
 import GameOverview from './GameOverview/GameOverview';
-import Monitoring from './Monitoring';
+import Downloader from './Monitoring/Downloader';
+import PCAModelMaker from './Monitoring/PCAModelMaker';
+import PCAModelOverview from './Monitoring/PCAModelOverview';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -39,8 +41,16 @@ const router = createBrowserRouter([
 		element: <GameOverview/>
 	},
 	{
-		path:'/Monitoring',
-		element: <Monitoring/>
+		path:'/Monitoring/Download',
+		element: <Downloader/>
+	},
+	{
+		path:'/Monitoring/PCAMaker',
+		element: <PCAModelMaker/>
+	},
+	{
+		path:'/Monitoring/PCAOverview',
+		element: <PCAModelOverview/>
 	}
 ])
 

@@ -1,0 +1,6 @@
+.pca-model-overview-wrapper {
+    background: rgba(43,48,53, 0.95);
+	height: 100vh;
+	color: white;
+	overflow: auto;
+}

@@ -13,10 +13,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
 
 
-import '../styles/Monitoring.css'
+import '../../styles/Monitoring.css'
 
-import NavBarComp from './NavbarComp';
-import { API_URL } from '../constants/index.js';
+import NavBarComp from '../NavbarComp.js';
+import { API_URL } from '../../constants/index.js';
 ;
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
@@ -256,7 +256,7 @@ function TournamentFilter({tournamentFilterList, selectedFilters, setSelectedFil
 
 
 
-export default function Monitoring() {
+export default function Downloader() {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
     const [tournamentListShortended, setTournamentListShortened] = React.useState([])
@@ -298,10 +298,9 @@ export default function Monitoring() {
 
 
     return (
-        <div className='wrapper-Monitoring'>
-            <React.StrictMode></React.StrictMode>
+        <div className='wrapper-downloader'>
             <NavBarComp/>
-            <h1>Monitoring</h1>
+            <h1>Download Games</h1>
             
 
             <h2>Select the tournament filter</h2>
