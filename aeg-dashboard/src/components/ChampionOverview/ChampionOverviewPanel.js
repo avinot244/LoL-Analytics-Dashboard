@@ -110,8 +110,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-        props;
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
@@ -120,36 +119,37 @@ function EnhancedTableHead(props) {
         <TableHead>
             <TableRow>
                 <TableCell padding="checkbox">
-                <Checkbox
-                    color="primary"
-                    indeterminate={numSelected > 0 && numSelected < rowCount}
-                    checked={rowCount > 0 && numSelected === rowCount}
-                    onChange={onSelectAllClick}
-                    inputProps={{
-                    'aria-label': 'select all desserts',
-                    }}
-                />
+                    <Checkbox
+                        color="primary"
+                        indeterminate={numSelected > 0 && numSelected < rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
+                        onChange={onSelectAllClick}
+                        inputProps={{
+                            'aria-label': 'select all Champions',
+                        }}
+                    />
                 </TableCell>
+
                 {headCells.map((headCell) => (
-                <TableCell
-                    key={headCell.id}
-                    align={headCell.numeric ? 'right' : 'left'}
-                    padding={headCell.disablePadding ? 'none' : 'normal'}
-                    sortDirection={orderBy === headCell.id ? order : false}
-                >
-                    <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : 'asc'}
-                        onClick={createSortHandler(headCell.id)}
+                    <TableCell
+                        key={headCell.id}
+                        align={headCell.numeric ? 'right' : 'left'}
+                        padding={headCell.disablePadding ? 'none' : 'normal'}
+                        sortDirection={orderBy === headCell.id ? order : false}
                     >
-                    {headCell.label}
-                    {orderBy === headCell.id ? (
-                        <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                        </Box>
-                    ) : null}
-                    </TableSortLabel>
-                </TableCell>
+                        <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={createSortHandler(headCell.id)}
+                        >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                                <Box component="span" sx={visuallyHidden}>
+                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                                </Box>
+                            ) : null}
+                        </TableSortLabel>
+                    </TableCell>
                 ))}
             </TableRow>
         </TableHead>
@@ -180,29 +180,31 @@ function EnhancedTableToolbar(props) {
         >
         {numSelected > 0 ? (
             <Typography
-            sx={{ flex: '1 1 100%' }}
-            color="inherit"
-            variant="subtitle1"
-            component="div"
+                sx={{ flex: '1 1 100%' }}
+                color="inherit"
+                variant="subtitle1"
+                component="div"
             >
-            {numSelected} selected
+                
             </Typography>
         ) : (
             <Typography
-            sx={{ flex: '1 1 100%' }}
-            variant="h6"
-            id="tableTitle"
-            component="div"
+                sx={{ flex: '1 1 100%' }}
+                variant="h6"
+                id="tableTitle"
+                component="div"
             >
-            Champion stats
+                Champion stats
             </Typography>
         )}
 
         {numSelected > 0 ? (
             <Tooltip title="Search related drafts">
-            <IconButton>
-                <SearchIcon />
-            </IconButton>
+                <IconButton
+                    onClick={() => alert("yo")}
+                >
+                    <SearchIcon />
+                </IconButton>
             </Tooltip>
         ) : (
             <Tooltip title="Filter list">
@@ -265,7 +267,7 @@ export default function ChampionOverviewPanel(props) {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = wantedRows.map((n) => n.id);
+            const newSelected = wantedRows.map((n) => n.pk);
             setSelected(newSelected);
             return;
         }
@@ -340,13 +342,13 @@ export default function ChampionOverviewPanel(props) {
                         />
                         <TableBody>
                         {visibleRows.map((row, index) => {
-                            const isItemSelected = isSelected(row.id);
+                            const isItemSelected = isSelected(row.pk);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                             <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row.id)}
+                                onClick={(event) => handleClick(event, row.pk)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
@@ -359,7 +361,7 @@ export default function ChampionOverviewPanel(props) {
                                     color="primary"
                                     checked={isItemSelected}
                                     inputProps={{
-                                    'aria-labelledby': labelId,
+                                        'aria-labelledby': labelId,
                                     }}
                                 />
                                 </TableCell>
