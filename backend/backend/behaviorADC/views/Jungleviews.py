@@ -239,3 +239,20 @@ def behaviorJungle_behavior_game(request, summonnerName, uuid, seriesId, gameNum
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
     return Response(transformed_wantedDB_scaled)
 
+@api_view(['GET'])
+def behaviorJungle_behavior_singleGamesLatest(request, summonnerName, uuid, limit, wantedTournament, comparisonTournament):
+    gameResponse = requests.get(
+        API_URL + "api/behavior/Jungle/stats/latest/{}/{}/{}/".format(summonnerName, limit, wantedTournament)
+    )
+
+    gameList : list = list(gameResponse.json())
+
+    resultList : list = list()
+
+    for gameObject in gameList:
+        behaviorGame = requests.get(
+            API_URL + "api/behavior/Jungle/compute/{}/{}/{}/{}/{}/{}/".format(summonnerName, uuid, gameObject["seriesId"], gameObject["gameNumber"], wantedTournament, comparisonTournament)
+        )
+        resultList.append(behaviorGame.json())
+
+    return Response(resultList)

@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/behavior/Top/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     
     path('api/behavior/Top/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_game),
+    path('api/behavior/Top/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_singleGamesLatest),
     
     path('api/behavior/Top/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_tournament),
 
@@ -63,6 +64,7 @@ urlpatterns = [
     path('api/behavior/Jungle/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     
     path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_game),
+    path('api/behavior/Jungle/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_singleGamesLatest),
     
     path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_tournament),
 
@@ -82,6 +84,7 @@ urlpatterns = [
     path('api/behavior/Mid/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     
     path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_game),
+    path('api/behavior/Mid/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_singleGamesLatest),
     
     path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_tournament),
 
@@ -101,6 +104,7 @@ urlpatterns = [
     path('api/behavior/ADC/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     
     path('api/behavior/ADC/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_game),
+    path('api/behavior/ADC/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_singleGamesLatest),
 
 
     path('api/behavior/ADC/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_tournament),
@@ -123,7 +127,8 @@ urlpatterns = [
     path('api/behavior/Support/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_tournament),
     
     path('api/behavior/Support/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_game),
-    
+    path('api/behavior/Support/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_singleGamesLatest),
+
     path('api/behavior/Support/deleteDuplicates', Supportviews.behaviorSupport_deleteDuplicates),
     
     # Behavior Models

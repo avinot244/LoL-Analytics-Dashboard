@@ -90,8 +90,6 @@ def behaviorSupport_stats_latest(request, summonnerName, limit, tournament):
 
     df = pd.DataFrame({"summonnerName": summonnerNameList})
 
-    print(df["summonnerName"].unique().tolist())
-
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -225,7 +223,6 @@ def behaviorSupport_behavior_tournament(request, summonnerName, uuid, wantedTour
 
 @api_view(['GET'])
 def behaviorSupport_behavior_game(request, summonnerName, uuid, seriesId, gameNumber, wantedTournament, comparisonTournament):
-    print("Behavior Game")
     tournamentDict = {
         "wanted": wantedTournament,
         "comparison": comparisonTournament,
@@ -236,9 +233,27 @@ def behaviorSupport_behavior_game(request, summonnerName, uuid, seriesId, gameNu
         API_URL + "api/behavior/Support/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
     )
     wantedDB = pd.DataFrame(response.json())
-    print(wantedDB)
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Support")
     return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorSupport_behavior_singleGamesLatest(request, summonnerName, uuid, limit, wantedTournament, comparisonTournament):
+    gameResponse = requests.get(
+        API_URL + "api/behavior/Support/stats/latest/{}/{}/{}/".format(summonnerName, limit, wantedTournament)
+    )
+
+    gameList : list = list(gameResponse.json())
+
+    resultList : list = list()
+
+    for gameObject in gameList:
+        behaviorGame = requests.get(
+            API_URL + "api/behavior/Support/compute/{}/{}/{}/{}/{}/{}/".format(summonnerName, uuid, gameObject["seriesId"], gameObject["gameNumber"], wantedTournament, comparisonTournament)
+        )
+        resultList.append(behaviorGame.json())
+
+    return Response(resultList)
+    
 
 @api_view(['DELETE'])
 def behaviorSupport_deleteDuplicates(request):

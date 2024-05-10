@@ -77,12 +77,7 @@ export default function PlayerOverviewStat(props) {
     const [champPoolPickRate, setChampPoolPickRate] = useState([])
     const [champPoolWinRate, setChampPoolWinRate] = useState([])
 
-    const gd15 = 450
-    const k15 = 4
-    const d15 = 1
-    const a15 = 5
 
-    const championList = ["Hwei", "Thresh", "Leona", "Maokai", "Senna", "Nautilus"]
 
     useEffect(() => {
         const fetchBehaviorTournamentPatchPlayer = async (role, summonnerName, patch, wantedTournament) => {
@@ -91,7 +86,6 @@ export default function PlayerOverviewStat(props) {
             })
             result.json().then(result => {
                 const newBehaviorPatch = result
-                console.log(newBehaviorPatch)
                 setDataBehaviorPatch(getAvgData(newBehaviorPatch, role))
             })
         }
@@ -102,7 +96,6 @@ export default function PlayerOverviewStat(props) {
             })
             result.json().then(result => {
                 const newBehaviorLatest = result
-                console.log(newBehaviorLatest)
                 setDataBehaviorLatest(getAvgData(newBehaviorLatest, role))
             })
         }
@@ -113,7 +106,6 @@ export default function PlayerOverviewStat(props) {
             })
             result.json().then(result => {
                 const newBehaviorTournament = result
-                console.log(newBehaviorTournament)
                 setDataBehaviorTournament(getAvgData(newBehaviorTournament, role))
             })
         }
@@ -139,7 +131,6 @@ export default function PlayerOverviewStat(props) {
                 return championPoolPRListTemp
             }).then(list => {
                 newChampionPoolPRList.push(list.slice(0, 6))
-                console.log("wanted list:", newChampionPoolPRList)
                 setChampPoolPickRate(newChampionPoolPRList)
             })
         }
@@ -165,17 +156,48 @@ export default function PlayerOverviewStat(props) {
                 return championPoolWRListTemp
             }).then(list => {
                 newChampionPoolWRList.push(list.slice(0, 6))
-                console.log("wanted list:", newChampionPoolWRList)
                 setChampPoolWinRate(newChampionPoolWRList)
             })
         }
 
+        const fetchBehaviorSingleGamesLatest = async (role, summonnerName, limit, wantedTournament) => {
+            let gameList = []
+            const games = await fetch(API_URL + `behavior/${role}/stats/latest/${summonnerName}/${limit}/${wantedTournament}/`, {
+                method: "GET"
+            })
+            games.json().then(result => {
+                for (let i = 0 ; i < result.length ; i++) {
+                    let gameObject = result[i]
+                    let temp = {
+                        "seriesId": gameObject.seriesId,
+                        "gameNumber": gameObject.gameNumber
+                    }
+                    gameList.push(temp)
+                }
+            })
+
+            console.log("gameList:", gameList)
+            let newDataSingleGame = []
+            for (let i = 0 ; i < limit ; i++) {
+                console.log("Yo")
+                let gameObject = gameList[i]
+                const behavior = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${behaviorModelUUID}/${gameObject.seriesId}/${gameObject.gameNumber}/${wantedTournament}/${wantedTournament}/`, {
+                    method: "GET"
+                })
+                behavior.json().then(result => {
+                    newDataSingleGame.push(result)
+                })
+            }
+
+            console.log(newDataSingleGame)
+        }
 
         fetchChampionPoolPickRate(summonnerName, wantedTournament)
         fetchChampionPoolWinRate(summonnerName, wantedTournament)
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
         fetchBehaviorTournamentLatestPlayer(role, summonnerName, limit, wantedTournament)
         fetchBehaviorTournamentPlayer(role, summonnerName, wantedTournament)
+        fetchBehaviorSingleGamesLatest(role, summonnerName, limit, wantedTournament)
 
     }, [])
 

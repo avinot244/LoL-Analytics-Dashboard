@@ -239,3 +239,20 @@ def behaviorADC_behavior_game(request, summonnerName, uuid, seriesId, gameNumber
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
+@api_view(['GET'])
+def behaviorADC_behavior_singleGamesLatest(request, summonnerName, uuid, limit, wantedTournament, comparisonTournament):
+    gameResponse = requests.get(
+        API_URL + "api/behavior/ADC/stats/latest/{}/{}/{}/".format(summonnerName, limit, wantedTournament)
+    )
+
+    gameList : list = list(gameResponse.json())
+
+    resultList : list = list()
+
+    for gameObject in gameList:
+        behaviorGame = requests.get(
+            API_URL + "api/behavior/ADC/compute/{}/{}/{}/{}/{}/{}/".format(summonnerName, uuid, gameObject["seriesId"], gameObject["gameNumber"], wantedTournament, comparisonTournament)
+        )
+        resultList.append(behaviorGame.json())
+
+    return Response(resultList)
