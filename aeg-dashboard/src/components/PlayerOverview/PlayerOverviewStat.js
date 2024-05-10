@@ -69,10 +69,7 @@ export default function PlayerOverviewStat(props) {
     const [dataBehaviorPatch, setDataBehaviorPatch] = useState([])
     const [dataBehaviorLatest, setDataBehaviorLatest] = useState([])
     const [dataBehaviorTournament, setDataBehaviorTournament] = useState([])
-
-    const [displayPatch, setDisplayPatch] = useState(true)
-    const [displayLatest, setDisplayLatest] = useState(true)
-    const [displayTournament, setDisplayTournament] = useState(true)
+    const [dataSingleGames, setDataSingleGames] = useState([])
 
     const [champPoolPickRate, setChampPoolPickRate] = useState([])
     const [champPoolWinRate, setChampPoolWinRate] = useState([])
@@ -161,35 +158,13 @@ export default function PlayerOverviewStat(props) {
         }
 
         const fetchBehaviorSingleGamesLatest = async (role, summonnerName, limit, wantedTournament) => {
-            let gameList = []
-            const games = await fetch(API_URL + `behavior/${role}/stats/latest/${summonnerName}/${limit}/${wantedTournament}/`, {
+            const gamesBehavior = await fetch(API_URL + `behavior/${role}/compute/singleGamesLatest/${summonnerName}/${behaviorModelUUID}/${limit}/${wantedTournament}/${wantedTournament}/`, {
                 method: "GET"
             })
-            games.json().then(result => {
-                for (let i = 0 ; i < result.length ; i++) {
-                    let gameObject = result[i]
-                    let temp = {
-                        "seriesId": gameObject.seriesId,
-                        "gameNumber": gameObject.gameNumber
-                    }
-                    gameList.push(temp)
-                }
+            gamesBehavior.json().then(result => {
+                const newDataSingleGames = result
+                setDataSingleGames(newDataSingleGames)
             })
-
-            console.log("gameList:", gameList)
-            let newDataSingleGame = []
-            for (let i = 0 ; i < limit ; i++) {
-                console.log("Yo")
-                let gameObject = gameList[i]
-                const behavior = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${behaviorModelUUID}/${gameObject.seriesId}/${gameObject.gameNumber}/${wantedTournament}/${wantedTournament}/`, {
-                    method: "GET"
-                })
-                behavior.json().then(result => {
-                    newDataSingleGame.push(result)
-                })
-            }
-
-            console.log(newDataSingleGame)
         }
 
         fetchChampionPoolPickRate(summonnerName, wantedTournament)
@@ -307,36 +282,89 @@ export default function PlayerOverviewStat(props) {
             return result
         }
     }
-    
+
+    function getData(behaviorObject, role) {
+        if (role === "Top" || role === "Jungle") {
+            let result = []
+            result.push(behaviorObject.Factor_1[0])
+            result.push(behaviorObject.Factor_2[0])
+            result.push(behaviorObject.Factor_3[0])
+            result.push(behaviorObject.Factor_4[0])
+            result.push(behaviorObject.Factor_5[0])
+            result.push(behaviorObject.Factor_6[0])
+            return result
+        }else if (role === "Mid") {
+            let result = []
+            result.push(behaviorObject.Factor_1[0])
+            result.push(behaviorObject.Factor_2[0])
+            result.push(behaviorObject.Factor_3[0])
+            result.push(behaviorObject.Factor_4[0])
+            result.push(behaviorObject.Factor_5[0])
+            result.push(behaviorObject.Factor_6[0])
+            result.push(behaviorObject.Factor_7[0])
+            result.push(behaviorObject.Factor_8[0])
+            return result
+        }else if (role === "ADC") {
+            let result = []
+            result.push(behaviorObject.Factor_1[0])
+            result.push(behaviorObject.Factor_2[0])
+            result.push(behaviorObject.Factor_3[0])
+            result.push(behaviorObject.Factor_4[0])
+            return result
+        }else if (role === "Support") {
+            let result = []
+            result.push(behaviorObject.Factor_1[0])
+            result.push(behaviorObject.Factor_2[0])
+            result.push(behaviorObject.Factor_3[0])
+            result.push(behaviorObject.Factor_4[0])
+            result.push(behaviorObject.Factor_5[0])
+            result.push(behaviorObject.Factor_6[0])
+            result.push(behaviorObject.Factor_7[0])
+            return result
+        }
+    }
+
+    let behaviorDatasets = [
+        {
+            label: `Behavior ${summonnerName} during patch ${patch} at ${wantedTournament}`,
+            data: dataBehaviorPatch,
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+            borderWidth: 1,
+                        
+        },
+        {
+            label: `Behavior ${summonnerName} latest ${limit} games at ${wantedTournament}`,
+            data: dataBehaviorLatest,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgb(54, 162, 235)',
+            borderWidth: 1,
+        },
+        {
+            label: `Behavior ${summonnerName} at ${wantedTournament}`,
+            data: dataBehaviorTournament,
+            backgroundColor: 'rgba(74, 191, 192, 0.2)',
+            borderColor: 'rgb(74, 191, 192)',
+            borderWidth: 1,
+        }
+    ]
+
+    for (let i = 0 ; i < dataSingleGames.length ; i++) {
+        console.log(getData(dataSingleGames[i], role))
+        let temp = {
+            label: `Behavior ${summonnerName} game ${i+1}`,
+            data: getData(dataSingleGames[i], role),
+            backgroundColor: alpha(purple[100*(2*i+1)], 0.2),
+            borderColor: purple[100*(2*i+1)],
+            borderWidth: 1,
+        }
+        behaviorDatasets.push(temp)
+    }
+
+
     const data = {
         labels: factorNamePerRole[role],
-        datasets: [
-            {
-                label: `Behavior ${summonnerName} during patch ${patch} at ${wantedTournament}`,
-                data: dataBehaviorPatch,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgb(255, 99, 132)',
-                borderWidth: 1,
-                hidden: !displayPatch
-                            
-            },
-            {
-                label: `Behavior ${summonnerName} latest ${limit} games at ${wantedTournament}`,
-                data: dataBehaviorLatest,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgb(54, 162, 235)',
-                borderWidth: 1,
-                hidden: !displayLatest
-            },
-            {
-                label: `Behavior ${summonnerName} at ${wantedTournament}`,
-                data: dataBehaviorTournament,
-                backgroundColor: 'rgba(74, 191, 192, 0.2)',
-                borderColor: 'rgb(74, 191, 192)',
-                borderWidth: 1,
-                hidden: !displayTournament
-            }
-        ]
+        datasets: behaviorDatasets,
     }
 
     const computeMax = () => {
@@ -412,13 +440,6 @@ export default function PlayerOverviewStat(props) {
     return (
         <div className="playerOverview-content-wrapper">
             <div className="playerOverviewGraph">
-                <div className="graph-ControlPanel">
-                    <FormGroup row>
-                        <FormControlLabel control={<RedSwitch defaultChecked onChange={(event) => {setDisplayPatch(event.target.checked)}}/>} label={`Patch ${patch}`}/>
-                        <FormControlLabel control={<BlueSwitch defaultChecked onChange={(event) => {setDisplayLatest(event.target.checked)}}/>} label={`Latest ${limit} games`}/>
-                        <FormControlLabel control={<TealSwitch defaultChecked onChange={(event) => {setDisplayTournament(event.target.checked)}}/>} label={`Tournament`}/>
-                    </FormGroup>
-                </div>
 
                 <div className="playerOverview-graph">
                     <Radar

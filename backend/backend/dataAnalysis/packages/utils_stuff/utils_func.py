@@ -5,6 +5,7 @@ import re
 import pickle
 import shutil
 import csv
+import time as t_time
 
 from dataAnalysis.packages.utils_stuff.globals import *
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
@@ -38,18 +39,29 @@ def get_all_event_types(json_path_details:str) -> dict:
 def getGameDuration(seriesId : int, gameNumber : int):
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
     rootdir = DATA_PATH + "games/bin/{}".format(match)
-    for subdir, _, files in os.walk(rootdir):
+
+    flagNew = False
+    flagOld = False
+
+    for _, _, files in os.walk(rootdir):
         for file in files:
             x = re.search(r"end_state_" + str(seriesId) + r"_grid.json", file)
             y = re.search(r"end_state_summary_riot_" + str(seriesId) + r"_" + str(gameNumber) + ".json", file)
             if x != None:
-                with open(os.path.join(subdir, file), "r") as json_file:
-                    res : dict = json.load(json_file)
-                    return res["games"][gameNumber-1]["clock"]["currentSeconds"]
+                flagNew = True
             elif y != None:
-                with open(os.path.join(subdir, file), "r") as json_file:
-                    res : dict = json.load(json_file)
-                    return res["gameDuration"]
+                flagOld = True  
+    
+    if flagNew:
+        path = rootdir + "/end_state_" + str(seriesId) + "_grid.json"
+        with open(path, "r") as json_file:
+            res : dict = json.load(json_file)
+            return res["games"][gameNumber-1]["clock"]["currentSeconds"]
+    if flagOld:
+        path = rootdir + "/end_state_summary_riot_" + str(seriesId) + "_" + str(gameNumber) + ".json"
+        with open(path, "r") as json_file:
+            res : dict = json.load(json_file)
+            return res["gameDuration"]
 
 def getData(seriesId : int, gameNumber : int):
     
@@ -78,7 +90,9 @@ def getData(seriesId : int, gameNumber : int):
                 matchName = match + "dataSeparatedRIOT"
                 patch = data.patch
                 teamBlue = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
+                t_time.sleep(1)
                 teamRed = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
+                t_time.sleep(1)
                 winningTeam = data.winningTeam
                 tournament = get_tournament_from_seriesId(seriesId)
                 dataCSV = [matchDate, tournament, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam, gameNumber]

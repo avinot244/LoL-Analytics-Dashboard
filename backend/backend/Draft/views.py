@@ -28,6 +28,7 @@ import requests
 import os
 import re
 from tqdm import tqdm
+import time as t_time
 
 @api_view(['POST'])
 def saveDrafts(request):
@@ -38,6 +39,7 @@ def saveDrafts(request):
 
     for game in tqdm(queryAllGames):
     # for game in queryAllGames:
+        t_time.sleep(0.4)
         data_base_exists : bool = os.path.exists(DATA_PATH + "drafts/draft_pick_order.csv") and os.path.exists(DATA_PATH + "drafts/draft_player_picks.csv")
         file_name : str = game.name
         gameNumber : int = int(file_name.split("_")[2][0])
