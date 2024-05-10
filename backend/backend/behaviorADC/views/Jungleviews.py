@@ -120,6 +120,22 @@ def behaviorJungle_stats_patch(request, summonnerName, patch, tournament):
 
 
 @api_view(['GET'])
+def behaviorJungle_stats_game(request, summonnerName, seriesId, gameNumber):
+    summonnerNameList : list = list()
+    allObjects = BehaviorJungle.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    for res in allObjects:
+        print(res)
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    queryResult = BehaviorJungle.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    serializer = BehaviorJungleSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def behaviorJungle_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
@@ -205,3 +221,21 @@ def behaviorJungle_behavior_tournament(request, summonnerName, uuid, wantedTourn
     wantedDB = pd.DataFrame(response.json())
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
     return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorJungle_behavior_game(request, summonnerName, uuid, seriesId, gameNumber, wantedTournament, comparisonTournament):
+    print("Behavior Game")
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/Jungle/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
+    )
+    wantedDB = pd.DataFrame(response.json())
+    print(wantedDB)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Jungle")
+    return Response(transformed_wantedDB_scaled)
+

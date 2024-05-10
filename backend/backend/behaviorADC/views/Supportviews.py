@@ -119,6 +119,24 @@ def behaviorSupport_stats_patch(request, summonnerName, patch, tournament):
     return Response(serializer.data)
 
 @api_view(['GET'])
+def behaviorSupport_stats_game(request, summonnerName, seriesId, gameNumber):
+    summonnerNameList : list = list()
+    allObjects = BehaviorSupport.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    for res in allObjects:
+        print(res)
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    queryResult = BehaviorSupport.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    serializer = BehaviorSupportSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
+
+    
+
+
+@api_view(['GET'])
 def behaviorSupport_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
@@ -205,8 +223,22 @@ def behaviorSupport_behavior_tournament(request, summonnerName, uuid, wantedTour
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Support")
     return Response(transformed_wantedDB_scaled)
 
+@api_view(['GET'])
+def behaviorSupport_behavior_game(request, summonnerName, uuid, seriesId, gameNumber, wantedTournament, comparisonTournament):
+    print("Behavior Game")
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
 
-
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/Support/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
+    )
+    wantedDB = pd.DataFrame(response.json())
+    print(wantedDB)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Support")
+    return Response(transformed_wantedDB_scaled)
 
 @api_view(['DELETE'])
 def behaviorSupport_deleteDuplicates(request):

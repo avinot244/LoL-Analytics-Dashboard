@@ -118,6 +118,21 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def behaviorADC_stats_game(request, summonnerName, seriesId, gameNumber):
+    summonnerNameList : list = list()
+    allObjects = BehaviorADC.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    for res in allObjects:
+        print(res)
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['GET'])
 def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
@@ -204,6 +219,23 @@ def behaviorADC_behavior_tournament(request, summonnerName, uuid, wantedTourname
         API_URL + "api/behavior/ADC/stats/{}/{}/".format(summonnerName, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
+    return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorADC_behavior_game(request, summonnerName, uuid, seriesId, gameNumber, wantedTournament, comparisonTournament):
+    print("Behavior Game")
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/ADC/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
+    )
+    wantedDB = pd.DataFrame(response.json())
+    print(wantedDB)
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
