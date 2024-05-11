@@ -3,6 +3,8 @@ import "../../styles/PCAModelOverview.css"
 import { useState } from "react";
 import { API_URL } from "../../constants";
 
+import PCAModelList from "./PCAModelList";
+
 export default function PCAModelOverview() {
     const [modelList, setModelList] = useState([])
 
@@ -16,6 +18,7 @@ export default function PCAModelOverview() {
             for (let i = 0; i < result.length ; i++) {
                 let modelObject = result[i]
                 let temp = {
+                    "pk": modelObject.pk,
                     "uuid": modelObject.uuid,
                     "role": modelObject.role,
                     "kmo": (modelObject.kmo).toFixed(2)
@@ -36,12 +39,11 @@ export default function PCAModelOverview() {
             <NavBarComp/>
 
             <h1>Manage Behavior Analysis Models</h1>
+            
+            <PCAModelList
+                modelList={modelList}
+            />
 
-            {
-                modelList.map((modelObject) => 
-                    <p>{modelObject.uuid}   {modelObject.role}    {modelObject.kmo}</p>
-                )
-            }
         </div>
 
     )
