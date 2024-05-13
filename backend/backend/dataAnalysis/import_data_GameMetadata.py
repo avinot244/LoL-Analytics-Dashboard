@@ -1,10 +1,11 @@
 import pandas as pd
 from dataAnalysis.models import GameMetadata
+from tqdm import tqdm
 
 csv_file_path : str = "./databases/games/data_metadata.csv"
 df = pd.read_csv(csv_file_path, sep=";")
 
-for index, row in df.iterrows():
+for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     gameMetadata = GameMetadata(
         date = row["Date"],
         name = row["Name"],

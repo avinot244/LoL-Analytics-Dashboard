@@ -1,10 +1,11 @@
 import pandas as pd
 from ..models import DraftPickOrder
+from tqdm import tqdm
 
 csv_draft_pick_order : str = "./databases/drafts/draft_pick_order.csv"
 
 df_draft_pick_order : pd.DataFrame = pd.read_csv(csv_draft_pick_order, sep=";")
-for index, row in df_draft_pick_order.iterrows():
+for index, row in tqdm(df_draft_pick_order.iterrows(), total=df_draft_pick_order.shape[0]):
     draftPickOrder = DraftPickOrder(
         date = row["Date"],
         tournament = row["Tournament"],

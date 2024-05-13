@@ -64,14 +64,14 @@ class Team:
         
         teamIdList : list = list(teamDict.keys())
         teamNameList : list = list(teamDict.values())
-        playerListTeam1 : list = get_team_members_from_id(teamIdList[0])
+        playerListTeam2 : list = get_team_members_from_id(teamIdList[1])
 
         playerName : str = self.players[0].playerName
-        for player in playerListTeam1:
+        for player in playerListTeam2:
             x = re.search(player, playerName)
             if x != None:
-                return teamNameList[0]
-        return teamNameList[1]
+                return teamNameList[1]
+        return teamNameList[0]
 
     def getClosesPlayerToJungler(self) -> Player:
         jungle = self.players[1]

@@ -1,9 +1,10 @@
 import pandas as pd
 from ..models import DraftPlayerPick
+from tqdm import tqdm
 
 csv_draft_player_pick : str = "./databases/drafts/draft_player_picks.csv"
 df_draft_player_pick : pd.DataFrame = pd.read_csv(csv_draft_player_pick, sep=";")
-for index, row in df_draft_player_pick.iterrows():
+for index, row in tqdm(df_draft_player_pick.iterrows(), total=df_draft_player_pick.shape[0]):
     draftPlayerPick = DraftPlayerPick(
         date = row["Date"],
         tournament = row["Tournament"],

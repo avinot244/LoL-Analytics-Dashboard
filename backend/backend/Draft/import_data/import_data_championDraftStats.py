@@ -1,11 +1,12 @@
 import pandas as pd
 from ..models import ChampionDraftStats
+from tqdm import tqdm
 
 csv_champion_draft_stats : str = "./databases/drafts/champion_draft_stats.csv"
 
 df_champion_draft_stats : pd.DataFrame = pd.read_csv(csv_champion_draft_stats, sep=";")
 
-for index, row in df_champion_draft_stats.iterrows():
+for index, row in tqdm(df_champion_draft_stats.iterrows(), total=df_champion_draft_stats.shape[0]):
     championDraftStats = ChampionDraftStats(
         championName = row["ChampionName"],
         patch = row["Patch"],
