@@ -1,5 +1,6 @@
 from django.shortcuts import render
 
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -14,13 +15,23 @@ import pandas as pd
 import json
 import requests
 import uuid
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+from PIL import Image
 
-from joblib import dump
+from joblib import dump, load
 
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import RobustScaler, MinMaxScaler
 from factor_analyzer.factor_analyzer import FactorAnalyzer
 from factor_analyzer.factor_analyzer import calculate_kmo
 
+
+@api_view(['GET'])
+def get_all_models(request):
+    queryResult = BehaviorModelsMetadata.objects.all()
+    serializer = BehaviorModelsMetadataSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def get_best_model(request, role):
@@ -43,7 +54,6 @@ def get_model(request, uuid, role):
     queryResult = BehaviorModelsMetadata.objects.filter(role__exact=role, uuid__exact=uuid)
     serializer = BehaviorModelsMetadataSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
-
 
 @api_view(['POST'])
 def compute_model(request, role):
@@ -117,3 +127,83 @@ def compute_model(request, role):
 
     print("Model successfully saved to SQLite database")
     return Response(BehaviorModelsMetadataSerializer(behaviorModelsMetadata).data)
+
+@api_view(['DELETE'])
+def deleteAllModelsMetadata(request):
+    query = BehaviorModelsMetadata.objects.all()
+    for res in query:
+        res.delete()
+
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_loading_matrix(request, uuid, role):
+    if not(role in ROLE_LIST):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    temp_df = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    if not(uuid in temp_df["uuid"].unique().tolist()):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if not os.path.exists(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(uuid, role)):
+
+        wantedModel = BehaviorModelsMetadata.objects.get(role__exact=role, uuid__exact=uuid)
+        model_path : str = DATA_PATH + "behavior/models/bin/{}".format(wantedModel.modelName)
+        factors = factorsPerRole[role]
+
+
+        splittedDfList : list[pd.DataFrame] = list()
+        dataSetSplit : dict = eval(wantedModel.tournamentDict)
+
+        df = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role), sep=";")
+        for tournament_name, nb_lines in dataSetSplit.items():        
+            temp : pd.DataFrame = df[df["Tournament"] == tournament_name]
+            splittedDfList.append(temp.sample(nb_lines))
+
+        wantedDB = pd.concat(splittedDfList)
+
+        header = [column for column in wantedDB.columns[6:]]
+
+        behavior = wantedDB[header]
+
+
+        #  Let's prepare some plots on one canvas (subplots)
+        fig, axes = plt.subplots(ncols=1, figsize=(16, 7))
+        
+        fa_model : FactorAnalyzer = load(model_path + ".joblib")
+        factor_matrix = fa_model.loadings_
+        scaled_factor_matrix = []
+        for line in factor_matrix:
+            scaler : MinMaxScaler = MinMaxScaler().fit(np.abs(line).reshape(-1, 1))
+            scaledLine = scaler.transform(np.abs(line).reshape(-1, 1))
+            scaled_factor_matrix.append(scaledLine.reshape(1, -1).tolist()[0])
+
+        scaled_factor_matrix = np.array(scaled_factor_matrix)
+
+        #  Plot the data as a heat map
+        im = axes.imshow(factor_matrix, cmap="RdBu_r", vmax=1, vmin=-1, aspect='auto')
+        #  and add the corresponding value to the center of each cell
+        for (i,j), z in np.ndenumerate(factor_matrix):
+            
+            axes.text(j, i, str(z.round(factors)), ha="center", va="center")
+        #  Tell matplotlib about the metadata of the plot
+        axes.set_yticks(np.arange(len(behavior.columns)))
+        if axes.get_subplotspec().is_first_col():
+            axes.set_yticklabels(behavior.columns)
+        else:
+            axes.set_yticklabels([])
+        axes.set_title("Loading model {}".format(uuid))
+        axes.set_xticks(np.arange(factors))
+        axes.set_xticklabels(["Factor {}".format(i+1) for i in range(factors)])
+        #  and squeeze the axes tight, to save space
+        plt.tight_layout()
+            
+        #  and add a colorbar
+        cb = fig.colorbar(im, ax=axes, location='right', label="loadings")
+
+        os.makedirs(DATA_PATH + "behavior/models/loadings/{}".format(uuid))
+        plt.savefig(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(uuid, role))
+
+    with open(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(uuid, role), "rb") as f:
+        return HttpResponse(f.read(), content_type="image/png")
+    

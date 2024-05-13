@@ -1,15 +1,16 @@
 import requests
 import json
-import pandas as pd
 import os
 import zipfile
 import io
+import time
 
 from .get_token import get_token
 
 
 def get_last_games(amount : int, gameType : str) -> list[str]:
     assert gameType == "SCRIM" or gameType == "COMPETITIVE" or gameType == "ESPORTS"
+    time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
     {
@@ -53,6 +54,7 @@ def get_last_games(amount : int, gameType : str) -> list[str]:
     return idList
 
 def get_all_download_links(seriesId):
+    time.sleep(1)
     url = "https://api.grid.gg/file-download/list/{}".format(seriesId)
     token = get_token()
     headers = {
@@ -66,6 +68,7 @@ def get_all_download_links(seriesId):
     return result
     
 def download_from_link(url : str, fileName : str, path : str, fileType : str):
+    time.sleep(1)
     if not(os.path.exists(path)):
         os.mkdir(path)
 
@@ -91,6 +94,7 @@ def download_from_link(url : str, fileName : str, path : str, fileType : str):
             with open(path + "/Separated/" + "{}.json".format(i), "w") as file:
                 # event_data = json.loads(event)
                 # json.dump(event, file)
+                
                 file.write(event)
             i += 1
 
@@ -108,6 +112,7 @@ def download_from_link(url : str, fileName : str, path : str, fileType : str):
             os.remove(path + fileName + "/" + fileName + ".jsonl")
 
 def get_download_link_end_summary(seriesId : str, games : int):
+    time.sleep(1)
     url = "https://api.grid.gg/file-download/end-state/riot/series/{}/games/{}/summary".format(seriesId, games)
     token = get_token()
     headers = {
@@ -121,13 +126,14 @@ def get_download_link_end_summary(seriesId : str, games : int):
         json.dump(response.json(), file)
 
 def get_tournament_ids_from_page(cursor : str):
+    time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     if cursor != "":
         body = """
                 query Tournaments {
                 tournaments(
-                    first: 50
-                    after: \"""" + cursor + """\"
+                    last: 50
+                    before: \"""" + cursor + """\"
                     filter: { titleId: "3" }) {
                     edges {
                         node {
@@ -157,7 +163,7 @@ def get_tournament_ids_from_page(cursor : str):
         body = """
                 query Tournaments {
                 tournaments(
-                    first: 50
+                    last: 50
                     filter: { titleId: "3" }) {
                     edges {
                         node {
@@ -202,29 +208,30 @@ def get_tournament_ids_from_page(cursor : str):
         tournamentMapping[node["name"]] = node["id"]
     
     # Computing the cursor for next page
-    if result["data"]["tournaments"]["pageInfo"]["hasNextPage"]:
-        cursorNextPage : str = result["data"]["tournaments"]["pageInfo"]["endCursor"]
+    if result["data"]["tournaments"]["pageInfo"]["hasPreviousPage"]:
+        cursorPreviousPage : str = result["data"]["tournaments"]["pageInfo"]["startCursor"]
     else:
-        cursorNextPage : str = ""
+        cursorPreviousPage : str = ""
     
-    return tournamentMapping, cursorNextPage
+    return tournamentMapping, cursorPreviousPage
 
 def get_all_tournament_ids(fromCursor : str):
+    time.sleep(1)
     if fromCursor == "":
-        res, cursorNextPage = get_tournament_ids_from_page("")
+        res, cursorPreviousPage = get_tournament_ids_from_page("")
     else:
-        res, cursorNextPage = get_tournament_ids_from_page(fromCursor)
+        res, cursorPreviousPage = get_tournament_ids_from_page(fromCursor)
         
-    i = 0
     # Forced to do max 40 API calls or API thinks we DDOS'ing the server x)
-    while cursorNextPage != "":
-        temp, cursorNextPage = get_tournament_ids_from_page(cursorNextPage)
+    while cursorPreviousPage != "":
+        temp, cursorPreviousPage = get_tournament_ids_from_page(cursorPreviousPage)
         res.update(temp)
-        i += 1
+        time.sleep(1)
     
     return res
     
 def get_all_game_seriesId_tournament(tournamentId : int, amount : int, fromCursor : str = ""):
+    time.sleep(1)
     seriesIdList : list = list()
 
     nbPage : int = amount // 50
@@ -259,6 +266,7 @@ def get_all_game_seriesId_tournament(tournamentId : int, amount : int, fromCurso
         return seriesIdList
 
 def get_game_seriesId_from_page_tournament(cursor : str, amount : int, tournamentId : int):
+    time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         {
@@ -319,6 +327,7 @@ def get_game_seriesId_from_page_tournament(cursor : str, amount : int, tournamen
     return idList, cursorNextPage
 
 def get_nb_games_seriesId(seriesId : int):
+    time.sleep(1)
     url = "https://api.grid.gg/live-data-feed/series-state/graphql"
     body = """
         {
@@ -351,6 +360,7 @@ def get_nb_games_seriesId(seriesId : int):
         return -1
 
 def get_tournament_from_seriesId(seriesId : int):
+    time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         query Series {
@@ -376,6 +386,7 @@ def get_tournament_from_seriesId(seriesId : int):
     return result["data"]["series"]["tournament"]["name"]
 
 def get_date_from_seriesId(seriesId : int):
+    time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         query Series {
@@ -396,3 +407,91 @@ def get_date_from_seriesId(seriesId : int):
     
     result : dict = response.json()
     return result["data"]["series"]["startTimeScheduled"]
+
+def get_dates_tournament(tournamentId : int):
+    time.sleep(1)
+    url = "https://api.grid.gg/central-data/graphql"
+    body = """
+        query Tournament {
+            tournament(id: """ + tournamentId + """) {
+                id
+                endDate
+                startDate
+            }
+        }
+    """
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    response = requests.post(url=url, json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+    
+    result : dict = response.json()
+    return result["data"]["tournament"]["startDate"], result["data"]["tournament"]["endDate"]
+
+def get_team_info_from_seriesId(seriesId : int):
+    time.sleep(1)
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    url = "https://api.grid.gg/central-data/graphql"
+
+    body = """
+        query Series {
+            series(id: \"""" + str(seriesId) + """\") {
+                teams {
+                    baseInfo {
+                        id
+                        name
+                        nameShortened
+                    }
+                }
+            }
+        }
+    """
+    response = requests.post(url=url, json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+    
+    result : dict = response.json()
+    teamDict : dict = dict()
+    for team_dict in result["data"]["series"]["teams"]:
+        teamDict.update({team_dict["baseInfo"]["id"]:team_dict["baseInfo"]["nameShortened"]})
+    return teamDict
+
+def get_team_members_from_id(id : int):
+    time.sleep(1)
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    url = "https://api.grid.gg/central-data/graphql"
+    body = """
+            query Players {
+            players(filter: { 
+                titleId: 3, 
+                teamIdFilter: { 
+                    id: """ + str(id) + """ 
+                } 
+            }) {
+                edges {
+                    node {
+                        nickname
+                    }
+                }
+            }
+        }
+    """
+    response = requests.post(url=url, json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+
+    result : dict = response.json()
+    playerNameList : list = list()
+    for edge in result["data"]["players"]["edges"]:
+        playerNameList.append(edge["node"]["nickname"])
+    
+    return playerNameList

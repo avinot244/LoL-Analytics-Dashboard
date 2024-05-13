@@ -30,6 +30,7 @@ for index, row in df.iterrows():
         jungleEnemyBotPresence = row["jungleEnemyBotPresence"],
         riverBotPresence = row["riverBotPresence"],
         riverTopPresence = row["riverTopPresence"],
+        gameNumber = row["GameNumber"]
     )
 
     behaviorSupport.save()

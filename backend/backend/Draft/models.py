@@ -7,6 +7,8 @@ class DraftPickOrder(models.Model):
     seriesId = models.IntegerField("SeriesId")
     winner = models.IntegerField("Winner")
     gameNumner = models.IntegerField("GameNumber")
+    teamBlue = models.CharField("teamBlue", max_length=240)
+    teamRed = models.CharField("teamRed", max_length=240)
 
     bb1 = models.CharField("BB1", max_length=240)
     bb2 = models.CharField("BB2", max_length=240)
@@ -42,4 +44,29 @@ class DraftPlayerPick(models.Model):
     championName = models.CharField("ChampionName", max_length=240)
     role = models.CharField("Role", max_length=240)
     gameNumber = models.IntegerField("GameNumber")
+
+class ChampionDraftStats(models.Model):
+    championName = models.CharField("ChampionName", max_length=240)
+    patch = models.CharField("Patch", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    side = models.CharField("Side", max_length=240)
+    winRate = models.FloatField("WinRate")
+    globalPickRate = models.FloatField("GlobalPickRate")
+    pickRate1Rota = models.FloatField("PickRate1Rota")
+    pickRate2Rota = models.FloatField("PickRate2Rota")
+    globalBanRate = models.FloatField("GlobalBanRate")
+    banRate1Rota = models.FloatField("BanRate1Rota")
+    banRate2Rota = models.FloatField("BanRate2Rota")
+    mostPopularPickOrder = models.IntegerField("MostPopularPickOrder")
+    blindPick = models.FloatField("BlindPick")
+    mostPopularRole = models.CharField("MostPopularRole", max_length=240)
+
+class ChampionPool(models.Model):
+    summonnerName = models.CharField("SummonnerName", max_length=240)
+    championName = models.CharField("ChampionName", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    globalPickRate = models.FloatField("GlobalPickRate")
+    winRate = models.FloatField("WinRate")
+    nbGames = models.IntegerField("NbGames")
+    kda = models.FloatField("KDA")
 

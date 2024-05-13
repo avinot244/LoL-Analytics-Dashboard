@@ -11,6 +11,7 @@ for index, row in df.iterrows():
         tournament = row["Tournament"],
         matchId = row["MatchId"],
         summonnerName = row["SummonnerName"],
+        patch = row["Patch"],
         seriesId = row["SeriesId"],
         xpd15 = row["XPD@15"],
         gd15 = row["GD@15"],
@@ -28,6 +29,7 @@ for index, row in df.iterrows():
         jungleAllyTopPresence = row["jungleAllyTopPresence"],
         jungleEnemyTopPresence = row["jungleEnemyTopPresence"],
         riverTopPresence = row["riverTopPresence"],
+        gameNumber = row["GameNumber"]
     )
 
 

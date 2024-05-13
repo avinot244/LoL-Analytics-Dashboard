@@ -15,15 +15,25 @@ import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorADC_get_player_list(request):
-    allObjects = BehaviorADC.objects.all()
+def behaviorADC_get_player_list(request, patch):
+    allObjects = BehaviorADC.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
-
     for ADCObject in allObjects:
         summonnerNameList.append(ADCObject.summonnerName)
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
+
+@api_view(['GET'])
+def behaviorADC_get_player_list_tournament(request, patch, tournament):
+    allObjects = BehaviorADC.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    summonnerNameList : list = list()
+
+    for ADCObject in allObjects:
+        if not(ADCObject.summonnerName in summonnerNameList):
+            summonnerNameList.append(ADCObject.summonnerName)
+        
+    return Response(summonnerNameList)
  
 @api_view(['PATCH'])
 def behaviorADC_updatePatch(request):
@@ -56,6 +66,20 @@ def behaviorADC_stats(request, summonnerName):
     
     queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName)
     serializer = BehaviorADCSerializer(queryResult,  context={"request": request}, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def behaviorADC_stats_tournament(request, summonnerName, tournament):
+    summonnerNameList : list = list()
+    allObjects = BehaviorADC.objects.filter(tournament__exact=tournament)
+    for res in allObjects:
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
+    serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -95,29 +119,20 @@ def behaviorADC_stats_patch(request, summonnerName, patch, tournament):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def behaviorADC_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
-    tournamentDict = {
-        "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
-    }
-    # Checking if the tournaments in tournamentDict are in our database
-    response = requests.get(
-        API_URL + 'api/dataAnalysis/tournament/getList'
-    )
-    tournamentListDB : list = list()
-    for tournament in response.json():
-        tournamentListDB.append(tournament)
-     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+def behaviorADC_stats_game(request, summonnerName, seriesId, gameNumber):
+    summonnerNameList : list = list()
+    allObjects = BehaviorADC.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    for res in allObjects:
+        print(res)
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
-        if not(flag):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    queryResult = BehaviorADC.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    serializer = BehaviorADCSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
 
-    wantedDB : pd.DataFrame = getDataBase("ADC", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="ADC")
-
-    return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
 def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
@@ -145,7 +160,8 @@ def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
         API_URL + "api/behavior/ADC/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
+    print(wantedDB.columns)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -171,9 +187,72 @@ def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     
     # Getting the db we want given a player and the patch
     response = requests.get(
-        API_URL + "api/behavior/ADC/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+        API_URL + "api/behavior/ADC/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="ADC")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
     return Response(transformed_wantedDB_scaled)
 
+@api_view(['GET'])
+def behaviorADC_behavior_tournament(request, summonnerName, uuid, wantedTournament, comparisonTournament):
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Checking if the tournament in tournamentDict are in our database
+    response = requests.get(
+        API_URL + 'api/dataAnalysis/tournament/getList'
+    )
+    tournamentListDB : list = list()
+    for tournament in response.json():
+        tournamentListDB.append(tournament)
+    
+    for key in tournamentDict.keys():
+        flag : bool = tournamentDict[key] in tournamentListDB
+    
+        if not(flag):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/ADC/stats/{}/{}/".format(summonnerName, tournamentDict["wanted"])
+    )
+    wantedDB = pd.DataFrame(response.json())
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
+    return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorADC_behavior_game(request, summonnerName, uuid, seriesId, gameNumber, wantedTournament, comparisonTournament):
+    print("Behavior Game")
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/ADC/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
+    )
+    wantedDB = pd.DataFrame(response.json())
+    print(wantedDB)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="ADC")
+    return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorADC_behavior_singleGamesLatest(request, summonnerName, uuid, limit, wantedTournament, comparisonTournament):
+    gameResponse = requests.get(
+        API_URL + "api/behavior/ADC/stats/latest/{}/{}/{}/".format(summonnerName, limit, wantedTournament)
+    )
+
+    gameList : list = list(gameResponse.json())
+
+    resultList : list = list()
+
+    for gameObject in gameList:
+        behaviorGame = requests.get(
+            API_URL + "api/behavior/ADC/compute/{}/{}/{}/{}/{}/{}/".format(summonnerName, uuid, gameObject["seriesId"], gameObject["gameNumber"], wantedTournament, comparisonTournament)
+        )
+        resultList.append(behaviorGame.json())
+
+    return Response(resultList)

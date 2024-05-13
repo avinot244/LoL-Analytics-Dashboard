@@ -1,15 +1,15 @@
-.wrapper-overview{
+.wrapper-champOverview{
     background: rgba(43,48,53, 0.95);
 	height: 100vh;
 	color: white;
-}
-
-@media all and (max-width: 1940px){
-	.wrapper-overview{
-		height: 100%;
-	}
+	overflow: auto;
 }
 
 h1 {
     text-align: center;
+}
+
+.simple-tabpanel-0, .simple-tabpanel-1, .simple-tabpanel-2, .simple-tabpanel-3, .simple-tabpanel-4, .simple-tabpanel-5{
+	width:1000px;
+	margin: 0 auto;
 }
