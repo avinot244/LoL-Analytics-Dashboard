@@ -1,7 +1,9 @@
 from .globals import DATA_PATH, ROLE_LIST
 
-import pandas as pd
 from behaviorADC.models import *
+
+import pandas as pd
+import re
 
 def isGameDownloaded(seriesId : int, gameNumber : int):
     df = pd.read_csv(DATA_PATH + "games/data_metadata.csv", sep=";")
@@ -9,7 +11,6 @@ def isGameDownloaded(seriesId : int, gameNumber : int):
         if row["SeriesId"] == seriesId and row["gameNumber"] == gameNumber:
             return True
     return False
-
 
 def import_Behavior_ADC():
     csv_file_path = "./databases/behavior/behavior/behavior_ADC.csv"
@@ -324,3 +325,9 @@ def import_Behavior():
     import_Behavior_Mid()
     import_Behavior_ADC()
     import_Behavior_Support()
+
+
+def convertDate(date : str):
+    return re.sub(r"T[0-9]+:[0-9]+:[0-9]+Z", "", date)
+
+# T[0-9]+:[0-9]+:[0-9]+Z

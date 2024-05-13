@@ -13,7 +13,7 @@ from dataAnalysis.globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_date_from_seriesId, get_tournament_from_seriesId
-from dataAnalysis.utils import isGameDownloaded
+from dataAnalysis.utils import isGameDownloaded, convertDate
 
 def get_all_event_types(json_path_details:str) -> dict:
     with open(json_path_details, 'r') as f:
@@ -86,7 +86,7 @@ def getData(seriesId : int, gameNumber : int):
         if not(isGameDownloaded(seriesId, gameNumber)):
             with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
                 writer = csv.writer(csv_file, delimiter=";")
-                matchDate = get_date_from_seriesId(seriesId)
+                matchDate = convertDate(get_date_from_seriesId(seriesId))
                 matchName = match + "dataSeparatedRIOT"
                 patch = data.patch
                 teamBlue = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)

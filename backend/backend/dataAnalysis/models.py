@@ -2,7 +2,7 @@ from django.db import models
 
 
 class GameMetadata(models.Model):
-    date = models.CharField("Date", max_length=240)
+    date = models.DateField("Date")
     tournament = models.CharField("Tournament", max_length=240)
     name = models.CharField("Name", max_length=240)
     patch = models.CharField("Patch", max_length=240)
