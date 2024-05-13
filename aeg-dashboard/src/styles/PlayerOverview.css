@@ -2,23 +2,13 @@
     background: rgba(43,48,53, 0.95);
 	height: 100vh;
 	color: white;
-}
-
-@media all and (max-width: 1940px){
-	.wrapper-overview-player{
-		height: 100%;
-	}
-	
+	overflow: auto;
 }
 
 h1 {
     text-align: center;
 }
 
-.playerOverview-content-wrapper{
-	display: flex;
-	flex-wrap: wrap;
-}
 
 .dashboard-playerOverview-controlPannel{
     width: 100%;
@@ -26,7 +16,6 @@ h1 {
 
 .dashboard-playerOverview-controlPannel-list{
     list-style-type: none;
-	padding: 32px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -36,42 +25,57 @@ h1 {
     padding: 5px;
 }
 
-.playerOverview-champion-list{
-	list-style-type: none;
-	padding: 32px;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: center;
-}
 
-.playerOverview-champion-list li {
-	padding: 5px;
-	margin-right: 5px;
-}
 
-.playerOverview-graph{
-	width: 400px;
-	height: 400px;
-	background-color: black;
-}
+
 
 .playerOverview-playerSelect{
 	width: fit-content;
 	margin: 0 auto;
 	display: flex;
 }
-.playerOverview-playerSelect .searchComp{
-	padding-right: 25px;
+
+.playerOverview-playerSelect ul li{
+	padding-left: 10px;
 }
+
+.playerOverview-playerSelect ul li:last-child{
+	padding-left: 10px;
+}
+
+
 
 .searchComp{
 	width: 250px;
 }
-.playerOverview-other-content{
-	margin-left: 10px;
+
+
+
+
+.dashboard-playerOverview-playerSelect-list{
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
 }
 
-.playerOverview-stats div p{
-	font-size: large;
+
+
+.playerOverview-searchTournament{
+	width: fit-content;
+	margin: 5px auto;
+}
+
+.dashboard-playerOverview-searchTournament-list{
+	width: fit-content;
+	list-style-type: none;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+}
+
+.dashboard-playerOverview-searchTournament-list li{
+	margin-left: 10px;
 }

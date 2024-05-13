@@ -1,34 +1,69 @@
 
-import Select from 'react-select';
-import "../styles/SelectComp.css"
-import { useState } from 'react';
+import { Autocomplete } from '@mui/material';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import { ThemeProvider, createTheme } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ClearIcon from '@mui/icons-material/Clear';
 
-function SearchComp({selectedElement, setSelectedElement, elementList}) {
+const theme = createTheme ({
+	palette: {
+		primary : {
+			main: '#fff',
+		},
+		text : {
+			disabled: '#fff'
+		}
+		
+	},
+	action: {
+		active: '#fff'
+	}
+	
+})
 
-	const playerList = [
-		{value: 'aeg_agresivoo', label: "AEG Agresivoo"},
-		{value: "aeg_ryuzaki", label: "AEG Ryuzaki"},
-		{value: "aeg_nafkelah", label: "AEG Nafkelah"},
-		{value: "aeg_hid0", label: "AEG Hid0"},
-		{value: "aeg_veignorem", label: "AEG Veignorem"},
-		{value: "g2_broken_blade", label: "G2 Broken Blade"},
-		{value: "g2_yike", label: "G2 Yike"},
-		{value: "g2_caps", label: "G2 Caps"},
-		{value: "g2_hans_sama", label: "G2 Hans Sama"},
-		{value: "g2_mikyx", label: "G2 Mikyx"}
-	]
 
+
+
+function SearchComp({setSelectedElement, elementList, label, width, multiple, defaultValue}) {
+	const handleChange = (value) => {
+		if (value != null) {
+			setSelectedElement(value)
+		}
+	}
 	return (	
 		<>
-			<Select
-				className="searchComp"
-				classNamePrefix="select"
-				isClearable={true}
-				isSearchable={true}
-				options={elementList}
-				onChange={(element) => setSelectedElement(element.value)}
+			<ThemeProvider theme={theme}>
+				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+					<Autocomplete
+						defaultValue={defaultValue}
+						multiple={multiple}
+						clearIcon={<ClearIcon color="error"/>}
+						popupIcon={<ArrowDropDownIcon color="primary"/>}
+						className="searchComp"
+						options={elementList}
+						renderInput={(params) => (
+							<TextField 
+								className='textField-searchComp'
+								{...params} 
+								label={label}
+								sx={{ 
+									input: { color: 'white'},
+									borderColor: 'white'
+								}}
+								focused
+								fullWidth={true}
+
+							/>
+							
+						)}
+						onChange={(_, value) => {handleChange(value)}}
+						sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
+						fullWidth={true}
+					/>
+				</Box>
 				
-			/>
+			</ThemeProvider>
 		</>
 	);
 }

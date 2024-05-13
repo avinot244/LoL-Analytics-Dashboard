@@ -30,62 +30,118 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Behavior Top
-    path('api/behavior/Top/getSummonnerList', Topviews.behaviorTop_get_player_list), # Getting the list of unique players
+    path('api/behavior/Top/getSummonnerList/<str:patch>/', Topviews.behaviorTop_get_player_list), # Getting the list of unique players
+    path('api/behavior/Top/getSummonnerListTournament/<str:patch>/<str:tournament>/', Topviews.behaviorTop_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Top/patch/update', Topviews.behaviorTop_updatePatch), # Updating patch values in the production database
     path('api/behavior/Top/stats/<str:summonnerName>', Topviews.behaviorTop_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Top/stats/<str:summonnerName>/<str:tournament>/', Topviews.behaviorTop_stats_tournament),
+    
+    path('api/behavior/Top/stats/game/<str:summonnerName>/<int:seriesId>/<int:gameNumber>/', Topviews.behaviorTop_stats_game),
+    
     path('api/behavior/Top/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Topviews.behaviorTop_stats_latest), # Getting last limit stats of a given summonnerName
     path('api/behavior/Top/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Topviews.behaviorTop_stats_patch), # Getting patch stats of a given summonnerName
-    path('api/behavior/Top/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_player), # Computing behavior analysis given a model and a player
     path('api/behavior/Top/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/Top/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
+    
+    path('api/behavior/Top/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_game),
+    path('api/behavior/Top/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_singleGamesLatest),
+    
+    path('api/behavior/Top/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_tournament),
+
 
     # Behavior Jungle
-    path('api/behavior/Jungle/getSummonnerList', Jungleviews.behaviorJungle_get_player_list), # Getting the list of unique players
+    path('api/behavior/Jungle/getSummonnerList/<str:patch>/', Jungleviews.behaviorJungle_get_player_list), # Getting the list of unique players
+    path('api/behavior/Jungle/getSummonnerListTournament/<str:patch>/<str:tournament>/', Jungleviews.behaviorJungle_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Jungle/patch/update', Jungleviews.behaviorJungle_updatePatch), # Updating patch values in the production database
     path('api/behavior/Jungle/stats/<str:summonnerName>', Jungleviews.behaviorJungle_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Jungle/stats/<str:summonnerName>/<str:tournament>/', Jungleviews.behaviorJungle_stats_tournament),
+    
+    path('api/behavior/Jungle/stats/game/<str:summonnerName>/<int:seriesId>/<int:gameNumber>/', Jungleviews.behaviorJungle_stats_game),
+    
     path('api/behavior/Jungle/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Jungleviews.behaviorJungle_stats_latest), # Getting last limit stats of a given summonnerName
     path('api/behavior/Jungle/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Jungleviews.behaviorJungle_stats_patch), # Getting patch stats of a given summonnerName
-    path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_player), # Computing behavior analysis given a model and a player
     path('api/behavior/Jungle/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/Jungle/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
+    
+    path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_game),
+    path('api/behavior/Jungle/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_singleGamesLatest),
+    
+    path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_tournament),
+
 
     # Behavior Mid
-    path('api/behavior/Mid/getSummonnerList', Midviews.behaviorMid_get_player_list), # Getting the list of unique players
+    path('api/behavior/Mid/getSummonnerList/<str:patch>/', Midviews.behaviorMid_get_player_list), # Getting the list of unique players
+    path('api/behavior/Mid/getSummonnerListTournament/<str:patch>/<str:tournament>/', Midviews.behaviorMid_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Mid/patch/update', Midviews.behaviorMid_updatePatch), # Updating patch values in the production database
     path('api/behavior/Mid/stats/<str:summonnerName>', Midviews.behaviorMid_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Mid/stats/<str:summonnerName>/<str:tournament>/', Midviews.behaviorMid_stats_tournament),
+    
+    path('api/behavior/Mid/stats/game/<str:summonnerName>/<int:seriesId>/<int:gameNumber>/', Midviews.behaviorMid_stats_game),
+    
     path('api/behavior/Mid/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Midviews.behaviorMid_stats_latest), # Getting last limit stats of a given summonnerName
     path('api/behavior/Mid/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Midviews.behaviorMid_stats_patch), # Getting patch stats of a given summonnerName
-    path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_player), # Computing behavior analysis given a model and a player
     path('api/behavior/Mid/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/Mid/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
     
+    path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_game),
+    path('api/behavior/Mid/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_singleGamesLatest),
+    
+    path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_tournament),
+
+
     # Behavior ADC
-    path('api/behavior/ADC/getSummonnerList', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
+    path('api/behavior/ADC/getSummonnerList/<str:patch>/', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
+    path('api/behavior/ADC/getSummonnerListTournament/<str:patch>/<str:tournament>/', ADCviews.behaviorADC_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch values in the production database
     path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
+    path('api/behavior/ADC/stats/<str:summonnerName>/<str:tournament>/', ADCviews.behaviorADC_stats_tournament),
+
+    path('api/behavior/ADC/stats/game/<str:summonnerName>/<int:seriesId>/<int:gameNumber>/', ADCviews.behaviorADC_stats_game),
+
     path('api/behavior/ADC/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', ADCviews.behaviorADC_stats_latest), # Getting last limit stats of a given summonnerName
     path('api/behavior/ADC/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', ADCviews.behaviorADC_stats_patch), # Getting patch stats of a given summonnerName
-    path('api/behavior/ADC/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_player), # Computing behavior analysis given a model and a player
     path('api/behavior/ADC/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/ADC/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
+    
+    path('api/behavior/ADC/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_game),
+    path('api/behavior/ADC/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_singleGamesLatest),
+
+
+    path('api/behavior/ADC/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_tournament),
+
+
 
     # Behavior Support
-    path('api/behavior/Support/getSummonnerList', Supportviews.behaviorSupport_get_player_list), # Getting the list of unique players
+    path('api/behavior/Support/getSummonnerList/<str:patch>/', Supportviews.behaviorSupport_get_player_list), # Getting the list of unique players
+    path('api/behavior/Support/getSummonnerListTournament/<str:patch>/<str:tournament>/', Supportviews.behaviorSupport_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Support/patch/update', Supportviews.behaviorSupport_updatePatch), # Updating patch values in the production database
     path('api/behavior/Support/stats/<str:summonnerName>', Supportviews.behaviorSupport_stats), # Getting stats of a given summonnerName
+    path('api/behavior/Support/stats/<str:summonnerName>/<str:tournament>/', Supportviews.behaviorSupport_stats_tournament),
+    
+    path('api/behavior/Support/stats/game/<str:summonnerName>/<int:seriesId>/<int:gameNumber>/', Supportviews.behaviorSupport_stats_game),
+    
     path('api/behavior/Support/stats/latest/<str:summonnerName>/<int:limit>/<str:tournament>/', Supportviews.behaviorSupport_stats_latest), # Getting last limit stats of a given summonnerName
     path('api/behavior/Support/stats/patch/<str:summonnerName>/<str:patch>/<str:tournament>/', Supportviews.behaviorSupport_stats_patch), # Getting patch stats of a given summonnerName
-    path('api/behavior/Support/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_player), # Computing behavior analysis given a model and a player
     path('api/behavior/Support/compute/<str:summonnerName>/<int:limit>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_latest), # Computing latest behavior analysis given a model and a player
     path('api/behavior/Support/compute/<str:summonnerName>/<str:patch>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_patch), # Computing behavior analysis on a given patch for a given player and model
+    path('api/behavior/Support/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_tournament),
+    
+    path('api/behavior/Support/compute/<str:summonnerName>/<str:uuid>/<int:seriesId>/<int:gameNumber>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_game),
+    path('api/behavior/Support/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_singleGamesLatest),
+
     path('api/behavior/Support/deleteDuplicates', Supportviews.behaviorSupport_deleteDuplicates),
     
     # Behavior Models
     path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
     path('api/behaviorModels/<str:role>/computeModel', behaviorModelsViews.compute_model),
     path('api/behaviorModels/<str:uuid>/<str:role>/getModel/', behaviorModelsViews.get_model),
+    path('api/behaviorModels/getLoadingMatrix/<str:uuid>/<str:role>/', behaviorModelsViews.get_loading_matrix),
+    path('api/behaviorModels/deleteAllMetadata/', behaviorModelsViews.deleteAllModelsMetadata),
+    path('api/behaviorModels/getAll/', behaviorModelsViews.get_all_models),
 
     # Data Analysis
+    path('api/dataAnalysis/deleteGame/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.deleteGame),
+    path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/', dataAnalysisViews.getTournamentFromPlayer),
     path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
@@ -93,13 +149,40 @@ urlpatterns = [
 
     path('api/dataAnalysis/updateBins/', dataAnalysisViews.update_bins),
     path('api/dataAnalysis/deleteAllMeta/', dataAnalysisViews.delete_all_gameMetadata),
+    path('api/dataAnalysis/patch/getFromTournament/<str:tournament>/', dataAnalysisViews.getPatchListFromTournament),
+
+    path('api/dataAnalysis/computeBehaviorStats/<int:time>/', dataAnalysisViews.computeNewBehaviorStats),
+    path('api/dataAnalysis/deleteAllBehaviorStats/', dataAnalysisViews.deleteAllBehaviorStats),
+
+    path('api/dataAnalysis/getListDownlodableTournament/<int:year>/', dataAnalysisViews.getListOfDownloadableTournament),
+    path('api/dataAnalysis/getTournamentListShortened/', dataAnalysisViews.get_tournament_list_shortened),
+    path('api/dataAnalysis/updateDatabase/<str:tournamentList>/', dataAnalysisViews.updateDatabase),
+    path('api/dataAnalysis/getGameList/<str:tournament>/', dataAnalysisViews.getGameList),
+
+    path('api/dataAnalysis/getGamePositionDensity/', dataAnalysisViews.getGamePositionDensity),
+    path('api/dataAnalysis/gameAnalysis/players/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsPlayers),
+    path('api/dataAnalysis/gameAnalysis/teams/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsTeams),
+
 
     # Draft
     path('api/draft/saveDrafts/', draftViews.saveDrafts),
-    path('api/draft/getLatest/<int:limit>/<int:scrim>/', draftViews.getLatestDraft),
-    path('api/draft/getPatch/<str:patch>/<int:scrim>/', draftViews.getDraftPatch),
+    path('api/draft/getLatest/<int:limit>/<int:scrimStr>/', draftViews.getLatestDraft),
+    path('api/draft/getPatch/<str:patch>/<int:scrimStr>/', draftViews.getDraftPatch),
     path('api/draft/getTournament/<str:tournament>/', draftViews.getDraftTournament),
     path('api/draft/getChampion/<str:championName>/<str:patch>/', draftViews.getDraftChampion),
+    path('api/draft/getTeamNames/<int:seriesId>/<int:gameNumber>/', draftViews.getTeamNames),
+    path('api/draft/delete/', draftViews.deleteAllDrafts),
+
+    path('api/draft/championStats/updateStats/<str:tournamentListStr>/', draftViews.updateChampionDraftStats),
+    path('api/draft/championStats/getStats/<str:patch>/<str:side>/<str:tournament>/', draftViews.getChampionDraftStats),
+
+    path('api/draft/championStats/deleteChampionGameStats/', draftViews.deleteAllChampionDraftStats),
+
+    path('api/draft/championStats/getTopChampions/<str:role>/<str:filter>/<str:side>/<str:patch>/<str:tournament>/', draftViews.getTopChampions),
+
+    path('api/draft/updatePlayerStat/<str:tournamentListStr>/', draftViews.updatePlayerStats),
+    path('api/draft/playerStat/<str:summonnerName>/<str:tournament>/<str:filter>/', draftViews.getPlayerStats),
+    path('api/draft/playerStat/deleteAll/', draftViews.deleteAllChampionPool),
 
 ]
 

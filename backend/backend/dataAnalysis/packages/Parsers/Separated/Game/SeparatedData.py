@@ -36,6 +36,7 @@ class SeparatedData:
             self.gameSnapshotList : list[Snapshot] = list()
             self.begGameTime : int = 0
             self.endGameTime : int = 0
+            self.patch : str = ""
             self.draftSnapshotList : list[DraftSnapshot] = list()
             print("Parsing game snapshot files from root directory {}".format(root_dir))
 
@@ -47,7 +48,9 @@ class SeparatedData:
                         data = ujson.loads(f.read())
                     
                     df = pd.json_normalize(data)
-
+                    if df["rfc461Schema"][0] == "game_info":
+                        self.patch = df["gameVersion"][0]
+                    
                     if df['rfc461Schema'][0] == "stats_update":
                         teamPlayers : list[list[Player]] = [[],[]]
                         # Parsing players
@@ -194,8 +197,7 @@ class SeparatedData:
                 
             # self.begGameTime = self.gameSnapshotList[0].gameTime
             self.matchName = ""
-            
-                    
+    
     def getPlayerList(self):
         firstGameSnapshot = self.gameSnapshotList[0]
         playersTeamOne : list[str] = firstGameSnapshot.teams[0].getPlayerList()
@@ -263,8 +265,7 @@ class SeparatedData:
         teamName[teamNameTwo] = 1
         return teamName
 
-
-    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str):
+    def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str, teamBlue : str, teamRed : str):
         draft : DraftSnapshot = self.draftSnapshotList[-1]
         # Asserting the right open option
         if new:
@@ -277,7 +278,7 @@ class SeparatedData:
         with open(full_path, open_option) as csv_file:
             writer = csv.writer(csv_file, delimiter=";")
             if new:
-                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumber", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
+                header = ["Date", "Tournament", "Patch", "SeriesId", "Winner", "GameNumber", "teamBlue", "teamRed", "BB1", "BB2", "BB3", "BB4", "BB5", "BP1", "BP2", "BP3", "BP4", "BP5", "RB1", "RB2", "RB3", "RB4", "RB5", "RP1", "RP2", "RP3", "RP4", "RP5"]
                 writer.writerow(header)
             
             data : list = list()
@@ -287,6 +288,8 @@ class SeparatedData:
             data.append(seriesId)
             data.append(self.winningTeam)
             data.append(gameNumber)
+            data.append(teamBlue)
+            data.append(teamRed)
 
             if len(draft.bans) < 10:
                 for _ in range(10-len(draft.bans)):
@@ -311,7 +314,7 @@ class SeparatedData:
             
             # Getting picks fo red side
             for i in range(len(draft.teams[1].playerDraftList)):
-                data.append(convertToChampionName(draft.teams[0].playerDraftList[i].championID))
+                data.append(convertToChampionName(draft.teams[1].playerDraftList[i].championID))
             writer.writerow(data)
         
         # Writing the draft player picks database

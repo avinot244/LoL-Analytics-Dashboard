@@ -1,9 +1,14 @@
 import '../styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import Home from "./Home"
-import ChampionOverview from "./ChampionOverview"
-import PlayerOverview from "./PlayerOverview"
-import GameOverview from './GameOverview';
+import Home from "./Home/Home"
+import ChampionOverview from "./ChampionOverview/ChampionOverview"
+import ChampionOverviewScrim from './ChampionOverview/ChampionOverviewScrim';
+import PlayerOverview from "./PlayerOverview/PlayerOverview"
+import PlayerOverviewScrim from "./PlayerOverview/PlayerOverviewScrim"
+import GameOverview from './GameOverview/GameOverview';
+import Downloader from './Monitoring/Downloader';
+import PCAModelMaker from './Monitoring/PCAModelMaker';
+import PCAModelOverview from './Monitoring/PCAModelOverview';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -13,7 +18,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path:'/ChampionOverview/Scrims',
-		element: <ChampionOverview />
+		element: <ChampionOverviewScrim />
 	},
 	{
 		path:'/ChampionOverview/Esports',
@@ -21,7 +26,7 @@ const router = createBrowserRouter([
 	},
 	{
 		path:'/PlayerOverview/Scrims',
-		element: <PlayerOverview/>
+		element: <PlayerOverviewScrim/>
 	},
 	{
 		path:'/PlayerOverview/Esports',
@@ -34,6 +39,18 @@ const router = createBrowserRouter([
 	{
 		path:'/GameOverview/Esports',
 		element: <GameOverview/>
+	},
+	{
+		path:'/Monitoring/Download',
+		element: <Downloader/>
+	},
+	{
+		path:'/Monitoring/PCAMaker',
+		element: <PCAModelMaker/>
+	},
+	{
+		path:'/Monitoring/PCAOverview',
+		element: <PCAModelOverview/>
 	}
 ])
 

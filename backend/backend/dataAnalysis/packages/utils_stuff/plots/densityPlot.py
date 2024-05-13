@@ -3,9 +3,10 @@ from scipy.stats import gaussian_kde
 import matplotlib.pyplot as plt
 from PIL import Image
 
-from Parsers.Separated.Game.SeparatedData import SeparatedData
-from utils_stuff.Position import Position
-from utils_stuff.globals import *
+from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
+from dataAnalysis.packages.utils_stuff.Position import Position
+from dataAnalysis.packages.utils_stuff.globals import *
+from dataAnalysis.globals import DATA_PATH
 
 
 def getPositionsMultipleGames(participantNames : list[str], dataLst : list[SeparatedData]):
@@ -17,6 +18,16 @@ def getPositionsMultipleGames(participantNames : list[str], dataLst : list[Separ
         for playerId in participantIds:
             participantPositions += data.getPlayerPositionHistory(playerId)
     
+    return participantPositions
+
+def getPositionsSingleGame(participantNames : list[str], data : SeparatedData):
+    # Getting player positions
+    participantIds : list[int] = [data.getPlayerID(playerName) for playerName in participantNames]
+    participantPositions : list[Position] = list()
+    
+    for playerId in participantIds:
+        participantPositions += data.getPlayerPositionHistory(playerId)
+
     return participantPositions
 
 def getPositionsSingleGame(participantNames : list[str], data : SeparatedData):
@@ -53,7 +64,7 @@ def densityPlot(participantPositions : list[Position], graphName : str, save_pat
     plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', zorder=-1)
 
     # Plotting minimap
-    img = np.asarray(Image.open("../Summoner's_Rift_MinimapTransparent.png"))
+    img = np.asarray(Image.open(DATA_PATH + "plots/Summoner's_Rift_MinimapTransparent.png"))
     ax.imshow(img, extent=[0, MINIMAP_WIDTH, 0, MINIMAP_HEIGHT])
 
     towerRedX = [pos.x for pos in towerPositionRedSide]

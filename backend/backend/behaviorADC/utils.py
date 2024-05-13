@@ -20,7 +20,6 @@ def getFAModel(behaviorModelsMetadata : BehaviorModelsMetadata) -> FactorAnalyze
     return fa
     
 def project(database : pd.DataFrame, model : FactorAnalyzer, role : str, header_offset : int):
-    # Scaling database
     metadataBehavior = database[database.columns[:header_offset]]
     # Building our transformed database from the model
     transformed_database_content : list = list()
@@ -51,9 +50,9 @@ def compute(wantedDB : pd.DataFrame, uuid : str, tournamentDict : dict, header_o
     # Scaling the wantedDB
     scaler : StandardScaler = StandardScaler()
     df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role), sep=";")
-    transformed_scaled_df : pd.DataFrame = project(df, fa_model, role, 6)
+    transformed_scaled_df : pd.DataFrame = project(df, fa_model, role, 7)
     database_for_scaler = transformed_scaled_df[transformed_scaled_df["Tournament"].isin([tournamentDict["comparison"]])]
-    scaler.fit(database_for_scaler[database_for_scaler.columns[6:]])
+    scaler.fit(database_for_scaler[database_for_scaler.columns[7:]])
 
     # Scaling the transformed_wantedDB with the same scaler used when scaling the transformed database 
     # used when building the FactorAnalysis model

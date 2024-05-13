@@ -13,8 +13,8 @@ import pandas as pd
 import requests
 
 @api_view(['GET'])
-def behaviorMid_get_player_list(request):
-    allObjects = BehaviorMid.objects.all()
+def behaviorMid_get_player_list(request, patch):
+    allObjects = BehaviorMid.objects.filter(patch__contains=patch)
     summonnerNameList : list = list()
 
     for MidObject in allObjects:
@@ -22,7 +22,18 @@ def behaviorMid_get_player_list(request):
     
     df = pd.DataFrame({"summonnerName": summonnerNameList})
     return Response(df["summonnerName"].unique())
- 
+
+@api_view(['GET'])
+def behaviorMid_get_player_list_tournament(request, patch, tournament):
+    allObjects = BehaviorMid.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    summonnerNameList : list = list()
+
+    for MidObject in allObjects:
+        if not(MidObject.summonnerName in summonnerNameList):
+            summonnerNameList.append(MidObject.summonnerName)
+        
+    return Response(summonnerNameList)
+
 @api_view(['PATCH'])
 def behaviorMid_updatePatch(request):
     csv_file_path = "./databases/behavior/behavior/behavior_Mid.csv"
@@ -54,6 +65,20 @@ def behaviorMid_stats(request, summonnerName):
     
     queryResult = BehaviorMid.objects.filter(summonnerName__exact=summonnerName)
     serializer = BehaviorMidSerializer(queryResult,  context={"request": request}, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def behaviorMid_stats_tournament(request, summonnerName, tournament):
+    summonnerNameList : list = list()
+    allObjects = BehaviorMid.objects.filter(tournament__exact=tournament)
+    for res in allObjects:
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    queryResult = BehaviorMid.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
+    serializer = BehaviorMidSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -93,30 +118,23 @@ def behaviorMid_stats_patch(request, summonnerName, patch, tournament):
     serializer = BehaviorMidSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
+
 @api_view(['GET'])
-def behaviorMid_behavior_player(request, summonnerName, uuid, wantedTournament, comparisonTournament):
-    tournamentDict = {
-        "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
-    }
-    # Checking if the tournaments in tournamentDict are in our database
-    response = requests.get(
-        API_URL + 'api/dataAnalysis/tournament/getList'
-    )
-    tournamentListDB : list = list()
-    for tournament in response.json():
-        tournamentListDB.append(tournament)
-     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+def behaviorMid_stats_game(request, summonnerName, seriesId, gameNumber):
+    summonnerNameList : list = list()
+    allObjects = BehaviorMid.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    for res in allObjects:
+        print(res)
+        if not(res.summonnerName in summonnerNameList):
+            summonnerNameList.append(res.summonnerName)
+    if not(summonnerName in summonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
-        if not(flag):
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    queryResult = BehaviorMid.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    serializer = BehaviorMidSerializer(queryResult, context={"request": request}, many=True)
+    return Response(serializer.data)
 
-    wantedDB : pd.DataFrame = getDataBase("Mid", summonnerName, tournamentDict["wanted"]) # Get the related database for the player
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=6, role="Mid")
 
-    return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
 def behaviorMid_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
@@ -144,7 +162,7 @@ def behaviorMid_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
         API_URL + "api/behavior/Mid/stats/latest/{}/{}/{}/".format(summonnerName, limit, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Mid")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Mid")
     return Response(transformed_wantedDB_scaled)
 
 @api_view(['GET'])
@@ -170,8 +188,72 @@ def behaviorMid_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     
     # Getting the db we want given a player and the patch
     response = requests.get(
-        API_URL + "api/behavior/Mid/stats/patch/{}/{}/{}".format(summonnerName, patch, tournamentDict["wanted"])
+        API_URL + "api/behavior/Mid/stats/patch/{}/{}/{}/".format(summonnerName, patch, tournamentDict["wanted"])
     )
     wantedDB = pd.DataFrame(response.json())
-    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=7, role="Mid")
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Mid")
     return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorMid_behavior_tournament(request, summonnerName, uuid, wantedTournament, comparisonTournament):
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Checking if the tournament in tournamentDict are in our database
+    response = requests.get(
+        API_URL + 'api/dataAnalysis/tournament/getList'
+    )
+    tournamentListDB : list = list()
+    for tournament in response.json():
+        tournamentListDB.append(tournament)
+    
+    for key in tournamentDict.keys():
+        flag : bool = tournamentDict[key] in tournamentListDB
+    
+        if not(flag):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/Mid/stats/{}/{}/".format(summonnerName, tournamentDict["wanted"])
+    )
+    wantedDB = pd.DataFrame(response.json())
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Mid")
+    return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorMid_behavior_game(request, summonnerName, uuid, seriesId, gameNumber, wantedTournament, comparisonTournament):
+    print("Behavior Game")
+    tournamentDict = {
+        "wanted": wantedTournament,
+        "comparison": comparisonTournament,
+    }
+
+    # Getting the db we want given a player and a tournament
+    response = requests.get(
+        API_URL + "api/behavior/Mid/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
+    )
+    wantedDB = pd.DataFrame(response.json())
+    print(wantedDB)
+    transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Mid")
+    return Response(transformed_wantedDB_scaled)
+
+@api_view(['GET'])
+def behaviorMid_behavior_singleGamesLatest(request, summonnerName, uuid, limit, wantedTournament, comparisonTournament):
+    gameResponse = requests.get(
+        API_URL + "api/behavior/Mid/stats/latest/{}/{}/{}/".format(summonnerName, limit, wantedTournament)
+    )
+
+    gameList : list = list(gameResponse.json())
+
+    resultList : list = list()
+
+    for gameObject in gameList:
+        behaviorGame = requests.get(
+            API_URL + "api/behavior/Mid/compute/{}/{}/{}/{}/{}/{}/".format(summonnerName, uuid, gameObject["seriesId"], gameObject["gameNumber"], wantedTournament, comparisonTournament)
+        )
+        resultList.append(behaviorGame.json())
+
+    return Response(resultList)
