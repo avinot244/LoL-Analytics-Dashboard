@@ -9,8 +9,12 @@ from behaviorADC.serializers import *
 from behaviorADC.globals import API_URL
 from behaviorADC.utils import getDataBase, compute
 
+from dataAnalysis.globals import DATE_LIMIT
+
 import pandas as pd
 import requests
+from datetime import datetime
+
 
 @api_view(['GET'])
 def behaviorSupport_get_player_list(request, patch):
@@ -25,7 +29,10 @@ def behaviorSupport_get_player_list(request, patch):
 
 @api_view(['GET'])
 def behaviorSupport_get_player_list_tournament(request, patch, tournament):
-    allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact=tournament)
     summonnerNameList : list = list()
 
     for SupportObject in allObjects:
@@ -70,7 +77,10 @@ def behaviorSupport_stats(request, summonnerName):
 @api_view(['GET'])
 def behaviorSupport_stats_tournament(request, summonnerName, tournament):
     summonnerNameList : list = list()
-    allObjects = BehaviorSupport.objects.filter(tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorSupport.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorSupport.objects.filter(tournament__exact=tournament)
     for res in allObjects:
         if not(res.summonnerName in summonnerNameList):
             summonnerNameList.append(res.summonnerName)
@@ -130,9 +140,6 @@ def behaviorSupport_stats_game(request, summonnerName, seriesId, gameNumber):
     queryResult = BehaviorSupport.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
     serializer = BehaviorSupportSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
-
-    
-
 
 @api_view(['GET'])
 def behaviorSupport_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
@@ -254,7 +261,6 @@ def behaviorSupport_behavior_singleGamesLatest(request, summonnerName, uuid, lim
 
     return Response(resultList)
     
-
 @api_view(['DELETE'])
 def behaviorSupport_deleteDuplicates(request):
     csv_file_path = "./databases/behavior/behavior/behavior_Support.csv"

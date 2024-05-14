@@ -129,7 +129,6 @@ def behaviorMid_stats_patch(request, summonnerName, patch, tournament):
     serializer = BehaviorMidSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 def behaviorMid_stats_game(request, summonnerName, seriesId, gameNumber):
     summonnerNameList : list = list()
@@ -144,8 +143,6 @@ def behaviorMid_stats_game(request, summonnerName, seriesId, gameNumber):
     queryResult = BehaviorMid.objects.filter(summonnerName__exact=summonnerName, seriesId__exact=seriesId, gameNumber__exact=gameNumber)
     serializer = BehaviorMidSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
-
-
 
 @api_view(['GET'])
 def behaviorMid_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
