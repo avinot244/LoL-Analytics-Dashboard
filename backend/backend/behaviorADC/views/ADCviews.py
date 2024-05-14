@@ -76,10 +76,15 @@ def behaviorADC_stats(request, summonnerName):
 @api_view(['GET'])
 def behaviorADC_stats_tournament(request, summonnerName, tournament):
     summonnerNameList : list = list()
-    allObjects = BehaviorADC.objects.filter(tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorADC.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorADC.objects.filter(tournament__exact=tournament)
+    
     for res in allObjects:
         if not(res.summonnerName in summonnerNameList):
             summonnerNameList.append(res.summonnerName)
+    
     if not(summonnerName in summonnerNameList):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
