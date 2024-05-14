@@ -9,8 +9,11 @@ from behaviorADC.serializers import *
 from behaviorADC.globals import API_URL
 from behaviorADC.utils import getDataBase, compute
 
+from dataAnalysis.globals import DATE_LIMIT
+
 import pandas as pd
 import requests
+from datetime import datetime
 
 @api_view(['GET'])
 def behaviorTop_get_player_list(request, patch):
@@ -25,7 +28,10 @@ def behaviorTop_get_player_list(request, patch):
 
 @api_view(['GET'])
 def behaviorTop_get_player_list_tournament(request, patch, tournament):
-    allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament)
     summonnerNameList : list = list()
 
     for TopObject in allObjects:
@@ -70,7 +76,10 @@ def behaviorTop_stats(request, summonnerName):
 @api_view(['GET'])
 def behaviorTop_stats_tournament(request, summonnerName, tournament):
     summonnerNameList : list = list()
-    allObjects = BehaviorTop.objects.filter(tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorTop.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorTop.objects.filter(tournament__exact=tournament)
     for res in allObjects:
         if not(res.summonnerName in summonnerNameList):
             summonnerNameList.append(res.summonnerName)
@@ -80,7 +89,6 @@ def behaviorTop_stats_tournament(request, summonnerName, tournament):
     queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
     serializer = BehaviorTopSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 def behaviorTop_stats_latest(request, summonnerName, limit, tournament):
@@ -118,7 +126,6 @@ def behaviorTop_stats_patch(request, summonnerName, patch, tournament):
     queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, patch__contains=patch, tournament__exact=tournament)
     serializer = BehaviorTopSerializer(queryResult, context={"request": request}, many=True)
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 def behaviorTop_stats_game(request, summonnerName, seriesId, gameNumber):
@@ -193,7 +200,6 @@ def behaviorTop_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Top")
     return Response(transformed_wantedDB_scaled)
 
-
 @api_view(['GET'])
 def behaviorTop_behavior_tournament(request, summonnerName, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
@@ -239,7 +245,6 @@ def behaviorTop_behavior_game(request, summonnerName, uuid, seriesId, gameNumber
     print(wantedDB)
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Top")
     return Response(transformed_wantedDB_scaled)
-
 
 @api_view(['GET'])
 def behaviorTop_behavior_singleGamesLatest(request, summonnerName, uuid, limit, wantedTournament, comparisonTournament):
