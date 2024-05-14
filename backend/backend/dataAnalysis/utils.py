@@ -1,9 +1,10 @@
-from .globals import DATA_PATH, ROLE_LIST
+from .globals import DATA_PATH, ROLE_LIST, DATE_LIMIT
 
 from behaviorADC.models import *
 
 import pandas as pd
 import re
+from datetime import datetime, timedelta
 
 def isGameDownloaded(seriesId : int, gameNumber : int):
     df = pd.read_csv(DATA_PATH + "games/data_metadata.csv", sep=";")
@@ -331,3 +332,8 @@ def convertDate(date : str):
     return re.sub(r"T[0-9]+:[0-9]+:[0-9]+Z", "", date)
 
 # T[0-9]+:[0-9]+:[0-9]+Z
+
+def isDateValid(date:str):
+    date_limit = datetime.strftime(DATE_LIMIT, "YYYY-MM-DD")
+    date_to_compare = datetime.strftime(date, "YYYY-MM-DD")
+    return date_to_compare > date_limit

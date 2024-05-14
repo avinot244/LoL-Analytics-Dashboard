@@ -6,6 +6,8 @@ ROLE_LIST = ["Top" ,"Jungle", "Mid", "ADC", "Support"]
 
 DATA_PATH = "./databases/"
 
+DATE_LIMIT = "2024-04-08"
+
 BLACKLIST = ["2620486", # bugged game
              "2618289", # bugged game
              "2614989",

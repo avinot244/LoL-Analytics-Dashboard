@@ -10,7 +10,7 @@ from .serializer import GameMetadataSerializer
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded, import_Behavior, convertDate
+from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid
 from .packages.utils_stuff.utils_func import getData, getRole
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
@@ -89,8 +89,12 @@ def download_latest(request, rawTournamentList : str):
                             # We have 3 files per games
                             # We add 1 to start the gameNumber at 1
                             # gameNumber = (i-2)//3 + 1
-
-                            if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1:
+                            date = convertDate(get_date_from_seriesId(seriesId))
+                            flag = True
+                            if tournament_name == "League of Legends Scrims":
+                                flag = isDateValid(date)
+                            
+                            if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1 and flag:
 
                                 path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
                                 print("\t\tDownloading {} files {}".format(fileName, gameNumber))
@@ -109,7 +113,12 @@ def download_latest(request, rawTournamentList : str):
                 # Save game metadata in csv and sqlite databases
                 print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
                 for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
-                    if not(isGameDownloaded(int(seriesId), gameNumberIt)):
+                    date = convertDate(get_date_from_seriesId(seriesId))
+                    flag = True
+                    if tournament_name == "League of Legends Scrims":
+                        flag = isDateValid(date)
+                    
+                    if not(isGameDownloaded(int(seriesId), gameNumberIt)) and flag:
                         # print("saving to db")
                         # Getting relative information about the game
                         date = convertDate(get_date_from_seriesId(seriesId))
