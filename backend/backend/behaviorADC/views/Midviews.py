@@ -9,8 +9,11 @@ from behaviorADC.serializers import *
 from behaviorADC.globals import API_URL
 from behaviorADC.utils import getDataBase, compute
 
+from dataAnalysis.globals import DATE_LIMIT
+
 import pandas as pd
 import requests
+from datetime import datetime
 
 @api_view(['GET'])
 def behaviorMid_get_player_list(request, patch):
@@ -25,7 +28,11 @@ def behaviorMid_get_player_list(request, patch):
 
 @api_view(['GET'])
 def behaviorMid_get_player_list_tournament(request, patch, tournament):
-    allObjects = BehaviorMid.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorMid.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorMid.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    
     summonnerNameList : list = list()
 
     for MidObject in allObjects:
@@ -70,7 +77,11 @@ def behaviorMid_stats(request, summonnerName):
 @api_view(['GET'])
 def behaviorMid_stats_tournament(request, summonnerName, tournament):
     summonnerNameList : list = list()
-    allObjects = BehaviorMid.objects.filter(tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorMid.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorMid.objects.filter(tournament__exact=tournament)
+    
     for res in allObjects:
         if not(res.summonnerName in summonnerNameList):
             summonnerNameList.append(res.summonnerName)
