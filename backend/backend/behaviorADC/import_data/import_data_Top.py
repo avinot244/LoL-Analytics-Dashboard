@@ -1,11 +1,12 @@
 import pandas as pd
 from behaviorADC.models import BehaviorTop
+from tqdm import tqdm
 
 csv_file_path = "./databases/behavior/behavior/behavior_Top.csv"
 df = pd.read_csv(csv_file_path, sep=";")
 
 
-for index, row in df.iterrows():
+for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     behaviorTop = BehaviorTop(
         date = row["Date"],
         tournament = row["Tournament"],

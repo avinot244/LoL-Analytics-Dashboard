@@ -140,6 +140,7 @@ urlpatterns = [
     path('api/behaviorModels/getAll/', behaviorModelsViews.get_all_models),
 
     # Data Analysis
+    path('api/behavior/deleteAll/', dataAnalysisViews.delete_all_behavior),
     path('api/dataAnalysis/deleteGame/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.deleteGame),
     path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/', dataAnalysisViews.getTournamentFromPlayer),
     path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
@@ -163,7 +164,6 @@ urlpatterns = [
     path('api/dataAnalysis/gameAnalysis/players/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsPlayers),
     path('api/dataAnalysis/gameAnalysis/teams/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsTeams),
 
-    path('api/getGamesDate/<int:limit>/', dataAnalysisViews.getGamesDate),
 
 
     # Draft

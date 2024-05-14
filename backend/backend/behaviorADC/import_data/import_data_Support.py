@@ -1,11 +1,12 @@
 import pandas as pd
 from behaviorADC.models import BehaviorSupport
+from tqdm import tqdm
 
 csv_file_path = "./databases/behavior/behavior/behavior_Support.csv"
 df = pd.read_csv(csv_file_path, sep=";")
 
 
-for index, row in df.iterrows():
+for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     behaviorSupport = BehaviorSupport(
         date = row["Date"],
         tournament = row["Tournament"],

@@ -1,7 +1,7 @@
 from django.db import models
 
 class BehaviorTop(models.Model):
-    date = models.CharField("Date", max_length=240)
+    date = models.DateField("Date")
     tournament = models.CharField("Tournament", max_length=240)
     matchId = models.CharField("MatchId", max_length=240)
     seriesId = models.IntegerField("SeriesId")
@@ -27,7 +27,7 @@ class BehaviorTop(models.Model):
 
 
 class BehaviorJungle(models.Model):
-    date = models.CharField("Date", max_length=240)
+    date = models.DateField("Date")
     tournament = models.CharField("Tournament", max_length=240)
     matchId = models.CharField("MatchId", max_length=240)
     seriesId = models.IntegerField("SeriesId")
@@ -52,7 +52,7 @@ class BehaviorJungle(models.Model):
     riverTopPresence = models.FloatField("riverTopPresence")
 
 class BehaviorMid(models.Model):
-    date = models.CharField("Date", max_length=240)
+    date = models.DateField("Date")
     tournament = models.CharField("Tournament", max_length=240)
     matchId = models.CharField("MatchId", max_length=240)
     seriesId = models.IntegerField("SeriesId")
@@ -83,7 +83,7 @@ class BehaviorMid(models.Model):
     riverTopPresence = models.FloatField("riverTopPresence")
 
 class BehaviorADC(models.Model):
-    date = models.CharField("Date", max_length=240)
+    date = models.DateField("Date")
     tournament = models.CharField("Tournament", max_length=240)
     matchId = models.CharField("MatchId", max_length=240)
     seriesId = models.IntegerField("SeriesId")
@@ -106,7 +106,7 @@ class BehaviorADC(models.Model):
         return "(" + self.date + ", " + self.tournament + ", " + self.matchId + ", " + str(self.seriesId) + ", " + self.patch + ", " + self.summonnerName + ")"
 
 class BehaviorSupport(models.Model):
-    date = models.CharField("Date", max_length=240)
+    date = models.DateField("Date")
     tournament = models.CharField("Tournament", max_length=240)
     matchId = models.CharField("MatchId", max_length=240)
     seriesId = models.IntegerField("SeriesId")

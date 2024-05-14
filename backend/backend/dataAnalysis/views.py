@@ -12,7 +12,6 @@ from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate
 from .packages.utils_stuff.utils_func import getData, getRole
-from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
@@ -31,13 +30,7 @@ import pandas as pd
 from datetime import datetime
 import re
 from tqdm import tqdm
-import time as t_time
 
-@api_view(['GET'])
-def getGamesDate(request, limit):
-    queryGames = GameMetadata.objects.all().order_by("-date")[:limit]
-    serializer = GameMetadataSerializer(queryGames, context={"request": request}, many=True)
-    return Response(serializer.data)
 
 @api_view(['DELETE'])
 def deleteGame(request, seriesId : int, gameNumber : int):
@@ -693,4 +686,26 @@ def getGameStatsTeams(request, seriesId : int, gameNumber):
     
     return Response(resultData)
             
+@api_view(['DELETE'])
+def delete_all_behavior(request):
+    queryTop = BehaviorTop.objects.all()
+    for res in tqdm(queryTop):
+        res.delete()
 
+    queryJungle = BehaviorJungle.objects.all()
+    for res in tqdm(queryJungle):
+        res.delete()
+
+    queryMid = BehaviorMid.objects.all()
+    for res in tqdm(queryMid):
+        res.delete()
+
+    queryADC = BehaviorADC.objects.all()
+    for res in tqdm(queryADC):
+        res.delete()
+
+    querySupport = BehaviorSupport.objects.all()
+    for res in tqdm(querySupport):
+        res.delete()
+
+    return Response(status=status.HTTP_200_OK)

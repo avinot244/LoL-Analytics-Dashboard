@@ -1,11 +1,12 @@
 import pandas as pd
 from behaviorADC.models import BehaviorJungle
+from tqdm import tqdm
 
 csv_file_path = "./databases/behavior/behavior/behavior_Jungle.csv"
 df = pd.read_csv(csv_file_path, sep=";")
 
 
-for index, row in df.iterrows():
+for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     behaviorJungle = BehaviorJungle(
         date = row["Date"],
         tournament = row["Tournament"],
