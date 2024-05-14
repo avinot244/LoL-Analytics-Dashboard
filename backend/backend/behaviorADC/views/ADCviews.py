@@ -10,9 +10,11 @@ from behaviorADC.globals import API_URL
 from behaviorADC.utils import getDataBase, compute
 
 from dataAnalysis.models import GameMetadata
+from dataAnalysis.globals import DATE_LIMIT
 
 import pandas as pd
 import requests
+from datetime import datetime
 
 @api_view(['GET'])
 def behaviorADC_get_player_list(request, patch):
@@ -26,7 +28,10 @@ def behaviorADC_get_player_list(request, patch):
 
 @api_view(['GET'])
 def behaviorADC_get_player_list_tournament(request, patch, tournament):
-    allObjects = BehaviorADC.objects.filter(patch__contains=patch, tournament__exact=tournament)
+    if tournament == "League of Legends Scrims":
+        allObjects = BehaviorADC.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+    else:
+        allObjects = BehaviorADC.objects.filter(patch__contains=patch, tournament__exact=tournament)
     summonnerNameList : list = list()
 
     for ADCObject in allObjects:

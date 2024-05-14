@@ -334,6 +334,6 @@ def convertDate(date : str):
 # T[0-9]+:[0-9]+:[0-9]+Z
 
 def isDateValid(date:str):
-    date_limit = datetime.strftime(DATE_LIMIT, "YYYY-MM-DD")
-    date_to_compare = datetime.strftime(date, "YYYY-MM-DD")
+    date_limit = datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")
+    date_to_compare = datetime.strptime(date, "YYYY-MM-DD")
     return date_to_compare > date_limit
