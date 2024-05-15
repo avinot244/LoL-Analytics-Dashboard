@@ -287,7 +287,7 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                                                 mostPopularPickOrder,
                                                 blindPick,
                                                 mostPopularRole)
-    import_draftStats()
+    # import_draftStats()
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
