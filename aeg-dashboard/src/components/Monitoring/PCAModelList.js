@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -25,8 +25,13 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
+import { behaviorModelUUID } from "../../constants";
+
 import "../../styles/PCAModelList.css"
 import { Button, Stack } from "@mui/material";
+
+
+import ModalAnalyze from "./ModalAnalyze";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -78,12 +83,7 @@ const headCells = [
         numeric: true,
         disablePadding: true,
         label: 'KMO'
-    },
-    // {
-    //     id: 'monitoring',
-    //     numeric: false,
-    //     disa
-    // }
+    }
 ]
 
 function EnhancedTableHead(props) {
@@ -143,8 +143,14 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
+
 function EnhancedTableToolbar(props) {
     const { numSelected, selectedModels } = props;
+    const [open, setOpen] = useState(false)
+    const handleOpen = () => setOpen(true)
+    const handleClose = () => setOpen(false)
+    
+    
     return (
         <Toolbar
             sx={{
@@ -178,15 +184,25 @@ function EnhancedTableToolbar(props) {
 
         {numSelected > 0 && numSelected < 2 ? 
             (
-                <Tooltip title="Monitor">
+                <Tooltip>
                     <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Button
                             variant="contained"
                             endIcon={<SearchIcon/>}
-                            
+                            onClick={() => {
+                                handleOpen()
+                            }}
                         >
                             Analyze
                         </Button>
+                        {open && 
+                            <ModalAnalyze
+                                open={open}
+                                handleClose={handleClose}
+                                model={selectedModels[0]}
+                            />
+                        }
+                        
                         <Button
                             variant="contained"
                             endIcon={<KeyboardDoubleArrowDownIcon/>}
@@ -239,6 +255,7 @@ EnhancedTableToolbar.propTypes = {
 
 
 export default function PCAModelList ({modelList}) {
+    console.log(modelList)
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('championName');
     const [selected, setSelected] = useState([]);
@@ -327,32 +344,60 @@ export default function PCAModelList ({modelList}) {
                             {visibleRows.map((row, index) => {
                                 const isItemSelected = isSelected(row);
                                 const labelId = `enhanced-table-checkbox-${index}`;
+                                const rowUUID = row.uuid
 
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={(event) => handleClick(event, row)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        key={row.id}
-                                        selected={isItemSelected}
-                                        sx={{ cursor: 'pointer' }}
-                                    >
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                color="primary"
-                                                checked={isItemSelected}
-                                                inputProps={{
-                                                    'aria-labelledby': labelId,
-                                                }}
-                                            />
-                                        </TableCell>
-                                        <TableCell align="left">{row.uuid}</TableCell>
-                                        <TableCell align="left">{row.role}</TableCell>
-                                        <TableCell align="right">{row.kmo}</TableCell>
-                                    </TableRow>
-                                );
+                                if (rowUUID === behaviorModelUUID) {
+                                    return (
+                                        <TableRow
+                                            onClick={(event) => handleClick(event, row)}
+                                            role="checkbox"
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            selected={isItemSelected}
+                                            sx={{ cursor: 'pointer', backgroundColor: 'primary.main'}}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby': labelId,
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell align="left">{row.uuid}</TableCell>
+                                            <TableCell align="left">{row.role}</TableCell>
+                                            <TableCell align="right">{row.kmo}</TableCell>
+                                        </TableRow>
+                                    );
+                                }else{
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={(event) => handleClick(event, row)}
+                                            role="checkbox"
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            key={row.id}
+                                            selected={isItemSelected}
+                                            sx={{ cursor: 'pointer' }}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby': labelId,
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            <TableCell align="left">{row.uuid}</TableCell>
+                                            <TableCell align="left">{row.role}</TableCell>
+                                            <TableCell align="right">{row.kmo}</TableCell>
+                                        </TableRow>
+                                    )
+                                }
                             })}
                             {emptyRows > 0 && (
                                 <TableRow

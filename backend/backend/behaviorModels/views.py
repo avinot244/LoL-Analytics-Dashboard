@@ -167,7 +167,6 @@ def get_loading_matrix(request, uuid, role):
         behavior = wantedDB[header]
 
 
-        #  Let's prepare some plots on one canvas (subplots)
         fig, axes = plt.subplots(ncols=1, figsize=(16, 7))
         
         fa_model : FactorAnalyzer = load(model_path + ".joblib")
@@ -200,10 +199,11 @@ def get_loading_matrix(request, uuid, role):
             
         #  and add a colorbar
         cb = fig.colorbar(im, ax=axes, location='right', label="loadings")
-
-        os.makedirs(DATA_PATH + "behavior/models/loadings/{}".format(uuid))
+        if not(os.path.exists(DATA_PATH + "behavior/models/loadings/{}".format(uuid))):
+            os.makedirs(DATA_PATH + "behavior/models/loadings/{}".format(uuid))
+        
         plt.savefig(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(uuid, role))
-
+        
     with open(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(uuid, role), "rb") as f:
         return HttpResponse(f.read(), content_type="image/png")
     
