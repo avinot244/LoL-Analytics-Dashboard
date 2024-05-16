@@ -17,11 +17,16 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+
 import SearchIcon from '@mui/icons-material/Search';
+import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
 import "../../styles/PCAModelList.css"
+import { Button, Stack } from "@mui/material";
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -73,7 +78,12 @@ const headCells = [
         numeric: true,
         disablePadding: true,
         label: 'KMO'
-    }
+    },
+    // {
+    //     id: 'monitoring',
+    //     numeric: false,
+    //     disa
+    // }
 ]
 
 function EnhancedTableHead(props) {
@@ -166,27 +176,60 @@ function EnhancedTableToolbar(props) {
                 </Typography>
             )}
 
-        {numSelected > 0 ? (
-            <Tooltip title="Search related drafts">
-                <IconButton
-                    onClick={() => alert("yo")}
-                >
-                    <SearchIcon />
-                </IconButton>
-            </Tooltip>
-        ) : (
-            <Tooltip title="Filter list">
-            <IconButton>
-                <FilterListIcon />
-            </IconButton>
-            </Tooltip>
-        )}
+        {numSelected > 0 && numSelected < 2 ? 
+            (
+                <Tooltip title="Monitor">
+                    <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                        <Button
+                            variant="contained"
+                            endIcon={<SearchIcon/>}
+                        >
+                            Analyze
+                        </Button>
+                        <Button
+                            variant="contained"
+                            endIcon={<KeyboardDoubleArrowDownIcon/>}
+                        >
+                            Set
+                        </Button>
+
+                        <Button
+                            variant="contained"
+                            color="error"
+                            endIcon={<DeleteIcon/>}
+                        >
+                            Delete
+                        </Button>
+                    </Stack>
+                    
+                </Tooltip>
+            ) 
+            : numSelected < 1 ? 
+            (
+                <Tooltip title="Filter list">
+                    <IconButton>
+                        <FilterListIcon />
+                    </IconButton>
+                </Tooltip>
+            )
+            : 
+            (
+                <Tooltip title="Filter list">
+                     <Button
+                            variant="contained"
+                            color="error"
+                            endIcon={<DeleteIcon/>}
+                        >
+                            Delete
+                        </Button>
+                </Tooltip>
+            )}
         </Toolbar>
     );
 }
 
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+    numSelected: PropTypes.number.isRequired,
 };
 
 
@@ -308,7 +351,6 @@ export default function PCAModelList ({modelList}) {
                                         <TableCell align="left">{row.uuid}</TableCell>
                                         <TableCell align="left">{row.role}</TableCell>
                                         <TableCell align="right">{row.kmo}</TableCell>
-                                        
                                     </TableRow>
                                 );
                             })}
