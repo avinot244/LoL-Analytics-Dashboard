@@ -144,7 +144,7 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
+    const { numSelected, selectedModels } = props;
     return (
         <Toolbar
             sx={{
@@ -174,7 +174,7 @@ function EnhancedTableToolbar(props) {
                 >
                     PCA Model List
                 </Typography>
-            )}
+        )}
 
         {numSelected > 0 && numSelected < 2 ? 
             (
@@ -183,6 +183,7 @@ function EnhancedTableToolbar(props) {
                         <Button
                             variant="contained"
                             endIcon={<SearchIcon/>}
+                            
                         >
                             Analyze
                         </Button>
@@ -219,6 +220,9 @@ function EnhancedTableToolbar(props) {
                             variant="contained"
                             color="error"
                             endIcon={<DeleteIcon/>}
+                            onClick={()=>{
+                                console.log(selectedModels)
+                            }}
                         >
                             Delete
                         </Button>
@@ -230,6 +234,7 @@ function EnhancedTableToolbar(props) {
 
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
+    selectedModels: PropTypes.array.isRequired
 };
 
 
@@ -264,7 +269,9 @@ export default function PCAModelList ({modelList}) {
         setPage(0);
     };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
+    const isSelected = (row) => {
+        return selected.indexOf(row) !== -1;
+    }
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -277,15 +284,16 @@ export default function PCAModelList ({modelList}) {
     //     [order, orderBy, page, rowsPerPage],
     // );
 
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
+    const handleClick = (event, row) => {
+        const selectedIndex = selected.indexOf(row);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
+            newSelected = newSelected.concat(selected, row)
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
+        }
+        else if (selectedIndex === selected.length - 1) {
             newSelected = newSelected.concat(selected.slice(0, -1));
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
@@ -300,7 +308,7 @@ export default function PCAModelList ({modelList}) {
         <div className='wrapper-tabpanel-pcaModelList'>
             <Box>
                 <Paper sw={{width: '100%', mb: 2}}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
+                    <EnhancedTableToolbar numSelected={selected.length} selectedModels={selected}/>
                     <TableContainer>
                         <Table
                             sx={{ minWidth: 750, pr: 5}}
@@ -317,13 +325,13 @@ export default function PCAModelList ({modelList}) {
                             />
                             <TableBody>
                             {visibleRows.map((row, index) => {
-                                const isItemSelected = isSelected(row.pk);
+                                const isItemSelected = isSelected(row);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
                                     <TableRow
                                         hover
-                                        onClick={(event) => handleClick(event, row.pk)}
+                                        onClick={(event) => handleClick(event, row)}
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
@@ -340,14 +348,6 @@ export default function PCAModelList ({modelList}) {
                                                 }}
                                             />
                                         </TableCell>
-                                        {/* <TableCell
-                                            component="th"
-                                            id={labelId}
-                                            scope="row"
-                                            padding="none"
-                                        >
-                                        </TableCell>
-                                         */}
                                         <TableCell align="left">{row.uuid}</TableCell>
                                         <TableCell align="left">{row.role}</TableCell>
                                         <TableCell align="right">{row.kmo}</TableCell>
