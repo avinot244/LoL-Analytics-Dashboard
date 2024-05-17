@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from dataAnalysis.globals import DATA_PATH, ROLE_LIST, API_URL, factorsPerRole
+from dataAnalysis.globals import DATA_PATH, ROLE_LIST, API_URL, factorsPerRole, factorNamePerRole
 
 from .models import BehaviorModelsMetadata
 from .serializers import BehaviorModelsMetadataSerializer
@@ -110,7 +110,7 @@ def compute_model(request, role):
     _, kmo = calculate_kmo(X)
     model_name : str = "PCA_model_{}_{}".format(role, model_id)
     s = dump(fa, DATA_PATH + "behavior/models/bin/" + model_name + ".joblib")
-    saveToDatabase(model_id, model_name, role, "PCA", kmo, tournamentDict)
+    saveToDatabase(model_id, model_name, role, "PCA", kmo, tournamentDict, factorsPerRole[role], factorNamePerRole[role], False)
 
     print("Model successfully saved to csv database")
 
@@ -121,7 +121,10 @@ def compute_model(request, role):
         modelName = model_name,
         role = role,
         kmo = kmo,
-        tournamentDict = str(tournamentDict)
+        tournamentDict = str(tournamentDict),
+        nbFactors = factorsPerRole[role],
+        factorsName = factorNamePerRole[role],
+        selected = False
     )
     behaviorModelsMetadata.save()
 
