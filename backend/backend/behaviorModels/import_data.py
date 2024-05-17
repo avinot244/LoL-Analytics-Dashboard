@@ -13,6 +13,9 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0]):
         role = row["role"],
         kmo = row["kmo"],
         tournamentDict = row["tournament_dict"],
+        nbFactors = row["nbFactors"],
+        factorsName = row["factorsNames"],
+        selected = row["selected"]
     )
     behaviorModelsMetadata.save()
 
