@@ -90,6 +90,26 @@ def getJungleProximity(data : SeparatedData, team : int):
     
     return jungleProximitySummary
 
-     
+def getProxomityMatrix(data : SeparatedData, team : int):
+    proximityMatrix : list[list] = list()
+    for _ in range(5):
+        proximityMatrix.append([0, 0, 0, 0, 0])
+    
+    for snapshot in data.gameSnapshotList:
+        for indexPlayer in range(5):
+            player : Player = snapshot.teams[team].players[indexPlayer]
+            indexClosestPlayer : int = snapshot.teams[team].getPlayerIdx(snapshot.teams[team].getClosestPlayer(player).participantID)
+            proximityMatrix[indexPlayer][indexClosestPlayer] += 1
+    for i in range(len(proximityMatrix)):
+        for j in range(len(proximityMatrix)):
+            proximityMatrix[i][j] /= len(data.gameSnapshotList)
+    
+    # Setting the diagonal to 1 because a given player is the closest to himself at any time
+    for i in range(len(proximityMatrix)):
+        for j in range(len(proximityMatrix)):
+            if i==j:
+                proximityMatrix[i][j] = 1
+
+    return proximityMatrix
 
 

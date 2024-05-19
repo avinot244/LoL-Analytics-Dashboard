@@ -84,6 +84,25 @@ class Team:
                     dist = distTemp
                     idx = i
         return self.players[idx]
+
+    def getClosestPlayer(self, player : Player) -> Player:
+        idx_ = self.getPlayerIdx(self.getPlayerID(player.playerName))
+        
+        if idx_ > 0:
+            res_idx = idx_ - 1
+        else:
+            res_idx = idx_ + 1
+        
+        dist = abs_dist(player.position, self.players[res_idx].position)
+        
+        for i in range(len(self.players)):
+            if i != idx_:
+                distTemp = abs_dist(player.position, self.players[i].position)
+                if distTemp < dist:
+                    dist = distTemp
+                    res_idx = i
+        return self.players[res_idx]
+                
     
     def getRole(self, summonnerName : str):
         playerId : int = self.getPlayerID(summonnerName)

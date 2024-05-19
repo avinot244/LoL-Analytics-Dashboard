@@ -12,12 +12,14 @@ from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid
 from .packages.utils_stuff.utils_func import getData, getRole
+from .packages.utils_stuff.stats import getProxomityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
 from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
+from .packages.Parsers.Separated.Game.Team import Team
 
 
 from Draft.models import DraftPlayerPick
@@ -30,6 +32,8 @@ import pandas as pd
 from datetime import datetime
 import re
 from tqdm import tqdm
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 @api_view(['DELETE'])
@@ -716,5 +720,40 @@ def delete_all_behavior(request):
     querySupport = BehaviorSupport.objects.all()
     for res in tqdm(querySupport):
         res.delete()
+
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
+    (data, gameDuration, _, _) = getData(seriesId, gameNumber)
+
+    # usually time = 840s i.e 14min
+    # Splitting our data so we get the interval between [840s; gameDuration]
+    splitList : list[int] = [120, time, gameDuration]
+    splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+
+    dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
+    proximityMatrixBlue : list[list] = getProxomityMatrix(dataBeforeTime, 0)
+    proximityMatrixRed : list[list] = getProxomityMatrix(dataBeforeTime, 1)
+
+    teamBlue : Team = dataBeforeTime.gameSnapshotList[0].teams[0]
+    teamRed : Team = dataBeforeTime.gameSnapshotList[0].teams[1]
+
+    fig, axes = plt.subplots(ncols=1, figsize=(8,6))
+
+    im = axes.imshow(proximityMatrixBlue, cmap="RdBu_r", vmax=1, vmin=0, aspect='auto')
+    for (i, j), z in np.ndenumerate(proximityMatrixBlue):
+        axes.text(j, i, str(round(z, 2)), ha="center", va="center")
+    
+    axes.set_title("Proximity Matrix {}".format(teamBlue.getTeamName(seriesId)))
+    axes.set_xticks(np.arange(5))
+    axes.set_yticks(np.arange(5))
+    axes.set_xticklabels(teamBlue.getPlayerList())
+    axes.set_yticklabels(teamBlue.getPlayerList())
+
+    plt.tight_layout()
+    cb = fig.colorbar(im, ax=axes, location='right', label="proximity")
+    plt.savefig(DATA_PATH)
+    
 
     return Response(status=status.HTTP_200_OK)
