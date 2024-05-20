@@ -245,27 +245,26 @@ def get_all_game_seriesId_scrims(amount : int, date : str, fromCursor : str = ""
 
     if nbPage >= 1:
         if fromCursor == "":
-            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament("", 50, tournamentId)
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_scrims("", 50, tournamentId)
         else:
-            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament(fromCursor, 50, tournamentId)
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_scrims(fromCursor, 50, tournamentId)
     else:
         if fromCursor == "":
-            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament("", nbGamesLeft, tournamentId)
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_scrims("", nbGamesLeft, tournamentId)
         else:
-            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament(fromCursor, nbGamesLeft, tournamentId)    
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_scrims(fromCursor, nbGamesLeft, tournamentId)    
     
     nbPage = nbPage - 1
     
     if nbPage > 1:
         i = 0
         while cursorNextPage != "" and i < nbPage:
-            seriesId, cursorNextPage = get_game_seriesId_from_page_tournament(cursorNextPage, 50, tournamentId)
+            seriesId, cursorNextPage = get_game_seriesId_from_page_scrims(cursorNextPage, 50, tournamentId)
             for tempSeriesId in seriesId:
                 seriesIdList.append(tempSeriesId)
-                print(seriesIdList)
             i += 1
         if cursorNextPage != "":
-            seriesId, cursorNextPage = get_game_seriesId_from_page_tournament(cursorNextPage, nbGamesLeft, tournamentId)
+            seriesId, cursorNextPage = get_game_seriesId_from_page_scrims(cursorNextPage, nbGamesLeft, tournamentId)
             for tempSeriesId in seriesId:
                 seriesIdList.append(tempSeriesId)
         return seriesIdList
@@ -298,20 +297,11 @@ def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId 
                 edges {
                     node {
                         id
-                        tournament {
-                            id
-                            endDate
-                            logoUrl
-                            name
-                            nameShortened
-                            startDate
-                        }
                     }
                 }
             }
         }
     """
-
     token = get_token()
     headers = {
         "x-api-key": token
@@ -322,6 +312,7 @@ def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId 
     
     result : dict = response.json()
     idList : list = list()
+    print(result["data"]["allSeries"]["totalCount"])
     edges = result["data"]["allSeries"]["edges"]
     for edge in edges:
        idList.append(edge["node"]["id"])
