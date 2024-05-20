@@ -101,9 +101,6 @@ class BehaviorADC(models.Model):
     jungleProximity = models.FloatField("JungleProximity")
     botLanePresence = models.FloatField("botLanePresence")
     riverBotPresence = models.FloatField("riverBotPresence")
-    
-    def __str__(self) -> str:
-        return "(" + self.date + ", " + self.tournament + ", " + self.matchId + ", " + str(self.seriesId) + ", " + self.patch + ", " + self.summonnerName + ")"
 
 class BehaviorSupport(models.Model):
     date = models.DateField("Date")
