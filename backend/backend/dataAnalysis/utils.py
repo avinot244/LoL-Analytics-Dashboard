@@ -1,10 +1,13 @@
 from .globals import DATA_PATH, ROLE_LIST, DATE_LIMIT
 
 from behaviorADC.models import *
+from dataAnalysis.packages.api_calls.GRID.get_token import get_token
 
 import pandas as pd
 import re
-from datetime import datetime, timedelta
+import time
+from datetime import datetime
+import requests
 
 def isGameDownloaded(seriesId : int, gameNumber : int):
     df = pd.read_csv(DATA_PATH + "games/data_metadata.csv", sep=";")
@@ -337,3 +340,23 @@ def isDateValid(date:str):
     date_limit = datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")
     date_to_compare = datetime.strptime(date, "YYYY-MM-DD")
     return date_to_compare > date_limit
+
+def checkSeries(fileList : list[dict]) -> bool:
+    time.sleep(1)
+    for file in fileList:
+        x = re.search(r"Riot LiveStats", file["fileName"])
+        if x != None:
+            url : str = file["fullURL"]
+            token = get_token()
+            headers = {
+                "x-api-key": token
+            }
+            response = requests.get(url=url, headers=headers)
+            if response.status_code != 200:
+                response.raise_for_status()
+
+            live_data = response.content.decode('utf-8').splitlines()
+            if len(live_data) < 200:
+                return False
+            
+    return True

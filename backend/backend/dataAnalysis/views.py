@@ -10,7 +10,7 @@ from .serializer import GameMetadataSerializer
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid
+from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries
 from .packages.utils_stuff.utils_func import getData, getRole
 from .packages.utils_stuff.stats import getProxomityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -79,66 +79,67 @@ def download_latest(request, rawTournamentList : str):
             if not(seriesId in BLACKLIST):
                 dlDict : dict = get_all_download_links(seriesId)
                 i = 0
-                print("\tChecking games of seriesId :", seriesId)
-                for downloadDict in dlDict['files']:
-                    fileType = downloadDict["fileName"].split(".")[-1]
-                    fileName = downloadDict["fileName"].split(".")[0]
-                    
-                    if i > 1 :
-                        gameNumber = int(downloadDict["id"].split("-")[-1])
-
-                    if fileType != "rofl" and downloadDict["status"] == "ready":
-                        if i > 1:
-                            # The first 2 files are global info about the Best-of
-                            # We have 3 files per games
-                            # We add 1 to start the gameNumber at 1
-                            # gameNumber = (i-2)//3 + 1
-                            date = convertDate(get_date_from_seriesId(seriesId))
-                            flag = True
-                            if tournament_name == "League of Legends Scrims":
-                                flag = isDateValid(date)
-                            
-                            if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1 and flag:
-
-                                path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                print("\t\tDownloading {} files {}".format(fileName, gameNumber))
-                                download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-
-                        else:
-                            for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
-                                if not(isGameDownloaded(int(seriesId), gameNumber)):
-                                    path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                                    print("\t\tDownloading {} info".format(fileName))
-                                    download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-                    elif fileType == "rofl":
-                        print("\t\twe don't download rofl file")
-                    i += 1
-
-                # Save game metadata in csv and sqlite databases
-                print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
-                for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
-                    date = convertDate(get_date_from_seriesId(seriesId))
-                    flag = True
-                    if tournament_name == "League of Legends Scrims":
-                        flag = isDateValid(date)
-                    
-                    if not(isGameDownloaded(int(seriesId), gameNumberIt)) and flag:
-                        # print("saving to db")
-                        # Getting relative information about the game
-                        date = convertDate(get_date_from_seriesId(seriesId))
-                        name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
-                        (data, _, _, _) = getData(int(seriesId), gameNumberIt)
-                        patch : str = data.patch
-                        teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
-                        teamRed : str = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
-                        winningTeam : int = data.winningTeam
-                        tournament : str = get_tournament_from_seriesId(seriesId)
+                if checkSeries(dlDict['files']):
+                    print("\tChecking games of seriesId :", seriesId)
+                    for downloadDict in dlDict['files']:
+                        fileType = downloadDict["fileName"].split(".")[-1]
+                        fileName = downloadDict["fileName"].split(".")[0]
                         
-                        # Saving game metadata to SQLite datbase
-                        gameMetadata : GameMetadata = GameMetadata(date=date, tournament=tournament, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumberIt)
-                        gameMetadata.save()
-                    else :
-                        print("game already downloaded")
+                        if i > 1 :
+                            gameNumber = int(downloadDict["id"].split("-")[-1])
+
+                        if fileType != "rofl" and downloadDict["status"] == "ready":
+                            if i > 1:
+                                # The first 2 files are global info about the Best-of
+                                # We have 3 files per games
+                                # We add 1 to start the gameNumber at 1
+                                # gameNumber = (i-2)//3 + 1
+                                date = convertDate(get_date_from_seriesId(seriesId))
+                                flag = True
+                                if tournament_name == "League of Legends Scrims":
+                                    flag = isDateValid(date)
+                                
+                                if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1 and flag:
+
+                                    path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
+                                    print("\t\tDownloading {} files {}".format(fileName, gameNumber))
+                                    download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+
+                            else:
+                                for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
+                                    if not(isGameDownloaded(int(seriesId), gameNumber)):
+                                        path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
+                                        print("\t\tDownloading {} info".format(fileName))
+                                        download_from_link(downloadDict['fullURL'], fileName, path, fileType)
+                        elif fileType == "rofl":
+                            print("\t\twe don't download rofl file")
+                        i += 1
+
+                    # Save game metadata in csv and sqlite databases
+                    print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
+                    for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
+                        date = convertDate(get_date_from_seriesId(seriesId))
+                        flag = True
+                        if tournament_name == "League of Legends Scrims":
+                            flag = isDateValid(date)
+                        
+                        if not(isGameDownloaded(int(seriesId), gameNumberIt)) and flag:
+                            # print("saving to db")
+                            # Getting relative information about the game
+                            date = convertDate(get_date_from_seriesId(seriesId))
+                            name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
+                            (data, _, _, _) = getData(int(seriesId), gameNumberIt)
+                            patch : str = data.patch
+                            teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
+                            teamRed : str = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
+                            winningTeam : int = data.winningTeam
+                            tournament : str = get_tournament_from_seriesId(seriesId)
+                            
+                            # Saving game metadata to SQLite datbase
+                            gameMetadata : GameMetadata = GameMetadata(date=date, tournament=tournament, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumberIt)
+                            gameMetadata.save()
+                        else :
+                            print("game already downloaded")
     
     return Response(wantedTournamentMapping)
 
@@ -171,6 +172,7 @@ def get_tournament_list_shortened(request):
                 temp_name : str = tournament_name.split("-")[0][:-1]
                 if not(temp_name in tournament_list):
                     tournament_list.append(temp_name)
+    tournament_list.append("League of Legends Scrims")
     return Response(tournament_list)
 
 @api_view(['GET'])
