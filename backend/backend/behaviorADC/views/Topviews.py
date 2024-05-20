@@ -29,7 +29,7 @@ def behaviorTop_get_player_list(request, patch):
 @api_view(['GET'])
 def behaviorTop_get_player_list_tournament(request, patch, tournament):
     if tournament == "League of Legends Scrims":
-        allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         allObjects = BehaviorTop.objects.filter(patch__contains=patch, tournament__exact=tournament)
     summonnerNameList : list = list()
@@ -77,7 +77,7 @@ def behaviorTop_stats(request, summonnerName):
 def behaviorTop_stats_tournament(request, summonnerName, tournament):
     summonnerNameList : list = list()
     if tournament == "League of Legends Scrims":
-        allObjects = BehaviorTop.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        allObjects = BehaviorTop.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         allObjects = BehaviorTop.objects.filter(tournament__exact=tournament)
     for res in allObjects:

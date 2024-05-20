@@ -30,7 +30,7 @@ def behaviorSupport_get_player_list(request, patch):
 @api_view(['GET'])
 def behaviorSupport_get_player_list_tournament(request, patch, tournament):
     if tournament == "League of Legends Scrims":
-        allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact=tournament)
     summonnerNameList : list = list()
@@ -78,7 +78,7 @@ def behaviorSupport_stats(request, summonnerName):
 def behaviorSupport_stats_tournament(request, summonnerName, tournament):
     summonnerNameList : list = list()
     if tournament == "League of Legends Scrims":
-        allObjects = BehaviorSupport.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        allObjects = BehaviorSupport.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         allObjects = BehaviorSupport.objects.filter(tournament__exact=tournament)
     for res in allObjects:

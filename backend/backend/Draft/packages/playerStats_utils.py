@@ -18,8 +18,8 @@ def isPlayerChampionStatInDatabase(playerName, championName, tournament):
 
 def getPlayerChampionPickRate(playerName : str, championName : str,  tournament : str) -> float:
     if tournament == "League of Legends Scrim":
-        pickCounter : int = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, tournament__exact=tournament, championName__exact=championName, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")).count()
-        totalGames : int = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")).count()
+        pickCounter : int = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, tournament__exact=tournament, championName__exact=championName, date__gte=DATE_LIMIT).count()
+        totalGames : int = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, tournament__exact=tournament, date__gte=DATE_LIMIT).count()
     else:
         pickCounter : int = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, tournament__exact=tournament, championName__exact=championName).count()
         totalGames : int = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, tournament__exact=tournament).count()
@@ -27,7 +27,7 @@ def getPlayerChampionPickRate(playerName : str, championName : str,  tournament 
 
 def getPlayerChampionWinRate(playerName : str, championName : str, tournament : str) -> float:
     if tournament == "League of Legends Scrim":
-        queryGames = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        queryGames = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         queryGames = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament)
     winCounter : int = 0
@@ -53,13 +53,13 @@ def getPlayerChampionWinRate(playerName : str, championName : str, tournament : 
 
 def getPlayerChampionNbGames(playerName : str, championName : str, tournament : str) -> int:
     if tournament == "League of Legends Scrims":
-        return DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")).count()
+        return DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament, date__gte=DATE_LIMIT).count()
     else:
         return DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament).count()
 
 def getPlayerChampionKDA(playerName : str, championName : str, tournament : str) -> float:
     if tournament == "League of Legends Scrims":
-        queryGames = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        queryGames = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         queryGames = DraftPlayerPick.objects.filter(sumonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament)
 

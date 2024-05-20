@@ -73,7 +73,8 @@ def download_latest(request, rawTournamentList : str):
         print(tournament_id, tournament_name)
         if tournament_name == "League of Legends Scrims":
             seriesIdList = get_all_game_seriesId_scrims(200, DATE_LIMIT)
-        seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
+        else:
+            seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
         
         
         for seriesId in seriesIdList:
@@ -258,7 +259,7 @@ def delete_all_gameMetadata(request):
 
 @api_view(['GET'])
 def getPatchListFromTournament(request, tournament):
-    queryTournamentList = DraftPlayerPick.objects.all()
+    queryTournamentList = DraftPlayerPick.objects.all().filter(date__gte=DATE_LIMIT)
     tournamentList : list = list()
 
     for res in queryTournamentList:
@@ -269,7 +270,7 @@ def getPatchListFromTournament(request, tournament):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-    queryPatchList = DraftPlayerPick.objects.filter(tournament__exact=tournament)
+    queryPatchList = DraftPlayerPick.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
     patchList : list = list()
     for res in queryPatchList:
         tempPatch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]

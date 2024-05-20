@@ -143,7 +143,7 @@ def getDraftTournament(request, tournament):
     
     
     if tournament == "League of Legends Scrims":
-        draftQuery = DraftPickOrder.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        draftQuery = DraftPickOrder.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         draftQuery = DraftPickOrder.objects.filter(tournament__exact=tournament)
     
@@ -301,7 +301,7 @@ def deleteAllChampionDraftStats(request):
 @api_view(['GET'])
 def getChampionDraftStats(request, patch, side, tournament):
     if tournament == "League of Legends Scrims":
-        queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
     else:
         queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
     availablePatchList : list = list()
@@ -314,10 +314,8 @@ def getChampionDraftStats(request, patch, side, tournament):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     if side in ["Blue", "Red"]:
-        if tournament == "League of Legends Scrims":
-            queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")).order_by("championName")
-        else:
-            queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")
+        
+        queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")
         serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
         
         return Response(serializer.data)
@@ -327,7 +325,7 @@ def getChampionDraftStats(request, patch, side, tournament):
 @api_view(['GET'])
 def getTopChampions(request, role, filter, patch, side, tournament):
     if tournament == "League of Legends Scrims":
-        query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side,  date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+        query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side,  date__gte=DATE_LIMIT)
     else:
         
         query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side)
@@ -368,7 +366,7 @@ def updatePlayerStats(request, tournamentListStr):
         print(tournament)
         associatedPlayerList : list = list()
         if tournament == "League of Legends Scrims":
-            queryPlayer = DraftPlayerPick.objects.filter(tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+            queryPlayer = DraftPlayerPick.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
         else:
             queryPlayer = DraftPlayerPick.objects.filter(tournament__exact=tournament)
         
@@ -380,7 +378,7 @@ def updatePlayerStats(request, tournamentListStr):
             print("\t{}".format(playerName))
             associatedChampionList : list = list()
             if tournament == "League of Legends Scrims":
-                queryChampion = DraftPlayerPick.objects.filter(tournament__exact=tournament, sumonnerName__exact=playerName, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
+                queryChampion = DraftPlayerPick.objects.filter(tournament__exact=tournament, sumonnerName__exact=playerName, date__gte=DATE_LIMIT)
             else:
                 queryChampion = DraftPlayerPick.objects.filter(tournament__exact=tournament, sumonnerName__exact=playerName)
             
@@ -413,10 +411,8 @@ def updatePlayerStats(request, tournamentListStr):
 
 @api_view(['GET'])
 def getPlayerStats(request, summonnerName, tournament, filter):
-    if tournament == "League of Legends Scrims":
-        query = ChampionPool.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament, date__gte=datetime.strptime(DATE_LIMIT, "YYYY-MM-DD"))
-    else:
-        query = ChampionPool.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
+    
+    query = ChampionPool.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
     
     if filter == "pickRate":
         res = query.order_by("-globalPickRate")

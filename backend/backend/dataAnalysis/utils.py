@@ -337,14 +337,14 @@ def convertDate(date : str):
 # T[0-9]+:[0-9]+:[0-9]+Z
 
 def isDateValid(date:str):
-    date_limit = datetime.strptime(DATE_LIMIT, "YYYY-MM-DD")
-    date_to_compare = datetime.strptime(date, "YYYY-MM-DD")
+    date_limit = datetime.strptime(DATE_LIMIT, "%Y-%m-%d")
+    date_to_compare = datetime.strptime(date, "%Y-%m-%d")
     return date_to_compare > date_limit
 
 def checkSeries(fileList : list[dict]) -> bool:
     time.sleep(1)
     for file in fileList:
-        x = re.search(r"Riot LiveStats", file["fileName"])
+        x = re.search(r"Riot LiveStats", file["description"])
         if x != None:
             url : str = file["fullURL"]
             token = get_token()
@@ -356,7 +356,7 @@ def checkSeries(fileList : list[dict]) -> bool:
                 response.raise_for_status()
 
             live_data = response.content.decode('utf-8').splitlines()
-            if len(live_data) < 200:
+            if len(live_data) < 500:
                 return False
             
     return True

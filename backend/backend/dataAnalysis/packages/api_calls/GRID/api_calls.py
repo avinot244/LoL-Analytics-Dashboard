@@ -312,7 +312,6 @@ def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId 
     
     result : dict = response.json()
     idList : list = list()
-    print(result["data"]["allSeries"]["totalCount"])
     edges = result["data"]["allSeries"]["edges"]
     for edge in edges:
        idList.append(edge["node"]["id"])
