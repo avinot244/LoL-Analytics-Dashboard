@@ -431,6 +431,9 @@ def getListOfDownloadableTournament(request, year):
             return Response(res)
     
     else:
+        if "League of Legends Scrims" in tournamentList:
+            return Response({"League of Legends Scrims": "584178"})
+        
         # We need to compute again
         regex : str = r"(?:"
         for tournament_name in tournamentList[:-1]:
