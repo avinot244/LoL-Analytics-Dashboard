@@ -71,6 +71,8 @@ def download_latest(request, rawTournamentList : str):
     
     for tournament_name, tournament_id in wantedTournamentMapping.items():
         print(tournament_id, tournament_name)
+        if tournament_name == "League of Legends Scrims":
+            seriesIdList = get_all_game_seriesId_scrims(200, DATE_LIMIT)
         seriesIdList = get_all_game_seriesId_tournament(tournament_id, 200)
         
         

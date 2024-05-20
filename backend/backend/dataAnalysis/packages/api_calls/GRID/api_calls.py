@@ -6,6 +6,7 @@ import io
 import time
 
 from .get_token import get_token
+from dataAnalysis.globals import DATA_PATH,DATE_LIMIT
 
 
 def get_last_games(amount : int, gameType : str) -> list[str]:
@@ -229,7 +230,110 @@ def get_all_tournament_ids(fromCursor : str):
         time.sleep(1)
     
     return res
+
+def get_all_game_seriesId_scrims(amount : int, date : str, fromCursor : str = ""):
+    time.sleep(1)
+    tournamentId : int = 0
+    with open(DATA_PATH + "tournament_mapping.json", "r") as file:
+        tournament_dict : dict = json.load(file)
+        tournamentId = tournament_dict["League of Legends Scrims"]
     
+    seriesIdList : list = list()
+
+    nbPage : int = amount // 50
+    nbGamesLeft : int = amount % 50
+
+    if nbPage >= 1:
+        if fromCursor == "":
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament("", 50, tournamentId)
+        else:
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament(fromCursor, 50, tournamentId)
+    else:
+        if fromCursor == "":
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament("", nbGamesLeft, tournamentId)
+        else:
+            seriesIdList, cursorNextPage = get_game_seriesId_from_page_tournament(fromCursor, nbGamesLeft, tournamentId)    
+    
+    nbPage = nbPage - 1
+    
+    if nbPage > 1:
+        i = 0
+        while cursorNextPage != "" and i < nbPage:
+            seriesId, cursorNextPage = get_game_seriesId_from_page_tournament(cursorNextPage, 50, tournamentId)
+            for tempSeriesId in seriesId:
+                seriesIdList.append(tempSeriesId)
+                print(seriesIdList)
+            i += 1
+        if cursorNextPage != "":
+            seriesId, cursorNextPage = get_game_seriesId_from_page_tournament(cursorNextPage, nbGamesLeft, tournamentId)
+            for tempSeriesId in seriesId:
+                seriesIdList.append(tempSeriesId)
+        return seriesIdList
+    else:
+        return seriesIdList
+
+def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId : int):
+    time.sleep(1)
+    url = "https://api.grid.gg/central-data/graphql"
+    body = """
+        {
+            allSeries(
+                first: """ + str(amount) + """
+                after: \"""" + cursor + """\"
+                filter: { 
+                    titleId : 3,
+                    tournamentId: """ + str(tournamentId) + """
+                    startTimeScheduled: { gte: \"""" + DATE_LIMIT + "T00:00:00Z" + """\" }
+                }
+                orderBy: ID
+                orderDirection: DESC
+            ) {
+                totalCount
+                pageInfo {
+                    hasPreviousPage
+                    hasNextPage
+                    startCursor
+                    endCursor
+                }
+                edges {
+                    node {
+                        id
+                        tournament {
+                            id
+                            endDate
+                            logoUrl
+                            name
+                            nameShortened
+                            startDate
+                        }
+                    }
+                }
+            }
+        }
+    """
+
+    token = get_token()
+    headers = {
+        "x-api-key": token
+    }
+    response = requests.post(url=url,json={"query": body}, headers=headers)
+    if response.status_code != 200:
+        response.raise_for_status()
+    
+    result : dict = response.json()
+    idList : list = list()
+    edges = result["data"]["allSeries"]["edges"]
+    for edge in edges:
+       idList.append(edge["node"]["id"])
+    
+    # Computing the cursor for next page
+    if result["data"]["allSeries"]["pageInfo"]["hasNextPage"]:
+        cursorNextPage : str = result["data"]["allSeries"]["pageInfo"]["endCursor"]
+    else:
+        cursorNextPage : str = ""
+    
+    return idList, cursorNextPage
+
 def get_all_game_seriesId_tournament(tournamentId : int, amount : int, fromCursor : str = ""):
     time.sleep(1)
     seriesIdList : list = list()
