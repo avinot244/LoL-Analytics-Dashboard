@@ -20,7 +20,6 @@ import Tooltip from '@mui/material/Tooltip';
 
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
@@ -203,12 +202,6 @@ function EnhancedTableToolbar(props) {
                             />
                         }
                         
-                        <Button
-                            variant="contained"
-                            endIcon={<KeyboardDoubleArrowDownIcon/>}
-                        >
-                            Set
-                        </Button>
 
                         <Button
                             variant="contained"
@@ -255,7 +248,6 @@ EnhancedTableToolbar.propTypes = {
 
 
 export default function PCAModelList ({modelList}) {
-    console.log(modelList)
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('championName');
     const [selected, setSelected] = useState([]);
@@ -344,9 +336,8 @@ export default function PCAModelList ({modelList}) {
                             {visibleRows.map((row, index) => {
                                 const isItemSelected = isSelected(row);
                                 const labelId = `enhanced-table-checkbox-${index}`;
-                                const rowUUID = row.uuid
 
-                                if (rowUUID === behaviorModelUUID) {
+                                if (row.selected) {
                                     return (
                                         <TableRow
                                             onClick={(event) => handleClick(event, row)}

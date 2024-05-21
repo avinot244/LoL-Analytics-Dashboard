@@ -4,6 +4,6 @@ from .models import BehaviorModelsMetadata
 class BehaviorModelsMetadataSerializer(serializers.ModelSerializer):
     class Meta:
         model = BehaviorModelsMetadata
-        fields = ("pk", "uuid", "modelType", "modelName", "role", "kmo", "tournamentDict")
+        fields = ("pk", "uuid", "modelType", "modelName", "role", "kmo", "tournamentDict", "nbFactors", "selected", "factorsName")
 
 

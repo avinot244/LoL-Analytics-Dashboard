@@ -13,7 +13,6 @@ export default function PCAModelOverview() {
             method: "GET"
         })
         result.json().then(result => {
-            console.log(result)
             let newModelList = []
             for (let i = 0; i < result.length ; i++) {
                 let modelObject = result[i]
@@ -21,7 +20,10 @@ export default function PCAModelOverview() {
                     "pk": modelObject.pk,
                     "uuid": modelObject.uuid,
                     "role": modelObject.role,
-                    "kmo": (modelObject.kmo).toFixed(2)
+                    "kmo": (modelObject.kmo).toFixed(2),
+                    "nbFactors": modelObject.nbFactors,
+                    "selected": modelObject.selected,
+                    "factorsName": modelObject.factorsName
                 }
                 newModelList.push(temp)
             }

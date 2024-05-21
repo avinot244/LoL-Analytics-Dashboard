@@ -1,8 +1,10 @@
 import Modal from "@mui/material/Modal";
 import Box from '@mui/material/Box';
-import { Button, Typography } from "@mui/material";
+import { Button, FormControl, Stack, TextField, Typography } from "@mui/material";
 import { API_URL } from "../../constants";
 import { useEffect, useState } from "react";
+import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 
 export default function ModalAnalyze({open, handleClose, model}) {
     const [img, setImg] = useState();
@@ -13,10 +15,12 @@ export default function ModalAnalyze({open, handleClose, model}) {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: "fit-content",
+        height : 600,
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
         p: 4,
+        overflow: 'scroll'
     };
 
     const fetchLoadingMatrix = async () => {
@@ -29,8 +33,7 @@ export default function ModalAnalyze({open, handleClose, model}) {
     useState(() => {
         fetchLoadingMatrix();
     }, [])
-
-    console.log(model)
+    const n = model.nbFactors;
 
     return (
         <Modal
@@ -38,19 +41,43 @@ export default function ModalAnalyze({open, handleClose, model}) {
             onClose={handleClose}
         >
             <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
+                <Typography id="modal-modal-title" variant="h6" component="h2"align="center">
                     Loadings of model {model.uuid} for {model.role}
                 </Typography>
                 <img src={img} alt="model loadings" width={1100} />
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                        handleClose()
-                    }}
-                >
-                    Close
-                </Button>
+
+                <FormControl defaultValue="" required>
+                    <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                        {
+                            [...Array(n)].map((e, i) => <TextField label={`Factor ${i+1}`} key={i}/>)            
+                        }
+                    </Stack>
+                </FormControl>
+                <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{mt: 2}}>
+                    <Button
+                        variant="contained"
+                        endIcon={<SystemUpdateAltIcon/>}
+                    >
+                        Set factors Name
+                    </Button>
+                    <Button
+                        variant="contained"
+                        endIcon={<KeyboardDoubleArrowDownIcon/>}
+                        color="success"
+                    >
+                        Set Model
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            handleClose()
+                        }}
+                    >
+                        Close
+                    </Button>
+                </Stack>
+                
             </Box>
             
         </Modal>
