@@ -213,6 +213,11 @@ def get_loading_matrix(request, uuid, role):
 @api_view(['DELETE'])
 def deleteModel(request, uuid : str, role : str):
     toDelete = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, role__exact=role)
-    print(toDelete)
+    df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    idx_delete : int = df[((df.uuid == str(toDelete.uuid)) & (df.role == toDelete.role))].index
+    df.drop(idx_delete, inplace=True)
+    os.remove(DATA_PATH + "behavior/models/behaviorModels_metadata.csv")
+    df.to_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";", index=False)
+
     toDelete.delete()
     return Response(status=status.HTTP_200_OK)

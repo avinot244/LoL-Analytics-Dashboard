@@ -255,7 +255,7 @@ class EnhancedTableToolbar extends Component {
                 ) 
                 : this.state.numSelected < 1 ? 
                 (
-                    <Tooltip title="Filter list">
+                    <Tooltip>
                         <IconButton>
                             <FilterListIcon />
                         </IconButton>
@@ -263,7 +263,7 @@ class EnhancedTableToolbar extends Component {
                 )
                 : 
                 (
-                    <Tooltip title="Filter list">
+                    <Tooltip>
                         <Button
                                 variant="contained"
                                 color="error"
