@@ -139,6 +139,8 @@ urlpatterns = [
     path('api/behaviorModels/deleteAllMetadata/', behaviorModelsViews.deleteAllModelsMetadata),
     path('api/behaviorModels/getAll/', behaviorModelsViews.get_all_models),
     path('api/behaviorModels/delete/<str:uuid>/<str:role>/', behaviorModelsViews.deleteModel),
+    path('api/behaviorModels/setActive/<str:uuid>/<str:role>/', behaviorModelsViews.setModelAsActive),
+    path('api/behaviorModels/setFactorsName/<str:uuid>/<str:role>/', behaviorModelsViews.setFactorsName),
 
     # Data Analysis
     path('api/behavior/deleteAll/', dataAnalysisViews.delete_all_behavior),

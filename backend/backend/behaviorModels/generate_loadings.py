@@ -33,7 +33,7 @@ for res in tqdm(query):
 
         wantedDB = pd.concat(splittedDfList)
 
-        header = [column for column in wantedDB.columns[6:]]
+        header = [column for column in wantedDB.columns[7:]]
 
         behavior = wantedDB[header]
 

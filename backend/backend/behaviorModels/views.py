@@ -165,7 +165,8 @@ def get_loading_matrix(request, uuid, role):
 
         wantedDB = pd.concat(splittedDfList)
 
-        header = [column for column in wantedDB.columns[6:]]
+        header = [column for column in wantedDB.columns[7:]]
+        print(header)
 
         behavior = wantedDB[header]
 
@@ -220,4 +221,40 @@ def deleteModel(request, uuid : str, role : str):
     df.to_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";", index=False)
 
     toDelete.delete()
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def setModelAsActive(request, uuid : str, role : str):
+    previousModel = BehaviorModelsMetadata.objects.get(role__exact=role, selected__exact=True)
+    previousModel.selected = False
+    previousModel.save()
+
+
+    model = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, role__exact=role)
+    model.selected = True
+    model.save()
+
+    df = pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    idx_selected : int = df[((df.uuid == str(model.uuid)) & (df.role == model.role))].index.to_list()[0]
+    df.loc[idx_selected: idx_selected] = [model.uuid, model.modelType, model.modelName, model.role, model.kmo, model.tournamentDict, model.nbFactors, model.factorsName, model.selected]
+    os.remove(DATA_PATH + "behavior/models/behaviorModels_metadata.csv")
+    df.to_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";", index=False)
+
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def setFactorsName(request, uuid : str, role : str):
+    factorsName_unicode = request.body.decode("utf-8")
+    factorsName : list = json.loads(factorsName_unicode)
+
+    model = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, role__exact=role)
+    model.factorsName = str(factorsName)
+    model.save()
+
+    df = pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    idx_selected : int = df[((df.uuid == str(model.uuid)) & (df.role == model.role))].index.to_list()[0]
+    df.loc[idx_selected: idx_selected] = [model.uuid, model.modelType, model.modelName, model.role, model.kmo, model.tournamentDict, model.nbFactors, model.factorsName, model.selected]
+    os.remove(DATA_PATH + "behavior/models/behaviorModels_metadata.csv")
+    df.to_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";", index=False)
+
     return Response(status=status.HTTP_200_OK)

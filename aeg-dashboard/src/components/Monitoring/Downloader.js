@@ -45,45 +45,45 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
 
 
     return (
-            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
-                <>	
-                    <ThemeProvider theme={theme}>
-                        <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
-                            <Autocomplete
-                                clearIcon={<ClearIcon color="error"/>}
-                                popupIcon={<ArrowDropDownIcon color="primary"/>}
-                                className="searchComp"
-                                options={tournamentList}
-                                renderInput={(params) => (
-                                    <TextField 
-                                        className='textField-searchComp'
-                                        {...params} 
-                                        label={"Tournament"}
-                                        sx={{ 
-                                            input: { color: 'white'},
-                                            borderColor: 'white'
-                                        }}
-                                        focused
-                                        fullWidth={true}
+        <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+            <>	
+                <ThemeProvider theme={theme}>
+                    <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+                        <Autocomplete
+                            clearIcon={<ClearIcon color="error"/>}
+                            popupIcon={<ArrowDropDownIcon color="primary"/>}
+                            className="searchComp"
+                            options={tournamentList}
+                            renderInput={(params) => (
+                                <TextField 
+                                    className='textField-searchComp'
+                                    {...params} 
+                                    label={"Tournament"}
+                                    sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                    focused
+                                    fullWidth={true}
 
-                                    />
-                                    
-                                )}
-                                onChange={(_, value) => {handleSelectChange(value)}}
-                                sx={{color: 'primary.main', borderColor: 'primary.main', width: 525}}
-                                fullWidth={true}
-                            />
-                        </Box> 
-                    </ThemeProvider>
-                </>
-                <Button
-                    onClick={onRemove}
-                    color='error'
-                    variant='contained'
-                    startIcon={<DeleteIcon/>}
-                >
-                    Remove
-                </Button>
+                                />
+                                
+                            )}
+                            onChange={(_, value) => {handleSelectChange(value)}}
+                            sx={{color: 'primary.main', borderColor: 'primary.main', width: 525}}
+                            fullWidth={true}
+                        />
+                    </Box> 
+                </ThemeProvider>
+            </>
+            <Button
+                onClick={onRemove}
+                color='error'
+                variant='contained'
+                startIcon={<DeleteIcon/>}
+            >
+                Remove
+            </Button>
         </Stack>
     )
 }

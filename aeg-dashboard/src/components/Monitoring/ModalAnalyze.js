@@ -2,12 +2,16 @@ import Modal from "@mui/material/Modal";
 import Box from '@mui/material/Box';
 import { Button, FormControl, Stack, TextField, Typography } from "@mui/material";
 import { API_URL } from "../../constants";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { useFormControlContext } from '@mui/base/FormControl';
 
-export default function ModalAnalyze({open, handleClose, model}) {
+
+
+export default function ModalAnalyze({open, handleClose, model, flag, setFlag, setSelected}) {
     const [img, setImg] = useState();
+    const textFieldRefs = useRef([]);
 
     const style = {
         position: 'absolute',
@@ -30,12 +34,34 @@ export default function ModalAnalyze({open, handleClose, model}) {
         setImg(imageObjectURL)
     }
 
+    const setModelActive = async () => {
+        const res = await fetch(API_URL + `behaviorModels/setActive/${model.uuid}/${model.role}/`,{
+            method: "PATCH"
+        })
+        const temp = flag + 1
+        setFlag(temp)
+        setSelected([])
+        handleClose()
+    }
+
+    
+
+
+    const setFactorsNameCall = async () => {
+        const currentValues = textFieldRefs.current.map(ref => ref.value);
+        const res = await fetch(API_URL + `behaviorModels/setFactorsName/${model.uuid}/${model.role}/`, {
+            method: "PATCH",
+            body: JSON.stringify(currentValues)
+        })
+    }
+
     useState(() => {
         fetchLoadingMatrix();
     }, [])
+
     const n = model.nbFactors;
     const jsonString = model.factorsName.replace(/'/g, '"')
-    const factorsName = JSON.parse(jsonString)
+    let factorsNameTemp = JSON.parse(jsonString)
     return (
         <Modal
             open={open}
@@ -50,7 +76,15 @@ export default function ModalAnalyze({open, handleClose, model}) {
                 <FormControl defaultValue="" required>
                     <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                         {
-                            [...Array(n)].map((e, i) => <TextField defaultValue={factorsName[i]} helperText={`Factor ${i+1}`} key={i}/>)            
+                            [...Array(n)].map((e, i) => 
+                                <TextField 
+                                    defaultValue={factorsNameTemp[i]} 
+                                    helperText={`Factor ${i+1}`} 
+                                    key={i}
+                                    inputRef={el => textFieldRefs.current[i] = el}
+                                    variant="outlined"
+                                />
+                            )            
                         }
                     </Stack>
                 </FormControl>
@@ -58,6 +92,9 @@ export default function ModalAnalyze({open, handleClose, model}) {
                     <Button
                         variant="contained"
                         endIcon={<SystemUpdateAltIcon/>}
+                        onClick={() => {
+                            setFactorsNameCall()
+                        }}
                     >
                         Set factors Name
                     </Button>
@@ -65,6 +102,9 @@ export default function ModalAnalyze({open, handleClose, model}) {
                         variant="contained"
                         endIcon={<KeyboardDoubleArrowDownIcon/>}
                         color="success"
+                        onClick={ () => {
+                            setModelActive()
+                        }}
                     >
                         Set Model
                     </Button>
@@ -72,6 +112,9 @@ export default function ModalAnalyze({open, handleClose, model}) {
                         variant="contained"
                         color="error"
                         onClick={() => {
+                            const temp = flag + 1
+                            setFlag(temp)
+                            setSelected([])
                             handleClose()
                         }}
                     >

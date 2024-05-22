@@ -235,6 +235,9 @@ class EnhancedTableToolbar extends Component {
                                     open={this.state.open}
                                     handleClose={this.handleClose}
                                     model={this.props.selectedModels[0]}
+                                    flag={this.props.flag}
+                                    setFlag={this.props.setFlag}
+                                    setSelected={this.props.setSelected}
                                 />
                             }
                             
@@ -414,7 +417,7 @@ export default function PCAModelList () {
                                             tabIndex={-1}
                                             key={row.id}
                                             selected={isItemSelected}
-                                            sx={{ cursor: 'pointer', backgroundColor: 'primary.main'}}
+                                            sx={{ cursor: 'pointer'}}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
@@ -425,9 +428,9 @@ export default function PCAModelList () {
                                                     }}
                                                 />
                                             </TableCell>
-                                            <TableCell align="left">{row.uuid}</TableCell>
-                                            <TableCell align="left">{row.role}</TableCell>
-                                            <TableCell align="right">{row.kmo}</TableCell>
+                                            <TableCell sx={{fontWeight: 'bold', color: 'primary.main'}} align="left">{row.uuid}</TableCell>
+                                            <TableCell sx={{fontWeight: 'bold', color: 'primary.main'}} align="left">{row.role}</TableCell>
+                                            <TableCell sx={{fontWeight: 'bold', color: 'primary.main'}} align="right">{row.kmo}</TableCell>
                                         </TableRow>
                                     );
                                 }else{
