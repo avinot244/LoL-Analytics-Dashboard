@@ -258,3 +258,9 @@ def setFactorsName(request, uuid : str, role : str):
     df.to_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";", index=False)
 
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getModel(request, role : str):
+    model = BehaviorModelsMetadata.objects.get(role__exact=role, selected__exact=True)
+    serializer = BehaviorModelsMetadataSerializer(model, context={"request": request}, many=False)
+    return Response(serializer.data)

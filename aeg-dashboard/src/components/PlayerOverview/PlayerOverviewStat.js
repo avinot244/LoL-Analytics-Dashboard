@@ -1,5 +1,5 @@
 import "../../styles/PlayerOverviewStat.css"
-import { API_URL, behaviorModelUUID, factorNamePerRole} from "../../constants";
+import { API_URL, roleList} from "../../constants";
 import { useEffect, useState } from "react";
 import NormalDistribution from "normal-distribution"
 
@@ -13,9 +13,8 @@ import {
     Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
-import { Switch } from "@mui/material";
-import { alpha, styled } from '@mui/material/styles';
-import { blue, teal, red, purple } from '@mui/material/colors';
+import { alpha } from '@mui/material/styles';
+import { purple } from '@mui/material/colors';
 import Divider from "@mui/material/Divider";
 import ChampionCard from "./ChampionCard";
 ChartJS.register(
@@ -39,37 +38,89 @@ export default function PlayerOverviewStat(props) {
     const [champPoolPickRate, setChampPoolPickRate] = useState([])
     const [champPoolWinRate, setChampPoolWinRate] = useState([])
 
+    const [factorsNamePerRole, setFactorsNamePerRole] = useState({
+        "Top": [],
+        "Jungle": [],
+        "Mid": [],
+        "ADC": [],
+        "Support": []
+    })
+
 
 
     useEffect(() => {
+        const fetchFactorsPerName = async () => {
+            let newFactorsNamePerRole = factorsNamePerRole
+            roleList.map(async (role) => {
+                const model = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
+                    method: "GET"
+                })
+                model.json().then(model => {
+                    newFactorsNamePerRole[role] = JSON.parse(model.factorsName.replace(/'/g, '"'))
+                })
+            })
+            console.log(newFactorsNamePerRole)
+            setFactorsNamePerRole(newFactorsNamePerRole)
+        }    
+    
         const fetchBehaviorTournamentPatchPlayer = async (role, summonnerName, patch, wantedTournament) => {
-            const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${patch}/${behaviorModelUUID}/${wantedTournament}/${wantedTournament}/`, {
+            let uuid = "";
+            const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
                 method: "GET"
             })
-            result.json().then(result => {
-                const newBehaviorPatch = result
-                setDataBehaviorPatch(getAvgData(newBehaviorPatch, role))
+            modelResult.json().then(async model => {
+                uuid = model.uuid
+
+                const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${patch}/${uuid}/${wantedTournament}/${wantedTournament}/`, {
+                method: "GET"
+                })
+                result.json().then(result => {
+                    const newBehaviorPatch = result
+                    setDataBehaviorPatch(getAvgData(newBehaviorPatch, role))
+                })
             })
+
+            
+            
         }
 
         const fetchBehaviorTournamentLatestPlayer = async (role, summonnerName, limit, wantedTournament) => {
-            const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${limit}/${behaviorModelUUID}/${wantedTournament}/${wantedTournament}/`, {
+            let uuid = "";
+            const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
                 method: "GET"
             })
-            result.json().then(result => {
-                const newBehaviorLatest = result
-                setDataBehaviorLatest(getAvgData(newBehaviorLatest, role))
+            modelResult.json().then(async model => {
+                uuid = model.uuid
+
+                const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${limit}/${uuid}/${wantedTournament}/${wantedTournament}/`, {
+                    method: "GET"
+                })
+                result.json().then(result => {
+                    const newBehaviorLatest = result
+                    setDataBehaviorLatest(getAvgData(newBehaviorLatest, role))
+                })
             })
+
+            
         }
 
         const fetchBehaviorTournamentPlayer = async (role, summonnerName, wantedTournament) => {
-            const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${behaviorModelUUID}/${wantedTournament}/${wantedTournament}/`, {
+            let uuid = "";
+            const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
                 method: "GET"
             })
-            result.json().then(result => {
-                const newBehaviorTournament = result
-                setDataBehaviorTournament(getAvgData(newBehaviorTournament, role))
+            modelResult.json().then(async model => {
+                uuid = model.uuid
+                const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${uuid}/${wantedTournament}/${wantedTournament}/`, {
+                    method: "GET"
+                })
+                result.json().then(result => {
+                    const newBehaviorTournament = result
+                    setDataBehaviorTournament(getAvgData(newBehaviorTournament, role))
+                })
             })
+
+            
         }
 
         const fetchChampionPoolPickRate = async (summonnerName, tournament) => {
@@ -123,22 +174,35 @@ export default function PlayerOverviewStat(props) {
         }
 
         const fetchBehaviorSingleGamesLatest = async (role, summonnerName, limit, wantedTournament) => {
-            const gamesBehavior = await fetch(API_URL + `behavior/${role}/compute/singleGamesLatest/${summonnerName}/${behaviorModelUUID}/${limit}/${wantedTournament}/${wantedTournament}/`, {
+            let uuid = "";
+            const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
                 method: "GET"
             })
-            gamesBehavior.json().then(result => {
-                const newDataSingleGames = result
-                setDataSingleGames(newDataSingleGames)
+            modelResult.json().then(async model => {
+                uuid = model.uuid
+
+                const gamesBehavior = await fetch(API_URL + `behavior/${role}/compute/singleGamesLatest/${summonnerName}/${uuid}/${limit}/${wantedTournament}/${wantedTournament}/`, {
+                    method: "GET"
+                })
+                gamesBehavior.json().then(result => {
+                    const newDataSingleGames = result
+                    setDataSingleGames(newDataSingleGames)
+                })
             })
+
+            
         }
 
-        fetchChampionPoolPickRate(summonnerName, wantedTournament)
-        fetchChampionPoolWinRate(summonnerName, wantedTournament)
+        fetchFactorsPerName()
+
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
         fetchBehaviorTournamentLatestPlayer(role, summonnerName, limit, wantedTournament)
         fetchBehaviorTournamentPlayer(role, summonnerName, wantedTournament)
         fetchBehaviorSingleGamesLatest(role, summonnerName, limit, wantedTournament)
 
+        fetchChampionPoolPickRate(summonnerName, wantedTournament)
+        fetchChampionPoolWinRate(summonnerName, wantedTournament)
+        
     }, [])
 
     function getAvgData(behaviorObject, role) {
@@ -326,9 +390,8 @@ export default function PlayerOverviewStat(props) {
         behaviorDatasets.push(temp)
     }
 
-
     const data = {
-        labels: factorNamePerRole[role],
+        labels: factorsNamePerRole[role],
         datasets: behaviorDatasets,
     }
 
@@ -421,10 +484,15 @@ export default function PlayerOverviewStat(props) {
             <div className="playerOverviewGraph">
 
                 <div className="playerOverview-graph">
-                    <Radar
-                        data={data}
-                        options={options}
-                    />
+                
+                    {
+                        factorsNamePerRole[role].length > 0 && 
+                        <Radar
+                            data={data}
+                            options={options}
+                        />
+                    }
+                    
                 </div>
             </div>
 
