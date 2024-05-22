@@ -34,7 +34,8 @@ export default function ModalAnalyze({open, handleClose, model}) {
         fetchLoadingMatrix();
     }, [])
     const n = model.nbFactors;
-
+    const jsonString = model.factorsName.replace(/'/g, '"')
+    const factorsName = JSON.parse(jsonString)
     return (
         <Modal
             open={open}
@@ -49,7 +50,7 @@ export default function ModalAnalyze({open, handleClose, model}) {
                 <FormControl defaultValue="" required>
                     <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                         {
-                            [...Array(n)].map((e, i) => <TextField label={`Factor ${i+1}`} key={i}/>)            
+                            [...Array(n)].map((e, i) => <TextField defaultValue={factorsName[i]} helperText={`Factor ${i+1}`} key={i}/>)            
                         }
                     </Stack>
                 </FormControl>

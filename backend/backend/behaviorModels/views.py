@@ -210,3 +210,9 @@ def get_loading_matrix(request, uuid, role):
     with open(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(uuid, role), "rb") as f:
         return HttpResponse(f.read(), content_type="image/png")
     
+@api_view(['DELETE'])
+def deleteModel(request, uuid : str, role : str):
+    toDelete = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, role__exact=role)
+    print(toDelete)
+    toDelete.delete()
+    return Response(status=status.HTTP_200_OK)
