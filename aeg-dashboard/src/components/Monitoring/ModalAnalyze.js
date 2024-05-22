@@ -19,7 +19,7 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: "fit-content",
-        height : 600,
+        height : "90vh",
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,

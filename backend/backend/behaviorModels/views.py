@@ -234,7 +234,8 @@ def setModelAsActive(request, uuid : str, role : str):
     model.selected = True
     model.save()
 
-    df = pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    
     idx_selected : int = df[((df.uuid == str(model.uuid)) & (df.role == model.role))].index.to_list()[0]
     df.loc[idx_selected: idx_selected] = [model.uuid, model.modelType, model.modelName, model.role, model.kmo, model.tournamentDict, model.nbFactors, model.factorsName, model.selected]
     os.remove(DATA_PATH + "behavior/models/behaviorModels_metadata.csv")
@@ -251,7 +252,7 @@ def setFactorsName(request, uuid : str, role : str):
     model.factorsName = str(factorsName)
     model.save()
 
-    df = pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
+    df : pd.DataFrame = pd.read_csv(DATA_PATH + "behavior/models/behaviorModels_metadata.csv", sep=";")
     idx_selected : int = df[((df.uuid == str(model.uuid)) & (df.role == model.role))].index.to_list()[0]
     df.loc[idx_selected: idx_selected] = [model.uuid, model.modelType, model.modelName, model.role, model.kmo, model.tournamentDict, model.nbFactors, model.factorsName, model.selected]
     os.remove(DATA_PATH + "behavior/models/behaviorModels_metadata.csv")
