@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 
 from django.http import HttpResponse
 from rest_framework.response import Response
@@ -179,9 +180,14 @@ def get_tournament_list_shortened(request):
     return Response(tournament_list)
 
 @api_view(['GET'])
-def get_patch_list(request):
-    queryResult = GameMetadata.objects.all()
+def get_patch_list(request, scrim : int):
+    
+    if scrim == 0:
+        queryResult = GameMetadata.objects.filter(~Q(tournament="League of Legends Scrims"))
+    else:
+        queryResult = GameMetadata.objects.filter(tournament__exact="League of Legends Scrims")
     patchList : list = list()
+
 
     for res in queryResult:
         patch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]

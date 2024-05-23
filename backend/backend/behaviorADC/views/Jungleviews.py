@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -16,8 +17,11 @@ import requests
 from datetime import datetime
 
 @api_view(['GET'])
-def behaviorJungle_get_player_list(request, patch):
-    allObjects = BehaviorJungle.objects.filter(patch__contains=patch)
+def behaviorJungle_get_player_list(request, patch, scrim):
+    if scrim == 0:
+        allObjects = BehaviorJungle.objects.filter(patch__contains=patch).filter(~Q(tournament="League of Legends Scrims"))
+    else:
+        allObjects = BehaviorJungle.objects.filter(patch__contains=patch, tournament__exact="League of Legends Scrims")
     summonnerNameList : list = list()
 
     for JungleObject in allObjects:

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -17,8 +18,11 @@ from datetime import datetime
 
 
 @api_view(['GET'])
-def behaviorSupport_get_player_list(request, patch):
-    allObjects = BehaviorSupport.objects.filter(patch__contains=patch)
+def behaviorSupport_get_player_list(request, patch, scrim):
+    if scrim == 0:
+        allObjects = BehaviorSupport.objects.filter(patch__contains=patch).filter(~Q(tournament="League of Legends Scrims"))
+    else:
+        allObjects = BehaviorSupport.objects.filter(patch__contains=patch, tournament__exact="League of Legends Scrims")
     summonnerNameList : list = list()
 
     for SupportObject in allObjects:

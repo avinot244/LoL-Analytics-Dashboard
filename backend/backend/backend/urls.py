@@ -30,7 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Behavior Top
-    path('api/behavior/Top/getSummonnerList/<str:patch>/', Topviews.behaviorTop_get_player_list), # Getting the list of unique players
+    path('api/behavior/Top/getSummonnerList/<str:patch>/<int:scrim>/', Topviews.behaviorTop_get_player_list), # Getting the list of unique players
     path('api/behavior/Top/getSummonnerListTournament/<str:patch>/<str:tournament>/', Topviews.behaviorTop_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Top/patch/update', Topviews.behaviorTop_updatePatch), # Updating patch values in the production database
     path('api/behavior/Top/stats/<str:summonnerName>', Topviews.behaviorTop_stats), # Getting stats of a given summonnerName
@@ -50,7 +50,7 @@ urlpatterns = [
 
 
     # Behavior Jungle
-    path('api/behavior/Jungle/getSummonnerList/<str:patch>/', Jungleviews.behaviorJungle_get_player_list), # Getting the list of unique players
+    path('api/behavior/Jungle/getSummonnerList/<str:patch>/<int:scrim>/', Jungleviews.behaviorJungle_get_player_list), # Getting the list of unique players
     path('api/behavior/Jungle/getSummonnerListTournament/<str:patch>/<str:tournament>/', Jungleviews.behaviorJungle_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Jungle/patch/update', Jungleviews.behaviorJungle_updatePatch), # Updating patch values in the production database
     path('api/behavior/Jungle/stats/<str:summonnerName>', Jungleviews.behaviorJungle_stats), # Getting stats of a given summonnerName
@@ -70,7 +70,7 @@ urlpatterns = [
 
 
     # Behavior Mid
-    path('api/behavior/Mid/getSummonnerList/<str:patch>/', Midviews.behaviorMid_get_player_list), # Getting the list of unique players
+    path('api/behavior/Mid/getSummonnerList/<str:patch>/<int:scrim>/', Midviews.behaviorMid_get_player_list), # Getting the list of unique players
     path('api/behavior/Mid/getSummonnerListTournament/<str:patch>/<str:tournament>/', Midviews.behaviorMid_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Mid/patch/update', Midviews.behaviorMid_updatePatch), # Updating patch values in the production database
     path('api/behavior/Mid/stats/<str:summonnerName>', Midviews.behaviorMid_stats), # Getting stats of a given summonnerName
@@ -90,7 +90,7 @@ urlpatterns = [
 
 
     # Behavior ADC
-    path('api/behavior/ADC/getSummonnerList/<str:patch>/', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
+    path('api/behavior/ADC/getSummonnerList/<str:patch>/<int:scrim>/', ADCviews.behaviorADC_get_player_list), # Getting the list of unique players
     path('api/behavior/ADC/getSummonnerListTournament/<str:patch>/<str:tournament>/', ADCviews.behaviorADC_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/ADC/patch/update', ADCviews.behaviorADC_updatePatch), # Updating patch values in the production database
     path('api/behavior/ADC/stats/<str:summonnerName>', ADCviews.behaviorADC_stats), # Getting stats of a given summonnerName
@@ -112,7 +112,7 @@ urlpatterns = [
 
 
     # Behavior Support
-    path('api/behavior/Support/getSummonnerList/<str:patch>/', Supportviews.behaviorSupport_get_player_list), # Getting the list of unique players
+    path('api/behavior/Support/getSummonnerList/<str:patch>/<int:scrim>/', Supportviews.behaviorSupport_get_player_list), # Getting the list of unique players
     path('api/behavior/Support/getSummonnerListTournament/<str:patch>/<str:tournament>/', Supportviews.behaviorSupport_get_player_list_tournament), # Getting the list of unique players
     path('api/behavior/Support/patch/update', Supportviews.behaviorSupport_updatePatch), # Updating patch values in the production database
     path('api/behavior/Support/stats/<str:summonnerName>', Supportviews.behaviorSupport_stats), # Getting stats of a given summonnerName
@@ -147,7 +147,7 @@ urlpatterns = [
     path('api/behavior/deleteAll/', dataAnalysisViews.delete_all_behavior),
     path('api/dataAnalysis/deleteGame/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.deleteGame),
     path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/', dataAnalysisViews.getTournamentFromPlayer),
-    path('api/dataAnalysis/patch/getList', dataAnalysisViews.get_patch_list),
+    path('api/dataAnalysis/patch/getList/<int:scrim>/', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
     path('api/dataAnalysis/getTournamentMapping/', dataAnalysisViews.get_tournament_mapping),

@@ -30,7 +30,7 @@ function PlayerOverview(){
 
     useEffect(() => {
         const fetchPatchList = async () => {
-            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
+            const result = await fetch(API_URL + "dataAnalysis/patch/getList/0/", {
                 method: "GET"
             })
             result.json().then(result => {
@@ -42,7 +42,7 @@ function PlayerOverview(){
     }, [])
 
     const fetchPlayers = async (patch, role) => {
-        const result = await fetch(API_URL + `behavior/${role}/getSummonnerList/${patch}/`, {
+        const result = await fetch(API_URL + `behavior/${role}/getSummonnerList/${patch}/0/`, {
             method: "GET"
         })
         result.json().then(result => {
