@@ -146,7 +146,7 @@ urlpatterns = [
     # Data Analysis
     path('api/behavior/deleteAll/', dataAnalysisViews.delete_all_behavior),
     path('api/dataAnalysis/deleteGame/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.deleteGame),
-    path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/', dataAnalysisViews.getTournamentFromPlayer),
+    path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/<int:scrim>/', dataAnalysisViews.getTournamentFromPlayer),
     path('api/dataAnalysis/patch/getList/<int:scrim>/', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),

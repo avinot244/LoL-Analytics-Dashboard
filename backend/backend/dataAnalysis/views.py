@@ -286,9 +286,12 @@ def getPatchListFromTournament(request, tournament):
     return Response(patchList)
 
 @api_view(['GET'])
-def getTournamentFromPlayer(request, summonnerName, patch):
-    query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, patch__contains=patch)
-    print(len(query))
+def getTournamentFromPlayer(request, summonnerName, patch, scrim):
+    if scrim == 0:
+        query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, patch__contains=patch).filter(~Q(tournament="League of Legends Scrims"))
+    else:
+        query = DraftPlayerPick.objects.filter(sumonnerName__exact=summonnerName, patch__contains=patch, tournament__exact="League of Legends Scrims")
+
     tournamentList : list = list()
     for res in query:
         if not(res.tournament in tournamentList):

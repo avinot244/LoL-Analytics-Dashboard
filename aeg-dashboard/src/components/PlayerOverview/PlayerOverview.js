@@ -52,7 +52,7 @@ function PlayerOverview(){
     }
 
     const fetchTournamentFromPlayer = async (summonnerName, patch) => {
-        const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/${patch}`, {
+        const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/${patch}/0/`, {
             method: "GET"
         })
         result.json().then(result => {

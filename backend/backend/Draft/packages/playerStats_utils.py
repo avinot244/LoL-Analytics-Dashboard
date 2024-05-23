@@ -137,6 +137,20 @@ def updateDatabase(path : str,
                 df.at[index, "NbGames"] = nbGames
                 
                 os.remove(path)
+                
+                to_delete = ChampionPool.objects.get(summonnerName__exact=playerName, championName__exact=championName, tournament__exact=tournament)
+                to_delete.delete()
+
+                newObject = ChampionPool(
+                    summonnerName=playerName,
+                    championName=championName,
+                    tournament=tournament,
+                    globalPickRate=globalPickRate,
+                    winRate=globalWinRate,
+                    nbGames=nbGames,
+                    kda=kda
+                )
+                newObject.save()
                 df.to_csv(path, sep=";", index=False)
                 break
 
