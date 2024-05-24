@@ -17,7 +17,7 @@ import '../../styles/Monitoring.css'
 
 import NavBarComp from '../NavbarComp.js';
 import { API_URL } from '../../constants/index.js';
-;
+
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
     const [selectedTournament, setSelectedTournament] = React.useState('')
