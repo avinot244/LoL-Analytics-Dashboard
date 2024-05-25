@@ -206,6 +206,18 @@ def get_tournament_list(request):
     
     return Response(tournamentList)
 
+@api_view(['GET'])
+def get_tournament_dict(request):
+    queryResult = BehaviorADC.objects.all()
+    tournamentList : list = list()
+    
+    for res in queryResult:
+        k = [list(o.keys())[0] for o in tournamentList]
+        if not(res.tournament in k):
+            tournamentList.append({res.tournament:queryResult.filter(tournament__exact=res.tournament).count()})
+    
+    return Response(tournamentList)
+
 @api_view(['PATCH'])
 def update_bins(request):
     df = pd.read_csv(DATA_PATH + "games/data_metadata.csv",sep=";")

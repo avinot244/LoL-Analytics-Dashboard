@@ -5,34 +5,44 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import DownloadIcon from '@mui/icons-material/Download';
-import { Autocomplete, Chip } from '@mui/material';
+import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { ThemeProvider, createTheme } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear'
-import SearchIcon from '@mui/icons-material/Search';
+import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 import Stack from '@mui/material/Stack';
 
 import SelectComp from "../SelectComp.js";
 
 import { API_URL, roleList } from '../../constants/index.js';
 
-function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
-    const [selectedTournament, setSelectedTournament] = React.useState({})
+function TournamentSelecter({onRemove, onSelectChange, tournamentList, tournamentDict, flagOverflow, setFlagOverflow}) {
+    const [selectedTournament, setSelectedTournament] = React.useState({"League of Legends Scrims": 0})
     const [amount, setAmount] = React.useState(0)
     
     const handleAmountChange = (amount) => {
-        const newValue = {[Object.keys(selectedTournament)[Object.keys(selectedTournament).length-1]]: parseInt(amount, 10)}
-        console.log(newValue)
+        let temp = Object.keys(selectedTournament)[0]
+
+        let limit = Object.values(tournamentDict[tournamentList.indexOf(temp)])[0]
+        let newValue = {}
+
+        if (amount <= limit) {
+            newValue = {[Object.keys(selectedTournament)[Object.keys(selectedTournament).length-1]]: parseInt(amount, 10)}
+            setFlagOverflow(false)
+        }else {
+            newValue = {[Object.keys(selectedTournament)[Object.keys(selectedTournament).length-1]]: parseInt(limit, 10)}
+            setFlagOverflow(true)
+        }
+
+            
         setSelectedTournament(newValue)
         onSelectChange(newValue)
     }
 
     const handleSelectChange = (value) => {
         const newValue = {[value]:amount};
-        console.log(newValue)
         setSelectedTournament(newValue)
         onSelectChange(newValue)
     }
@@ -41,6 +51,7 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
         palette: {
             primary : {
                 main: '#fff',
+                error: '#e57373'
             },
             text : {
                 disabled: '#fff'
@@ -64,21 +75,43 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
                             popupIcon={<ArrowDropDownIcon color="primary"/>}
                             className="searchComp"
                             options={tournamentList}
-                            renderInput={(params) => (
-                                <TextField 
-                                    className='textField-searchComp'
-                                    {...params} 
-                                    label={"Tournament"}
-                                    sx={{ 
-                                        input: { color: 'white'},
-                                        borderColor: 'white'
-                                    }}
-                                    focused
-                                    fullWidth={true}
+                            renderInput={(params) => {
+                                if (flagOverflow) {
+                                    return (
+                                        <TextField 
+                                            className='textField-searchComp'
+                                            {...params} 
+                                            label={"Tournament"}
+                                            sx={{ 
+                                                input: { color: 'red'},
+                                            }}
+                                            focused
+                                            fullWidth={true}
 
-                                />
+                                        
+                                        />
+                                    )
+                                }else {
+                                    return (
+                                            
+                                        <TextField 
+                                            className='textField-searchComp'
+                                            {...params} 
+                                            label={"Tournament"}
+                                            sx={{ 
+                                                input: { color: 'white'},
+                                                borderColor: 'white'
+                                            }}
+                                            focused
+                                            fullWidth={true}
+
+                                        />
+                                        
+                                    )
+                                }
+                            }}
                                 
-                            )}
+                                
                             onChange={(_, value) => {handleSelectChange(value)}}
                             sx={{color: 'primary.main', borderColor: 'primary.main', width: 525}}
                             fullWidth={true}
@@ -105,6 +138,7 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
                     }}
                 />
             </ThemeProvider>
+            <p>max : {Object.values(tournamentDict[tournamentList.indexOf(Object.keys(selectedTournament)[0])])[0]}</p>
             <Button
                 onClick={onRemove}
                 color='error'
@@ -117,15 +151,23 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
     )
 }
 
-const fetchData = async (tournamentList) => {
+const fetchData = async (tournamentList, role) => {
     let res = {}
+    console.log(role)
     tournamentList.map((object) => res[Object.keys(object)] = Object.values(object)[0])
-    console.log(JSON.stringify(res))
+    let response = await fetch(API_URL + `behaviorModels/${role}/computeModel`, {
+        method: "POST",
+        body: JSON.stringify(res)
+    })
+    response.json().then((newModel) => {
+        console.log(newModel)
+    })
 }
 
-function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}) {
+function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList, tournamentDict, activeRole}) {
     // State to store the paragraphs
     const [paragraphs, setParagraphs] = React.useState([]);
+    const [flagOverflow, setFlagOverflow] = React.useState(false)
     
 
     // Function to add a paragraph
@@ -152,7 +194,7 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
         setSelectedTournaments(newSelectedTournaments)
     }
 
-    const handleDownload = () => {
+    const handleCompute = () => {
         let flag = true
         if (selectedTournaments.length === 0) {
             flag = false
@@ -163,10 +205,14 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
             }
         }
 
-        if (flag) {
-            fetchData(selectedTournaments)
+        if (flagOverflow) {
+            alert("Too much game selected for given tournament")
         }else{
-            alert("Please select a tournament in each fields")
+            if (flag) {
+                fetchData(selectedTournaments, activeRole)            
+            }else{
+                alert("Please select a tournament in each fields")
+            }
         }
     }
 
@@ -181,6 +227,9 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
                         onRemove={() => removeParagraph(index)}
                         onSelectChange={(value) => handleSelectChange(value, index)}
                         tournamentList={tournamentList}
+                        tournamentDict={tournamentDict}
+                        flagOverflow={flagOverflow}
+                        setFlagOverflow={setFlagOverflow}
                     />
                 ))}
             </div>
@@ -199,11 +248,11 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
 
                 <Button
                     variant='contained'
-                    endIcon={<DownloadIcon/>}
+                    endIcon={<DeveloperBoardIcon/>}
                     color="success"
-                    onClick={() => handleDownload()}
+                    onClick={() => handleCompute()}
                 >
-                    Download
+                    Compute model
                 </Button>
             </div>
         </div>
@@ -213,20 +262,29 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
 
 export default function PCAModelMaker() {
     const [tournamentList, setTournamentList] = React.useState([]);
+    const [tournamentDict, setTournamentDict] = React.useState([])
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
     const [activeRole, setActiveRole] = React.useState('')
 
     const fetchTournamentList = async () => {
-        const today = new Date()
-        const year = today.getFullYear();
-        const result = await fetch(API_URL + `dataAnalysis/tournament/getList`, {
+        const result = await fetch(API_URL + `dataAnalysis/tournament/getDict`, {
             method: "GET",
         })
         result.json().then(result => {
-            let newTournamentList = result.sort()
+            let newTournamentList = []
+            result.map((tournamentObject) => newTournamentList.push(Object.keys(tournamentObject)[0]))
+            newTournamentList = newTournamentList
+            
             setTournamentList(newTournamentList)
+
+            let newTournamentDict = result
+            setTournamentDict(newTournamentDict)
+
+
         })
     }
+
+
 
     React.useEffect(()=>{
         fetchTournamentList()
@@ -254,13 +312,14 @@ export default function PCAModelMaker() {
                     </div>
                 </div>
                     
-                
                 <div className="PCAMaker-tournament-selecter">
                     <h3>Select a list of tournaments</h3>
                     <TextAdder
                         tournamentList={tournamentList}
                         selectedTournaments={selectedTournaments}
                         setSelectedTournaments={setSelectedTournaments}
+                        tournamentDict={tournamentDict}
+                        activeRole={activeRole}
                     />
                 </div>
                 

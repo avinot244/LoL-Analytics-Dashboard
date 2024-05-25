@@ -142,6 +142,7 @@ urlpatterns = [
     path('api/behaviorModels/setActive/<str:uuid>/<str:role>/', behaviorModelsViews.setModelAsActive),
     path('api/behaviorModels/setFactorsName/<str:uuid>/<str:role>/', behaviorModelsViews.setFactorsName),
     path('api/behaviorModels/getModel/<str:role>/', behaviorModelsViews.getModel),
+    path('api/behaviorModels/generateLoadings/', behaviorModelsViews.generate_loadings),
 
     # Data Analysis
     path('api/behavior/deleteAll/', dataAnalysisViews.delete_all_behavior),
@@ -149,6 +150,7 @@ urlpatterns = [
     path('api/dataAnalysis/tournament/<str:summonnerName>/<str:patch>/<int:scrim>/', dataAnalysisViews.getTournamentFromPlayer),
     path('api/dataAnalysis/patch/getList/<int:scrim>/', dataAnalysisViews.get_patch_list),
     path('api/dataAnalysis/tournament/getList', dataAnalysisViews.get_tournament_list),
+    path('api/dataAnalysis/tournament/getDict', dataAnalysisViews.get_tournament_dict),
     path('api/dataAnalysis/download/<str:rawTournamentList>/', dataAnalysisViews.download_latest),
     path('api/dataAnalysis/getTournamentMapping/', dataAnalysisViews.get_tournament_mapping),
 
@@ -161,7 +163,11 @@ urlpatterns = [
 
     path('api/dataAnalysis/getListDownlodableTournament/<int:year>/', dataAnalysisViews.getListOfDownloadableTournament),
     path('api/dataAnalysis/getTournamentListShortened/', dataAnalysisViews.get_tournament_list_shortened),
+
+
     path('api/dataAnalysis/updateDatabase/<str:tournamentList>/', dataAnalysisViews.updateDatabase),
+
+    
     path('api/dataAnalysis/getGameList/<str:tournament>/', dataAnalysisViews.getGameList),
 
     path('api/dataAnalysis/getGamePositionDensity/', dataAnalysisViews.getGamePositionDensity),
