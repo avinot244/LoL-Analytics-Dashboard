@@ -367,6 +367,8 @@ def getRegionSplit(request, uuid : str, role : str):
         "LCK": 0,
         "LEC": 0,
         "LCS": 0,
+        "MSI": 0,
+        "Worlds": 0,
         "Other": 0
     }
 

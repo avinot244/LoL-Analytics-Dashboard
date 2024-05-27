@@ -5,12 +5,16 @@ import { API_URL } from "../../constants";
 import { useEffect, useRef, useState } from "react";
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import { useFormControlContext } from '@mui/base/FormControl';
+
+import PCADbOverview from "./PCADbOverview";
+
+import "../../styles/PCAModalAnalyze.css"
 
 
 
 export default function ModalAnalyze({open, handleClose, model, flag, setFlag, setSelected}) {
     const [img, setImg] = useState();
+    const [regionSplit, setRegionSplit] = useState({})
     const textFieldRefs = useRef([]);
 
     const style = {
@@ -32,6 +36,14 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
         const imageBlob = await res.blob()
         const imageObjectURL = URL.createObjectURL(imageBlob)
         setImg(imageObjectURL)
+    }
+    
+    const fetchRegionSplit = async () => {
+        const dict = await fetch(API_URL + `behaviorModels/getRegionSplit/${model.uuid}/${model.role}/`)
+        dict.json().then((regionSplit) => {
+            let newRegionSplit = regionSplit
+            setRegionSplit(newRegionSplit)
+        })
     }
 
     const setModelActive = async () => {
@@ -55,8 +67,9 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
         })
     }
 
-    useState(() => {
+    useEffect(() => {
         fetchLoadingMatrix();
+        fetchRegionSplit();
     }, [])
 
     const n = model.nbFactors;
@@ -71,7 +84,15 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
                 <Typography id="modal-modal-title" variant="h6" component="h2"align="center">
                     Loadings of model {model.uuid} for {model.role}
                 </Typography>
+
                 <img src={img} alt="model loadings" width={1100} />
+                
+                <div className="wrapper-pcamodal-piechart">
+                    <PCADbOverview
+                        regionSplit={regionSplit}
+                    />
+                </div>
+                
 
                 <FormControl defaultValue="" required>
                     <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
