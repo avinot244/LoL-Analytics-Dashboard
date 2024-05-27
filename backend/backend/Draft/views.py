@@ -406,7 +406,7 @@ def updatePlayerStats(request, tournamentListStr):
                     nbGames,
                     kda
                 )
-    import_championPools()
+    # import_championPools()
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])

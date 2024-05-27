@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import os
 from PIL import Image
 from tqdm import tqdm
+import re
 
 from joblib import dump, load
 
@@ -342,3 +343,40 @@ def getModel(request, role : str):
     model = BehaviorModelsMetadata.objects.get(role__exact=role, selected__exact=True)
     serializer = BehaviorModelsMetadataSerializer(model, context={"request": request}, many=False)
     return Response(serializer.data)
+
+
+def searchRegion(regionList : list[str], tournament_name : str):
+
+    for i in range(len(regionList)):
+        x = re.search(regionList[i], tournament_name)
+        
+        if x != None:
+            if i == len(regionList):
+                return i-1
+            else:
+                return i
+    return -1
+        
+@api_view(['GET'])
+def getRegionSplit(request, uuid : str, role : str):
+    regionList : list[str] = ["LCK", "LEC", "LCS"]
+    model = BehaviorModelsMetadata.objects.get(role__exact=role, uuid__exact=uuid)
+    tournamentDict : dict = json.loads(model.tournamentDict.replace("'", "\""))
+
+    res : dict = {
+        "LCK": 0,
+        "LEC": 0,
+        "LCS": 0,
+        "Other": 0
+    }
+
+
+    for tournament_name, amount in tournamentDict.items():
+        
+        idx = searchRegion(regionList, tournament_name)
+        if amount > 0 and idx != -1:
+            res[regionList[idx]] += amount
+        elif amount > 0:
+            res["Other"] += amount
+
+    return Response(res)

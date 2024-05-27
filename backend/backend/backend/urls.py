@@ -143,6 +143,7 @@ urlpatterns = [
     path('api/behaviorModels/setFactorsName/<str:uuid>/<str:role>/', behaviorModelsViews.setFactorsName),
     path('api/behaviorModels/getModel/<str:role>/', behaviorModelsViews.getModel),
     path('api/behaviorModels/generateLoadings/', behaviorModelsViews.generate_loadings),
+    path('api/behaviorModels/getRegionSplit/<str:uuid>/<str:role>/', behaviorModelsViews.getRegionSplit),
 
     # Data Analysis
     path('api/behavior/deleteAll/', dataAnalysisViews.delete_all_behavior),
