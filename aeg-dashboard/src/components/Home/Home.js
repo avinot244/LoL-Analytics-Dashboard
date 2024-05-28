@@ -12,6 +12,8 @@ import { grey } from '@mui/material/colors/'
 
 import { useNavigate } from "react-router-dom";
 
+import RedirectPage from "./RedirectPage";
+
 
 
 const theme = createTheme({
@@ -26,48 +28,55 @@ const theme = createTheme({
 })
 
 
-function Home({loggedId, email}){
-    const navigate = useNavigate()
+function Home({loggedIn, setLoggedIn, email}){
     
     const [value, setValue] = useState(0)
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        
     }
 
     return(
         <div className="wrapper-overview">
-            <NavBarComp />
-            <br/>
-            <h1>Home Page</h1>
+            {
+                loggedIn ? (
+                    <>
+                        <NavBarComp />
+                        <br/>
+                        <h1>Home Page</h1>
 
-            <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
-            <ThemeProvider theme={theme}>
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    textColor="primary"
-                    indicatorColor="primary"
-                >
-                    <Tab
-                        label="Top Meta Picks"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                    <Tab
-                        label="Latest Drafts"
-                        sx={{
-                            color:"gray"
-                        }}
-                    />
-                </Tabs>
-            </ThemeProvider>
-            </Box>
-            <TopMetaPicksPanel value={value} panelIndex={0}/>
-            <LatestDraftsPanel value={value} panelIndex={1}/>
-        </div>    
+                        <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
+                        <ThemeProvider theme={theme}>
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                textColor="primary"
+                                indicatorColor="primary"
+                            >
+                                <Tab
+                                    label="Top Meta Picks"
+                                    sx={{
+                                        color:"gray"
+                                    }}
+                                />
+                                <Tab
+                                    label="Latest Drafts"
+                                    sx={{
+                                        color:"gray"
+                                    }}
+                                />
+                            </Tabs>
+                        </ThemeProvider>
+                        </Box>
+                        <TopMetaPicksPanel value={value} panelIndex={0}/>
+                        <LatestDraftsPanel value={value} panelIndex={1}/>
+                    </>
+                ) : (
+                    <RedirectPage/>
+                )
+            }
+            
+        </div>
     )
 }
 

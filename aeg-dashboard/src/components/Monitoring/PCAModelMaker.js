@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 import SelectComp from "../SelectComp.js";
 
 import { API_URL, roleList } from '../../constants/index.js';
+import RedirectPage from "../Home/RedirectPage.js";
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList, tournamentDict, flagOverflow, setFlagOverflow}) {
     const [selectedTournament, setSelectedTournament] = React.useState({"League of Legends Scrims": 0})
@@ -260,7 +261,7 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList,
 }
 
 
-export default function PCAModelMaker() {
+export default function PCAModelMaker({loggedIn}) {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [tournamentDict, setTournamentDict] = React.useState([])
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
@@ -292,41 +293,46 @@ export default function PCAModelMaker() {
 
     return (
         <div className="pca-model-maker-wrapper">
-            <NavBarComp/>
+            {
+                loggedIn ? (
+                    <>
+                        <NavBarComp/>
 
-            <h1>Create Behavior Analysis Models</h1>
+                        <h1>Create Behavior Analysis Models</h1>
 
-            <br/>
-            <br/>
-            <br/>
-            
-            <div className="PCAMaker-control-panel">
-                <div className="PCAMaker-roleSelected-wrapper">
-                    <h3>Select a role</h3>
-                    <div className="PCAMaker-roleSelecter">
-                        <SelectComp
-                            elementList={roleList}
-                            defaultValue={"-- Role --"}
-                            setActive={setActiveRole}/>
+                        <br/>
+                        <br/>
+                        <br/>
 
-                    </div>
-                </div>
-                    
-                <div className="PCAMaker-tournament-selecter">
-                    <h3>Select a list of tournaments</h3>
-                    <TextAdder
-                        tournamentList={tournamentList}
-                        selectedTournaments={selectedTournaments}
-                        setSelectedTournaments={setSelectedTournaments}
-                        tournamentDict={tournamentDict}
-                        activeRole={activeRole}
-                    />
-                </div>
-                
-            </div>
-            
-            
+                        <div className="PCAMaker-control-panel">
+                            <div className="PCAMaker-roleSelected-wrapper">
+                                <h3>Select a role</h3>
+                                <div className="PCAMaker-roleSelecter">
+                                    <SelectComp
+                                        elementList={roleList}
+                                        defaultValue={"-- Role --"}
+                                        setActive={setActiveRole}/>
+
+                                </div>
+                            </div>
+                                
+                            <div className="PCAMaker-tournament-selecter">
+                                <h3>Select a list of tournaments</h3>
+                                <TextAdder
+                                    tournamentList={tournamentList}
+                                    selectedTournaments={selectedTournaments}
+                                    setSelectedTournaments={setSelectedTournaments}
+                                    tournamentDict={tournamentDict}
+                                    activeRole={activeRole}
+                                />
+                            </div>
+                            
+                        </div>
+                    </>
+                ) : (
+                    <RedirectPage />
+                )
+            }
         </div>
-
     )
 }

@@ -2,7 +2,6 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import "../styles/NavbarComp.css"
 import {Outlet, Link} from "react-router-dom";
 
 function NavBarComp() {
@@ -18,36 +17,26 @@ function NavBarComp() {
 				<Nav.Link as={Link} to="/Home">Home</Nav.Link>
 
 				<NavDropdown title="Champion Overview">
-					<NavDropdown.Item href='/ChampionOverview/Scrims'>Scrims</NavDropdown.Item>
-					<NavDropdown.Item href='/ChampionOverview/Esports'>Esports</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/ChampionOverview/Scrims'>Scrims</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/ChampionOverview/Esports'>Esports</NavDropdown.Item>
 				</NavDropdown>
 
 				<NavDropdown title="Player Overview">
 					<NavDropdown.Item as={Link} to='/PlayerOverview/Scrims'>Scrims</NavDropdown.Item>
-					<NavDropdown.Item href='/PlayerOverview/Esports'>Esports</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/PlayerOverview/Esports'>Esports</NavDropdown.Item>
 				</NavDropdown>
 
 				<NavDropdown title="Game Overview">
-					<NavDropdown.Item href='/GameOverview/Scrims'>Scrims</NavDropdown.Item>
-					<NavDropdown.Item href='/GameOverview/Esports'>Esports</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/GameOverview/Scrims'>Scrims</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/GameOverview/Esports'>Esports</NavDropdown.Item>
 				</NavDropdown>
 
 				<NavDropdown title="Monitoring">
-					<NavDropdown.Item href='/Monitoring/Download'>Download Games</NavDropdown.Item>
-					<NavDropdown.Item href='/Monitoring/PCAMaker'>PCA Model Maker</NavDropdown.Item>
-					<NavDropdown.Item href='/Monitoring/PCAOverview'>PCA Model Overview</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/Monitoring/Download'>Download Games</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/Monitoring/PCAMaker'>PCA Model Maker</NavDropdown.Item>
+					<NavDropdown.Item as={Link} to='/Monitoring/PCAOverview'>PCA Model Overview</NavDropdown.Item>
 				</NavDropdown>
 				
-				{/* <NavDropdown title="Game Overview" id="basic-nav-dropdown">		
-					<NavDropdown.Item href="#action/3.1">Post-game stats</NavDropdown.Item>
-					<NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-					<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-
-					<NavDropdown.Divider />
-					<NavDropdown.Item href="#action/3.4">
-						Separated link
-					</NavDropdown.Item>
-				</NavDropdown> */}
 
 			</Nav>
 			</Navbar.Collapse>

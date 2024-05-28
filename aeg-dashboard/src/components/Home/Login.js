@@ -27,7 +27,7 @@ const defaultTheme = createTheme({
     }
 });
 
-export default function SignInSide() {
+export default function SignInSide({loggedIn, setLoggedIn}) {
     const navigate = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -36,6 +36,7 @@ export default function SignInSide() {
             email: data.get('email'),
             password: data.get('password'),
         });
+        setLoggedIn(true)
         navigate('/Home')
     };
 

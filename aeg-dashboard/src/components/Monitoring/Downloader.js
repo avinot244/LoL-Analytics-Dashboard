@@ -17,6 +17,7 @@ import '../../styles/Monitoring.css'
 
 import NavBarComp from '../NavbarComp.js';
 import { API_URL } from '../../constants/index.js';
+import RedirectPage from '../Home/RedirectPage.js';
 
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
@@ -256,7 +257,7 @@ function TournamentFilter({tournamentFilterList, selectedFilters, setSelectedFil
 
 
 
-export default function Downloader() {
+export default function Downloader({loggedIn}) {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
     const [tournamentListShortended, setTournamentListShortened] = React.useState([])
@@ -299,40 +300,45 @@ export default function Downloader() {
 
     return (
         <div className='wrapper-downloader'>
-            <NavBarComp/>
-            <h1>Download Games</h1>
-            
-
-            <h2>Select the tournament filter</h2>
-            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
-                <TournamentFilter
-                    tournamentFilterList={tournamentListShortended}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                />
-                <Button
-                    endIcon={<SearchIcon/>}
-                    variant='contained'
-                    onClick={() => {fetchTournamentList(); setFlagDisplay(true)}}
-                    
-                >
-                    Get Tournaments
-                </Button>
-
-            </Stack>
-            
-
             {
-                flagDisplay &&
-                <TextAdder
-                    tournamentList={tournamentList}
-                    selectedTournaments={selectedTournaments}
-                    setSelectedTournaments={setSelectedTournaments}
-                />
+                loggedIn ? (
+                    <>
+                        <NavBarComp/>
+                        <h1>Download Games</h1>
+                        
+
+                        <h2>Select the tournament filter</h2>
+                        <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+                            <TournamentFilter
+                                tournamentFilterList={tournamentListShortended}
+                                selectedFilters={selectedFilters}
+                                setSelectedFilters={setSelectedFilters}
+                            />
+                            <Button
+                                endIcon={<SearchIcon/>}
+                                variant='contained'
+                                onClick={() => {fetchTournamentList(); setFlagDisplay(true)}}
+                                
+                            >
+                                Get Tournaments
+                            </Button>
+
+                        </Stack>
+                        
+
+                        {
+                            flagDisplay &&
+                            <TextAdder
+                                tournamentList={tournamentList}
+                                selectedTournaments={selectedTournaments}
+                                setSelectedTournaments={setSelectedTournaments}
+                            />
+                        }
+                    </>
+                ) : (
+                    <RedirectPage />
+                )
             }
-            
-        
-        
         </div>
     );
 }

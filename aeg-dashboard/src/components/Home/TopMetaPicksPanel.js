@@ -95,7 +95,6 @@ function TopMetaPicksPanel(props) {
                         </Button>
                     </li>
                 </ul>
-                <p>{activeTournament}</p>
             </div>
 
             {
