@@ -9,13 +9,13 @@ function NavBarComp() {
   return (
     <Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
       	<Container>
-			<Link to="/">
+			<Link to="/Home">
 				<Navbar.Brand>Aegis DashBoard</Navbar.Brand>
 			</Link>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			<Navbar.Collapse id="basic-navbar-nav">
 			<Nav className="me-auto">
-				<Nav.Link as={Link} to="/">Home</Nav.Link>
+				<Nav.Link as={Link} to="/Home">Home</Nav.Link>
 
 				<NavDropdown title="Champion Overview">
 					<NavDropdown.Item href='/ChampionOverview/Scrims'>Scrims</NavDropdown.Item>

@@ -8,7 +8,9 @@ import { ThemeProvider, createTheme } from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { amber,  brown,  grey} from '@mui/material/colors/'
+import { grey } from '@mui/material/colors/'
+
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -24,7 +26,9 @@ const theme = createTheme({
 })
 
 
-function Home(){
+function Home({loggedId, email}){
+    const navigate = useNavigate()
+    
     const [value, setValue] = useState(0)
 
     const handleChange = (event, newValue) => {

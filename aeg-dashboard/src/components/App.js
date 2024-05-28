@@ -10,10 +10,15 @@ import Downloader from './Monitoring/Downloader';
 import PCAModelMaker from './Monitoring/PCAModelMaker';
 import PCAModelOverview from './Monitoring/PCAModelOverview';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import SignInSide from './Home/Login';
 
 const router = createBrowserRouter([
 	{
 		path:'/',
+		element: <SignInSide />
+	},
+	{
+		path:'/Home',
 		element: <Home />
 	},
 	{

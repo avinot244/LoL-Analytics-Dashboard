@@ -13,9 +13,9 @@ import SearchComp from "../SearchComp";
 function TopMetaPicksPanel(props) {
     const [patchList, setPatchList] = useState([]);
     
-    const [activePatch, setActivePatch] = useState("14.4")
+    const [activePatch, setActivePatch] = useState("14.9")
     const [activeSide, setActiveSide] = useState("Blue")
-    const [activeTournament, setActiveTournament] = useState("La Ligue Française - Spring 2024 (Regular Season: Regular Season)")
+    const [activeTournament, setActiveTournament] = useState("La Ligue Française - Summer 2024 (Regular Season: Regular Season)")
     const [activeFilter, setActiveFilter] = useState("PickRate")
 
     const [flagChampionOverview, setFlagChampionOverview] = useState(true)
@@ -28,6 +28,7 @@ function TopMetaPicksPanel(props) {
 
 
     const fetchPatchListFromTournament = async (tournament) => {
+        console.log(tournament)
         const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
             method: "GET"
         })
@@ -94,6 +95,7 @@ function TopMetaPicksPanel(props) {
                         </Button>
                     </li>
                 </ul>
+                <p>{activeTournament}</p>
             </div>
 
             {
