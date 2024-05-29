@@ -17,7 +17,6 @@ function TopMetaPicksPanel(props) {
     const [activeSide, setActiveSide] = useState("Blue")
     const [activeTournament, setActiveTournament] = useState("La Ligue Française - Summer 2024 (Regular Season: Regular Season)")
     const [activeFilter, setActiveFilter] = useState("PickRate")
-    console.log(activeTournament)
 
     const [flagChampionOverview, setFlagChampionOverview] = useState(true)
 
@@ -29,7 +28,6 @@ function TopMetaPicksPanel(props) {
 
 
     const fetchPatchListFromTournament = async (tournament) => {
-        console.log(tournament)
         const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
             method: "GET"
         })
