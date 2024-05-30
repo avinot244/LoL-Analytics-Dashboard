@@ -2,6 +2,7 @@ import "../../styles/PlayerOverviewStat.css"
 import { API_URL, roleList} from "../../constants";
 import { useEffect, useState } from "react";
 import NormalDistribution from "normal-distribution"
+import Loading from "../Loading";
 
 import {
     Chart as ChartJS,
@@ -46,6 +47,8 @@ export default function PlayerOverviewStat(props) {
         "Support": []
     })
 
+    const [loading, setLoading] = useState(true)
+
 
 
     useEffect(() => {
@@ -59,11 +62,11 @@ export default function PlayerOverviewStat(props) {
                     newFactorsNamePerRole[role] = JSON.parse(model.factorsName.replace(/'/g, '"'))
                 })
             })
-            console.log(newFactorsNamePerRole)
             setFactorsNamePerRole(newFactorsNamePerRole)
         }    
     
         const fetchBehaviorTournamentPatchPlayer = async (role, summonnerName, patch, wantedTournament) => {
+            setLoading(true)
             let uuid = "";
             const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
                 method: "GET"
@@ -77,8 +80,14 @@ export default function PlayerOverviewStat(props) {
                 result.json().then(result => {
                     const newBehaviorPatch = result
                     setDataBehaviorPatch(getAvgData(newBehaviorPatch, role))
+                    setLoading(false)
+                    console.log("Finished getting data for tournament patch")
+
                 })
             })
+
+            
+            
 
             
             
@@ -192,7 +201,7 @@ export default function PlayerOverviewStat(props) {
 
             
         }
-
+        
         fetchFactorsPerName()
 
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
@@ -202,6 +211,10 @@ export default function PlayerOverviewStat(props) {
 
         fetchChampionPoolPickRate(summonnerName, wantedTournament)
         fetchChampionPoolWinRate(summonnerName, wantedTournament)
+        
+
+
+        
         
     }, [])
 
@@ -379,7 +392,6 @@ export default function PlayerOverviewStat(props) {
     ]
 
     for (let i = 0 ; i < dataSingleGames.length ; i++) {
-        console.log(getData(dataSingleGames[i], role))
         let temp = {
             label: `Behavior ${summonnerName} game ${i+1}`,
             data: getData(dataSingleGames[i], role),
@@ -483,17 +495,22 @@ export default function PlayerOverviewStat(props) {
         <div className="playerOverview-content-wrapper">
             <div className="playerOverviewGraph">
 
-                <div className="playerOverview-graph">
+                
                 
                     {
-                        factorsNamePerRole[role].length > 0 && 
-                        <Radar
-                            data={data}
-                            options={options}
-                        />
+                        loading ? (
+                            <Loading />
+                        ) : (
+                            <div className="playerOverview-graph">
+                                <Radar
+                                    data={data}
+                                    options={options}
+                                />
+                            </div>
+
+                        )
                     }
                     
-                </div>
             </div>
 
             <br />
@@ -504,19 +521,6 @@ export default function PlayerOverviewStat(props) {
             />
 
             <div className="playerOverview-other-content">
-                {/* <div className="playerOverview-stats">
-                    <h2>Overall stats</h2>
-                    <div className="playerOverview-stats-GD">
-                        <p>
-                            AVG GD@15 : {gd15 > 0 ? `+${gd15} golds` : `-${gd15} golds`}
-                        </p>
-                    </div>
-                    <div className="playerOverview-stats-kda">
-                        <p>
-                            AVG K/D/A@15 : {`${k15}/${d15}/${a15}`}
-                        </p>
-                    </div>  
-                </div> */}
                 <br/>
                 <div className="playerOverview-champs">
                     <h2>Best champions by pick rate</h2>

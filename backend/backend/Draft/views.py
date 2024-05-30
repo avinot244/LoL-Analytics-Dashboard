@@ -411,6 +411,7 @@ def updatePlayerStats(request, tournamentListStr):
 
 @api_view(['GET'])
 def getPlayerStats(request, summonnerName, tournament, filter):
+    print(ChampionPool.objects.all().count())
     
     query = ChampionPool.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament)
     
