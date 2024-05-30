@@ -250,7 +250,7 @@ export default function ChampionOverviewPanel(props) {
                 })
                 if (panelIndex > 4) {
                     setRows(newData)
-                }else{
+                } else {
                     setRows(newWantedRows)   
                 }
             })

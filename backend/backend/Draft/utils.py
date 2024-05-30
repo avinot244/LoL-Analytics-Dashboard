@@ -1,4 +1,5 @@
 from dataAnalysis.globals import DATA_PATH, ROLE_LIST
+from django.db.models.query import QuerySet
 
 from .models import *
 
@@ -170,3 +171,96 @@ def import_championPools():
         ).count() > 0):
             championPool.save()
     print("Champion pools imported")
+
+def fuseQueriesChampionDraftStats(query1 : QuerySet, query2 : QuerySet):
+    object1 : ChampionDraftStats
+    object2 : ChampionDraftStats
+
+    championList1 = [temp.championName for temp in query1]
+    championList2 = [temp.championName for temp in query2]
+
+    res : list = list()
+    for object1 in query1:
+        for object2 in query2:
+            
+            if not(object1.championName in championList2):
+                res.append({
+                    "pk": object1.pk,
+                    "championName": object1.championName,
+                    "patch": object1.patch,
+                    "tournament": object1.tournament,
+                    "side": object1.side,
+                    "mostPopularRole": object1.mostPopularRole,
+                    "winRate": object1.winRate,
+                    "globalPickRate": object1.globalPickRate,
+                    "pickRate1Rota": object1.pickRate1Rota,
+                    "pickRate2Rota": object1.pickRate2Rota,
+                    "globalBanRate": object1.globalBanRate,
+                    "banRate1Rota": object1.banRate1Rota,
+                    "banRate2Rota": object1.banRate2Rota,
+                    "mostPopularPickOrder": object1.mostPopularPickOrder,
+                    "blindPick": object1.blindPick
+
+                })
+                championList2.append(object1.championName)
+
+            elif not(object2.championName in championList1):
+                res.append({
+                    "pk": object2.pk,
+                    "championName": object2.championName,
+                    "patch": object2.patch,
+                    "tournament": object2.tournament,
+                    "side": object2.side,
+                    "mostPopularRole": object2.mostPopularRole,
+                    "winRate": object2.winRate,
+                    "globalPickRate": object2.globalPickRate,
+                    "pickRate1Rota": object2.pickRate1Rota,
+                    "pickRate2Rota": object2.pickRate2Rota,
+                    "globalBanRate": object2.globalBanRate,
+                    "banRate1Rota": object2.banRate1Rota,
+                    "banRate2Rota": object2.banRate2Rota,
+                    "mostPopularPickOrder": object2.mostPopularPickOrder,
+                    "blindPick": object2.blindPick
+
+                })
+                championList1.append(object2.championName)
+            
+            elif object1.championName == object2.championName and object1.patch == object2.patch:
+                fusedObject = ChampionDraftStats(
+                    championName = object1.championName,
+                    patch = object1.patch,
+                    tournament = object1.tournament,
+                    side = "Both",
+                    winRate = (object1.winRate + object2.winRate) / 2,
+                    globalPickRate = (object1.globalPickRate + object2.globalPickRate) / 2,
+                    pickRate1Rota = (object1.pickRate1Rota + object2.pickRate1Rota) / 2,
+                    pickRate2Rota = (object1.pickRate2Rota + object2.pickRate2Rota) / 2,
+                    globalBanRate = (object1.globalBanRate + object2.globalBanRate) / 2,
+                    banRate1Rota = (object1.banRate1Rota + object2.banRate1Rota) / 2,
+                    banRate2Rota = (object1.banRate2Rota + object2.banRate2Rota) / 2,
+                    mostPopularPickOrder = (object1.mostPopularPickOrder + object2.mostPopularPickOrder) / 2,
+                    blindPick = (object1.blindPick + object2.blindPick) / 2,
+                    mostPopularRole = object1.mostPopularRole
+                )
+                
+                res.append({
+                    "pk": fusedObject.pk,
+                    "championName": fusedObject.championName,
+                    "patch": fusedObject.patch,
+                    "tournament": fusedObject.tournament,
+                    "side": fusedObject.side,
+                    "mostPopularRole": fusedObject.mostPopularRole,
+                    "winRate": fusedObject.winRate,
+                    "globalPickRate": fusedObject.globalPickRate,
+                    "pickRate1Rota": fusedObject.pickRate1Rota,
+                    "pickRate2Rota": fusedObject.pickRate2Rota,
+                    "globalBanRate": fusedObject.globalBanRate,
+                    "banRate1Rota": fusedObject.banRate1Rota,
+                    "banRate2Rota": fusedObject.banRate2Rota,
+                    "mostPopularPickOrder": fusedObject.mostPopularPickOrder,
+                    "blindPick": fusedObject.blindPick
+
+                })
+            
+
+    return res

@@ -80,7 +80,7 @@ def download_latest(request, rawTournamentList : str):
         
         for seriesId in seriesIdList:
         # for seriesId in seriesIdList:
-            if not(seriesId in BLACKLIST):
+            if not(seriesId in BLACKLIST) and not(GameMetadata.objects.filter(seriesId__exact=seriesId).count() > 0):
                 dlDict : dict = get_all_download_links(seriesId)
                 i = 0
                 if checkSeries(dlDict['files']):

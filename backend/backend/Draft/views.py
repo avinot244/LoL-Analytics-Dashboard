@@ -20,7 +20,7 @@ from .packages.utils import isDraftDownloaded, isTournamentOngoing
 from .packages.championStats_utils import *
 from .packages.playerStats_utils import *
 
-from .utils import import_draft, import_draftStats, import_championPools
+from .utils import import_draft, import_draftStats, import_championPools, fuseQueriesChampionDraftStats
 
 
 import pandas as pd
@@ -319,26 +319,65 @@ def getChampionDraftStats(request, patch, side, tournament):
         serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
         
         return Response(serializer.data)
+
+    else:
+        queryBlue = ChampionDraftStats.objects.filter(tournament__exact=tournament, patch__contains=patch, side__exact="Blue")
+        queryRed = ChampionDraftStats.objects.filter(tournament__exact=tournament, patch__contains=patch, side__exact="Red")
+        
+        return Response(fuseQueriesChampionDraftStats(queryRed, queryBlue))
     
     return Response(status=status.HTTP_200_OK)
 
+def lowercase_first_letter(s : str):
+    if not s:
+        return s
+    return s[0].lower() + s[1:]
+
 @api_view(['GET'])
 def getTopChampions(request, role, filter, patch, side, tournament):
-    if tournament == "League of Legends Scrims":
-        query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side,  date__gte=DATE_LIMIT)
-    else:
-        
-        query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side)
+    if side != "Both":
+        if tournament == "League of Legends Scrims":
+            query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side,  date__gte=DATE_LIMIT)
+        else:
+            query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side)
 
-    if filter == "WinRate":
-        queryFiltered = query.order_by("-winRate")
-    elif filter == "PickRate":
-        queryFiltered = query.order_by("-globalPickRate")
-    elif filter == "BanRate":
-        queryFiltered = query.order_by("-globalBanRate")
-    
-    serializer = ChampionDraftStatsSerializer(queryFiltered, context={"request": request}, many=True)
-    return Response(serializer.data)
+        if filter == "WinRate":
+            queryFiltered = query.order_by("-winRate")
+        elif filter == "PickRate":
+            queryFiltered = query.order_by("-globalPickRate")
+        elif filter == "BanRate":
+            queryFiltered = query.order_by("-globalBanRate")
+        
+        
+        serializer = ChampionDraftStatsSerializer(queryFiltered, context={"request": request}, many=True)
+        return Response(serializer.data)
+
+    elif side == "Both":
+        if tournament == "League of Legends Scrims":
+            queryBlue = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Blue",  date__gte=DATE_LIMIT)
+            queryRed = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Red",  date__gte=DATE_LIMIT)
+
+            res : dict = fuseQueriesChampionDraftStats(queryRed, queryBlue)
+            
+            if filter == "PickRate":
+                return Response(sorted(res, key=lambda d:-d["globalPickRate"]))
+            elif filter == "BanRate":
+                return Response(sorted(res, key=lambda d:-d["globalBanRate"]))
+            elif filter == "WinRate":
+                return Response(sorted(res, key=lambda d:-d["winRate"]))  
+        else:
+            queryBlue = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Blue")
+            queryRed = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Red")
+
+            res : dict = fuseQueriesChampionDraftStats(queryRed, queryBlue)
+
+            if filter == "PickRate":
+                return Response(sorted(res, key=lambda d:-d["globalPickRate"]))
+            elif filter == "BanRate":
+                return Response(sorted(res, key=lambda d:-d["globalBanRate"]))
+            elif filter == "WinRate":
+                return Response(sorted(res, key=lambda d:-d["winRate"]))    
+        
 
 @api_view(['PATCH'])
 def updatePlayerStats(request, tournamentListStr):

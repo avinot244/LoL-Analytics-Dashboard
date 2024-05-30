@@ -18,6 +18,7 @@ import '../../styles/Monitoring.css'
 import NavBarComp from '../NavbarComp.js';
 import { API_URL } from '../../constants/index.js';
 import RedirectPage from '../Home/RedirectPage.js';
+import Loading from '../Loading.js';
 
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
@@ -264,9 +265,10 @@ export default function Downloader({loggedIn}) {
     const [selectedFilters, setSelectedFilters] = React.useState([])
 
 
-    const [flagDisplay, setFlagDisplay] = React.useState(false)
+    const [loading, setLoading] = React.useState(false)
 
     const fetchTournamentList = async () => {
+        setLoading(true)
         const today = new Date()
         const year = today.getFullYear();
         const result = await fetch(API_URL + `dataAnalysis/getListDownlodableTournament/${year}/`, {
@@ -279,6 +281,7 @@ export default function Downloader({loggedIn}) {
             console.log(newTournamentList)
             newTournamentList = newTournamentList.sort()
             setTournamentList(newTournamentList)
+            setLoading(false)
         })
     }
 
@@ -317,7 +320,7 @@ export default function Downloader({loggedIn}) {
                             <Button
                                 endIcon={<SearchIcon/>}
                                 variant='contained'
-                                onClick={() => {fetchTournamentList(); setFlagDisplay(true)}}
+                                onClick={() => {fetchTournamentList()}}
                                 
                             >
                                 Get Tournaments
@@ -327,12 +330,16 @@ export default function Downloader({loggedIn}) {
                         
 
                         {
-                            flagDisplay &&
-                            <TextAdder
-                                tournamentList={tournamentList}
-                                selectedTournaments={selectedTournaments}
-                                setSelectedTournaments={setSelectedTournaments}
-                            />
+                            loading ? (
+                                <Loading />
+                            ) : (
+                                <TextAdder
+                                    tournamentList={tournamentList}
+                                    selectedTournaments={selectedTournaments}
+                                    setSelectedTournaments={setSelectedTournaments}
+                                />
+                            )
+                            
                         }
                     </>
                 ) : (

@@ -38,13 +38,13 @@ function ChampionOverview({loggedIn}) {
     const [value, setValue] = useState(0)
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
-    const [displayFlag, setDisplayFlag] = useState(true)
-    const [displayPatchFlag, setDisplayPatchFlag] = useState(true)
+    const [displayFlag, setDisplayFlag] = useState(false)
+    const [displayPatchFlag, setDisplayPatchFlag] = useState(false)
 
 
-    const [activePatch, setActivePatch] = useState('14.4')
+    const [activePatch, setActivePatch] = useState()
     const [activeSide, setActiveSide] = useState('Blue')
-    const [activeTournament, setActiveTournament] = useState("La Ligue Française - Spring 2024 (Regular Season: Regular Season)")
+    const [activeTournament, setActiveTournament] = useState()
 
 
     const handleChange = (event, newValue) => {
@@ -64,15 +64,7 @@ function ChampionOverview({loggedIn}) {
     
 
     useEffect(() => {
-        const fetchPatchList = async () => {
-            const result = await fetch(API_URL + "dataAnalysis/patch/getList", {
-                method: "GET"
-            })
-            result.json().then(result => {
-                const newPatchList = result;
-                setPatchList(newPatchList);
-            })
-        }
+        
 
         const fetchTournamentList = async () => {
             const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
@@ -84,7 +76,6 @@ function ChampionOverview({loggedIn}) {
             })
         }
         
-        fetchPatchList();
         fetchTournamentList();
     }, [])
 
