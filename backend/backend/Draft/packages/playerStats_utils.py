@@ -175,6 +175,18 @@ def saveChampionPoolCSV(path : str,
         header = ["SummonnerName", "ChampionName", "Tournament", "GlobalPickRate", "WinRate", "NbGames", "KDA"]
         writer.writerow(header)
         data = [playerName, championName, tournament, globalPickRate, globalWinRate, nbGames, kda]
+
+        newObject = ChampionPool(
+            summonnerName=playerName,
+            championName=championName,
+            tournament=tournament,
+            globalPickRate=globalPickRate,
+            winRate=globalWinRate,
+            nbGames=nbGames,
+            kda=kda
+        )
+
+        newObject.save()
         
         writer.writerow(data)
         csv_file.close()
@@ -193,6 +205,18 @@ def saveChampionPoolCSV(path : str,
         )
     else:
         data = [playerName, championName, tournament, globalPickRate, globalWinRate, nbGames, kda]
+
+        newObject = ChampionPool(
+            summonnerName=playerName,
+            championName=championName,
+            tournament=tournament,
+            globalPickRate=globalPickRate,
+            winRate=globalWinRate,
+            nbGames=nbGames,
+            kda=kda
+        )
+
+        newObject.save()
 
         writer.writerow(data)
         csv_file.close()
