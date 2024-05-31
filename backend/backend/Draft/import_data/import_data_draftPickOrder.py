@@ -4,7 +4,36 @@ from tqdm import tqdm
 
 csv_draft_pick_order : str = "./databases/drafts/draft_pick_order.csv"
 
-df_draft_pick_order : pd.DataFrame = pd.read_csv(csv_draft_pick_order, sep=";")
+df_draft_pick_order : pd.DataFrame = pd.read_csv(csv_draft_pick_order, sep=";", dtype={
+    "Date": 'string',
+    "Tournament": 'string',
+    "Patch": 'string',
+    "SeriesId": 'int64',
+    "Winner": 'int64',
+    "GameNumber": 'int64',
+    "teamBlue": 'string',
+    "teamRed": 'string',
+    "BB1": 'string',
+    "BB2": 'string',
+    "BB3": 'string',
+    "BB4": 'string',
+    "BB5": 'string',
+    "BP1": 'string',
+    "BP2": 'string',
+    "BP3": 'string',
+    "BP4": 'string',
+    "BP5": 'string',
+    "RB1": 'string',
+    "RB2": 'string',
+    "RB3": 'string',
+    "RB4": 'string',
+    "RB5": 'string',
+    "RP1": 'string',
+    "RP2": 'string',
+    "RP3": 'string',
+    "RP4": 'string',
+    "RP5": 'string',
+})
 for index, row in tqdm(df_draft_pick_order.iterrows(), total=df_draft_pick_order.shape[0]):
     draftPickOrder = DraftPickOrder(
         date = row["Date"],

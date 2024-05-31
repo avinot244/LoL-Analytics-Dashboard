@@ -12,10 +12,13 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
 
                 <div className="blue">
                     <div className="header-team">
-                        {win === 0 ?
-                        (<h1 className="win">WIN</h1>)
-                        :
-                        (<h1 className="lose">LOSE</h1>)}
+                        {
+                            win === 0 ? (
+                                <h1 className="win">WIN</h1>
+                            ) : (
+                                <h1 className="lose">LOSE</h1>
+                            )
+                        }
                         <h1 className="teamName">{team1Name}</h1>
                     </div>
                     <div className="picksBlue">
@@ -82,10 +85,13 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                 <div className="red">
                     <div className="header-team">
                         <h1 className="teamName">{team2Name}</h1>
-                        {win === 1 ?
-                        (<h1 className="win">WIN</h1>)
-                        :
-                        (<h1 className="lose">LOSE</h1>)}
+                        {
+                            win === 1 ? (
+                                <h1 className="win">WIN</h1>
+                            ) : (
+                                <h1 className="lose">LOSE</h1>
+                            )
+                        }
                     </div>
                     <div className="picksRed">
                         <div className="picksRed1Rota">
@@ -141,15 +147,12 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                                         />
                                     </li>
                                 )}
-                        </ul>
+                            </ul>
                         </div>
                     </div>
                 </div>                
             </div>
-
-            
         </>
-        
     )
 }
 

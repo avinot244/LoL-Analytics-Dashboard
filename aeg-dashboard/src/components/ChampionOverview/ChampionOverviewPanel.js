@@ -20,6 +20,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { API_URL } from '../../constants';
+import RelatedDraftModal from './RelatedDraftModal';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -166,15 +167,19 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-    const { numSelected } = props;
+    const [open, setOpen] = React.useState(false)
+    
+
+    const { numSelected, selected } = props;
+
     return (
         <Toolbar
         sx={{
             pl: { sm: 2 },
             pr: { xs: 1, sm: 1 },
             ...(numSelected > 0 && {
-            bgcolor: (theme) =>
-                alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+                bgcolor: (theme) =>
+                    alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
             }),
         }}
         >
@@ -198,19 +203,19 @@ function EnhancedTableToolbar(props) {
             </Typography>
         )}
 
-        {numSelected > 0 ? (
+        {numSelected === 1 && (
             <Tooltip title="Search related drafts">
                 <IconButton
-                    onClick={() => alert("yo")}
+
+                    onClick={() => setOpen(true)}
                 >
                     <SearchIcon />
                 </IconButton>
-            </Tooltip>
-        ) : (
-            <Tooltip title="Filter list">
-            <IconButton>
-                <FilterListIcon />
-            </IconButton>
+                <RelatedDraftModal 
+                    open={open}
+                    handleClose={setOpen}
+                    selected={selected}
+                />
             </Tooltip>
         )}
         </Toolbar>
@@ -218,7 +223,8 @@ function EnhancedTableToolbar(props) {
 }
 
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
+    numSelected: PropTypes.number.isRequired,
+    selected: PropTypes.array.isRequired
 };
 
 export default function ChampionOverviewPanel(props) {
@@ -241,6 +247,7 @@ export default function ChampionOverviewPanel(props) {
             })
             result.json().then(result => {
                 const newData = result;
+                console.log(result)
 
                 let newWantedRows = []
                 newData.map((championDraftStats) => {
@@ -274,12 +281,12 @@ export default function ChampionOverviewPanel(props) {
         setSelected([]);
     };
 
-    const handleClick = (event, id) => {
-        const selectedIndex = selected.indexOf(id);
+    const handleClick = (event, object) => {
+        const selectedIndex = selected.indexOf(object);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
+            newSelected = newSelected.concat(selected, object);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -302,7 +309,7 @@ export default function ChampionOverviewPanel(props) {
         setPage(0);
     };
 
-    const isSelected = (id) => selected.indexOf(id) !== -1;
+    const isSelected = (object) => selected.indexOf(object) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -325,7 +332,11 @@ export default function ChampionOverviewPanel(props) {
             >
                 <Box sx={{ width: '100%', paddingTop: 3 }}>
                 <Paper sx={{ width: '100%', mb: 2 }}>
-                    <EnhancedTableToolbar numSelected={selected.length} />
+                    <EnhancedTableToolbar 
+                        numSelected={selected.length}
+                        selected={selected}
+
+                    />
                     <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -342,13 +353,13 @@ export default function ChampionOverviewPanel(props) {
                         />
                         <TableBody>
                         {visibleRows.map((row, index) => {
-                            const isItemSelected = isSelected(row.pk);
+                            const isItemSelected = isSelected(row);
                             const labelId = `enhanced-table-checkbox-${index}`;
 
                             return (
                             <TableRow
                                 hover
-                                onClick={(event) => handleClick(event, row.pk)}
+                                onClick={(event) => handleClick(event, row)}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
