@@ -2,7 +2,7 @@ import "../styles/DraftComponent.css"
 import ChampionIconSmall from "./ChampionIconSmall";
 
 
-function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1rota, bansB2rota, picksR1rota, picksR2rota, bansR1rota, bansR2rota, win}) {
+function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1rota, bansB2rota, picksR1rota, picksR2rota, bansR1rota, bansR2rota, win, championNameFilter}) {
     // 0 : win Rlue, 1 : win Red
 
     return (
@@ -24,27 +24,61 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                     <div className="picksBlue">
                         <div className="picksBlue1Rota">
                             <ul>
-                                {picksB1rota.map((championName) =>
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={80}
-                                            height={80}
-                                        />
-                                    </li>
+                                {picksB1rota.map((championName) => {
+                                    if (championName !== championNameFilter) {
+                                        return (
+                                            <li>
+                                                <ChampionIconSmall
+                                                    championName={championName}
+                                                    width={80}
+                                                    height={80}
+                                                    glow={true}
+                                                />
+                                            </li>
+                                        )
+                                    } else {
+                                        return (
+                                            <li>
+                                                <ChampionIconSmall
+                                                    championName={championName}
+                                                    width={80}
+                                                    height={80}
+                                                />
+                                            </li>
+                                        )
+                                    }
+                                }
+                                    
                                 )}
                             </ul>
                         </div>
                         <div className="picksBlue2Rota">
                             <ul>
                                 {picksB2rota.map((championName) =>
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={80}
-                                            height={80}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={80}
+                                                        height={80}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={80}
+                                                        height={80}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}
                             </ul>
                         </div>
@@ -55,13 +89,30 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                         <div className="bansBlue1Rota">
                             <ul>
                                 {bansB1rota.map((championName) => 
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}
                                 
                             </ul>
@@ -69,13 +120,30 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                         <div className="bansBlue2Rota">
                             <ul>
                                 {bansB2rota.map((championName) =>
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}
                         </ul>
                         </div>
@@ -97,26 +165,60 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                         <div className="picksRed1Rota">
                             <ul>
                                 {picksR1rota.map((championName) =>
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={80}
-                                            height={80}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={80}
+                                                        height={80}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={80}
+                                                        height={80}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}    
                             </ul>
                         </div>
                         <div className="picksRed2Rota">
                             <ul>
                                 {picksR2rota.map((championName) =>
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={80}
-                                            height={80}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={80}
+                                                        height={80}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={80}
+                                                        height={80}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}
                             </ul>
                         </div>
@@ -125,13 +227,30 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                         <div className="bansRed1Rota">
                             <ul>
                                 {bansR1rota.map((championName) => 
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}
                                 
                             </ul>
@@ -139,13 +258,30 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                         <div className="bansRed2Rota">
                             <ul>
                                 {bansR2rota.map((championName) =>
-                                    <li>
-                                        <ChampionIconSmall
-                                            championName={championName}
-                                            width={50}
-                                            height={50}
-                                        />
-                                    </li>
+                                    {
+                                        if (championName != championNameFilter) {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                        glow={true}
+                                                    />
+                                                </li>
+                                            )
+                                        } else {
+                                            return (
+                                                <li>
+                                                    <ChampionIconSmall
+                                                        championName={championName}
+                                                        width={50}
+                                                        height={50}
+                                                    />
+                                                </li>
+                                            )
+                                        }
+                                    }
                                 )}
                             </ul>
                         </div>

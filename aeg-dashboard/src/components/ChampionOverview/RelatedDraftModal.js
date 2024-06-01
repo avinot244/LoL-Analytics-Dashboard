@@ -65,6 +65,7 @@ export default function RelatedDraftModal({open, handleClose, selected}) {
                             bansR1rota={[draft.rb1, draft.rb2, draft.rb3]}
                             bansR2rota={[draft.rb4, draft.rb5]}
                             win={draft.winner}
+                            championNameFilter={selected[0].championName}
                         />
                     </>
                     

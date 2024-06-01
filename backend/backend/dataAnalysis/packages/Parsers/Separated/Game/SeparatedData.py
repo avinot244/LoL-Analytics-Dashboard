@@ -301,16 +301,21 @@ class SeparatedData:
                         draft.teams[i].playerDraftList.append(PlayerDraft(-1, ""))
 
             # Getting bans of blue side
-            for i in range(5):
+            for i in range(3):
                 data.append(convertToChampionName(draft.bans[2*i].championID))
+            data.append(convertToChampionName(draft.bans[7].championID))
+            data.append(convertToChampionName(draft.bans[9].championID))
 
             # Getting pick of blue side
             for i in range(len(draft.teams[0].playerDraftList)):
                 data.append(convertToChampionName(draft.teams[0].playerDraftList[i].championID))
             
             # Getting bans for red side 
-            for i in range(5):
+            for i in range(3):
                 data.append(convertToChampionName(draft.bans[2*i + 1].championID))
+            data.append(convertToChampionName(draft.bans[6].championID))
+            data.append(convertToChampionName(draft.bans[8].championID))
+            
             
             # Getting picks fo red side
             for i in range(len(draft.teams[1].playerDraftList)):
