@@ -33,8 +33,6 @@ from datetime import datetime
 
 @api_view(['POST'])
 def saveDrafts(request):
-    
-
     # for idx, row in tqdm(data_metadata.iterrows(), total=data_metadata.shape[0]):
     queryAllGames = GameMetadata.objects.all()
 
