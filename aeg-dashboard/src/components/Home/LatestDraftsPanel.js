@@ -41,6 +41,7 @@ function LatestDraftsPanel(props) {
                         bansR1rota={[draftObject.rb1, draftObject.rb2, draftObject.rb3]}
                         bansR2rota={[draftObject.rb4, draftObject.rb5]}
                         win={draftObject.winner}
+                        championNameFilter={""}
                     />
                 )
             }        

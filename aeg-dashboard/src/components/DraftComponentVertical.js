@@ -1,4 +1,4 @@
-import ChampionIconSmall from "./ChampionIconSmall";
+import ChampionIconSmallGlow from "./ChampionIconSmallGlow";
 import "../styles/DraftComponentVertical.css"
 
 export default function DraftComponentVertical({team1Name, team2Name, picksB1rota, picksB2rota, bansB1rota, bansB2rota, picksR1rota, picksR2rota, bansR1rota, bansR2rota, win, championNameFilter}) {
@@ -25,7 +25,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -36,7 +36,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -55,7 +55,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -66,7 +66,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -86,7 +86,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                         if (championName !== championNameFilter) {
                                             return (
                                                 <li>
-                                                    <ChampionIconSmall
+                                                    <ChampionIconSmallGlow
                                                         championName={championName}
                                                         width={80}
                                                         height={80}
@@ -97,7 +97,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                         } else {
                                             return (
                                                 <li>
-                                                    <ChampionIconSmall
+                                                    <ChampionIconSmallGlow
                                                         championName={championName}
                                                         width={80}
                                                         height={80}
@@ -118,7 +118,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={80}
                                                             height={80}
@@ -129,7 +129,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={80}
                                                             height={80}
@@ -167,7 +167,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={80}
                                                             height={80}
@@ -178,7 +178,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={80}
                                                             height={80}
@@ -197,7 +197,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={80}
                                                             height={80}
@@ -208,7 +208,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={80}
                                                             height={80}
@@ -229,7 +229,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -240,7 +240,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -259,7 +259,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             if (championName != championNameFilter) {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
@@ -270,7 +270,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                             } else {
                                                 return (
                                                     <li>
-                                                        <ChampionIconSmall
+                                                        <ChampionIconSmallGlow
                                                             championName={championName}
                                                             width={50}
                                                             height={50}
