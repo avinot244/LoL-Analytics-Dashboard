@@ -7,9 +7,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
 
     return (
         <>
-
             <div className="draft-content">
-
                 <div className="blue">
                     <div className="header-team">
                         {
@@ -23,7 +21,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                     </div>
                     <div className="picksBlue">
                         <div className="picksBlue1Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {picksB1rota.map((championName) => {
                                     if (championName !== championNameFilter) {
                                         return (
@@ -53,7 +51,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                             </ul>
                         </div>
                         <div className="picksBlue2Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {picksB2rota.map((championName) =>
                                     {
                                         if (championName != championNameFilter) {
@@ -87,7 +85,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
 
                     <div className="bansBlue">
                         <div className="bansBlue1Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {bansB1rota.map((championName) => 
                                     {
                                         if (championName != championNameFilter) {
@@ -118,7 +116,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                             </ul>
                         </div>
                         <div className="bansBlue2Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {bansB2rota.map((championName) =>
                                     {
                                         if (championName != championNameFilter) {
@@ -145,7 +143,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                                         }
                                     }
                                 )}
-                        </ul>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -163,7 +161,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                     </div>
                     <div className="picksRed">
                         <div className="picksRed1Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {picksR1rota.map((championName) =>
                                     {
                                         if (championName != championNameFilter) {
@@ -193,7 +191,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                             </ul>
                         </div>
                         <div className="picksRed2Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {picksR2rota.map((championName) =>
                                     {
                                         if (championName != championNameFilter) {
@@ -225,7 +223,7 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                     </div>
                     <div className="bansRed">
                         <div className="bansRed1Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {bansR1rota.map((championName) => 
                                     {
                                         if (championName != championNameFilter) {
@@ -252,11 +250,10 @@ function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1r
                                         }
                                     }
                                 )}
-                                
                             </ul>
                         </div>
                         <div className="bansRed2Rota">
-                            <ul>
+                            <ul className="horizontal">
                                 {bansR2rota.map((championName) =>
                                     {
                                         if (championName != championNameFilter) {

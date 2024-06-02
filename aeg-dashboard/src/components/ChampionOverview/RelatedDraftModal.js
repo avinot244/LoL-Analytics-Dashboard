@@ -1,7 +1,7 @@
 import Modal from "@mui/material/Modal";
 import Box from '@mui/material/Box';
 import { Button, FormControl, Stack, TextField, Typography } from "@mui/material";
-import DraftComponent from "../DraftComponent";
+import DraftComponentVertical from "../DraftComponentVertical";
 
 import { useEffect, useState } from "react";
 
@@ -53,7 +53,7 @@ export default function RelatedDraftModal({open, handleClose, selected}) {
                         <Typography id="modal-modal-title" variant="h6" component="h5"align="center">
                             {draft.tournament}
                         </Typography>
-                        <DraftComponent
+                        <DraftComponentVertical
                             team1Name={draft.teamBlue}
                             team2Name={draft.teamRed}
                             picksB1rota={[draft.bp1, draft.bp2, draft.bp3]}

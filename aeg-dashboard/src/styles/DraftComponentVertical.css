@@ -1,0 +1,53 @@
+.draft-content-vertical{
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.blue-pb-vertical, .red-pb-vertical{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bansBlue-vertical{
+    float: left;
+}
+
+ul.vertical {
+    list-style: none;
+}
+
+.red-vertical h1.teamName{
+    text-align: left;
+    padding-left: 5px;
+    padding-right: 20px;
+    font-weight: bold;
+    color: #f50057;
+    width: fit-content;
+}
+
+.blue-vertical h1.teamName{
+    text-align: right;
+    padding-right: 5px;
+    padding-left: 20px;
+    font-weight: bold;
+    color: #2196f3;
+    width: fit-content;
+}
+
+.red-vertical .header-team-vertical{
+    margin-left: 32px;
+}
+
+.header-team-vertical{
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+
+h1.win, h1.lose {
+    width: fit-content;
+}
