@@ -354,23 +354,6 @@ def updateDatabase(path : str,
                 to_delete = ChampionDraftStats.objects.get(championName__exact=championName, patch__contains=patch, tournament__exact=tournament, side__exact=side)
                 to_delete.delete()
 
-                newObject = ChampionDraftStats(
-                    championName=championName,
-                    patch=patch,
-                    tournament=tournament,
-                    side=side,
-                    winRate=winRate,
-                    globalPickRate=pickRate,
-                    pickRate1Rota=pickRate1Rota,
-                    pickRate2Rota=pickRate2Rota,
-                    globalBanRate=banRate,
-                    banRate1Rota=banRate1Rota,
-                    banRate2Rota=banRate2Rota,
-                    mostPopularPickOrder=mostPopularPickOrder,
-                    blindPick=blindPick,
-                    mostPopularRole=mostPopularRole
-                )
-                newObject.save()
                 df.to_csv(path, sep=";", index=False)
                 break
             
@@ -454,24 +437,6 @@ def saveChampionDraftStatsCSV(path : str,
         data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
-
-        newObject = ChampionDraftStats(
-            championName=championName,
-            patch=patch,
-            tournament=tournament,
-            side=side,
-            winRate=winRate,
-            globalPickRate=pickRate,
-            pickRate1Rota=pickRate1Rota,
-            pickRate2Rota=pickRate2Rota,
-            globalBanRate=banRate,
-            banRate1Rota=banRate1Rota,
-            banRate2Rota=banRate2Rota,
-            mostPopularPickOrder=mostPopularPickOrder,
-            blindPick=blindPick,
-            mostPopularRole=mostPopularRole
-        )
-        newObject.save()
         csv_file.close()
     elif isLineInDatabase(path, championName, patch, tournament, side):
         # print(" Is In database ", end="")
@@ -498,23 +463,7 @@ def saveChampionDraftStatsCSV(path : str,
         data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
-        newObject = ChampionDraftStats(
-            championName=championName,
-            patch=patch,
-            tournament=tournament,
-            side=side,
-            winRate=winRate,
-            globalPickRate=pickRate,
-            pickRate1Rota=pickRate1Rota,
-            pickRate2Rota=pickRate2Rota,
-            globalBanRate=banRate,
-            banRate1Rota=banRate1Rota,
-            banRate2Rota=banRate2Rota,
-            mostPopularPickOrder=mostPopularPickOrder,
-            blindPick=blindPick,
-            mostPopularRole=mostPopularRole
-        )
-        newObject.save()
+
         csv_file.close()
     
         

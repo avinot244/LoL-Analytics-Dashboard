@@ -4,6 +4,7 @@ from django.db.models.query import QuerySet
 from .models import *
 
 import pandas as pd
+from tqdm import tqdm
 
 def import_draftPickOrder():
     csv_draft_pick_order : str = "./databases/drafts/draft_pick_order.csv"
@@ -133,11 +134,33 @@ def import_draft():
     import_draftPickOrder()
     import_draftPlayerPick()
 
+def delete_draftStats():
+    queryChampionDraftStats = ChampionDraftStats.objects.all()
+    for res in tqdm(queryChampionDraftStats):
+        res.delete()
+
+   
+
 def import_draftStats():
     csv_champion_draft_stats : str = "./databases/drafts/champion_draft_stats.csv"
-    df_champion_draft_stats : pd.DataFrame = pd.read_csv(csv_champion_draft_stats, sep=";")
+    df_champion_draft_stats : pd.DataFrame = pd.read_csv(csv_champion_draft_stats, sep=";", dtype={
+        "ChampionName": 'string',
+        "Patch": 'string',
+        "Tournament": 'string',
+        "Side": 'string',
+        "WinRate": 'float64',
+        "GlobalPickRate": 'float64',
+        "PickRate1Rota": 'float64',
+        "PickRate2Rota": 'float64',
+        "GlobalBanRate": 'float64',
+        "BanRate1Rota": 'float64',
+        "BanRate2Rota": 'float64',
+        "MostPopularPickOrder": 'int64',
+        "BlindPick": 'float64',
+        "MostPopularRole": 'string'
+    })
 
-    for index, row in df_champion_draft_stats.iterrows():
+    for index, row in tqdm(df_champion_draft_stats.iterrows(), total=df_champion_draft_stats.shape[0]):
         championDraftStats = ChampionDraftStats(
             championName = row["ChampionName"],
             patch = row["Patch"],
