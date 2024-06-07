@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { API_URL } from "../../constants"
 import "../../styles/GameOverviewStat.css"
+import DraftComponent from "../DraftComponent";
+import ChampionIconSmall from "../ChampionIconSmall";
+import Loading from "../Loading" 
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -120,6 +123,9 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
     const [displayADCBlue, setDisplayADCBlue] = useState(true)
     const [displaySupportBlue, setDisplaySupportBlue] = useState(true)
 
+    const [draft, setDraft] = useState({})
+    const [loadingDraft, setLoadingDraft] = useState(true)
+
     
     useEffect(() => {
         const fetchGameDataPlayer = async (seriesId, gameNumber) => {
@@ -157,8 +163,22 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
             })
         }
 
+        const fetchDraftGame = async (seriesId, gameNumber) => {
+            setLoadingDraft(true)
+            const result = await fetch(API_URL + `draft/getDraftGame/${seriesId}/${gameNumber}/`, {
+                method: "GET"
+            })
+
+            result.json().then(result => {
+                let newDraft = result[0]
+                setDraft(newDraft)
+                setLoadingDraft(false)
+            })
+        }
+
         fetchGameDataPlayer(seriesId, gameNumber)
         fetchGameDataTeams(seriesId, gameNumber)
+        fetchDraftGame(seriesId, gameNumber)
     }, [])
 
 
@@ -422,6 +442,28 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
                     </FormGroup>
                     <Line options={optionsPlayer} data={dataPlayer}/>
                 </div>
+            </div>
+            <div className="gameOverview-draft">
+                {
+                    loadingDraft ? (
+                        <Loading/>
+                    ) : (
+                        <DraftComponent
+                            team1Name={draft.teamBlue}
+                            team2Name={draft.teamRed}
+                            picksB1rota={[draft.bp1, draft.bp2, draft.bp3]}
+                            picksB2rota={[draft.bp4, draft.bp5]}
+                            picksR1rota={[draft.rp1, draft.rp2, draft.rp3]}
+                            picksR2rota={[draft.rp4, draft.rp5]}
+                            bansB1rota={[draft.bb1, draft.bb2, draft.bb3]}
+                            bansB2rota={[draft.bb4, draft.bb5]}
+                            bansR1rota={[draft.rb1, draft.rb2, draft.rb3]}
+                            bansR2rota={[draft.rb4, draft.rb5]}
+                            win={draft.winner}
+                        />
+                    )
+                }
+                
             </div>
         </div>
     )

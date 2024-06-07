@@ -3,7 +3,6 @@ import ChampionIconSmall from "./ChampionIconSmall";
 
 
 function DraftComponent({team1Name, team2Name, picksB1rota, picksB2rota, bansB1rota, bansB2rota, picksR1rota, picksR2rota, bansR1rota, bansR2rota, win, championNameFilter}) {
-    console.log(championNameFilter === "")
     // 0 : win Rlue, 1 : win Red
 
     return (

@@ -19,9 +19,7 @@ function ChampionIconSmall({championName, width, height}) {
 
 
     return (
-
         <img className="champion-icon-small" src={img} alt={championName} width={width} height={height}/>
-
     )
 
 

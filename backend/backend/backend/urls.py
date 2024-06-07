@@ -25,6 +25,7 @@ from behaviorADC.views import Supportviews
 from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
 from Draft import views as draftViews
+from authentication import views as authenticationViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -186,6 +187,7 @@ urlpatterns = [
     path('api/draft/getTournament/<str:tournament>/', draftViews.getDraftTournament),
     path('api/draft/getChampion/<str:championName>/<str:patch>/', draftViews.getDraftChampion),
     path('api/draft/getTeamNames/<int:seriesId>/<int:gameNumber>/', draftViews.getTeamNames),
+    path('api/draft/getDraftGame/<int:seriesId>/<int:gameNumber>/', draftViews.getDraftGame),
     path('api/draft/delete/', draftViews.deleteAllDrafts),
 
     path('api/draft/championStats/updateStats/<str:tournamentListStr>/', draftViews.updateChampionDraftStats),
@@ -198,6 +200,12 @@ urlpatterns = [
     path('api/draft/updatePlayerStat/<str:tournamentListStr>/', draftViews.updatePlayerStats),
     path('api/draft/playerStat/<str:summonnerName>/<str:tournament>/<str:filter>/', draftViews.getPlayerStats),
     path('api/draft/playerStat/deleteAll/', draftViews.deleteAllChampionPool),
+
+    # Authentication
+    path("api/authentication/login/", authenticationViews.loginUser, name="api_login"),
+    path("api/authentication/logout/", authenticationViews.logoutUser, name="api_logout"),
+    path("api/authentication/session/", authenticationViews.session_view, name="api_session"),
+    path("api/authentication/whoami/", authenticationViews.whomai_view, name="api_whoami"),
 
 ]
 

@@ -462,7 +462,7 @@ def getPlayerStats(request, summonnerName, tournament, filter):
     
     return Response(return_data.data)
 
-@api_view(['DELEtE'])
+@api_view(['DELETE'])
 def deleteAllChampionPool(request):
     query = ChampionPool.objects.all()
 
@@ -470,3 +470,10 @@ def deleteAllChampionPool(request):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def getDraftGame(request, seriesId : int, gameNumber : int):
+    query = DraftPickOrder.objects.filter(seriesId__exact=seriesId, gameNumner__exact=gameNumber)
+    serializer = DraftPickOrderSerializer(query, context={"request": request}, many=True)
+
+    return Response(serializer.data)
