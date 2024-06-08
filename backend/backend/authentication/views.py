@@ -8,7 +8,6 @@ import json
 
 @api_view(["POST"])
 def loginUser(request):
-    print(request)
     data = json.loads(request.body)
     username = data.get("username")
     password = data.get("password")
