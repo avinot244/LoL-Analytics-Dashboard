@@ -41,7 +41,7 @@ function Home({loggedIn, setLoggedIn, email}){
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp />
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                         <br/>
                         <h1>Home Page</h1>
 

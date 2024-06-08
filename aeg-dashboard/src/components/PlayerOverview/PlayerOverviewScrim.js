@@ -16,7 +16,7 @@ import SearchComp from "../SearchComp";
 import RedirectPage from "../Home/RedirectPage";
 
 
-function PlayerOverviewScrim({loggedIn}){
+function PlayerOverviewScrim({loggedIn, setLoggedIn}){
     const [patchList, setPatchList] = useState([]);
     
     const tournament = "League of Legends Scrims"
@@ -81,7 +81,7 @@ function PlayerOverviewScrim({loggedIn}){
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp />
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                         <h1> Player Overview </h1>
                         <div className="dashboard-playerOverview-controlPannel">
                             <ul className="dashboard-playerOverview-controlPannel-list">

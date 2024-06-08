@@ -3,9 +3,35 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Outlet, Link} from "react-router-dom";
+import { Button } from '@mui/material';
+import { API_URL } from '../constants';
 
-function NavBarComp() {
-  return (
+
+
+function NavBarComp({loggedIn, setLoggedIn}) {
+	function isResponseOk(response) {
+        if (response.status >= 200 && response.status <= 299) {
+            return response.json();
+        }else{
+            throw Error(response.statusText)
+        }
+    }
+	function logout() {
+		fetch(API_URL + "authentication/logout/", {
+			credentials: "same-origin"
+		})
+		.then(isResponseOk)
+		.then((data) => {
+			console.log(data)
+			setLoggedIn(false)
+		})
+		.catch((err) => {
+			console.log(err)
+		})
+	}
+	
+
+  	return (
     <Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
       	<Container>
 			<Link to="/Home">
@@ -41,6 +67,7 @@ function NavBarComp() {
 			</Nav>
 			</Navbar.Collapse>
       	</Container>
+		<Link to="/"><Button variant='contained' sx={{mr: 5}} onClick={() => logout()}>Log Out</Button></Link>
     </Navbar>
   );
 }

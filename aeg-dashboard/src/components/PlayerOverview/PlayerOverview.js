@@ -14,7 +14,7 @@ import { TextField } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material";
 import RedirectPage from "../Home/RedirectPage";
 
-function PlayerOverview({loggedIn}){
+function PlayerOverview({loggedIn, setLoggedIn}){
     const [patchList, setPatchList] = useState([]);
     
     const [activePatch, setActivePatch] = useState('')
@@ -87,7 +87,7 @@ function PlayerOverview({loggedIn}){
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp />
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                         <h1> Player Overview </h1>
                         <div className="dashboard-playerOverview-controlPannel">
                             <ul className="dashboard-playerOverview-controlPannel-list">

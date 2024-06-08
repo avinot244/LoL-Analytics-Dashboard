@@ -30,39 +30,39 @@ function App() {
 		},
 		{
 			path:'/ChampionOverview/Scrims',
-			element: <ChampionOverviewScrim loggedIn={loggedIn}/>//
+			element: <ChampionOverviewScrim loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/ChampionOverview/Esports',
-			element: <ChampionOverview loggedIn={loggedIn}/>//
+			element: <ChampionOverview loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/PlayerOverview/Scrims',
-			element: <PlayerOverviewScrim loggedIn={loggedIn}/>//
+			element: <PlayerOverviewScrim loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/PlayerOverview/Esports',
-			element: <PlayerOverview loggedIn={loggedIn}/>//
+			element: <PlayerOverview loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/GameOverview/Scrims',
-			element: <GameOverview loggedIn={loggedIn}/>//
+			element: <GameOverview loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/GameOverview/Esports',
-			element: <GameOverview loggedIn={loggedIn}/>//
+			element: <GameOverview loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/Monitoring/Download',
-			element: <Downloader loggedIn={loggedIn}/>//
+			element: <Downloader loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/Monitoring/PCAMaker',
-			element: <PCAModelMaker loggedIn={loggedIn}/>//
+			element: <PCAModelMaker loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		},
 		{
 			path:'/Monitoring/PCAOverview',
-			element: <PCAModelOverview loggedIn={loggedIn}/>//
+			element: <PCAModelOverview loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		}
 	])
 	return <RouterProvider router={router}/>

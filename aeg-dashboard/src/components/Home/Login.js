@@ -113,19 +113,7 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
         })
     }
 
-    function logout() {
-        fetch(API_URL + "authentication/logout/", {
-            credentials: "same-origin"
-        })
-        .then(isResponseOk)
-        .then((data) => {
-            console.log(data)
-            setLoggedIn(false)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }
+    
 
 
     const navigate = useNavigate()

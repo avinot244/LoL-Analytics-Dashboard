@@ -33,7 +33,7 @@ const theme = createTheme({
 })
 
 
-function ChampionOverview({loggedIn}) {
+function ChampionOverview({loggedIn, setLoggedIn}) {
     const [patchList, setPatchList] = useState([]);
     const [value, setValue] = useState(0)
     const side = ["Blue", "Red", "Both"];
@@ -85,7 +85,7 @@ function ChampionOverview({loggedIn}) {
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp />
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                         <h1> Champion overview </h1>
 
                         <div className="dashboard-champOverview-controlPannel">

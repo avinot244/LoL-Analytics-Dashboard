@@ -258,7 +258,7 @@ function TournamentFilter({tournamentFilterList, selectedFilters, setSelectedFil
 
 
 
-export default function Downloader({loggedIn}) {
+export default function Downloader({loggedIn, setLoggedIn}) {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
     const [tournamentListShortended, setTournamentListShortened] = React.useState([])
@@ -306,7 +306,7 @@ export default function Downloader({loggedIn}) {
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp/>
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                         <h1>Download Games</h1>
                         
 

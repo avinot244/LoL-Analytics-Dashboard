@@ -31,7 +31,7 @@ const theme = createTheme({
 })
 
 
-function ChampionOverviewScrim({loggedIn}) {
+function ChampionOverviewScrim({loggedIn, setLoggedIn}) {
     const [patchList, setPatchList] = useState([]);
     const [value, setValue] = useState(0)
     const side = ["Blue", "Red", "Both"];
@@ -71,7 +71,7 @@ function ChampionOverviewScrim({loggedIn}) {
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp />
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                         <h1> Champion overview </h1>
 
                         <div className="dashboard-champOverview-controlPannel">

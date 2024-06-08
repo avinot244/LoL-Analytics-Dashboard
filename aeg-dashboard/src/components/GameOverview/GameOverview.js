@@ -76,7 +76,7 @@ function SearchGames({setSelectedElement, elementList}) {
 }
 
 
-function GameOverview({loggedIn}){
+function GameOverview({loggedIn, setLoggedIn}){
 
     const [gameList, setGameList] = useState([])
     const [selectedGame, setSelectedGame] = useState('')
@@ -134,7 +134,7 @@ function GameOverview({loggedIn}){
             {
                 loggedIn ? (
                     <>
-                        <NavBarComp />
+                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
                             <h1> Game overview </h1>
                             <br/>
                             <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
