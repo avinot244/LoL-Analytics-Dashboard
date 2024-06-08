@@ -13,6 +13,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import bgImage from "../../assets/login-bg.jpg"
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+import { API_URL } from '../../constants';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -25,15 +27,116 @@ const defaultTheme = createTheme({
     }
 });
 
+const cookies = new Cookies()
+
+
+
 export default function SignInSide({loggedIn, setLoggedIn}) {
+    const [userName, setUserName] = React.useState("")
+    const [password, setPassword] = React.useState("")
+    const [error, setError] = React.useState("")
+
+    function getSession() {
+        fetch(API_URL + "authentication/session/", {
+            credentials: "same-origin"
+        })
+        .then((res) => res.json())
+        .then((data)=>{
+            console.log(data)
+            if (data.isauthenticated) {
+                setLoggedIn(true)
+            }else{
+                setLoggedIn(false)
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+    function whoami() {
+        fetch(API_URL + "authentication/whoami/", {
+            headers: {
+                "Content-type": "application/json"
+            },
+            credentials: "same-origin"
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log("you're logged in as" + data.username)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+    function handlePasswordChange(event) {
+        setPassword(event.target.value)
+    }
+
+    function handleUserNameChange(event) {
+        setUserName(event.target.value)
+    }
+
+    function isResponseOk(response) {
+        if (response.status >= 200 && response.status <= 299) {
+            return response.json();
+        }else{
+            throw Error(response.statusText)
+        }
+    }
+
+    function login(event) {
+        event.preventDefault();
+
+        // Make a post request to login api
+        fetch(API_URL + "authentication/login/", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json",
+                "X-CSRFToken":  cookies.get("csrftoken"),
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({username: userName, password: password})
+        })
+        .then(isResponseOk)
+        .then((data) => {
+            console.log(data);
+            setLoggedIn(true)
+            setUserName("")
+            setPassword("")
+
+        })
+        .catch((err) => {
+            console.log(err)
+            setError("Wrong username or password")
+        })
+    }
+
+    function logout() {
+        fetch(API_URL + "authentication/logout/", {
+            credentials: "same-origin"
+        })
+        .then(isResponseOk)
+        .then((data) => {
+            console.log(data)
+            setLoggedIn(false)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
+
     const navigate = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        // console.log({
+        //     username: data.get('username'),
+        //     password: data.get('password'),
+        // });
+        login(event)
         setLoggedIn(true)
         navigate('/Home')
     };
@@ -77,14 +180,15 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
+                                id="username"
+                                label="Username"
+                                name="username"
+                                autoComplete="username"
                                 focused
                                 sx={{ 
                                     input: { color: 'white'},
                                 }}
+                                onChange={handleUserNameChange}
                             />
                             <TextField
                                 margin="normal"
@@ -99,6 +203,7 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
                                 sx={{ 
                                     input: { color: 'white'},
                                 }}
+                                onChange={handlePasswordChange}
                             />
                             <Button
                                 type="submit"

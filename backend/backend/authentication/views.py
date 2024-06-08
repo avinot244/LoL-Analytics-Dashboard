@@ -1,14 +1,14 @@
 from rest_framework.decorators import api_view
 from django.shortcuts import render
-from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 
 import json
 
-@require_POST
+@api_view(["POST"])
 def loginUser(request):
+    print(request)
     data = json.loads(request.body)
     username = data.get("username")
     password = data.get("password")
