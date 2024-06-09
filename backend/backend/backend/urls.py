@@ -206,6 +206,8 @@ urlpatterns = [
     path("api/authentication/logout/", authenticationViews.logoutUser, name="api_logout"),
     path("api/authentication/session/", authenticationViews.session_view, name="api_session"),
     path("api/authentication/whoami/", authenticationViews.whomai_view, name="api_whoami"),
+    path("api/authentication/getUserList/", authenticationViews.getUserList),
+    path("api/authentication/deleteUser/<str:username>/", authenticationViews.deleteUser)
 
 ]
 

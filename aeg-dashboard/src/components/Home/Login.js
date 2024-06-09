@@ -86,6 +86,7 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
         }
     }
 
+
     function login(event) {
         event.preventDefault();
 
@@ -105,11 +106,13 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
             setLoggedIn(true)
             setUserName("")
             setPassword("")
+            navigate('/Home')
+
 
         })
         .catch((err) => {
-            console.log(err)
             setError("Wrong username or password")
+            console.log(error)
         })
     }
 
@@ -119,14 +122,7 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
     const navigate = useNavigate()
     const handleSubmit = (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // console.log({
-        //     username: data.get('username'),
-        //     password: data.get('password'),
-        // });
         login(event)
-        setLoggedIn(true)
-        navigate('/Home')
     };
 
     return (
@@ -193,6 +189,7 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
                                 }}
                                 onChange={handlePasswordChange}
                             />
+                            {error !== "" && <Typography component="div" variant='p' color={"red"}>{error}</Typography>}
                             <Button
                                 type="submit"
                                 fullWidth

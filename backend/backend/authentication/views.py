@@ -3,6 +3,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.contrib.auth.models import User
+from rest_framework.response import Response
+from rest_framework import status
 
 import json
 
@@ -40,4 +43,16 @@ def whomai_view(request):
         return JsonResponse({"isAuthenticated": False})
     return JsonResponse({"username": request.user.username})
 
-    
+@api_view(['GET'])
+def getUserList(request):
+    query = User.objects.all()
+    for res in query:
+        print(res)
+
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def deleteUser(request, username : str):
+    toDelete = User.objects.get(username__exact=username)
+    toDelete.delete()
+    return Response(status=status.HTTP_200_OK)
