@@ -28,7 +28,7 @@ const theme = createTheme({
 })
 
 
-function Home({loggedIn, setLoggedIn, email}){
+function Home({loggedIn, setLoggedIn}){
     
     const [value, setValue] = useState(0)
 

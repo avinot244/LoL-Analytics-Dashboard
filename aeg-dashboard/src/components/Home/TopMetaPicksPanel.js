@@ -24,7 +24,7 @@ function TopMetaPicksPanel(props) {
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
     const [displayPatchFlag, setDisplayPatchFlag] = useState(true)
-    const filterList = ["WinRate", "PickRate", "BanRate", "PickOrder"]
+    const filterList = ["WinRate", "PickRate", "BanRate"]
 
 
     const fetchPatchListFromTournament = async (tournament) => {
