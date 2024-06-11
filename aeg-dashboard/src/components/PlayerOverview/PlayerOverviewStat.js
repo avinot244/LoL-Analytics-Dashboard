@@ -393,7 +393,7 @@ export default function PlayerOverviewStat(props) {
 
     for (let i = 0 ; i < dataSingleGames.length ; i++) {
         let temp = {
-            label: `Behavior ${summonnerName} game ${i+1}`,
+            label: `Behavior ${summonnerName} game ${dataSingleGames.length - i}`,
             data: getData(dataSingleGames[i], role),
             backgroundColor: alpha(purple[100*(2*i+1)], 0.2),
             borderColor: purple[100*(2*i+1)],
@@ -411,13 +411,6 @@ export default function PlayerOverviewStat(props) {
         const maxPatch = Math.max(...dataBehaviorPatch)
         const maxLatest = Math.max(...dataBehaviorLatest)
         const maxTournament = Math.max(...dataBehaviorTournament)
-        
-        // let maxGames = Math.max(...dataSingleGames[0])
-        // for (let i = 0 ; i < dataSingleGames.length ; i++) {
-        //     if (Math.max(...dataSingleGames[i]) > maxGames){
-        //         maxGames = Math.max(...dataSingleGames[i])
-        //     }
-        // }
 
         const max = Math.max(maxPatch, maxLatest, maxTournament)
         if (max > 1.5) {
@@ -432,13 +425,6 @@ export default function PlayerOverviewStat(props) {
         const minPatch = Math.min(...dataBehaviorPatch)
         const minLatest = Math.min(...dataBehaviorLatest)
         const minTournament = Math.min(...dataBehaviorTournament)
-
-        // let minGames = Math.min(...dataSingleGames[0])
-        // for (let i = 0 ; i < dataSingleGames.length ; i++) {
-        //     if (Math.min(...dataSingleGames[i]) > minGames){
-        //         minGames = Math.min(...dataSingleGames[i])
-        //     }
-        // }
 
         const min = Math.min(minPatch, minLatest, minTournament)
         if (min < -1.5) {
@@ -494,9 +480,6 @@ export default function PlayerOverviewStat(props) {
     return (
         <div className="playerOverview-content-wrapper">
             <div className="playerOverviewGraph">
-
-                
-                
                     {
                         loading ? (
                             <Loading />

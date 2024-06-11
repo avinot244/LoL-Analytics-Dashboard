@@ -108,7 +108,7 @@ def behaviorTop_stats_latest(request, summonnerName, limit, tournament):
     if not(summonnerName in df["summonnerName"].unique().tolist()) :
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-seriesId")[:int(limit)]
+    queryResult = BehaviorTop.objects.filter(summonnerName__exact=summonnerName, tournament__exact=tournament).order_by("-date")[:int(limit)]
     serializer = BehaviorTopSerializer(queryResult,  context={"request": request}, many=True)
     return Response(serializer.data)
 
