@@ -786,3 +786,11 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
     
 
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def testLoadingBar(request):
+    print("Beginning of request")
+    time.sleep(10)
+    print("End of request")
+    return Response(status=status.HTTP_200_OK)
