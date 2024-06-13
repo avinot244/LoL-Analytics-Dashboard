@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { API_URL } from "../../constants"
 import "../../styles/GameOverviewStat.css"
 import DraftComponent from "../DraftComponent";
-import ChampionIconSmall from "../ChampionIconSmall";
 import Loading from "../Loading" 
 import {
     Chart as ChartJS,

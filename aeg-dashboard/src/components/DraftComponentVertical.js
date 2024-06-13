@@ -22,7 +22,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {bansB1rota.map((championName) => 
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow
@@ -52,7 +52,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {bansB2rota.map((championName) =>
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow
@@ -115,7 +115,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {picksB2rota.map((championName) =>
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow
@@ -164,7 +164,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {picksR1rota.map((championName) =>
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow
@@ -194,7 +194,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {picksR2rota.map((championName) =>
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow
@@ -226,7 +226,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {bansR1rota.map((championName) => 
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow
@@ -256,7 +256,7 @@ export default function DraftComponentVertical({team1Name, team2Name, picksB1rot
                                 <ul className="vertical">
                                     {bansR2rota.map((championName) =>
                                         {
-                                            if (championName != championNameFilter) {
+                                            if (championName !== championNameFilter) {
                                                 return (
                                                     <li>
                                                         <ChampionIconSmallGlow

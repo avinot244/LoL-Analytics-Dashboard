@@ -4,7 +4,7 @@ import SearchComp from "../SearchComp"
 import { API_URL } from "../../constants"
 import GameOverviewStat from "./GameOverviewStat"
 
-import { Chip, ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
 import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -16,7 +16,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import { useState, useEffect, Fragment } from "react"
+import { useState, useEffect  } from "react"
 import RedirectPage from "../Home/RedirectPage"
 
 const theme = createTheme ({
@@ -113,19 +113,6 @@ function GameOverview({loggedIn, setLoggedIn}){
             setGameList(newGameList)
             setSelectedGame(newGameList[newGameList.length - 1])
         })
-    }
-
-    const fetchPositionDensity = async (gameList) => {
-        const result = await fetch(API_URL + "dataAnalysis/getGamePositionDensity/", {
-            method: "POST",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(gameList)
-        })
-        
-
     }
 
 

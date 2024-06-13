@@ -1,11 +1,7 @@
-import { API_URL, roleList } from "../../constants/index";
+import { API_URL } from "../../constants/index";
 import ChampionIcon from "../ChampionIcon";
 import { useState, useEffect } from "react";
 import Loading from "../Loading";
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 export default function ChampionOverviewListPanel(props) {
     const {filter, side, patch, tournament} = props

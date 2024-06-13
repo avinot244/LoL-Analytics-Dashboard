@@ -19,7 +19,7 @@ function ChampionIcon({championName, winRate, pickRate, banRate, pickOrder}){
     return (
         championName !== "" ?
         (<div className="champion-info">
-            <img className="champion-icon-img" src={img}/>
+            <img className="champion-icon-img" src={img} alt={championName}/>
             <div className="champion-data">
                 <p>WR : <span>{winRate}%</span></p>
                 <p>Pick : <span>{pickRate}%</span></p>

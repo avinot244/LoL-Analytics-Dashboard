@@ -1,6 +1,6 @@
 import Modal from "@mui/material/Modal";
 import Box from '@mui/material/Box';
-import { Button, FormControl, Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import DraftComponentVertical from "../DraftComponentVertical";
 
 import { useEffect, useState } from "react";
