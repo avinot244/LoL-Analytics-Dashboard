@@ -455,7 +455,21 @@ export default function PlayerOverviewStat(props) {
                 },
                 grid: {
                     display: true,
-                    color: "#FFF"
+                    color: (context) => {
+                        if (context.tick.value === 0) {
+                            return "#d32f2f"
+                        } else {
+                            return "#fff"
+                        }
+                    },
+                    lineWidth: (context) => {
+                        console.log(context)
+                        if (context.tick.value === 0) {
+                            return 4
+                        } else {
+                            return 1
+                        }
+                    }
                 },
                 pointLabels: {
                     color: "#FFF"
