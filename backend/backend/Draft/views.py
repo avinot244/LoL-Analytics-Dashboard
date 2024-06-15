@@ -89,10 +89,10 @@ def getLatestDraft(request, limit, scrimStr):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
     if scrim == 0:
-        draftQuery = DraftPickOrder.objects.filter(tournament__exact="League of Legends Scrims").order_by("-seriesId")[:limit]
+        draftQuery = DraftPickOrder.objects.filter(tournament__exact="League of Legends Scrims").order_by("-date")[:limit]
         serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
     else:
-        draftQuery = DraftPickOrder.objects.filter(~Q(tournament="League of Legends Scrims")).order_by("-seriesId")[:limit]
+        draftQuery = DraftPickOrder.objects.filter(~Q(tournament="League of Legends Scrims")).order_by("-date")[:limit]
         serializer = DraftPickOrderSerializer(draftQuery, context={"request": request}, many=True)
     
     return Response(serializer.data)
