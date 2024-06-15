@@ -13,7 +13,7 @@ import SearchComp from "../SearchComp";
 function TopMetaPicksPanel(props) {
     const [patchList, setPatchList] = useState([]);
     
-    const [activePatch, setActivePatch] = useState("14.9")
+    const [activePatch, setActivePatch] = useState("14.11")
     const [activeSide, setActiveSide] = useState("Blue")
     const [activeTournament, setActiveTournament] = useState("La Ligue Française - Summer 2024 (Regular Season: Regular Season)")
     const [activeFilter, setActiveFilter] = useState("PickRate")
@@ -52,7 +52,7 @@ function TopMetaPicksPanel(props) {
         fetchTournamentList();
         setActiveSide("Blue")
         setActiveFilter(filterList[0])
-        
+        fetchPatchListFromTournament(activeTournament)
     }, [])
     
     return (

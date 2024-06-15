@@ -9,7 +9,7 @@ const theme = createTheme({
     },
 })
 
-export default function Loading(){
+export default function Loading () {
     return (
         <>
             <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
