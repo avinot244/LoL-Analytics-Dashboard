@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.db.models import Q
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats
 from .serializer import DraftPickOrderSerializer, ChampionDraftStatsSerializer, ChampionPoolSerializer
@@ -83,6 +84,7 @@ def saveDrafts(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
 def getLatestDraft(request, limit, scrimStr):
     scrim : int = int(scrimStr)
     if not(scrim == 0 or scrim == 1):
