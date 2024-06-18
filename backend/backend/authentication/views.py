@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from rest_framework.response import Response
@@ -55,4 +55,13 @@ def getUserList(request):
 def deleteUser(request, username : str):
     toDelete = User.objects.get(username__exact=username)
     toDelete.delete()
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getAllusers(request):
+    User = get_user_model()
+    users = User.objects.all()
+    for user_elt in users:
+        print(user_elt)
+
     return Response(status=status.HTTP_200_OK)

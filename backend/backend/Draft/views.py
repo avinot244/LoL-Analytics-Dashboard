@@ -84,7 +84,6 @@ def saveDrafts(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes((IsAuthenticated, ))
 def getLatestDraft(request, limit, scrimStr):
     scrim : int = int(scrimStr)
     if not(scrim == 0 or scrim == 1):
