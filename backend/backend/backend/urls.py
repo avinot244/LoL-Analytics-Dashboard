@@ -216,6 +216,5 @@ urlpatterns = [
     path('api/token/auth/', include('rest_framework.urls')),
     path('api/token/getPair/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/authentication/getAllUsers/', authenticationViews.getAllusers)
 ]
 

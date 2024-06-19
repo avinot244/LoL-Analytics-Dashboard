@@ -13,7 +13,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import bgImage from "../../assets/login-bg.jpg"
 import { useNavigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 import { API_URL } from '../../constants';
 
 
@@ -27,14 +26,13 @@ const defaultTheme = createTheme({
     }
 });
 
-const cookies = new Cookies()
-
 
 
 export default function SignInSide({loggedIn, setLoggedIn}) {
     const [userName, setUserName] = React.useState("")
     const [password, setPassword] = React.useState("")
     const [error, setError] = React.useState("")
+    const [authTokens, setAuthTokens] = React.useState(null)
 
     function getSession() {
         fetch(API_URL + "authentication/session/", {
@@ -91,13 +89,11 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
         event.preventDefault();
 
         // Make a post request to login api
-        fetch(API_URL + "authentication/login/", {
+        fetch(API_URL + "token/getPair/", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
-                "X-CSRFToken":  cookies.get("csrftoken"),
             },
-            credentials: "same-origin",
             body: JSON.stringify({username: userName, password: password})
         })
         .then(isResponseOk)
@@ -107,8 +103,6 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
             setUserName("")
             setPassword("")
             navigate('/Home')
-
-
         })
         .catch((err) => {
             setError("Wrong username or password")
