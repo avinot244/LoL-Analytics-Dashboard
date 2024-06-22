@@ -303,48 +303,40 @@ export default function Downloader({loggedIn, setLoggedIn}) {
 
     return (
         <div className='wrapper-downloader'>
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <h1>Download Games</h1>
+            
+
+            <h2>Select the tournament filter</h2>
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+                <TournamentFilter
+                    tournamentFilterList={tournamentListShortended}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
+                />
+                <Button
+                    endIcon={<SearchIcon/>}
+                    variant='contained'
+                    onClick={() => {fetchTournamentList()}}
+                    
+                >
+                    Get Tournaments
+                </Button>
+
+            </Stack>
+            
+
             {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                        <h1>Download Games</h1>
-                        
-
-                        <h2>Select the tournament filter</h2>
-                        <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
-                            <TournamentFilter
-                                tournamentFilterList={tournamentListShortended}
-                                selectedFilters={selectedFilters}
-                                setSelectedFilters={setSelectedFilters}
-                            />
-                            <Button
-                                endIcon={<SearchIcon/>}
-                                variant='contained'
-                                onClick={() => {fetchTournamentList()}}
-                                
-                            >
-                                Get Tournaments
-                            </Button>
-
-                        </Stack>
-                        
-
-                        {
-                            loading ? (
-                                <Loading />
-                            ) : (
-                                <TextAdder
-                                    tournamentList={tournamentList}
-                                    selectedTournaments={selectedTournaments}
-                                    setSelectedTournaments={setSelectedTournaments}
-                                />
-                            )
-                            
-                        }
-                    </>
+                loading ? (
+                    <Loading />
                 ) : (
-                    <RedirectPage />
+                    <TextAdder
+                        tournamentList={tournamentList}
+                        selectedTournaments={selectedTournaments}
+                        setSelectedTournaments={setSelectedTournaments}
+                    />
                 )
+                
             }
         </div>
     );

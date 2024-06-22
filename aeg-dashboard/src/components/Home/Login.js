@@ -14,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import bgImage from "../../assets/login-bg.jpg"
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../constants';
+import AuthContext from '../context/AuthContext';
 
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -33,6 +34,10 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
     const [password, setPassword] = React.useState("")
     const [error, setError] = React.useState("")
     const [authTokens, setAuthTokens] = React.useState(null)
+
+    let {login} = React.useContext(AuthContext)
+
+    const navigate = useNavigate()
 
     function getSession() {
         fetch(API_URL + "authentication/session/", {
@@ -84,39 +89,17 @@ export default function SignInSide({loggedIn, setLoggedIn}) {
         }
     }
 
-
-    function login(event) {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        let bool = await login(userName, password)
+        console.log(bool)
 
-        // Make a post request to login api
-        fetch(API_URL + "token/getPair/", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({username: userName, password: password})
-        })
-        .then(isResponseOk)
-        .then((data) => {
-            console.log(data);
-            setLoggedIn(true)
-            setUserName("")
-            setPassword("")
-            navigate('/Home')
-        })
-        .catch((err) => {
+        if (bool) {
+            console.log("OOOK")
+            navigate("/Home")
+        }else{
             setError("Wrong username or password")
-            console.log(error)
-        })
-    }
-
-    
-
-
-    const navigate = useNavigate()
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        login(event)
+        }
     };
 
     return (

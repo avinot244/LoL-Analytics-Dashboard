@@ -82,156 +82,147 @@ function ChampionOverview({loggedIn, setLoggedIn}) {
     return(
         <div className="wrapper-champOverview">
 
-            {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                        <h1> Champion overview </h1>
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <h1> Champion overview </h1>
 
-                        <div className="dashboard-champOverview-controlPannel">
-                            <ul className="dashboard-champOverview-controlPannel-list">
-                                <li>
-                                    <SearchComp
-                                        defaultValue={activeTournament}
-                                        setSelectedElement={setActiveTournament}
-                                        elementList={tournamentList}
-                                        label={"Tournament"}
-                                        width={550}
-                                    />
+            <div className="dashboard-champOverview-controlPannel">
+                <ul className="dashboard-champOverview-controlPannel-list">
+                    <li>
+                        <SearchComp
+                            defaultValue={activeTournament}
+                            setSelectedElement={setActiveTournament}
+                            elementList={tournamentList}
+                            label={"Tournament"}
+                            width={550}
+                        />
+                        
+                    </li>
+                    <li>
+                        <SelectComp
+                            elementList={side}
+                            defaultValue={activeSide}
+                            setActive={setActiveSide}/>
+                    </li>
+                    <li>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<SearchIcon />}
+                            onClick={() => {
+                                fetchPatchListFromTournament(activeTournament)
+                                setDisplayPatchFlag(true)
+                            }}    
+                        >
+                            Search Patches
+                        </Button>
+                    </li>
+                </ul>
+
+                {
+                    displayPatchFlag ?
+                    <ul className="dashboard-champOverview-controlPannel-list">
+                        <li>
+                            <SelectComp 
+                                elementList={patchList}
+                                defaultValue={activePatch}
+                                setActive={setActivePatch}
+                            />
+                        </li>
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<ArrowForwardIosIcon />}
+                                onClick={() => {
+                                    setDisplayFlag(true)
                                     
-                                </li>
-                                <li>
-                                    <SelectComp
-                                        elementList={side}
-                                        defaultValue={activeSide}
-                                        setActive={setActiveSide}/>
-                                </li>
-                                <li>
-                                    <Button 
-                                        variant="contained" 
-                                        endIcon={<SearchIcon />}
-                                        onClick={() => {
-                                            fetchPatchListFromTournament(activeTournament)
-                                            setDisplayPatchFlag(true)
-                                        }}    
-                                    >
-                                        Search Patches
-                                    </Button>
-                                </li>
-                            </ul>
+                                }}    
+                            >
+                                Analyze
+                            </Button>
+                        </li>
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<RestartAltIcon />}
+                                onClick={() => {
+                                    setDisplayFlag(false)
+                                    setDisplayPatchFlag(false)
+                                }}    
+                            >
+                                Reset
+                            </Button>
+                        </li>
+                    </ul>
+                    :
+                    <div className="alt">
 
-                            {
-                                displayPatchFlag ?
-                                <ul className="dashboard-champOverview-controlPannel-list">
-                                    <li>
-                                        <SelectComp 
-                                            elementList={patchList}
-                                            defaultValue={activePatch}
-                                            setActive={setActivePatch}
-                                        />
-                                    </li>
-                                    <li>
-                                        <Button 
-                                            variant="contained" 
-                                            endIcon={<ArrowForwardIosIcon />}
-                                            onClick={() => {
-                                                setDisplayFlag(true)
-                                                
-                                            }}    
-                                        >
-                                            Analyze
-                                        </Button>
-                                    </li>
-                                    <li>
-                                        <Button 
-                                            variant="contained" 
-                                            endIcon={<RestartAltIcon />}
-                                            onClick={() => {
-                                                setDisplayFlag(false)
-                                                setDisplayPatchFlag(false)
-                                            }}    
-                                        >
-                                            Reset
-                                        </Button>
-                                    </li>
-                                </ul>
-                                :
-                                <div className="alt">
+                    </div>
 
-                                </div>
+                }
+                
+            </div>
 
-                            }
-                            
-                        </div>
+            {
+                displayFlag ?
+                <div className="dashboard-champOverview-rolePanel">
+                    <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 574}}> 
+                    <ThemeProvider theme={theme}>
+                        <Tabs 
+                            value={value} 
+                            onChange={handleChange}
+                            textColor="primary"
+                            indicatorColor="primary"
+                        >
+                            <Tab 
+                                label="Toplane"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="Jungle"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="Midlane"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="ADC"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="Support"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                            <Tab 
+                                label="All Roles"
+                                sx={{
+                                    color:"gray"
+                                }}
+                            />
+                        </Tabs>
+                    </ThemeProvider>
+                    </Box>
+                    <ChampionOverviewPanel value={value} panelIndex={0} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={1} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={2} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={3} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={4} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                    <ChampionOverviewPanel value={value} panelIndex={5} tournament={activeTournament} patch={activePatch} side={activeSide}/>
+                </div>
+                :
+                <div className="alt">
 
-                        {
-                            displayFlag ?
-                            <div className="dashboard-champOverview-rolePanel">
-                                <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 574}}> 
-                                <ThemeProvider theme={theme}>
-                                    <Tabs 
-                                        value={value} 
-                                        onChange={handleChange}
-                                        textColor="primary"
-                                        indicatorColor="primary"
-                                    >
-                                        <Tab 
-                                            label="Toplane"
-                                            sx={{
-                                                color:"gray"
-                                            }}
-                                        />
-                                        <Tab 
-                                            label="Jungle"
-                                            sx={{
-                                                color:"gray"
-                                            }}
-                                        />
-                                        <Tab 
-                                            label="Midlane"
-                                            sx={{
-                                                color:"gray"
-                                            }}
-                                        />
-                                        <Tab 
-                                            label="ADC"
-                                            sx={{
-                                                color:"gray"
-                                            }}
-                                        />
-                                        <Tab 
-                                            label="Support"
-                                            sx={{
-                                                color:"gray"
-                                            }}
-                                        />
-                                        <Tab 
-                                            label="All Roles"
-                                            sx={{
-                                                color:"gray"
-                                            }}
-                                        />
-                                    </Tabs>
-                                </ThemeProvider>
-                                </Box>
-                                <ChampionOverviewPanel value={value} panelIndex={0} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-                                <ChampionOverviewPanel value={value} panelIndex={1} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-                                <ChampionOverviewPanel value={value} panelIndex={2} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-                                <ChampionOverviewPanel value={value} panelIndex={3} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-                                <ChampionOverviewPanel value={value} panelIndex={4} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-                                <ChampionOverviewPanel value={value} panelIndex={5} tournament={activeTournament} patch={activePatch} side={activeSide}/>
-                            </div>
-                            :
-                            <div className="alt">
-
-                            </div>
-                        }
-                    </>
-                    
-                ) : (
-                    <RedirectPage />
-                )
-            }   
+                </div>
+            }
         </div>
             
     )

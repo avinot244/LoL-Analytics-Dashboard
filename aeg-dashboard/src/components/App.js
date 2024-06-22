@@ -9,9 +9,12 @@ import GameOverview from './GameOverview/GameOverview';
 import Downloader from './Monitoring/Downloader';
 import PCAModelMaker from './Monitoring/PCAModelMaker';
 import PCAModelOverview from './Monitoring/PCAModelOverview';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter, createBrowserRouter, Routes, Route } from 'react-router-dom';
 import SignInSide from './Home/Login';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
+import NavBarComp from './NavbarComp';
+import PrivateRoute from './utils/PrivateRoute';
+import { AuthProvider } from './context/AuthContext';
 
 
 
@@ -26,11 +29,13 @@ function App() {
 		},
 		{
 			path:'/Home',
-			element: <Home loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
+			element: (
+				<PrivateRoute><Home loggedIn={loggedIn} setLoggedIn={setLoggedIn}/></PrivateRoute>
+			)
 		},
 		{
 			path:'/ChampionOverview/Scrims',
-			element: <ChampionOverviewScrim loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
+			element: <PrivateRoute><ChampionOverviewScrim loggedIn={loggedIn} setLoggedIn={setLoggedIn}/></PrivateRoute>
 		},
 		{
 			path:'/ChampionOverview/Esports',
@@ -65,7 +70,46 @@ function App() {
 			element: <PCAModelOverview loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>//
 		}
 	])
-	return <RouterProvider router={router}/>
+	return (
+		<BrowserRouter>
+			<AuthProvider>
+				<Routes>
+					<Route Component={SignInSide} path='/' exact/>
+					<Route element={<PrivateRoute />}>
+						<Route element={<Home />} path='/Home' exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<ChampionOverviewScrim />} path="/ChampionOverview/Scrims" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<ChampionOverview />} path="/ChampionOverview/Esports" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<PlayerOverviewScrim />} path="/PlayerOverview/Scrims" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<PlayerOverview />} path="/PlayerOverview/Esports" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<GameOverview />} path="/GameOverview/Scrims" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<GameOverview />} path="/GameOverview/Esports" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<Downloader />} path="/Monitoring/Download" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<PCAModelMaker />} path="/Monitoring/PCAMaker" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<PCAModelOverview />} path="/Monitoring/PCAOverview" exact/>
+					</Route>
+				</Routes>
+			</AuthProvider>
+		</BrowserRouter>
+		
+	)
 }
 
 export default App;

@@ -6,19 +6,11 @@ import RedirectPage from "../Home/RedirectPage";
 export default function PCAModelOverview({loggedIn, setLoggedIn}) {
     return (
         <div className="pca-model-overview-wrapper">
-            {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
 
-                        <h1>Manage Behavior Analysis Models</h1>
+            <h1>Manage Behavior Analysis Models</h1>
 
-                        <PCAModelList/>
-                    </>
-                ) : (
-                    <RedirectPage />
-                )
-            }
+            <PCAModelList/>
         </div>
     )
 }

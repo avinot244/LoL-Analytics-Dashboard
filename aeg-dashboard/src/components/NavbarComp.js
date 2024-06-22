@@ -5,10 +5,13 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Outlet, Link} from "react-router-dom";
 import { Button } from '@mui/material';
 import { API_URL } from '../constants';
+import { useContext } from 'react';
+import AuthContext from './context/AuthContext';
 
 
 
 function NavBarComp({loggedIn, setLoggedIn}) {
+	let {logoutUser} = useContext(AuthContext)
 	function isResponseOk(response) {
         if (response.status >= 200 && response.status <= 299) {
             return response.json();
@@ -17,17 +20,7 @@ function NavBarComp({loggedIn, setLoggedIn}) {
         }
     }
 	function logout() {
-		fetch(API_URL + "authentication/logout/", {
-			credentials: "same-origin"
-		})
-		.then(isResponseOk)
-		.then((data) => {
-			console.log(data)
-			setLoggedIn(false)
-		})
-		.catch((err) => {
-			console.log(err)
-		})
+		logoutUser()
 	}
 	
 

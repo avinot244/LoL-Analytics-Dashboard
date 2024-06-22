@@ -293,46 +293,38 @@ export default function PCAModelMaker({loggedIn, setLoggedIn}) {
 
     return (
         <div className="pca-model-maker-wrapper">
-            {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
 
-                        <h1>Create Behavior Analysis Models</h1>
+            <h1>Create Behavior Analysis Models</h1>
 
-                        <br/>
-                        <br/>
-                        <br/>
+            <br/>
+            <br/>
+            <br/>
 
-                        <div className="PCAMaker-control-panel">
-                            <div className="PCAMaker-roleSelected-wrapper">
-                                <h3>Select a role</h3>
-                                <div className="PCAMaker-roleSelecter">
-                                    <SelectComp
-                                        elementList={roleList}
-                                        defaultValue={"-- Role --"}
-                                        setActive={setActiveRole}/>
+            <div className="PCAMaker-control-panel">
+                <div className="PCAMaker-roleSelected-wrapper">
+                    <h3>Select a role</h3>
+                    <div className="PCAMaker-roleSelecter">
+                        <SelectComp
+                            elementList={roleList}
+                            defaultValue={"-- Role --"}
+                            setActive={setActiveRole}/>
 
-                                </div>
-                            </div>
-                                
-                            <div className="PCAMaker-tournament-selecter">
-                                <h3>Select a list of tournaments</h3>
-                                <TextAdder
-                                    tournamentList={tournamentList}
-                                    selectedTournaments={selectedTournaments}
-                                    setSelectedTournaments={setSelectedTournaments}
-                                    tournamentDict={tournamentDict}
-                                    activeRole={activeRole}
-                                />
-                            </div>
-                            
-                        </div>
-                    </>
-                ) : (
-                    <RedirectPage />
-                )
-            }
+                    </div>
+                </div>
+                    
+                <div className="PCAMaker-tournament-selecter">
+                    <h3>Select a list of tournaments</h3>
+                    <TextAdder
+                        tournamentList={tournamentList}
+                        selectedTournaments={selectedTournaments}
+                        setSelectedTournaments={setSelectedTournaments}
+                        tournamentDict={tournamentDict}
+                        activeRole={activeRole}
+                    />
+                </div>
+                
+            </div>
         </div>
     )
 }

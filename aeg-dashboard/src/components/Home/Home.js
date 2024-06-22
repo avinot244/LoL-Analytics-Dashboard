@@ -2,6 +2,7 @@ import NavBarComp from "../NavbarComp"
 import "../../styles/Home.css"
 import TopMetaPicksPanel from "./TopMetaPicksPanel";
 import LatestDraftsPanel from "./LatestDraftsPanel";
+import { useContext } from "react";
 
 import { useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -11,6 +12,7 @@ import Box from '@mui/material/Box';
 import { grey } from '@mui/material/colors/'
 
 import RedirectPage from "./RedirectPage";
+import AuthContext from "../context/AuthContext";
 
 
 
@@ -27,6 +29,7 @@ const theme = createTheme({
 
 
 function Home({loggedIn, setLoggedIn}){
+    let {user} = useContext(AuthContext)
     
     const [value, setValue] = useState(0)
 
@@ -36,43 +39,36 @@ function Home({loggedIn, setLoggedIn}){
 
     return(
         <div className="wrapper-overview">
-            {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                        <br/>
-                        <h1>Home Page</h1>
-
-                        <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
-                        <ThemeProvider theme={theme}>
-                            <Tabs
-                                value={value}
-                                onChange={handleChange}
-                                textColor="primary"
-                                indicatorColor="primary"
-                            >
-                                <Tab
-                                    label="Top Meta Picks"
-                                    sx={{
-                                        color:"gray"
-                                    }}
-                                />
-                                <Tab
-                                    label="Latest Drafts"
-                                    sx={{
-                                        color:"gray"
-                                    }}
-                                />
-                            </Tabs>
-                        </ThemeProvider>
-                        </Box>
-                        <TopMetaPicksPanel value={value} panelIndex={0}/>
-                        <LatestDraftsPanel value={value} panelIndex={1}/>
-                    </>
-                ) : (
-                    <RedirectPage/>
-                )
-            }
+            <>
+                <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                <br/>
+                <h1>Home Page</h1>
+                <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
+                <ThemeProvider theme={theme}>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        textColor="primary"
+                        indicatorColor="primary"
+                    >
+                        <Tab
+                            label="Top Meta Picks"
+                            sx={{
+                                color:"gray"
+                            }}
+                        />
+                        <Tab
+                            label="Latest Drafts"
+                            sx={{
+                                color:"gray"
+                            }}
+                        />
+                    </Tabs>
+                </ThemeProvider>
+                </Box>
+                <TopMetaPicksPanel value={value} panelIndex={0}/>
+                <LatestDraftsPanel value={value} panelIndex={1}/>
+            </>
             
         </div>
     )

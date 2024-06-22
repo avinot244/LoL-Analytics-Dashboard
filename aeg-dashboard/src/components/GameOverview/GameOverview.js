@@ -118,84 +118,74 @@ function GameOverview({loggedIn, setLoggedIn}){
 
     return(
         <div className="wrapper-overview-game">
-            {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                            <h1> Game overview </h1>
-                            <br/>
-                            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
-                                <SearchComp
-                                    elementList={tournamentList}
-                                    setSelectedElement={setActiveTournament}
-                                    label={"Tournament"}
-                                    width={550}
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+                <h1> Game overview </h1>
+                <br/>
+                <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                    <SearchComp
+                        elementList={tournamentList}
+                        setSelectedElement={setActiveTournament}
+                        label={"Tournament"}
+                        width={550}
 
-                                />
+                    />
 
-                                <Button
-                                    variant="contained"
-                                    endIcon={<SearchIcon />}
-                                    onClick={() => {
-                                        fetchGamesFromTournament(tournament)
-                                        setFlagGameSelecter(true)
-                                    }}
-                                >
-                                    Search Games
-                                </Button>
-                            </Stack>
-                            
-                            <br/>
+                    <Button
+                        variant="contained"
+                        endIcon={<SearchIcon />}
+                        onClick={() => {
+                            fetchGamesFromTournament(tournament)
+                            setFlagGameSelecter(true)
+                        }}
+                    >
+                        Search Games
+                    </Button>
+                </Stack>
+                
+                <br/>
 
 
-                            {
-                                flagGameSelecter && 
-                                <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
-                                    <SearchGames
-                                        setSelectedElement={setSelectedGame}
-                                        elementList={gameList}
-                                    />
-                                    <Button 
-                                        variant="contained" 
-                                        endIcon={<ArrowForwardIosIcon />}         
-                                        onClick = {() => {
-                                            setFlagDisplayState(true)
-                                        }}               
-                                    >
-                                        Analyze
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        endIcon={<RestartAltIcon/>}
-                                        onClick={() => {
-                                            setFlagGameSelecter(false)
-                                            setSelectedGame('')
-                                            setFlagDisplayState(false)
-                                        }}
-                                    >
-                                        Reset
-                                    </Button>
-                                    
-                                </Stack>
+                {
+                    flagGameSelecter && 
+                    <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                        <SearchGames
+                            setSelectedElement={setSelectedGame}
+                            elementList={gameList}
+                        />
+                        <Button 
+                            variant="contained" 
+                            endIcon={<ArrowForwardIosIcon />}         
+                            onClick = {() => {
+                                setFlagDisplayState(true)
+                            }}               
+                        >
+                            Analyze
+                        </Button>
+                        <Button
+                            variant="contained"
+                            endIcon={<RestartAltIcon/>}
+                            onClick={() => {
+                                setFlagGameSelecter(false)
+                                setSelectedGame('')
+                                setFlagDisplayState(false)
+                            }}
+                        >
+                            Reset
+                        </Button>
+                        
+                    </Stack>
 
-                            }
-                            
-                            
-                            {
-                                flagDisplayStat &&
-                                <GameOverviewStat 
-                                    seriesId={selectedGame.seriesId}
-                                    gameNumber={selectedGame.gameNumber}
-                                />
-                            }
-                    </>
-                ) : (
-                    <RedirectPage />
-                )
-            }
-            
+                }
+                
+                
+                {
+                    flagDisplayStat &&
+                    <GameOverviewStat 
+                        seriesId={selectedGame.seriesId}
+                        gameNumber={selectedGame.gameNumber}
+                    />
+                }
         </div>
-        
     )
 }
 

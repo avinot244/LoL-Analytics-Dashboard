@@ -83,163 +83,151 @@ function PlayerOverview({loggedIn, setLoggedIn}){
 
     return(
         <div className="wrapper-overview-player">
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <h1> Player Overview </h1>
+            <div className="dashboard-playerOverview-controlPannel">
+                <ul className="dashboard-playerOverview-controlPannel-list">
+                    <li>
+                        <SelectComp
+                            elementList={patchList}
+                            defaultValue={"-- Patch --"}
+                            setActive={setActivePatch}/>
+                    </li>
+                    <li>
+                        <SelectComp
+                            elementList={roleList}
+                            defaultValue={"-- Role --"}
+                            setActive={setActiveRole}/>
+                    </li>
+                    <li>
+                        <Button
+                            variant="contained"
+                            endIcon={<SearchIcon />}
+                            onClick={() => {
+                                console.log(activePatch, activeRole)
+                                if (activePatch !== '' && activeRole !== '') {
+                                    fetchPlayers(activePatch, activeRole)
+                                    setDisplayPlayerSearch(true)
+                                }
+                            }}
+                        >
+                            Search
+                        </Button>
+                    </li>
+                </ul>
+            </div>
+
+
 
             {
-                loggedIn ? (
-                    <>
-                        <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                        <h1> Player Overview </h1>
-                        <div className="dashboard-playerOverview-controlPannel">
-                            <ul className="dashboard-playerOverview-controlPannel-list">
-                                <li>
-                                    <SelectComp
-                                        elementList={patchList}
-                                        defaultValue={"-- Patch --"}
-                                        setActive={setActivePatch}/>
-                                </li>
-                                <li>
-                                    <SelectComp
-                                        elementList={roleList}
-                                        defaultValue={"-- Role --"}
-                                        setActive={setActiveRole}/>
-                                </li>
-                                <li>
-                                    <Button
-                                        variant="contained"
-                                        endIcon={<SearchIcon />}
-                                        onClick={() => {
-                                            console.log(activePatch, activeRole)
-                                            if (activePatch !== '' && activeRole !== '') {
-                                                fetchPlayers(activePatch, activeRole)
-                                                setDisplayPlayerSearch(true)
-                                            }
-                                        }}
-                                    >
-                                        Search
-                                    </Button>
-                                </li>
-                            </ul>
-                        </div>
-
-
-
-                        {
-                            flagDisplayPlayerSearch && 
-                            <div className="playerOverview-playerSelect">
-                                <ul className="dashboard-playerOverview-playerSelect-list">
-                                    <li>
-                                        <SearchComp
-                                            setSelectedElement={setSelectedPlayer}
-                                            elementList={playerList}
-                                            label={"Player"}
-                                            width={175}
-                                        />
-                                    </li>
-
-                                    <li>
-                                        <Button 
-                                            variant="contained" 
-                                            endIcon={<SearchIcon />}
-                                            onClick={() => {
-                                                if (selectedPlayer !== '') {
-                                                    setDisplayTournamentSearch(true)
-                                                    fetchTournamentFromPlayer(selectedPlayer, activePatch)
-                                                }
-                                                
-                                            }}    
-                                        >
-                                            Search tournament
-                                        </Button>
-                                    </li>
-
-                                    
-                                </ul>
-                            </div>
-                        }
-                        
-                        {
-                            flagDisplayTournamentSearch &&
-                            <div className="playerOverview-searchTournament">
-                                <ul className="dashboard-playerOverview-searchTournament-list">
-                                    <li>
-                                        <SelectComp 
-                                            elementList={tournamentList}
-                                            defaultValue={"-- Tournament --"}
-                                            setActive={setActiveTournament}
-                                        />
-                                    </li>
-
-                                    <li>
-                                        <ThemeProvider theme={theme}>
-                                            <TextField
-                                                id="outlined-number"
-                                                label="Games"
-                                                type="number"
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                                sx={{ 
-                                                    input: { color: 'white'},
-                                                    borderColor: 'white'
-                                                }}
-                                                focused
-                                                onChange={(e) => {
-                                                    setActiveLimit(e.target.value)
-                                                }}
-                                            />
-                                        </ThemeProvider>
-                                    </li>
-
-                                    <li>
-                                        <Button 
-                                            variant="contained" 
-                                            endIcon={<RestartAltIcon />}
-                                            onClick={() => {
-                                                setDisplayPlayerSearch(false)
-                                                setDisplayPlayerStat(false)
-                                                setDisplayTournamentSearch(false)
-                                                setActiveLimit(5)
-                                            }}    
-                                        >
-                                            Reset
-                                        </Button>
-                                    </li>
-                                    <li>
-                                        <Button
-                                            variant="contained"
-                                            endIcon={<ArrowForwardIosIcon/>}
-                                            onClick={() => {
-                                                if (tournament !== '' && activeLimit > 0) {
-                                                    setDisplayPlayerStat(true)
-                                                }
-                                            }}
-                                        >
-                                            Analyse
-                                        </Button>
-                                    </li>
-                                </ul>
-                            </div>
-                        }
-                        
-
-                        {
-                            flagDisplayPlayerStat && 
-                            <PlayerOverviewStat 
-                                role={activeRole}
-                                summonnerName={selectedPlayer}
-                                patch={activePatch}
-                                wantedTournament={tournament}
-                                limit={activeLimit}
+                flagDisplayPlayerSearch && 
+                <div className="playerOverview-playerSelect">
+                    <ul className="dashboard-playerOverview-playerSelect-list">
+                        <li>
+                            <SearchComp
+                                setSelectedElement={setSelectedPlayer}
+                                elementList={playerList}
+                                label={"Player"}
+                                width={175}
                             />
-                        }
-                    </>
-                ) : (
-                    <RedirectPage />
-                )
+                        </li>
 
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<SearchIcon />}
+                                onClick={() => {
+                                    if (selectedPlayer !== '') {
+                                        setDisplayTournamentSearch(true)
+                                        fetchTournamentFromPlayer(selectedPlayer, activePatch)
+                                    }
+                                    
+                                }}    
+                            >
+                                Search tournament
+                            </Button>
+                        </li>
+
+                        
+                    </ul>
+                </div>
             }
             
+            {
+                flagDisplayTournamentSearch &&
+                <div className="playerOverview-searchTournament">
+                    <ul className="dashboard-playerOverview-searchTournament-list">
+                        <li>
+                            <SelectComp 
+                                elementList={tournamentList}
+                                defaultValue={"-- Tournament --"}
+                                setActive={setActiveTournament}
+                            />
+                        </li>
+
+                        <li>
+                            <ThemeProvider theme={theme}>
+                                <TextField
+                                    id="outlined-number"
+                                    label="Games"
+                                    type="number"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                    focused
+                                    onChange={(e) => {
+                                        setActiveLimit(e.target.value)
+                                    }}
+                                />
+                            </ThemeProvider>
+                        </li>
+
+                        <li>
+                            <Button 
+                                variant="contained" 
+                                endIcon={<RestartAltIcon />}
+                                onClick={() => {
+                                    setDisplayPlayerSearch(false)
+                                    setDisplayPlayerStat(false)
+                                    setDisplayTournamentSearch(false)
+                                    setActiveLimit(5)
+                                }}    
+                            >
+                                Reset
+                            </Button>
+                        </li>
+                        <li>
+                            <Button
+                                variant="contained"
+                                endIcon={<ArrowForwardIosIcon/>}
+                                onClick={() => {
+                                    if (tournament !== '' && activeLimit > 0) {
+                                        setDisplayPlayerStat(true)
+                                    }
+                                }}
+                            >
+                                Analyse
+                            </Button>
+                        </li>
+                    </ul>
+                </div>
+            }
             
+
+            {
+                flagDisplayPlayerStat && 
+                <PlayerOverviewStat 
+                    role={activeRole}
+                    summonnerName={selectedPlayer}
+                    patch={activePatch}
+                    wantedTournament={tournament}
+                    limit={activeLimit}
+                />
+            }
         </div>
     )
 }
