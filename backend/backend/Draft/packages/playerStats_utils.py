@@ -130,7 +130,6 @@ def updateDatabase(path : str,
                    and abs(kda - row["KDA"] < 0.01)
                    and row["NbGames"] == nbGames):
                 
-                print("Updating row")
                 df.at[index, "GlobalPickRate"] = globalPickRate
                 df.at[index, "WinRate"] = globalWinRate
                 df.at[index, "KDA"] = kda

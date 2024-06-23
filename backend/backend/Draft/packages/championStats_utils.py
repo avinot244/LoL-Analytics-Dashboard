@@ -280,7 +280,7 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
     counterBlinded : int = 0
     amountOfGames = len(queryDraftPickOrder)
     for draftPickOrder in queryDraftPickOrder:
-        queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId,tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
+        queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId, tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
         
         pickPosition : int = getPickPosition(championName, draftPickOrder, side)
         enemyRoleList : list = getEnemyRoleList(draftPickOrder, queryPlayerPicks, side)
@@ -337,7 +337,6 @@ def updateDatabase(path : str,
                    and abs(row["BlindPick"] - blindPick) < 0.01
                    and row["MostPopularRole"] == mostPopularRole):
                 
-                # print("Updating row")
                 df.at[index, "WinRate"] = winRate
                 df.at[index, "GlobalPickRate"] = pickRate
                 df.at[index, "PickRate1Rota"] = pickRate1Rota
@@ -350,10 +349,6 @@ def updateDatabase(path : str,
                 df.at[index, "MostPopularRole"] = mostPopularRole
 
                 os.remove(path)
-
-                to_delete = ChampionDraftStats.objects.get(championName__exact=championName, patch__contains=patch, tournament__exact=tournament, side__exact=side)
-                to_delete.delete()
-
                 df.to_csv(path, sep=";", index=False)
                 break
             
