@@ -1,6 +1,6 @@
-import NavBarComp from "../NavbarComp"
+import NavBarComp from "../utils/NavbarComp"
 import "../../styles/GameOverview.css"
-import SearchComp from "../SearchComp"
+import SearchComp from "../utils/SearchComp"
 import { API_URL } from "../../constants"
 import GameOverviewStat from "./GameOverviewStat"
 

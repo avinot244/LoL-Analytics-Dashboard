@@ -1,4 +1,4 @@
-import NavBarComp from "../NavbarComp";
+import NavBarComp from "../utils/NavbarComp";
 import "../../styles/PCAModelMaker.css"
 
 import * as React from 'react';
@@ -14,7 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear'
 import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 import Stack from '@mui/material/Stack';
 
-import SelectComp from "../SelectComp.js";
+import SelectComp from "../utils/SelectComp.js";
 
 import { API_URL, roleList } from '../../constants/index.js';
 import RedirectPage from "../Home/RedirectPage.js";

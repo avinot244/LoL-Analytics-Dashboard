@@ -2,7 +2,7 @@ import "../../styles/PlayerOverviewStat.css"
 import { API_URL, roleList} from "../../constants";
 import { useEffect, useState } from "react";
 import NormalDistribution from "normal-distribution"
-import Loading from "../Loading";
+import Loading from "../utils/Loading";
 
 import {
     Chart as ChartJS,

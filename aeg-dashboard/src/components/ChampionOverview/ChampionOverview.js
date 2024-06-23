@@ -1,7 +1,7 @@
-import NavBarComp from "../NavbarComp";
+import NavBarComp from "../utils/NavbarComp";
 import ChampionOverviewPanel from "./ChampionOverviewPanel"
 import "../../styles/ChampionOverview.css"
-import SelectComp from "../SelectComp";
+import SelectComp from "../utils/SelectComp";
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -18,7 +18,7 @@ import Button from "@mui/material/Button"
 import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchComp from "../SearchComp";
+import SearchComp from "../utils/SearchComp";
 import RedirectPage from "../Home/RedirectPage";
 
 const theme = createTheme({

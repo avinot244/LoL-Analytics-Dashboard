@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import "../styles/ChampionIconSmall.css"
+import "../../styles/ChampionIconSmall.css"
 
-function ChampionIconSmallGlow({championName, width, height, glow}) {
+function ChampionIconSmall({championName, width, height}) {
     const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${championName}.png`
     const [img, setImg] = useState();
 
@@ -16,21 +16,14 @@ function ChampionIconSmallGlow({championName, width, height, glow}) {
         fetchImage();
     }, []);
 
-    if (glow) {
-        return (
 
-            <img className="champion-icon-small-glow" src={img} alt={championName} width={width} height={height}/>
-    
-        )
-    } else {
-        return (
 
-            <img className="champion-icon-small" src={img} alt={championName} width={width} height={height}/>
-    
-        )
-    }
+    return (
+        <img className="champion-icon-small" src={img} alt={championName} width={width} height={height}/>
+    )
+
 
     
 }
 
-export default ChampionIconSmallGlow;
+export default ChampionIconSmall;

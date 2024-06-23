@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { API_URL } from "../../constants"
 import "../../styles/GameOverviewStat.css"
-import DraftComponent from "../DraftComponent";
-import Loading from "../Loading" 
+import DraftComponent from "../utils/DraftComponent";
+import Loading from "../utils/Loading" 
 import {
     Chart as ChartJS,
     CategoryScale,

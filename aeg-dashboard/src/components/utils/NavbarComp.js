@@ -4,9 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import {Outlet, Link} from "react-router-dom";
 import { Button } from '@mui/material';
-import { API_URL } from '../constants';
+import { API_URL } from '../../constants';
 import { useContext } from 'react';
-import AuthContext from './context/AuthContext';
+import AuthContext from '../context/AuthContext';
 
 
 

@@ -1,4 +1,4 @@
-import "../styles/DraftComponent.css"
+import "../../styles/DraftComponent.css"
 import ChampionIconSmall from "./ChampionIconSmall";
 
 

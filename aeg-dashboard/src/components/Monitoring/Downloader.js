@@ -15,10 +15,10 @@ import Stack from '@mui/material/Stack';
 
 import '../../styles/Monitoring.css'
 
-import NavBarComp from '../NavbarComp.js';
+import NavBarComp from '../utils/NavbarComp.js';
 import { API_URL } from '../../constants/index.js';
 import RedirectPage from '../Home/RedirectPage.js';
-import Loading from '../Loading.js';
+import Loading from '../utils/Loading.js';
 
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {

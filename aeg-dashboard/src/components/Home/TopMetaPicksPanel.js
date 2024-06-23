@@ -1,4 +1,4 @@
-import SelectComp from "../SelectComp";
+import SelectComp from "../utils/SelectComp";
 import { useState, useEffect } from "react";
 import { API_URL } from "../../constants";
 import ChampionOverviewListPanel from "../ChampionOverview/championOverviewListPanel";
@@ -7,7 +7,7 @@ import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchComp from "../SearchComp";
+import SearchComp from "../utils/SearchComp";
 
 
 function TopMetaPicksPanel(props) {

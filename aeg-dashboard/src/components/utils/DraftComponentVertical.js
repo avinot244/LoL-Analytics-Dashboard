@@ -1,5 +1,5 @@
 import ChampionIconSmallGlow from "./ChampionIconSmallGlow";
-import "../styles/DraftComponentVertical.css"
+import "../../styles/DraftComponentVertical.css"
 
 export default function DraftComponentVertical({team1Name, team2Name, picksB1rota, picksB2rota, bansB1rota, bansB2rota, picksR1rota, picksR2rota, bansR1rota, bansR2rota, win, championNameFilter}) {
     return (

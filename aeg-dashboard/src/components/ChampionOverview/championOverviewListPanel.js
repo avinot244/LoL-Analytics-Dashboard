@@ -1,7 +1,7 @@
 import { API_URL } from "../../constants/index";
-import ChampionIcon from "../ChampionIcon";
+import ChampionIcon from "../utils/ChampionIcon";
 import { useState, useEffect } from "react";
-import Loading from "../Loading";
+import Loading from "../utils/Loading";
 
 export default function ChampionOverviewListPanel(props) {
     const {filter, side, patch, tournament} = props

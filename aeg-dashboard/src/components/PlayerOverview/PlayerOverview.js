@@ -1,6 +1,6 @@
-import NavBarComp from "../NavbarComp"
+import NavBarComp from "../utils/NavbarComp"
 import "../../styles/PlayerOverview.css"
-import SelectComp from "../SelectComp";
+import SelectComp from "../utils/SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import { API_URL, roleList} from "../../constants";
@@ -9,7 +9,7 @@ import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchComp from "../SearchComp";
+import SearchComp from "../utils/SearchComp";
 import { TextField } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material";
 import RedirectPage from "../Home/RedirectPage";

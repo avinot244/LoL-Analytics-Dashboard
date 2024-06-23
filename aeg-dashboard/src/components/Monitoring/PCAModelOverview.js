@@ -1,4 +1,4 @@
-import NavBarComp from "../NavbarComp";
+import NavBarComp from "../utils/NavbarComp";
 import "../../styles/PCAModelOverview.css"
 import PCAModelList from "./PCAModelList";
 import RedirectPage from "../Home/RedirectPage";

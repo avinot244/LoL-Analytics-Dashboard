@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../styles/ChampionIcon.css"
+import "../../styles/ChampionIcon.css"
 
 function ChampionIcon({championName, winRate, pickRate, banRate, pickOrder}){
     const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${championName}.png`
