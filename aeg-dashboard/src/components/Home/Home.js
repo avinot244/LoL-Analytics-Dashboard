@@ -39,37 +39,34 @@ function Home({loggedIn, setLoggedIn}){
 
     return(
         <div className="wrapper-overview">
-            <>
-                <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-                <br/>
-                <h1>Home Page</h1>
-                <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
-                <ThemeProvider theme={theme}>
-                    <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        textColor="primary"
-                        indicatorColor="primary"
-                    >
-                        <Tab
-                            label="Top Meta Picks"
-                            sx={{
-                                color:"gray"
-                            }}
-                        />
-                        <Tab
-                            label="Latest Drafts"
-                            sx={{
-                                color:"gray"
-                            }}
-                        />
-                    </Tabs>
-                </ThemeProvider>
-                </Box>
-                <TopMetaPicksPanel value={value} panelIndex={0}/>
-                <LatestDraftsPanel value={value} panelIndex={1}/>
-            </>
-            
+            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <br/>
+            <h1>Home Page</h1>
+            <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
+            <ThemeProvider theme={theme}>
+                <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    textColor="primary"
+                    indicatorColor="primary"
+                >
+                    <Tab
+                        label="Top Meta Picks"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                    <Tab
+                        label="Latest Drafts"
+                        sx={{
+                            color:"gray"
+                        }}
+                    />
+                </Tabs>
+            </ThemeProvider>
+            </Box>
+            <TopMetaPicksPanel value={value} panelIndex={0}/>
+            <LatestDraftsPanel value={value} panelIndex={1}/>
         </div>
     )
 }
