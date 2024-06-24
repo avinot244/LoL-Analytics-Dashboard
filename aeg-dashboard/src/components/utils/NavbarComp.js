@@ -55,6 +55,7 @@ function NavBarComp({loggedIn, setLoggedIn}) {
 					<NavDropdown.Item as={Link} to='/Monitoring/PCAMaker'>PCA Model Maker</NavDropdown.Item>
 					<NavDropdown.Item as={Link} to='/Monitoring/PCAOverview'>PCA Model Overview</NavDropdown.Item>
 				</NavDropdown>
+				<Nav.Link as ={Link} to="/getToken">Get Tokens</Nav.Link>
 				
 
 			</Nav>

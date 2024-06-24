@@ -13,6 +13,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignInSide from './Home/Login';
 import PrivateRoute from './utils/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
+import GetTokenComp from './GetToken/GetTokenComp';
 
 
 
@@ -52,6 +53,10 @@ function App() {
 					<Route element={<PrivateRoute />}>
 						<Route element={<PCAModelOverview />} path="/Monitoring/PCAOverview" exact/>
 					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<GetTokenComp />} path="/GetToken" exact/>
+					</Route>
+					
 				</Routes>
 			</AuthProvider>
 		</BrowserRouter>

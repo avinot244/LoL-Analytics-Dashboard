@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework import status
 
+
 import json
 
 @api_view(["POST"])
@@ -56,4 +57,10 @@ def getUserList(request):
 def deleteUser(request, username : str):
     toDelete = User.objects.get(username__exact=username)
     toDelete.delete()
+    return Response(status=status.HTTP_200_OK)
+
+@permission_classes((IsAuthenticated, ))
+@api_view(['GET'])
+def test(request):
+    print("Yo")
     return Response(status=status.HTTP_200_OK)
