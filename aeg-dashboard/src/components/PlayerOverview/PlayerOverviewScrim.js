@@ -13,8 +13,9 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchComp from "../utils/SearchComp";
-import RedirectPage from "../Home/RedirectPage";
+import AuthContext from "../context/AuthContext";
 
+import { useContext } from "react";
 
 function PlayerOverviewScrim({loggedIn, setLoggedIn}){
     const [patchList, setPatchList] = useState([]);
@@ -30,11 +31,15 @@ function PlayerOverviewScrim({loggedIn, setLoggedIn}){
 
     const [activeLimit, setActiveLimit] = useState(5)
 
-    
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
 
     const fetchPlayers = async (patch, role) => {
         const result = await fetch(API_URL + `behavior/${role}/getSummonnerListTournament/${patch}/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then(result => {
             const newPlayerList = result.sort();
@@ -44,7 +49,8 @@ function PlayerOverviewScrim({loggedIn, setLoggedIn}){
 
     const fetchPatchListFromScrim = async () => {
         const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then(result => {
             const newPatchList = result;

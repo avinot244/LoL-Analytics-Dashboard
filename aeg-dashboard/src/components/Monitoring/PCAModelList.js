@@ -1,5 +1,5 @@
 
-import { Component, useState, useEffect } from "react";
+import { Component, useState, useEffect, useContext } from "react";
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -27,6 +27,7 @@ import { visuallyHidden } from '@mui/utils';
 import "../../styles/PCAModelList.css"
 import { API_URL } from "../../constants";
 import { Button, Stack, selectClasses } from "@mui/material";
+import AuthContext from "../context/AuthContext";
 
 
 import ModalAnalyze from "./ModalAnalyze";
@@ -169,10 +170,17 @@ class EnhancedTableToolbar extends Component {
         })
     }
 
+    
+
     handleDelete = async (selectedModels) => {
+        const header = {
+            Authorization: "Bearer " + this.props.authTokens.access
+        }
         selectedModels.map(async (model) => {
             const result = await fetch(API_URL + `behaviorModels/delete/${model.uuid}/${model.role}/`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers:header
+
             }).then(_ => {
                 let temp = this.props.flag + 1
                 this.props.setFlag(temp)
@@ -295,10 +303,16 @@ export default function PCAModelList () {
     const [modelList, setModelList] = useState([])
     const [modelListFlag, setFlagModelList] = useState(1)
 
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
+
 
     const fetchPCAModels = async () => {
         const result = await fetch(API_URL + `behaviorModels/getAll/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then(result => {
             let newModelList = []
@@ -387,7 +401,7 @@ export default function PCAModelList () {
         <div className='wrapper-tabpanel-pcaModelList'>
             <Box>
                 <Paper sw={{width: '100%', mb: 2}}>
-                    <EnhancedTableToolbar numSelected={selected.length} selectedModels={selected} setFlag={setFlagModelList} flag={modelListFlag} setSelected={setSelected}/>
+                    <EnhancedTableToolbar numSelected={selected.length} selectedModels={selected} setFlag={setFlagModelList} flag={modelListFlag} setSelected={setSelected} authTokens={authTokens}/>
                     <TableContainer>
                         <Table
                             sx={{ minWidth: 750, pr: 5}}

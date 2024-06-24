@@ -13,6 +13,8 @@ import SearchComp from "../utils/SearchComp";
 import { TextField } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material";
 import RedirectPage from "../Home/RedirectPage";
+import AuthContext from "../context/AuthContext";
+import { useContext } from "react";
 
 function PlayerOverview({loggedIn, setLoggedIn}){
     const [patchList, setPatchList] = useState([]);
@@ -29,10 +31,16 @@ function PlayerOverview({loggedIn, setLoggedIn}){
     const [tournament, setActiveTournament] = useState('')
     const [activeLimit, setActiveLimit] = useState(5)
 
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
+
     useEffect(() => {
         const fetchPatchList = async () => {
             const result = await fetch(API_URL + "dataAnalysis/patch/getList/0/", {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             result.json().then(result => {
                 const newPatchList = result;
@@ -44,7 +52,8 @@ function PlayerOverview({loggedIn, setLoggedIn}){
 
     const fetchPlayers = async (patch, role) => {
         const result = await fetch(API_URL + `behavior/${role}/getSummonnerList/${patch}/0/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then(result => {
             const newPlayerList = result.sort();
@@ -54,7 +63,8 @@ function PlayerOverview({loggedIn, setLoggedIn}){
 
     const fetchTournamentFromPlayer = async (summonnerName, patch) => {
         const result = await fetch(API_URL + `dataAnalysis/tournament/${summonnerName}/${patch}/0/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then(result => {
             const newTournamentListPlayer = result

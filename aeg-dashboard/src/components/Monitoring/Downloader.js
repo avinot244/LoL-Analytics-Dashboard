@@ -11,6 +11,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search';
 import Stack from '@mui/material/Stack';
+import { useContext } from 'react';
 
 
 import '../../styles/Monitoring.css'
@@ -19,6 +20,10 @@ import NavBarComp from '../utils/NavbarComp.js';
 import { API_URL } from '../../constants/index.js';
 import RedirectPage from '../Home/RedirectPage.js';
 import Loading from '../utils/Loading.js';
+import AuthContext from '../context/AuthContext.js';
+
+
+
 
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
@@ -90,11 +95,15 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList}) {
     )
 }
 
-const fetchData = async (tournamentList) => {
+const fetchData = async (tournamentList, authTokens) => {
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
     try {
         const strTournamentList = tournamentList.join(',')
         const response = await fetch(API_URL + `dataAnalysis/updateDatabase/${strTournamentList}/`,{
-            method: "PATCH"
+            method: "PATCH",
+            headers: header
         });
         const data = await response.json();
         console.log(data)
@@ -103,7 +112,7 @@ const fetchData = async (tournamentList) => {
     }
 }
 
-function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}) {
+function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList, authTokens}) {
     // State to store the paragraphs
     const [paragraphs, setParagraphs] = React.useState([]);
     
@@ -144,7 +153,7 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList}
         }
 
         if (flag) {
-            fetchData(selectedTournaments)
+            fetchData(selectedTournaments, authTokens)
         }else{
             alert("Please select a tournament in each fields")
         }
@@ -267,13 +276,19 @@ export default function Downloader({loggedIn, setLoggedIn}) {
 
     const [loading, setLoading] = React.useState(false)
 
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
+
     const fetchTournamentList = async () => {
         setLoading(true)
         const today = new Date()
         const year = today.getFullYear();
         const result = await fetch(API_URL + `dataAnalysis/getListDownlodableTournament/${year}/`, {
             method: "POST",
-            body: JSON.stringify(selectedFilters)
+            body: JSON.stringify(selectedFilters),
+            headers: header
         })
         result.json().then(result => {
             console.log(result)
@@ -287,7 +302,8 @@ export default function Downloader({loggedIn, setLoggedIn}) {
 
     const fetchTournamentFilterList = async () => {
         const result = await fetch(API_URL + `dataAnalysis/getTournamentListShortened/`, {
-            method: "GET"
+            method: "GET",
+            headers: header
         })
         result.json().then(result => {
             let newTournamentListShortended = result.sort()
@@ -334,6 +350,7 @@ export default function Downloader({loggedIn, setLoggedIn}) {
                         tournamentList={tournamentList}
                         selectedTournaments={selectedTournaments}
                         setSelectedTournaments={setSelectedTournaments}
+                        authTokens={authTokens}
                     />
                 )
                 

@@ -21,6 +21,8 @@ import { visuallyHidden } from '@mui/utils';
 import { API_URL } from '../../constants';
 import RelatedDraftModal from './RelatedDraftModal';
 
+import AuthContext from '../context/AuthContext';
+
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -238,11 +240,16 @@ export default function ChampionOverviewPanel(props) {
     const [wantedRows, setRows] = React.useState([])
 
     const roleList = ["Top", "Jungle", "Mid", "ADC", "Support"]
+    let {authTokens} = React.useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
 
     React.useEffect(() => {
         const fetchChampionsDraftStats = async (tournament, patch, side) => {
             const result = await fetch(API_URL + `draft/championStats/getStats/${patch}/${side}/${tournament}/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             result.json().then(result => {
                 const newData = result;

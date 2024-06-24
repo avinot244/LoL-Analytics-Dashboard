@@ -1,7 +1,8 @@
 import { API_URL } from "../../constants/index";
 import ChampionIcon from "../utils/ChampionIcon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Loading from "../utils/Loading";
+import AuthContext from "../context/AuthContext";
 
 export default function ChampionOverviewListPanel(props) {
     const {filter, side, patch, tournament} = props
@@ -14,11 +15,16 @@ export default function ChampionOverviewListPanel(props) {
     const [topPicksSupport, setTopPicksSupport] = useState([])
 
     const [loading, setLoading] = useState(true);
+    let {authTokens} = useContext(AuthContext)
 
 
     const fetchTopMetaPicks = async () => {
+        const header = {
+            Authorization: "Bearer " + authTokens.access
+        }
         const resultTop = await fetch(API_URL + `draft/championStats/getTopChampions/Top/${filter}/${side}/${patch}/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         let newTopPicksTop = []
         resultTop.json().then(result => {
@@ -40,7 +46,8 @@ export default function ChampionOverviewListPanel(props) {
         })
 
         const resultJungle = await fetch(API_URL + `draft/championStats/getTopChampions/Jungle/${filter}/${side}/${patch}/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         let newTopPicksJungle = []
         resultJungle.json().then(result => {
@@ -62,7 +69,8 @@ export default function ChampionOverviewListPanel(props) {
         })
 
         const resultMid = await fetch(API_URL + `draft/championStats/getTopChampions/Mid/${filter}/${side}/${patch}/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         let newTopPicksMid = []
         resultMid.json().then(result => {
@@ -84,7 +92,8 @@ export default function ChampionOverviewListPanel(props) {
         })
 
         const resultADC = await fetch(API_URL + `draft/championStats/getTopChampions/ADC/${filter}/${side}/${patch}/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         let newTopPicksADC = []
         resultADC.json().then(result => {
@@ -106,7 +115,8 @@ export default function ChampionOverviewListPanel(props) {
         })
 
         const resultSupport = await fetch(API_URL + `draft/championStats/getTopChampions/Support/${filter}/${side}/${patch}/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         let newTopPicksSupport = []
         resultSupport.json().then(result => {

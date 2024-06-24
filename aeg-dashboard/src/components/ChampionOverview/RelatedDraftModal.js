@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import { Button, Stack, Typography } from "@mui/material";
 import DraftComponentVertical from "../utils/DraftComponentVertical";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import { API_URL } from "../../constants";
+import AuthContext from "../context/AuthContext";
 
 export default function RelatedDraftModal({open, handleClose, selected}) {
     const [draftList, setDraftList] = useState([])
@@ -22,10 +23,15 @@ export default function RelatedDraftModal({open, handleClose, selected}) {
         p: 4,
         overflow: 'scroll'
     };
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
 
     const fetchRelatedDraft = async () => {
         const result = await fetch (API_URL + `draft/getChampion/${selected[0].championName}/${selected[0].patch}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then((result) => {
             let newDraftList = result

@@ -16,8 +16,9 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear';
 
-import { useState, useEffect  } from "react"
+import { useState, useEffect, useContext } from "react"
 import RedirectPage from "../Home/RedirectPage"
+import AuthContext from "../context/AuthContext"
 
 const theme = createTheme ({
 	palette: {
@@ -87,12 +88,19 @@ function GameOverview({loggedIn, setLoggedIn}){
 
     const [flagGameSelecter, setFlagGameSelecter] = useState(false)
     const [flagDisplayStat, setFlagDisplayState] = useState(false)
+
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
     
 
     useEffect(() => {
         const fetchTournamentList = async () => {
             const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
-                method: "GET"
+                method: "GET",
+                headers: header
+                
             })
             result.json().then(result => {
                 const newTournamentList = result.sort();
@@ -106,7 +114,8 @@ function GameOverview({loggedIn, setLoggedIn}){
 
     const fetchGamesFromTournament = async () => {
         const result = await fetch(API_URL + `dataAnalysis/getGameList/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers: header
         })
         result.json().then(result => {
             const newGameList = result.data

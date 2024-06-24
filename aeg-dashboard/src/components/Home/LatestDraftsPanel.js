@@ -1,14 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import DraftComponent from "../utils/DraftComponent";
 import { API_URL } from "../../constants";
+import AuthContext from "../context/AuthContext";
 
 function LatestDraftsPanel(props) {
     const {value, panelIndex} = props
     const [draftList, setActiveDraftList] = useState([])
+
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
     useEffect(() => {
         async function fetchLatestDrafts() {
             const result = await fetch(API_URL + "draft/getLatest/5/1/", {
-                method: "GET"
+                method: "GET",
+                headers: header
             })
             result.json().then(result => {
                 const newDraftList = result;

@@ -1,5 +1,5 @@
 import SelectComp from "../utils/SelectComp";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { API_URL } from "../../constants";
 import ChampionOverviewListPanel from "../ChampionOverview/championOverviewListPanel";
 
@@ -8,6 +8,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchComp from "../utils/SearchComp";
+import AuthContext from "../context/AuthContext";
 
 
 function TopMetaPicksPanel(props) {
@@ -26,10 +27,15 @@ function TopMetaPicksPanel(props) {
     const [displayPatchFlag, setDisplayPatchFlag] = useState(true)
     const filterList = ["WinRate", "PickRate", "BanRate"]
 
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
 
     const fetchPatchListFromTournament = async (tournament) => {
         const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers: header
         })
         result.json().then(result => {
             const newPatchList = result;
@@ -41,7 +47,8 @@ function TopMetaPicksPanel(props) {
     useEffect(() => {
         const fetchTournamentList = async () => {
             const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
-                method: "GET"
+                method: "GET",
+                headers: header
             })
             result.json().then(result => {
                 const newTournamentList = result.sort();

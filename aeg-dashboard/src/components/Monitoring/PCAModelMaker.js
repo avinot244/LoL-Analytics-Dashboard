@@ -17,7 +17,7 @@ import Stack from '@mui/material/Stack';
 import SelectComp from "../utils/SelectComp.js";
 
 import { API_URL, roleList } from '../../constants/index.js';
-import RedirectPage from "../Home/RedirectPage.js";
+import AuthContext from "../context/AuthContext.js";
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList, tournamentDict, flagOverflow, setFlagOverflow}) {
     const [selectedTournament, setSelectedTournament] = React.useState({"League of Legends Scrims": 0})
@@ -152,20 +152,24 @@ function TournamentSelecter({onRemove, onSelectChange, tournamentList, tournamen
     )
 }
 
-const fetchData = async (tournamentList, role) => {
+const fetchData = async (tournamentList, role, authTokens) => {
     let res = {}
     console.log(role)
+    let header = {
+        Authorization: authTokens.access
+    }
     tournamentList.map((object) => res[Object.keys(object)] = Object.values(object)[0])
     let response = await fetch(API_URL + `behaviorModels/${role}/computeModel`, {
         method: "POST",
-        body: JSON.stringify(res)
+        body: JSON.stringify(res),
+        headers:header
     })
     response.json().then((newModel) => {
         console.log(newModel)
     })
 }
 
-function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList, tournamentDict, activeRole}) {
+function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList, tournamentDict, activeRole, authTokens}) {
     // State to store the paragraphs
     const [paragraphs, setParagraphs] = React.useState([]);
     const [flagOverflow, setFlagOverflow] = React.useState(false)
@@ -210,7 +214,7 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList,
             alert("Too much game selected for given tournament")
         }else{
             if (flag) {
-                fetchData(selectedTournaments, activeRole)            
+                fetchData(selectedTournaments, activeRole, authTokens)            
             }else{
                 alert("Please select a tournament in each fields")
             }
@@ -267,9 +271,15 @@ export default function PCAModelMaker({loggedIn, setLoggedIn}) {
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
     const [activeRole, setActiveRole] = React.useState('')
 
+    let {authTokens} = React.useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
+
     const fetchTournamentList = async () => {
         const result = await fetch(API_URL + `dataAnalysis/tournament/getDict`, {
             method: "GET",
+            headers:header
         })
         result.json().then(result => {
             let newTournamentList = []
@@ -280,8 +290,6 @@ export default function PCAModelMaker({loggedIn, setLoggedIn}) {
 
             let newTournamentDict = result
             setTournamentDict(newTournamentDict)
-
-
         })
     }
 
@@ -321,6 +329,7 @@ export default function PCAModelMaker({loggedIn, setLoggedIn}) {
                         setSelectedTournaments={setSelectedTournaments}
                         tournamentDict={tournamentDict}
                         activeRole={activeRole}
+                        authTokens={authTokens}
                     />
                 </div>
                 

@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 
 import {grey} from '@mui/material/colors/'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ThemeProvider, createTheme } from "@mui/material";
 
 import { API_URL } from "../../constants";
@@ -20,6 +20,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchComp from "../utils/SearchComp";
 import RedirectPage from "../Home/RedirectPage";
+import AuthContext from "../context/AuthContext";
 
 const theme = createTheme({
     palette: {
@@ -46,14 +47,21 @@ function ChampionOverview({loggedIn, setLoggedIn}) {
     const [activeSide, setActiveSide] = useState('Blue')
     const [activeTournament, setActiveTournament] = useState()
 
+    let {authTokens} = useContext(AuthContext)
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     }
 
     const fetchPatchListFromTournament = async (tournament) => {
+        
+        const header = {
+            Authorization: "Bearer " + authTokens.access
+        }
         const result = await fetch(API_URL + `dataAnalysis/patch/getFromTournament/${tournament}/`, {
-            method: "GET"
+            method: "GET",
+            headers:header
         })
         result.json().then(result => {
             const newPatchList = result;
@@ -67,8 +75,12 @@ function ChampionOverview({loggedIn, setLoggedIn}) {
         
 
         const fetchTournamentList = async () => {
+            const header = {
+                Authorization: "Bearer " + authTokens.access
+            }
             const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
-                method: "GET"
+                method: "GET",
+                headers: header
             })
             result.json().then(result => {
                 const newTournamentList = result.sort();

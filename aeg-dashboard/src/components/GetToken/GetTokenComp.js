@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { Button } from "@mui/material";
 import DownloadIcon from '@mui/icons-material/Download';
 import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
+import { API_URL } from "../../constants";
 
 function CopyButton ({content, buttonText, onClick, state, setState}) {
     let bool = true
@@ -63,11 +64,14 @@ function CopyButton ({content, buttonText, onClick, state, setState}) {
 }
 
 export default function GetTokenComp () {
+    let {authTokens} = useContext(AuthContext)
     const [textAccess, setTextAccess] = useState("Get Access Token")
     const [textRefresh, setTextRefresh] = useState("Get Refresh Token")
 
     const [accessState, setAccessState] = useState(false)
     const [refreshState, setRefreshState] = useState(false)
+
+
 
     let onClickAccess = () => {
         if (!accessState) {
@@ -91,8 +95,23 @@ export default function GetTokenComp () {
         
     }
 
-    let {authTokens} = useContext(AuthContext)
-    console.log(authTokens)
+
+    const sendRequest = async () => {
+        const header = {
+            Authorization: "Bearer " + authTokens.access
+        }
+
+        let result = await fetch(API_URL + "authentication/test", {
+            method: "GET",
+            headers: header
+        })
+
+        if (result.status === 200) {
+            alert("Ok !")
+        }
+    }
+
+    
     return (
         <div className="wrapper-getToken">
             <NavBarComp />

@@ -1,6 +1,6 @@
 import "../../styles/PlayerOverviewStat.css"
 import { API_URL, roleList} from "../../constants";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import NormalDistribution from "normal-distribution"
 import Loading from "../utils/Loading";
 
@@ -18,6 +18,7 @@ import { alpha } from '@mui/material/styles';
 import { purple } from '@mui/material/colors';
 import Divider from "@mui/material/Divider";
 import ChampionCard from "./ChampionCard";
+import AuthContext from "../context/AuthContext";
 ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -49,14 +50,18 @@ export default function PlayerOverviewStat(props) {
 
     const [loading, setLoading] = useState(true)
 
-
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
 
     useEffect(() => {
         const fetchFactorsPerName = async () => {
             let newFactorsNamePerRole = factorsNamePerRole
             roleList.map(async (role) => {
                 const model = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
-                    method: "GET"
+                    method: "GET",
+                    headers:header
                 })
                 model.json().then(model => {
                     newFactorsNamePerRole[role] = JSON.parse(model.factorsName.replace(/'/g, '"'))
@@ -69,13 +74,15 @@ export default function PlayerOverviewStat(props) {
             setLoading(true)
             let uuid = "";
             const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             modelResult.json().then(async model => {
                 uuid = model.uuid
 
                 const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${patch}/${uuid}/${wantedTournament}/${wantedTournament}/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
                 })
                 result.json().then(result => {
                     const newBehaviorPatch = result
@@ -96,13 +103,15 @@ export default function PlayerOverviewStat(props) {
         const fetchBehaviorTournamentLatestPlayer = async (role, summonnerName, limit, wantedTournament) => {
             let uuid = "";
             const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             modelResult.json().then(async model => {
                 uuid = model.uuid
 
                 const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${limit}/${uuid}/${wantedTournament}/${wantedTournament}/`, {
-                    method: "GET"
+                    method: "GET",
+                    headers:header
                 })
                 result.json().then(result => {
                     const newBehaviorLatest = result
@@ -116,12 +125,14 @@ export default function PlayerOverviewStat(props) {
         const fetchBehaviorTournamentPlayer = async (role, summonnerName, wantedTournament) => {
             let uuid = "";
             const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             modelResult.json().then(async model => {
                 uuid = model.uuid
                 const result = await fetch(API_URL + `behavior/${role}/compute/${summonnerName}/${uuid}/${wantedTournament}/${wantedTournament}/`, {
-                    method: "GET"
+                    method: "GET",
+                    headers:header
                 })
                 result.json().then(result => {
                     const newBehaviorTournament = result
@@ -136,7 +147,8 @@ export default function PlayerOverviewStat(props) {
             let championPoolPRListTemp = []
             let newChampionPoolPRList = []
             const result = await fetch(API_URL + `draft/playerStat/${summonnerName}/${tournament}/pickRate/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             result.json().then(result => {
                 for (let i = 0 ; i < result.length ; i++) {
@@ -161,7 +173,8 @@ export default function PlayerOverviewStat(props) {
             let championPoolWRListTemp = []
             let newChampionPoolWRList = []
             const result = await fetch(API_URL + `draft/playerStat/${summonnerName}/${tournament}/winRate/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             result.json().then(result => {
                 for (let i = 0 ; i < result.length ; i++) {
@@ -185,13 +198,15 @@ export default function PlayerOverviewStat(props) {
         const fetchBehaviorSingleGamesLatest = async (role, summonnerName, limit, wantedTournament) => {
             let uuid = "";
             const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
-                method: "GET"
+                method: "GET",
+                headers:header
             })
             modelResult.json().then(async model => {
                 uuid = model.uuid
 
                 const gamesBehavior = await fetch(API_URL + `behavior/${role}/compute/singleGamesLatest/${summonnerName}/${uuid}/${limit}/${wantedTournament}/${wantedTournament}/`, {
-                    method: "GET"
+                    method: "GET",
+                    headers:header
                 })
                 gamesBehavior.json().then(result => {
                     const newDataSingleGames = result

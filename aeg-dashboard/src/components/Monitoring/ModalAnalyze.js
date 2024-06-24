@@ -2,9 +2,10 @@ import Modal from "@mui/material/Modal";
 import Box from '@mui/material/Box';
 import { Button, FormControl, Stack, TextField, Typography } from "@mui/material";
 import { API_URL } from "../../constants";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import AuthContext from "../context/AuthContext";
 
 import PCADbOverview from "./PCADbOverview";
 
@@ -16,6 +17,11 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
     const [img, setImg] = useState();
     const [regionSplit, setRegionSplit] = useState({})
     const textFieldRefs = useRef([]);
+
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
 
     const style = {
         position: 'absolute',
@@ -32,14 +38,20 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
     };
 
     const fetchLoadingMatrix = async () => {
-        const res = await fetch(API_URL + `behaviorModels/getLoadingMatrix/${model.uuid}/${model.role}/`)
+        const res = await fetch(API_URL + `behaviorModels/getLoadingMatrix/${model.uuid}/${model.role}/`, {
+            method: "GET",
+            headers:header
+        })
         const imageBlob = await res.blob()
         const imageObjectURL = URL.createObjectURL(imageBlob)
         setImg(imageObjectURL)
     }
     
     const fetchRegionSplit = async () => {
-        const dict = await fetch(API_URL + `behaviorModels/getRegionSplit/${model.uuid}/${model.role}/`)
+        const dict = await fetch(API_URL + `behaviorModels/getRegionSplit/${model.uuid}/${model.role}/`, {
+            method: "GET",
+            headers:header
+        })
         dict.json().then((regionSplit) => {
             let newRegionSplit = regionSplit
             setRegionSplit(newRegionSplit)
@@ -48,7 +60,8 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
 
     const setModelActive = async () => {
         const res = await fetch(API_URL + `behaviorModels/setActive/${model.uuid}/${model.role}/`,{
-            method: "PATCH"
+            method: "PATCH",
+            headers:header
         })
         const temp = flag + 1
         setFlag(temp)
@@ -63,7 +76,8 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
         const currentValues = textFieldRefs.current.map(ref => ref.value);
         const res = await fetch(API_URL + `behaviorModels/setFactorsName/${model.uuid}/${model.role}/`, {
             method: "PATCH",
-            body: JSON.stringify(currentValues)
+            body: JSON.stringify(currentValues),
+            headers:header
         })
     }
 

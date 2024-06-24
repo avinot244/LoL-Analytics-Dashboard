@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { API_URL } from "../../constants"
 import "../../styles/GameOverviewStat.css"
 import DraftComponent from "../utils/DraftComponent";
@@ -17,6 +17,7 @@ import { FormControlLabel, FormGroup, Switch} from "@mui/material";
 import { alpha, styled } from '@mui/material/styles';
 import { blue, teal, red, yellow, purple } from '@mui/material/colors';
 import { Line } from 'react-chartjs-2';
+import AuthContext from "../context/AuthContext";
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -26,6 +27,8 @@ ChartJS.register(
     Tooltip,
     Legend
 );
+
+
 
 
 const BlueSwitch = styled(Switch)(({ theme }) => ({
@@ -125,11 +128,17 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
     const [draft, setDraft] = useState({})
     const [loadingDraft, setLoadingDraft] = useState(true)
 
+    let {authTokens} = useContext(AuthContext)
+    const header = {
+        Authorization: "Bearer " + authTokens.access
+    }
+
     
     useEffect(() => {
         const fetchGameDataPlayer = async (seriesId, gameNumber) => {
             const result = await fetch(API_URL + `dataAnalysis/gameAnalysis/players/${seriesId}/${gameNumber}/`, {
-                method: "GET"
+                method: "GET",
+                headers: header
             })
 
             result.json().then(result => {
@@ -147,7 +156,8 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
 
         const fetchGameDataTeams = async (seriesId, gameNumber) => {
             const result = await fetch(API_URL + `dataAnalysis/gameAnalysis/teams/${seriesId}/${gameNumber}/`, {
-                method: "GET"
+                method: "GET",
+                headers: header
             })
 
             result.json().then(result => {
@@ -165,7 +175,8 @@ export default function GameOverviewStat({seriesId, gameNumber}) {
         const fetchDraftGame = async (seriesId, gameNumber) => {
             setLoadingDraft(true)
             const result = await fetch(API_URL + `draft/getDraftGame/${seriesId}/${gameNumber}/`, {
-                method: "GET"
+                method: "GET",
+                headers: header
             })
 
             result.json().then(result => {
