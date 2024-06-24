@@ -96,9 +96,9 @@ export default function GetTokenComp () {
     return (
         <div className="wrapper-getToken">
             <NavBarComp />
-            <Typography variant="h2">Your tokens :</Typography>
-            <Typography color={"error"} variant="h4">They refresh every 4 mins</Typography>
             <div className="wrapper-content-token">
+                <Typography variant="h2">Get You Tokens</Typography>
+                <Typography color={"error"} variant="h4">They refresh every 4 mins</Typography>
                 <Typography variant="h5" className="tokens-values">
                     Access Token : 
                 </Typography>
@@ -110,7 +110,7 @@ export default function GetTokenComp () {
                     setState={setAccessState}
                 />
 
-                <br/>
+                {/* <br/>
 
                 <Typography variant="h5" className="tokens-values">
                     Refresh Token : 
@@ -121,7 +121,7 @@ export default function GetTokenComp () {
                     onClick={onClickRefresh}
                     state={refreshState}
                     setState={setRefreshState}
-                />
+                /> */}
             </div>
         </div>
     )

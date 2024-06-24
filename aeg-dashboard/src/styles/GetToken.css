@@ -8,3 +8,7 @@ p.tokens-values{
     width: 500px;
     word-break: break-all;
 }
+.wrapper-content-token{
+    width: fit-content;
+    margin: 0 auto;
+}
