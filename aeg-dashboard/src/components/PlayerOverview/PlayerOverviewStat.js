@@ -226,11 +226,6 @@ export default function PlayerOverviewStat(props) {
 
         fetchChampionPoolPickRate(summonnerName, wantedTournament)
         fetchChampionPoolWinRate(summonnerName, wantedTournament)
-        
-
-
-        
-        
     }, [])
 
     function getAvgData(behaviorObject, role) {
