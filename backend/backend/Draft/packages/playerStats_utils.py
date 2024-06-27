@@ -3,6 +3,7 @@ from dataAnalysis.models import GameMetadata
 from dataAnalysis.packages.utils_stuff.utils_func import getData
 from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
 from dataAnalysis.globals import DATE_LIMIT
+from .utils import getPlayerTeam
 
 import csv
 import pandas as pd
@@ -43,12 +44,11 @@ def getPlayerChampionWinRate(playerName : str, championName : str, tournament : 
         draftPickOrder = DraftPickOrder.objects.get(gameNumner__exact=gameNumber, seriesId__exact=seriesId)
         
         teamNamePlayer = playerName.split(" ")[0]
-
+        # teamNamePlayer = getPlayerTeam(playerName, seriesId)
         if teamNamePlayer == draftPickOrder.teamBlue and draftPickOrder.winner == 0:
             winCounter += 1
         elif teamNamePlayer == draftPickOrder.teamRed and draftPickOrder.winner == 1:
             winCounter += 1
-        
     return winCounter/totalGames
 
 def getPlayerChampionNbGames(playerName : str, championName : str, tournament : str) -> int:

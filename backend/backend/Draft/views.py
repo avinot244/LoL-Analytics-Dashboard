@@ -420,7 +420,7 @@ def updatePlayerStats(request, tournamentListStr):
                     associatedChampionList.append(res.championName)
 
             for championName in tqdm(associatedChampionList):
-                
+            # for championName in associatedChampionList:
                 globalPickRate = getPlayerChampionPickRate(playerName, championName, tournament)
                 globalWinRate = getPlayerChampionWinRate(playerName, championName, tournament)
                 nbGames = getPlayerChampionNbGames(playerName, championName, tournament)
@@ -428,6 +428,7 @@ def updatePlayerStats(request, tournamentListStr):
                 
                 path : str = DATA_PATH + "drafts/player_championPool.csv"
                 new : bool = not(os.path.exists(path))
+                # print("{}-{} : {}% PR, {}% WR, {} games, {} KDA".format(playerName, championName, globalPickRate, globalWinRate, nbGames, kda))
                 saveChampionPoolCSV(
                     path,
                     new,

@@ -9,7 +9,7 @@ import shutil
 
 def get_champion_mapping_key():
     response = requests.get(
-        'https://ddragon.leagueoflegends.com/cdn/14.5.1/data/en_US/champion.json'
+        'https://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json'
     )
 
     if response.status_code != 200:
@@ -22,7 +22,7 @@ def get_champion_mapping_key():
 
 def get_champion_mapping_key_reversed():
     response = requests.get(
-        'https://ddragon.leagueoflegends.com/cdn/14.5.1/data/en_US/champion.json'
+        'https://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json'
     )
 
     if response.status_code != 200:
@@ -35,7 +35,7 @@ def get_champion_mapping_key_reversed():
 
 def get_item_mapping_key():
     response = requests.get(
-        'https://ddragon.leagueoflegends.com/cdn/14.5.1/data/en_US/item.json'
+        'https://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/item.json'
     )
 
     if response.status_code != 200:
