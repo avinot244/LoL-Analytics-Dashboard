@@ -49,8 +49,7 @@ class SeparatedData:
                     
                     df = pd.json_normalize(data)
                     if df["rfc461Schema"][0] == "game_info":
-                        self.patch = df["gameVersion"][0]
-                    
+                        self.patch = df["gameVersion"][0]                   
                     if df['rfc461Schema'][0] == "stats_update":
                         teamPlayers : list[list[Player]] = [[],[]]
                         # Parsing players

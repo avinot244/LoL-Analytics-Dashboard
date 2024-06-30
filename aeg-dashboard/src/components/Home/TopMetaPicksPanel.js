@@ -160,7 +160,6 @@ function TopMetaPicksPanel(props) {
                     tournament={activeTournament}
                 />
             }
-            
         </div>
     )
 }

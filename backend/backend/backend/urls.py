@@ -1,3 +1,7 @@
+# pickRate + banRate / 2 = presenceRate => valuable
+# Sélectionner plusieurs 
+# Regrouper les requêtes dans une seule requête GraphQL
+
 """
 URL configuration for django_tests_proj project.
 

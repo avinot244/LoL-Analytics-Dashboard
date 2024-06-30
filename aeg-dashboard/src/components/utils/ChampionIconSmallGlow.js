@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../../styles/ChampionIconSmall.css"
 
 function ChampionIconSmallGlow({championName, width, height, glow}) {
-    const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${championName}.png`
+    const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championName}.png`
     const [img, setImg] = useState();
 
     const fetchImage = async () => {

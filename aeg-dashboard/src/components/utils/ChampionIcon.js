@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import "../../styles/ChampionIcon.css"
+import AuthContext from "../context/AuthContext";
 
 function ChampionIcon({championName, winRate, pickRate, banRate, pickOrder}){
-    const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${championName}.png`
     const [img, setImg] = useState()
-
+    let {patch} = useContext(AuthContext)
     const fetchImage = async () => {
-        const res = await fetch(apiURL)
+        const res = await fetch(`https://ddragon.leagueoflegends.com/cdn/${patch}/img/champion/${championName}.png`)
         const imageBlob = await res.blob()
         const imageObjectURL = URL.createObjectURL(imageBlob);
         setImg(imageObjectURL);

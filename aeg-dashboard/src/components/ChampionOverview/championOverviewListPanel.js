@@ -55,9 +55,9 @@ export default function ChampionOverviewListPanel(props) {
                 let championStatsObject = result[i]
                 let tempDict = {
                     "championName": championStatsObject.championName,
-                    "winRate": Math.round(championStatsObject.winRate*100).toFixed(2),
-                    "pickRate": Math.round(championStatsObject.globalPickRate*100).toFixed(2),
-                    "banRate": Math.round(championStatsObject.globalBanRate*100).toFixed(2),
+                    "winRate": Math.round(championStatsObject.winRate*100),
+                    "pickRate": Math.round(championStatsObject.globalPickRate*100),
+                    "banRate": Math.round(championStatsObject.globalBanRate*100),
                     "pickOrder": championStatsObject.mostPopularPickOrder
                 }
                 newTopPicksJungle.push(tempDict)
@@ -78,9 +78,9 @@ export default function ChampionOverviewListPanel(props) {
                 let championStatsObject = result[i]
                 let tempDict = {
                     "championName": championStatsObject.championName,
-                    "winRate": Math.round(championStatsObject.winRate*100).toFixed(2),
-                    "pickRate": Math.round(championStatsObject.globalPickRate*100).toFixed(2),
-                    "banRate": Math.round(championStatsObject.globalBanRate*100).toFixed(2),
+                    "winRate": Math.round(championStatsObject.winRate*100),
+                    "pickRate": Math.round(championStatsObject.globalPickRate*100),
+                    "banRate": Math.round(championStatsObject.globalBanRate*100),
                     "pickOrder": championStatsObject.mostPopularPickOrder
                 }
                 newTopPicksMid.push(tempDict)
@@ -101,9 +101,9 @@ export default function ChampionOverviewListPanel(props) {
                 let championStatsObject = result[i]
                 let tempDict = {
                     "championName": championStatsObject.championName,
-                    "winRate": Math.round(championStatsObject.winRate*100).toFixed(2),
-                    "pickRate": Math.round(championStatsObject.globalPickRate*100).toFixed(2),
-                    "banRate": Math.round(championStatsObject.globalBanRate*100).toFixed(2),
+                    "winRate": Math.round(championStatsObject.winRate*100),
+                    "pickRate": Math.round(championStatsObject.globalPickRate*100),
+                    "banRate": Math.round(championStatsObject.globalBanRate*100),
                     "pickOrder": championStatsObject.mostPopularPickOrder
                 }
                 newTopPicksADC.push(tempDict)
@@ -124,9 +124,9 @@ export default function ChampionOverviewListPanel(props) {
                 let championStatsObject = result[i]
                 let tempDict = {
                     "championName": championStatsObject.championName,
-                    "winRate": Math.round(championStatsObject.winRate*100).toFixed(2),
-                    "pickRate": Math.round(championStatsObject.globalPickRate*100).toFixed(2),
-                    "banRate": Math.round(championStatsObject.globalBanRate*100).toFixed(2),
+                    "winRate": Math.round(championStatsObject.winRate*100),
+                    "pickRate": Math.round(championStatsObject.globalPickRate*100),
+                    "banRate": Math.round(championStatsObject.globalBanRate*100),
                     "pickOrder": championStatsObject.mostPopularPickOrder
                 }
                 newTopPicksSupport.push(tempDict)

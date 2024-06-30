@@ -11,6 +11,19 @@ export const AuthProvider = ({children}) => {
     let [authTokens, setAuthTokens] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null)
     let [user, setUser] = useState(() => localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')) : null)
     let [loading, setLoading] = useState(true)
+    let [patch, setPatch] = useState("")
+
+    const getPatch = async () => {
+        const result = await fetch("https://ddragon.leagueoflegends.com/api/versions.json")
+        if (result.status == 200) {
+            let patchList = await result.json()
+            const newPatch = patchList[0]
+            setPatch(newPatch)
+            console.log(newPatch)
+        }else {
+            console.log("Unable to retrieve data from DDragon API")
+        }
+    }
 
     const login = async (userName, password) => {
 
@@ -62,13 +75,14 @@ export const AuthProvider = ({children}) => {
     let contextData = {
         user:user,
         authTokens:authTokens,
+        patch:patch,
         login:login,
         logoutUser:logoutUser,
         
     }
 
     useEffect(() => {
-        
+        getPatch()
         let interval = setInterval(() => {
             if (authTokens) {
                 updateToken()
