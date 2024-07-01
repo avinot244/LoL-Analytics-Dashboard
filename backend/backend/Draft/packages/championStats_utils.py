@@ -257,7 +257,11 @@ def getEnemyRoleList(draftPickOrder : DraftPickOrder, queryPlayerPicks, side : s
             draftPickOrder.rp5
         ]
         for championName in championList:
-            playerPick : DraftPlayerPick = queryPlayerPicks.get(championName__exact=championName)
+            try:
+                playerPick : DraftPlayerPick = queryPlayerPicks.get(championName__exact=championName)
+            except:
+                print(queryPlayerPicks)
+            
             roleList.append(playerPick.role)
         
     elif side == "Red":
@@ -281,8 +285,11 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
     amountOfGames = len(queryDraftPickOrder)
     for draftPickOrder in queryDraftPickOrder:
         queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId, tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
-        
+
         pickPosition : int = getPickPosition(championName, draftPickOrder, side)
+        if patch == "14.11":
+            print(draftPickOrder.seriesId, draftPickOrder.gameNumner)
+            print(queryPlayerPicks)
         enemyRoleList : list = getEnemyRoleList(draftPickOrder, queryPlayerPicks, side)
         
         

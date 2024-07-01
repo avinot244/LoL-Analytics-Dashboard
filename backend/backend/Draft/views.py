@@ -293,6 +293,18 @@ def deleteAllChampionDraftStats(request):
 
     return Response(status=status.HTTP_200_OK)
 
+@api_view(['DELETE'])
+def deleteDraftStatSingleGame(request, seriesId : int, gameNumber : int):
+    # 2682736
+    queryDraftPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    for res in queryDraftPlayerPicks:
+        res.delete()
+
+    queryDraftPickOrder = DraftPickOrder.objects.filter(seriesId__exact=seriesId, gameNumner__exact=gameNumber)
+    for res in queryDraftPickOrder:
+        res.delete()
+    return Response(status=status.HTTP_200_OK)
+
 @api_view(['GET'])
 def getChampionDraftStats(request, patch, side, tournament):
     if tournament == "League of Legends Scrims":

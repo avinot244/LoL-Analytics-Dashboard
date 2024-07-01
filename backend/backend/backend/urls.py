@@ -209,6 +209,7 @@ urlpatterns = [
     path('api/draft/updatePlayerStat/<str:tournamentListStr>/', draftViews.updatePlayerStats),
     path('api/draft/playerStat/<str:summonnerName>/<str:tournament>/<str:filter>/', draftViews.getPlayerStats),
     path('api/draft/playerStat/deleteAll/', draftViews.deleteAllChampionPool),
+    path('api/draft/deleteSingleGame/<int:seriesId>/<int:gameNumber>/', draftViews.deleteDraftStatSingleGame),
 
     # Authentication
     path("api/authentication/login/", authenticationViews.loginUser, name="api_login"),
