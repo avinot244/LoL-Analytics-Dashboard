@@ -287,9 +287,6 @@ def getBlindPick(championName : str, tournament : str, patch : str, side : str) 
         queryPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=draftPickOrder.seriesId, tournament__exact=tournament, patch__contains=patch, gameNumber__exact=draftPickOrder.gameNumner)
 
         pickPosition : int = getPickPosition(championName, draftPickOrder, side)
-        if patch == "14.11":
-            print(draftPickOrder.seriesId, draftPickOrder.gameNumner)
-            print(queryPlayerPicks)
         enemyRoleList : list = getEnemyRoleList(draftPickOrder, queryPlayerPicks, side)
         
         
