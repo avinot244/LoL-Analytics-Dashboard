@@ -170,6 +170,7 @@ def get_tournament_list_shortened(request):
 
         for tournament_name, _ in tournament_mapping.items():
             today_year = datetime.today().year
+            # TODO: Only take tournament that have a beginning year equal to today's year
             x = re.search(r"- .*(" + str(today_year) + r"|" + str(today_year-1) + r") \(.+\)", tournament_name)
             
             if x != None :
