@@ -48,14 +48,6 @@ def deleteGame(request, seriesId : int, gameNumber : int):
 def download_latest(request, rawTournamentList : str):
     wantedTournamentList : list = rawTournamentList.split(",")
     
-    # Getting the list of tournament in our database
-    tournamentList : list = list()
-    queryTournamentList = BehaviorADC.objects.all()
-    for res in queryTournamentList:
-        tournamentList.append(res.tournament)
-    df = pd.DataFrame({'tournaments': tournamentList})
-    tournamentList = df['tournaments'].unique().tolist()
-    
     # Opening our tournament mapping json
     tournamentMapping : dict = None
     with open(DATA_PATH + "tournament_mapping.json", "r") as json_file:
@@ -144,7 +136,6 @@ def download_latest(request, rawTournamentList : str):
                             gameMetadata.save()
                         else :
                             print("game already downloaded")
-    
     return Response(wantedTournamentMapping)
 
 @api_view(['GET'])
