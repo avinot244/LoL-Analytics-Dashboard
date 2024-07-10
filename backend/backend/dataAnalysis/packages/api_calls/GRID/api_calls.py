@@ -231,7 +231,7 @@ def get_all_tournament_ids(fromCursor : str):
     
     return res
 
-def get_all_game_seriesId_scrims(amount : int, date : str, fromCursor : str = ""):
+def get_all_games_seriesId_scrims(amount : int, date : str, fromCursor : str = ""):
     time.sleep(1)
     tournamentId : int = 0
     with open(DATA_PATH + "tournament_mapping.json", "r") as file:
@@ -255,7 +255,6 @@ def get_all_game_seriesId_scrims(amount : int, date : str, fromCursor : str = ""
             seriesIdList, cursorNextPage = get_game_seriesId_from_page_scrims(fromCursor, nbGamesLeft, tournamentId)    
     
     nbPage = nbPage - 1
-    
     if nbPage > 1:
         i = 0
         while cursorNextPage != "" and i < nbPage:
@@ -263,7 +262,7 @@ def get_all_game_seriesId_scrims(amount : int, date : str, fromCursor : str = ""
             for tempSeriesId in seriesId:
                 seriesIdList.append(tempSeriesId)
             i += 1
-        if cursorNextPage != "":
+        if cursorNextPage != "" and nbGamesLeft > 0:
             seriesId, cursorNextPage = get_game_seriesId_from_page_scrims(cursorNextPage, nbGamesLeft, tournamentId)
             for tempSeriesId in seriesId:
                 seriesIdList.append(tempSeriesId)
@@ -324,7 +323,7 @@ def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId 
     
     return idList, cursorNextPage
 
-def get_all_game_seriesId_tournament(tournamentId : int, amount : int, fromCursor : str = ""):
+def get_all_games_seriesId_tournament(tournamentId : int, amount : int, fromCursor : str = ""):
     time.sleep(1)
     seriesIdList : list = list()
 
