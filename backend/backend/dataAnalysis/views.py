@@ -11,7 +11,7 @@ from .serializer import GameMetadataSerializer
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries
+from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries
 from .packages.utils_stuff.utils_func import getData, getRole
 from .packages.utils_stuff.stats import getProxomityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -35,11 +35,13 @@ import re
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 
 @api_view(['DELETE'])
 def deleteGame(request, seriesId : int, gameNumber : int):
     wantedGame = GameMetadata.objects.filter(seriesId=seriesId, gameNumber=gameNumber)
+    print(wantedGame)
     for res in wantedGame:
         res.delete()
     return Response(status=status.HTTP_200_OK)
@@ -76,7 +78,8 @@ def download_latest(request, rawTournamentList : str):
                 dlDict : dict = get_all_download_links(seriesId)
                 i = 0
                 if checkSeries(dlDict['files']):
-                    print("\tChecking games of seriesId :", seriesId)
+                    nbGames = getNbGamesSeries(dlDict['files'])
+                    print("\tChecking games of seriesId : {} {} games".format(seriesId, nbGames))
                     for downloadDict in dlDict['files']:
                         fileType = downloadDict["fileName"].split(".")[-1]
                         fileName = downloadDict["fileName"].split(".")[0]
@@ -95,14 +98,14 @@ def download_latest(request, rawTournamentList : str):
                                 if tournament_name == "League of Legends Scrims":
                                     flag = isDateValid(date)
                                 
-                                if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber < get_nb_games_seriesId(seriesId) + 1 and flag:
+                                if not(isGameDownloaded(int(seriesId), gameNumber)) and gameNumber <= nbGames  and flag:
 
                                     path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
                                     print("\t\tDownloading {} files {}".format(fileName, gameNumber))
                                     download_from_link(downloadDict['fullURL'], fileName, path, fileType)
 
                             else:
-                                for gameNumber in range(1, get_nb_games_seriesId(seriesId) + 1):
+                                for gameNumber in range(1, nbGames + 1):
                                     if not(isGameDownloaded(int(seriesId), gameNumber)):
                                         path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
                                         print("\t\tDownloading {} info".format(fileName))
@@ -112,8 +115,8 @@ def download_latest(request, rawTournamentList : str):
                         i += 1
 
                     # Save game metadata in csv and sqlite databases
-                    print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
-                    for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
+                    print("Saving to database ({} games)".format(nbGames))
+                    for gameNumberIt in range(1, nbGames + 1):
                         date = convertDate(get_date_from_seriesId(seriesId))
                         flag = True
                         if tournament_name == "League of Legends Scrims":
@@ -348,68 +351,68 @@ def computeNewBehaviorStats(request, time):
 
             # usually time = 840s i.e 14min
             # Splitting our data so we get the interval between [840s; gameDuration]
+            print(len(data.gameSnapshotList))
             splitList : list[int] = [120, time, gameDuration]
             splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
             areaMapping : AreaMapping = AreaMapping()
 
             dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-            areaMapping.computeMapping(dataBeforeTime)
-            tournamentName : str = get_tournament_from_seriesId(seriesId)
+            if len(dataBeforeTime.gameSnapshotList)> 0:
+                areaMapping.computeMapping(dataBeforeTime)
+                tournamentName : str = get_tournament_from_seriesId(seriesId)
 
 
-            # Getting game patch
-            match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
-            rootdir = DATA_PATH + "games/bin/{}".format(match)
-            flagOlderVersion : bool = False
-            for subdir, _, files in os.walk(rootdir):
-                for file in files:
-                    x = re.search(r"end_state_summary_riot_" + str(seriesId) + r"_" + str(gameNumber) + ".json", file)
-                    if x != None:
-                        with open(os.path.join(subdir, file), "r") as json_file:
-                            res : dict = json.load(json_file)
-                            if "gameVersion" in list(res.keys()):
-                                patch : str = res["gameVersion"]
-                                flagOlderVersion = True
-                        break
-            
-            if not(flagOlderVersion):
-                patch : str = data.patch
-
-            # print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
-
-            for playerTeamOne in dataBeforeTime.gameSnapshotList[0].teams[0].players:
-                summonnerName : str = playerTeamOne.playerName
-                role = getRole(dataBeforeTime, summonnerName)
-
-                gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
-
-                (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
-
-                new = False
-                if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
-                    new = True
+                # Getting game patch
+                match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
+                rootdir = DATA_PATH + "games/bin/{}".format(match)
+                flagOlderVersion : bool = False
+                for subdir, _, files in os.walk(rootdir):
+                    for file in files:
+                        x = re.search(r"end_state_summary_riot_" + str(seriesId) + r"_" + str(gameNumber) + ".json", file)
+                        if x != None:
+                            with open(os.path.join(subdir, file), "r") as json_file:
+                                res : dict = json.load(json_file)
+                                if "gameVersion" in list(res.keys()):
+                                    patch : str = res["gameVersion"]
+                                    flagOlderVersion = True
+                            break
                 
-                save_path : str = DATA_PATH + "behavior/behavior/".format(role)
-                saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
+                if not(flagOlderVersion):
+                    patch : str = data.patch
 
-            for playerTeamTwo in dataBeforeTime.gameSnapshotList[0].teams[1].players:
-                summonnerName : str = playerTeamTwo.playerName
-                role = getRole(dataBeforeTime, summonnerName)
+                # print("Saving behavior analysis of match id {} {} to database".format(seriesId, matchId))
 
-                gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
+                for playerTeamOne in dataBeforeTime.gameSnapshotList[0].teams[0].players:
+                    summonnerName : str = playerTeamOne.playerName
+                    role = getRole(dataBeforeTime, summonnerName)
 
-                (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
+                    gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
+
+                    (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
+
+                    new = False
+                    if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
+                        new = True
+                    
+                    save_path : str = DATA_PATH + "behavior/behavior/".format(role)
+                    saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
+
+                for playerTeamTwo in dataBeforeTime.gameSnapshotList[0].teams[1].players:
+                    summonnerName : str = playerTeamTwo.playerName
+                    role = getRole(dataBeforeTime, summonnerName)
+
+                    gameStat : GameStat = GameStat(dataBeforeTime.getSnapShotByTime(time, gameDuration), gameDuration, begGameTime, endGameTime)
+
+                    (statDict, lanePresenceMapping) = getBehaviorData(areaMapping, gameStat, dataBeforeTime, summonnerName, time, gameDuration)
 
 
-                new = False
-                if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
-                    new = True
-                
-                save_path : str = DATA_PATH + "behavior/behavior/".format(role)
-                saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
+                    new = False
+                    if not(os.path.exists(DATA_PATH + "behavior/behavior/behavior_{}.csv".format(role))):
+                        new = True
+                    
+                    save_path : str = DATA_PATH + "behavior/behavior/".format(role)
+                    saveToDataBase(statDict, lanePresenceMapping, save_path, new, matchId, seriesId, patch, summonnerName, role, tournamentName, date, gameNumber)
 
-        # else:
-        #     print("Behavior form game {} {} already computed".format(game.seriesId, game.gameNumber))
 
     # Importing data into SQLite database
     import_Behavior()

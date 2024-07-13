@@ -360,3 +360,11 @@ def checkSeries(fileList : list[dict]) -> bool:
                 return False
             
     return True
+
+def getNbGamesSeries(fileList : list[dict]) -> int:
+    cpt = 0
+    for file in fileList:
+        x = re.search(r"Riot LiveStats", file["description"])
+        if x != None:
+            cpt += 1
+    return cpt

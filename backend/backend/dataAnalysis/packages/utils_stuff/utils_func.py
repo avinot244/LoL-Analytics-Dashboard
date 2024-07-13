@@ -81,7 +81,7 @@ def getData(seriesId : int, gameNumber : int):
             shutil.rmtree(DATA_PATH + "games/bin/" + match + "/Separated/")
 
         file.close()
-
+        print("\nLEN : ",len(data.gameSnapshotList))
 
         if not(isGameDownloaded(seriesId, gameNumber)):
             with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
