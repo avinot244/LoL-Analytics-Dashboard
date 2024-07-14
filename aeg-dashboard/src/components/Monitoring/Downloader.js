@@ -2,6 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import UpdateIcon from '@mui/icons-material/Update';
 import DownloadIcon from '@mui/icons-material/Download';
 import { Autocomplete, Chip } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -273,6 +274,8 @@ export default function Downloader({loggedIn, setLoggedIn}) {
     const [tournamentListShortended, setTournamentListShortened] = React.useState([])
     const [selectedFilters, setSelectedFilters] = React.useState([])
 
+    const [loadingTournamentMapping, setLoadingTournamentMapping] = React.useState(false)
+
 
     const [loading, setLoading] = React.useState(false)
 
@@ -309,6 +312,18 @@ export default function Downloader({loggedIn, setLoggedIn}) {
             let newTournamentListShortended = result.sort()
             setTournamentListShortened(newTournamentListShortended)
         })
+    
+    }
+
+    const fetchTournamentMapping = async () => {
+        setLoadingTournamentMapping(true)
+        const result = await fetch(API_URL + 'dataAnalysis/getTournamentMapping/', {
+            method: "GET",
+            headers: header
+        })
+        if (result.status === 200) {
+            setLoadingTournamentMapping(false)
+        }
     }
 
     React.useEffect(() => {
@@ -323,38 +338,60 @@ export default function Downloader({loggedIn, setLoggedIn}) {
             <h1>Download Games</h1>
             
 
-            <h2>Select the tournament filter</h2>
-            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
-                <TournamentFilter
-                    tournamentFilterList={tournamentListShortended}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                />
-                <Button
-                    endIcon={<SearchIcon/>}
-                    variant='contained'
-                    onClick={() => {fetchTournamentList()}}
-                    
-                >
-                    Get Tournaments
-                </Button>
-
-            </Stack>
             
+            <div className='getTournamentMapping'>
+                <Button
+                    endIcon={<UpdateIcon/>}
+                    variant='contained'
+                    onClick={() => {fetchTournamentMapping()}}
+                >
+                    Update Tournaments
+                </Button>
+            </div>
+
 
             {
-                loading ? (
+                loadingTournamentMapping ?
+                (
                     <Loading />
-                ) : (
-                    <TextAdder
-                        tournamentList={tournamentList}
-                        selectedTournaments={selectedTournaments}
-                        setSelectedTournaments={setSelectedTournaments}
-                        authTokens={authTokens}
-                    />
                 )
-                
+                :
+                (
+                    <>
+                        <h2>Select the tournament filter</h2>
+                        <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+                            <TournamentFilter
+                                tournamentFilterList={tournamentListShortended}
+                                selectedFilters={selectedFilters}
+                                setSelectedFilters={setSelectedFilters}
+                            />
+                            <Button
+                                endIcon={<SearchIcon/>}
+                                variant='contained'
+                                onClick={() => {fetchTournamentList()}}
+                                
+                            >
+                                Get Tournaments
+                            </Button>
+            
+                        </Stack>
+                        {
+                            loading ? (
+                                <Loading />
+                            ) : (
+                                <TextAdder
+                                    tournamentList={tournamentList}
+                                    selectedTournaments={selectedTournaments}
+                                    setSelectedTournaments={setSelectedTournaments}
+                                    authTokens={authTokens}
+                                />
+                            )
+                            
+                        }
+                    </>
+                )
             }
+            
         </div>
     );
 }
