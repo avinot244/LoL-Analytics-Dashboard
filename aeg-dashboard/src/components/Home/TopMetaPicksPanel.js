@@ -19,7 +19,7 @@ function TopMetaPicksPanel(props) {
     const [activeTournament, setActiveTournament] = useState("La Ligue Française - Summer 2024 (Regular Season: Regular Season)")
     const [activeFilter, setActiveFilter] = useState("PickRate")
 
-    const [flagChampionOverview, setFlagChampionOverview] = useState(true)
+    const [flagChampionOverview, setFlagChampionOverview] = useState(false)
 
     const {value, panelIndex} = props
     const side = ["Blue", "Red", "Both"];
@@ -40,6 +40,9 @@ function TopMetaPicksPanel(props) {
         result.json().then(result => {
             const newPatchList = result;
             setPatchList(newPatchList)
+            const latestPatch = newPatchList[newPatchList.length - 1]
+            setActivePatch(latestPatch)
+            setFlagChampionOverview(true)
         })
     }
 
