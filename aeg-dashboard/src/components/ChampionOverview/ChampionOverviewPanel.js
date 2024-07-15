@@ -68,6 +68,12 @@ const headCells = [
         label: 'Win Rate',
     },
     {
+        id: 'draftPresence',
+        numeric: true,
+        disablePadding: true,
+        label: "Draft Presence"
+    },
+    {
         id: 'globalPickRate',
         numeric: true,
         disablePadding: false,
@@ -253,11 +259,11 @@ export default function ChampionOverviewPanel(props) {
             })
             result.json().then(result => {
                 const newData = result;
-                console.log(result)
 
                 let newWantedRows = []
                 newData.map((championDraftStats) => {
                     if (championDraftStats.mostPopularRole === roleList[panelIndex]) {
+                        championDraftStats["draftPresence"] = (championDraftStats.globalPickRate + championDraftStats.globalBanRate)/2
                         newWantedRows.push(championDraftStats)
                     }
                 })
@@ -391,6 +397,7 @@ export default function ChampionOverviewPanel(props) {
                                 {row.championName}
                                 </TableCell>
                                 <TableCell align="right">{(row.winRate*100).toFixed(2)}%</TableCell>
+                                <TableCell align="right">{(row.draftPresence*100).toFixed(2)}%</TableCell>
                                 <TableCell align="right">{(row.globalPickRate*100).toFixed(2)}%</TableCell>
                                 <TableCell align="right">{(row.pickRate1Rota*100).toFixed(2)}%</TableCell>
                                 <TableCell align="right">{(row.pickRate2Rota*100).toFixed(2)}%</TableCell>
