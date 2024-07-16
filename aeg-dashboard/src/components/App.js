@@ -9,6 +9,8 @@ import GameOverview from './GameOverview/GameOverview';
 import Downloader from './Monitoring/Downloader';
 import PCAModelMaker from './Monitoring/PCAModelMaker';
 import PCAModelOverview from './Monitoring/PCAModelOverview';
+import PCADocumentation from './PlayerOverview/Documentation'
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignInSide from './Home/Login';
 import PrivateRoute from './utils/PrivateRoute';
@@ -55,6 +57,9 @@ function App() {
 					</Route>
 					<Route element={<PrivateRoute />}>
 						<Route element={<GetTokenComp />} path="/GetToken" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<PCADocumentation />} path="/PlayerOverview/Docs" exact/>
 					</Route>
 					
 				</Routes>

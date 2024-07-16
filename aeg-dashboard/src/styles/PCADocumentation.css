@@ -1,0 +1,19 @@
+.wrapper-PCAdocumentation{
+    background: rgba(43,48,53, 0.95);
+	height: 100vh;
+	color: white;
+	overflow: auto;
+}
+
+.PCADocumentation-top li,
+.PCADocumentation-jungle li,
+.PCADocumentation-midlane li,
+.PCADocumentation-ADC li,
+.PCADocumentation-support li {
+    font-weight: lighter;
+}
+
+.factor-name{
+    text-decoration: underline;
+    font-weight: normal;
+}
