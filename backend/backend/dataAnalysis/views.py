@@ -342,6 +342,7 @@ def computeNewBehaviorStats(request, time):
     for game in tqdm(queryAllGames):
     # for game in queryAllGames:
         if not(BehaviorADC.objects.filter(date=game.date, seriesId=game.seriesId, gameNumber=game.gameNumber).count() > 0):
+            print(game.tournament)
             seriesId : int = game.seriesId
             gameNumber : int = game.gameNumber
             (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)
@@ -351,13 +352,12 @@ def computeNewBehaviorStats(request, time):
 
             # usually time = 840s i.e 14min
             # Splitting our data so we get the interval between [840s; gameDuration]
-            print(len(data.gameSnapshotList))
             splitList : list[int] = [120, time, gameDuration]
             splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
             areaMapping : AreaMapping = AreaMapping()
 
             dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-            if len(dataBeforeTime.gameSnapshotList)> 0:
+            if len(dataBeforeTime.gameSnapshotList) > 0:
                 areaMapping.computeMapping(dataBeforeTime)
                 tournamentName : str = get_tournament_from_seriesId(seriesId)
 

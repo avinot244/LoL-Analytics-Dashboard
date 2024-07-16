@@ -4,7 +4,6 @@ from tqdm import tqdm
 
 csv_file_path : str = "./databases/games/data_metadata.csv"
 df = pd.read_csv(csv_file_path, sep=";")
-
 for index, row in tqdm(df.iterrows(), total=df.shape[0]):
     gameMetadata = GameMetadata(
         date = row["Date"],
@@ -17,7 +16,13 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0]):
         winningTeam = row["winningTeam"],
         gameNumber = row["gameNumber"],
     )
-    gameMetadata.save()
+    if not(GameMetadata.objects.filter(
+        seriesId__exact=gameMetadata.seriesId,
+        gameNumber__exact=gameMetadata.gameNumber
+    ).count() > 0):
+        gameMetadata.save()
+    
+    
 
 print(GameMetadata.objects.count())
 
