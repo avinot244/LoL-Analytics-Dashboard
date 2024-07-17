@@ -1,14 +1,9 @@
 import "../../styles/PCADocumentation.css"
 import NavBarComp from "../utils/NavbarComp"
-import top_challenger from "../../assets/top_challenger.png"
-import jungle_challenger from "../../assets/jungle_challenger.png"
-import mid_challenger from "../../assets/middle_challenger.png"
-import bot_challenger from "../../assets/bot_challenger.png"
-import support_challenger from "../../assets/support_challenger.png"
 
-import { Typography, Stack, Card, CardMedia, CardContent, Avatar, Box, Button } from "@mui/material"
+import { Typography } from "@mui/material"
 import Divider from "@mui/material/Divider";
-import InfoIcon from '@mui/icons-material/Info';
+
 
 function PCADocumentation({loggedIn, setLoggedIn}) {
     return (
