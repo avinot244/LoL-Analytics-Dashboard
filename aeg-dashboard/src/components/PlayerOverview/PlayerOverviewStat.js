@@ -14,10 +14,6 @@ import {
     Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
-import { alpha } from '@mui/material/styles';
-import { purple } from '@mui/material/colors';
-import Divider from "@mui/material/Divider";
-import ChampionCard from "./ChampionCard";
 import AuthContext from "../context/AuthContext";
 ChartJS.register(
     RadialLinearScale,
@@ -35,10 +31,6 @@ export default function PlayerOverviewStat(props) {
     const [dataBehaviorPatch, setDataBehaviorPatch] = useState([])
     const [dataBehaviorLatest, setDataBehaviorLatest] = useState([])
     const [dataBehaviorTournament, setDataBehaviorTournament] = useState([])
-    const [dataSingleGames, setDataSingleGames] = useState([])
-
-    const [champPoolPickRate, setChampPoolPickRate] = useState([])
-    const [champPoolWinRate, setChampPoolWinRate] = useState([])
 
     const [factorsNamePerRole, setFactorsNamePerRole] = useState({
         "Top": [],
@@ -91,13 +83,7 @@ export default function PlayerOverviewStat(props) {
                     console.log("Finished getting data for tournament patch")
 
                 })
-            })
-
-            
-            
-
-            
-            
+            })            
         }
 
         const fetchBehaviorTournamentLatestPlayer = async (role, summonnerName, limit, wantedTournament) => {
@@ -142,90 +128,13 @@ export default function PlayerOverviewStat(props) {
 
             
         }
-
-        const fetchChampionPoolPickRate = async (summonnerName, tournament) => {
-            let championPoolPRListTemp = []
-            let newChampionPoolPRList = []
-            const result = await fetch(API_URL + `draft/playerStat/${summonnerName}/${tournament}/pickRate/`, {
-                method: "GET",
-                headers:header
-            })
-            result.json().then(result => {
-                for (let i = 0 ; i < result.length ; i++) {
-                    let championPoolObject = result[i]
-                    let tempDict = {
-                        "championName": championPoolObject.championName,
-                        "pickRate": (championPoolObject.globalPickRate*100).toFixed(2),
-                        "winRate": (championPoolObject.winRate*100).toFixed(2),
-                        "nbGames": championPoolObject.nbGames,
-                        "kda": championPoolObject.kda.toFixed(2)
-                    }
-                    championPoolPRListTemp.push(tempDict)
-                }
-                return championPoolPRListTemp
-            }).then(list => {
-                newChampionPoolPRList.push(list.slice(0, 6))
-                setChampPoolPickRate(newChampionPoolPRList)
-            })
-        }
-
-        const fetchChampionPoolWinRate = async (summonnerName, tournament) => {
-            let championPoolWRListTemp = []
-            let newChampionPoolWRList = []
-            const result = await fetch(API_URL + `draft/playerStat/${summonnerName}/${tournament}/winRate/`, {
-                method: "GET",
-                headers:header
-            })
-            result.json().then(result => {
-                for (let i = 0 ; i < result.length ; i++) {
-                    let championPoolObject = result[i]
-                    let tempDict = {
-                        "championName": championPoolObject.championName,
-                        "pickRate": (championPoolObject.globalPickRate*100).toFixed(2),
-                        "winRate": (championPoolObject.winRate*100).toFixed(2),
-                        "nbGames": championPoolObject.nbGames,
-                        "kda": championPoolObject.kda.toFixed(2)
-                    }
-                    championPoolWRListTemp.push(tempDict)
-                }
-                return championPoolWRListTemp
-            }).then(list => {
-                newChampionPoolWRList.push(list.slice(0, 6))
-                setChampPoolWinRate(newChampionPoolWRList)
-            })
-        }
-
-        const fetchBehaviorSingleGamesLatest = async (role, summonnerName, limit, wantedTournament) => {
-            let uuid = "";
-            const modelResult = await fetch(API_URL + `behaviorModels/getModel/${role}/`, {
-                method: "GET",
-                headers:header
-            })
-            modelResult.json().then(async model => {
-                uuid = model.uuid
-
-                const gamesBehavior = await fetch(API_URL + `behavior/${role}/compute/singleGamesLatest/${summonnerName}/${uuid}/${limit}/${wantedTournament}/${wantedTournament}/`, {
-                    method: "GET",
-                    headers:header
-                })
-                gamesBehavior.json().then(result => {
-                    const newDataSingleGames = result
-                    setDataSingleGames(newDataSingleGames)
-                })
-            })
-
-            
-        }
         
         fetchFactorsPerName()
-
         fetchBehaviorTournamentPatchPlayer(role, summonnerName, patch, wantedTournament)
         fetchBehaviorTournamentLatestPlayer(role, summonnerName, limit, wantedTournament)
         fetchBehaviorTournamentPlayer(role, summonnerName, wantedTournament)
-        fetchBehaviorSingleGamesLatest(role, summonnerName, limit, wantedTournament)
 
-        fetchChampionPoolPickRate(summonnerName, wantedTournament)
-        fetchChampionPoolWinRate(summonnerName, wantedTournament)
+        
     }, [])
 
     function getAvgData(behaviorObject, role) {
@@ -335,46 +244,6 @@ export default function PlayerOverviewStat(props) {
         }
     }
 
-    function getData(behaviorObject, role) {
-        if (role === "Top" || role === "Jungle") {
-            let result = []
-            result.push(behaviorObject.Factor_1[0])
-            result.push(behaviorObject.Factor_2[0])
-            result.push(behaviorObject.Factor_3[0])
-            result.push(behaviorObject.Factor_4[0])
-            result.push(behaviorObject.Factor_5[0])
-            result.push(behaviorObject.Factor_6[0])
-            return result
-        }else if (role === "Mid") {
-            let result = []
-            result.push(behaviorObject.Factor_1[0])
-            result.push(behaviorObject.Factor_2[0])
-            result.push(behaviorObject.Factor_3[0])
-            result.push(behaviorObject.Factor_4[0])
-            result.push(behaviorObject.Factor_5[0])
-            result.push(behaviorObject.Factor_6[0])
-            result.push(behaviorObject.Factor_7[0])
-            result.push(behaviorObject.Factor_8[0])
-            return result
-        }else if (role === "ADC") {
-            let result = []
-            result.push(behaviorObject.Factor_1[0])
-            result.push(behaviorObject.Factor_2[0])
-            result.push(behaviorObject.Factor_3[0])
-            result.push(behaviorObject.Factor_4[0])
-            return result
-        }else if (role === "Support") {
-            let result = []
-            result.push(behaviorObject.Factor_1[0])
-            result.push(behaviorObject.Factor_2[0])
-            result.push(behaviorObject.Factor_3[0])
-            result.push(behaviorObject.Factor_4[0])
-            result.push(behaviorObject.Factor_5[0])
-            result.push(behaviorObject.Factor_6[0])
-            result.push(behaviorObject.Factor_7[0])
-            return result
-        }
-    }
 
     let behaviorDatasets = [
         {
@@ -400,17 +269,6 @@ export default function PlayerOverviewStat(props) {
             borderWidth: 1,
         }
     ]
-
-    for (let i = 0 ; i < dataSingleGames.length ; i++) {
-        let temp = {
-            label: `Behavior ${summonnerName} game ${dataSingleGames.length - i}`,
-            data: getData(dataSingleGames[i], role),
-            backgroundColor: alpha(purple[100*(2*i+1)], 0.2),
-            borderColor: purple[100*(2*i+1)],
-            borderWidth: 1,
-        }
-        behaviorDatasets.push(temp)
-    }
 
     const data = {
         labels: factorsNamePerRole[role],
@@ -473,7 +331,6 @@ export default function PlayerOverviewStat(props) {
                         }
                     },
                     lineWidth: (context) => {
-                        console.log(context)
                         if (context.tick.value === 0) {
                             return 4
                         } else {
@@ -504,66 +361,20 @@ export default function PlayerOverviewStat(props) {
     return (
         <div className="playerOverview-content-wrapper">
             <div className="playerOverviewGraph">
-                    {
-                        loading ? (
-                            <Loading />
-                        ) : (
-                            <div className="playerOverview-graph">
-                                <Radar
-                                    data={data}
-                                    options={options}
-                                />
-                            </div>
+                {
+                    loading ? (
+                        <Loading />
+                    ) : (
+                        <div className="playerOverview-graph">
+                            <Radar
+                                data={data}
+                                options={options}
+                            />
+                        </div>
 
-                        )
-                    }
-                    
-            </div>
-
-            <br />
-
-            <Divider
-                style={{ background: 'white', borderWidth: 1}}
-                variant="middle"
-            />
-
-            <div className="playerOverview-other-content">
-                <br/>
-                <div className="playerOverview-champs">
-                    <h2>Best champions by pick rate</h2>
-                    {
-                        champPoolPickRate.length > 0 && 
-                        <ul className="playerOverview-champion-list">
-                            {champPoolPickRate[0].map((object) => 
-                                <ChampionCard
-                                    championName={object.championName}
-                                    pickRate={object.pickRate}
-                                    winRate={object.winRate}
-                                    nbGames={object.nbGames}
-                                    kda={object.kda}
-                                />
-                            )}
-                        </ul>
-                    }
-                    
-
-                    <h2>Best champions by win rate</h2>
-                    {
-                        champPoolWinRate.length > 0 && 
-                        <ul className="playerOverview-champion-list">
-                            {champPoolWinRate[0].map((object) => 
-                                <ChampionCard
-                                    championName={object.championName}
-                                    pickRate={object.pickRate}
-                                    winRate={object.winRate}
-                                    nbGames={object.nbGames}
-                                    kda={object.kda}
-                                />
-                            )}
-                        </ul>
-                    }
-                </div>
-            </div>
+                    )
+                } 
+            </div>        
         </div>
     )
 }

@@ -1,20 +1,25 @@
-import NavBarComp from "../utils/NavbarComp"
-import "../../styles/PlayerOverview.css"
-import SelectComp from "../utils/SelectComp";
-import { useState, useEffect } from "react";
-import PlayerOverviewStat from "./PlayerOverviewStat";
-import { API_URL, roleList} from "../../constants";
-
 import Button from "@mui/material/Button"
+import { TextField } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material";
+import Divider from "@mui/material/Divider";
+
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchComp from "../utils/SearchComp";
-import { TextField } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material";
-import RedirectPage from "../Home/RedirectPage";
-import AuthContext from "../context/AuthContext";
+
+
+import { useState, useEffect } from "react";
 import { useContext } from "react";
+
+
+import AuthContext from "../context/AuthContext";
+import NavBarComp from "../utils/NavbarComp"
+import SelectComp from "../utils/SelectComp";
+import SearchComp from "../utils/SearchComp";
+import PlayerOverviewStat from "./PlayerOverviewStat";
+import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
+import { API_URL, roleList} from "../../constants";
+import "../../styles/PlayerOverview.css"
 
 function PlayerOverview({loggedIn, setLoggedIn}){
     const [patchList, setPatchList] = useState([]);
@@ -151,7 +156,6 @@ function PlayerOverview({loggedIn, setLoggedIn}){
                                         setDisplayTournamentSearch(true)
                                         fetchTournamentFromPlayer(selectedPlayer, activePatch)
                                     }
-                                    
                                 }}    
                             >
                                 Search tournament
@@ -230,13 +234,27 @@ function PlayerOverview({loggedIn, setLoggedIn}){
 
             {
                 flagDisplayPlayerStat && 
-                <PlayerOverviewStat 
-                    role={activeRole}
-                    summonnerName={selectedPlayer}
-                    patch={activePatch}
-                    wantedTournament={tournament}
-                    limit={activeLimit}
-                />
+                <>
+                    <PlayerOverviewStat 
+                        role={activeRole}
+                        summonnerName={selectedPlayer}
+                        patch={activePatch}
+                        wantedTournament={tournament}
+                        limit={activeLimit}
+                    />
+
+                    <br />
+
+                    <Divider
+                        style={{ background: 'white', borderWidth: 1}}
+                        variant="middle"
+                    />   
+
+                    <PlayerOverviewChampPool
+                        summonnerName={selectedPlayer}
+                        tournament={tournament}
+                    />
+                </>
             }
         </div>
     )

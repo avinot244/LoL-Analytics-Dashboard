@@ -6,14 +6,15 @@ import PlayerOverviewStat from "./PlayerOverviewStat";
 import { API_URL, roleList} from "../../constants";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { TextField } from "@mui/material";
-
-
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
+import Divider from "@mui/material/Divider";
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
 import SearchComp from "../utils/SearchComp";
 import AuthContext from "../context/AuthContext";
+import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
 
 import { useContext } from "react";
 
@@ -29,6 +30,7 @@ function PlayerOverviewScrim({loggedIn, setLoggedIn}){
     const [flagDisplayPlayerSearch, setDisplayPlayerSearch] = useState(false)
     const [flagDisplayPlayerStat, setDisplayPlayerStat] = useState(false)
 
+    
     const [activeLimit, setActiveLimit] = useState(5)
 
     let {authTokens} = useContext(AuthContext)
@@ -183,13 +185,28 @@ function PlayerOverviewScrim({loggedIn, setLoggedIn}){
 
             {
                 flagDisplayPlayerStat && 
-                <PlayerOverviewStat 
-                    role={activeRole}
-                    summonnerName={selectedPlayer}
-                    patch={activePatch}
-                    wantedTournament={tournament}
-                    limit={activeLimit}
-                />
+                <>
+                    <PlayerOverviewStat 
+                        role={activeRole}
+                        summonnerName={selectedPlayer}
+                        patch={activePatch}
+                        wantedTournament={tournament}
+                        limit={activeLimit}
+                    />
+
+                    <br />
+
+                    <Divider
+                        style={{ background: 'white', borderWidth: 1}}
+                        variant="middle"
+                    />   
+
+                    <PlayerOverviewChampPool
+                        summonnerName={selectedPlayer}
+                        tournament={tournament}
+                    />
+                </>
+                
             }
         </div>
     )
