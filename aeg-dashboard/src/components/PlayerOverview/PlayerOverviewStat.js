@@ -366,6 +366,7 @@ export default function PlayerOverviewStat(props) {
                         <Loading />
                     ) : (
                         <div className="playerOverview-graph">
+                            <h1>{summonnerName}</h1>
                             <Radar
                                 data={data}
                                 options={options}
