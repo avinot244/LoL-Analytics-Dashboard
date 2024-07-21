@@ -10,6 +10,7 @@ import Downloader from './Monitoring/Downloader';
 import PCAModelMaker from './Monitoring/PCAModelMaker';
 import PCAModelOverview from './Monitoring/PCAModelOverview';
 import PCADocumentation from './PlayerOverview/Documentation'
+import RefreshDBComp from './Monitoring/RefreshDBComp';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignInSide from './Home/Login';
@@ -60,6 +61,9 @@ function App() {
 					</Route>
 					<Route element={<PrivateRoute />}>
 						<Route element={<PCADocumentation />} path="/PlayerOverview/Docs" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<RefreshDBComp />} path="/Monitoring/RefreshDB" exact/>
 					</Route>
 					
 				</Routes>

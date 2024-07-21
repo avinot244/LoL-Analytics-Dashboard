@@ -128,19 +128,6 @@ export default function GetTokenComp () {
                     state={accessState}
                     setState={setAccessState}
                 />
-
-                {/* <br/>
-
-                <Typography variant="h5" className="tokens-values">
-                    Refresh Token : 
-                </Typography>
-                <CopyButton 
-                    content={authTokens.refresh} 
-                    buttonText={textRefresh}
-                    onClick={onClickRefresh}
-                    state={refreshState}
-                    setState={setRefreshState}
-                /> */}
             </div>
         </div>
     )

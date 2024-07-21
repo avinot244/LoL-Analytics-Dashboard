@@ -55,6 +55,7 @@ function NavBarComp() {
 							<NavDropdown.Item as={Link} to='/Monitoring/Download'>Download Games</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/Monitoring/PCAMaker'>PCA Model Maker</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/Monitoring/PCAOverview'>PCA Model Overview</NavDropdown.Item>
+							<NavDropdown.Item as={Link} to='/Monitoring/RefreshDB'>Refresh DB</NavDropdown.Item>
 						</NavDropdown>
 						<Nav.Link as ={Link} to="/getToken">Get Tokens</Nav.Link>
 					</Nav>
