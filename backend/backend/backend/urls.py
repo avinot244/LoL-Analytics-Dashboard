@@ -30,6 +30,7 @@ from behaviorModels import views as behaviorModelsViews
 from dataAnalysis import views as dataAnalysisViews
 from Draft import views as draftViews
 from authentication import views as authenticationViews
+from Monitoring import views as monitoringViews
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -222,5 +223,8 @@ urlpatterns = [
     path('api/token/getPair/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/authentication/test', authenticationViews.test),
+    
+    # Monitoring
+    path("api/monitoring/refresh/<str:dbName>/", monitoringViews.refresh_db),
 ]
 

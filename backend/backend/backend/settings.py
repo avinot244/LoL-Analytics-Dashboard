@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'behaviorModels',
     'Draft',
     'authentication',
+    'Monitoring',
     'django_extensions',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
