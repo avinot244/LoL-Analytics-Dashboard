@@ -389,7 +389,6 @@ export default function PlayerOverviewStat(props) {
                                 options={options}
                             />
                         </div>
-
                     )
                 } 
             </div>        

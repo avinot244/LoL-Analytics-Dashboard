@@ -391,53 +391,59 @@ function PlayerOverview({loggedIn, setLoggedIn}){
 
             <Stack spacing={5} direction="row" justifyContent="center" alignItems="center">
                 {
-                    flagDisplayPlayerStat1 && 
-                    <Stack spacing={1} direction="column" justifyContent="center" alignItems="center">
-                        <PlayerOverviewStat 
-                            role={activeRole1}
-                            summonnerName={selectedPlayer1}
-                            patch={activePatch1}
-                            wantedTournament={tournament1}
-                            limit={activeLimit1}
-                        />
-                        <br />
+                    flagDisplayPlayerStat1 ? ( 
+                        <Stack spacing={1} direction="column" justifyContent="center" alignItems="center">
+                            <PlayerOverviewStat 
+                                role={activeRole1}
+                                summonnerName={selectedPlayer1}
+                                patch={activePatch1}
+                                wantedTournament={tournament1}
+                                limit={activeLimit1}
+                            />
+                            <br />
 
-                        <Divider
-                            style={{ background: 'white', borderWidth: 1}}
-                            variant="middle"
-                        />   
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />   
 
-                        <PlayerOverviewChampPool
-                            summonnerName={selectedPlayer1}
-                            tournament={tournament1}
-                        />
-                    </Stack>
+                            <PlayerOverviewChampPool
+                                summonnerName={selectedPlayer1}
+                                tournament={tournament1}
+                            />
+                        </Stack>
+                    ) : (
+                        <div className="playerOverview-placeholder"></div>
+                    )
                 }
 
                 {
                     
-                    flagDisplayPlayerStat2 &&
-                    <Stack spacing={1} direction="column" justifyContent="center" alignItems="center">
-                        <PlayerOverviewStat 
-                            role={activeRole2}
-                            summonnerName={selectedPlayer2}
-                            patch={activePatch2}
-                            wantedTournament={tournament2}
-                            limit={activeLimit2}
-                        />
+                    flagDisplayPlayerStat2 ? (
+                        <Stack spacing={1} direction="column" justifyContent="center" alignItems="center">
+                            <PlayerOverviewStat 
+                                role={activeRole2}
+                                summonnerName={selectedPlayer2}
+                                patch={activePatch2}
+                                wantedTournament={tournament2}
+                                limit={activeLimit2}
+                            />
 
-                        <br />
+                            <br />
 
-                        <Divider
-                            style={{ background: 'white', borderWidth: 1}}
-                            variant="middle"
-                        />   
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />   
 
-                        <PlayerOverviewChampPool
-                            summonnerName={selectedPlayer2}
-                            tournament={tournament2}
-                        />
-                    </Stack>
+                            <PlayerOverviewChampPool
+                                summonnerName={selectedPlayer2}
+                                tournament={tournament2}
+                            />
+                        </Stack>
+                    ) : (
+                        <div className="playerOverview-placeholder"></div>
+                    )
                 }
                 
                 

@@ -9,6 +9,12 @@ h1 {
     text-align: center;
 }
 
+.playerOverview-placeholder{
+	width: 680px;
+	height: 780px;
+	/*background-color: black;*/
+	margin: 0 auto;
+}
 
 .dashboard-playerOverview-controlPannel{
     width: 100%;
