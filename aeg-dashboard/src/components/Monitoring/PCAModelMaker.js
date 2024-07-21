@@ -265,7 +265,7 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList,
 }
 
 
-export default function PCAModelMaker({loggedIn, setLoggedIn}) {
+export default function PCAModelMaker() {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [tournamentDict, setTournamentDict] = React.useState([])
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
@@ -301,7 +301,7 @@ export default function PCAModelMaker({loggedIn, setLoggedIn}) {
 
     return (
         <div className="pca-model-maker-wrapper">
-            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp/>
 
             <h1>Create Behavior Analysis Models</h1>
 

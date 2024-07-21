@@ -18,7 +18,7 @@ import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
 
 import { useContext } from "react";
 //
-function PlayerOverviewScrim({loggedIn, setLoggedIn}){
+function PlayerOverviewScrim(){
     const [patchList, setPatchList] = useState([]);
     
     const tournament = "League of Legends Scrims"
@@ -86,7 +86,7 @@ function PlayerOverviewScrim({loggedIn, setLoggedIn}){
     return(
         
         <div className="wrapper-overview-player">
-            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp/>
             <h1> Player Overview </h1>
             <div className="dashboard-playerOverview-controlPannel">
                 <ul className="dashboard-playerOverview-controlPannel-list">

@@ -10,7 +10,7 @@ import AuthContext from '../context/AuthContext';
 
 
 
-function NavBarComp({loggedIn, setLoggedIn}) {
+function NavBarComp() {
 	let {logoutUser} = useContext(AuthContext)
 	function isResponseOk(response) {
         if (response.status >= 200 && response.status <= 299) {

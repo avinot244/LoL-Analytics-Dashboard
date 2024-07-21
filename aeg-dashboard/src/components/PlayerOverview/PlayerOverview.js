@@ -21,7 +21,7 @@ import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
 import { API_URL, roleList} from "../../constants";
 import "../../styles/PlayerOverview.css"
 
-function PlayerOverview({loggedIn, setLoggedIn}){
+function PlayerOverview(){
     const [patchList, setPatchList] = useState([]);
     
 
@@ -122,7 +122,7 @@ function PlayerOverview({loggedIn, setLoggedIn}){
 
     return(
         <div className="wrapper-overview-player">
-            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp/>
             <h1> Player Overview </h1>
             <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                 <div className="dashboard-playerOverview-controlPannel-wrapper">

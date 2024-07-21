@@ -3,10 +3,10 @@ import "../../styles/PCAModelOverview.css"
 import PCAModelList from "./PCAModelList";
 import RedirectPage from "../Home/RedirectPage";
 
-export default function PCAModelOverview({loggedIn, setLoggedIn}) {
+export default function PCAModelOverview() {
     return (
         <div className="pca-model-overview-wrapper">
-            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp/>
 
             <h1>Manage Behavior Analysis Models</h1>
 

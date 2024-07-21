@@ -5,10 +5,10 @@ import { Typography } from "@mui/material"
 import Divider from "@mui/material/Divider";
 
 
-function PCADocumentation({loggedIn, setLoggedIn}) {
+function PCADocumentation() {
     return (
         <div className="wrapper-PCAdocumentation">
-            <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
+            <NavBarComp/>
             <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10}}>
                 Player Analysis Documentation
             </Typography>
