@@ -1,8 +1,12 @@
 import "../../styles/PlayerOverviewStat.css"
 import { API_URL, roleList} from "../../constants";
+import Loading from "../utils/Loading";
+import RedSwitch from "../utils/switches/RedSwitch.js"
+import BlueSwitch from "../utils/switches/BlueSwitch.js"
+import TealSwith from "../utils/switches/TealSwitch.js"
+
 import { useEffect, useState,useContext } from "react";
 import NormalDistribution from "normal-distribution"
-import Loading from "../utils/Loading";
 
 import {
     Chart as ChartJS,
@@ -15,6 +19,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import AuthContext from "../context/AuthContext";
+import { FormControlLabel, FormGroup } from "@mui/material";
 ChartJS.register(
     RadialLinearScale,
     PointElement,
@@ -31,6 +36,10 @@ export default function PlayerOverviewStat(props) {
     const [dataBehaviorPatch, setDataBehaviorPatch] = useState([])
     const [dataBehaviorLatest, setDataBehaviorLatest] = useState([])
     const [dataBehaviorTournament, setDataBehaviorTournament] = useState([])
+
+    const [displayDataTournament, setDisplayDataTournament] = useState(true)
+    const [displayDataPatch, setDisplayDataPatch] = useState(false)
+    const [displayDataLatest, setDisplayDataLatest] = useState(false)
 
     const [factorsNamePerRole, setFactorsNamePerRole] = useState({
         "Top": [],
@@ -79,8 +88,7 @@ export default function PlayerOverviewStat(props) {
                 result.json().then(result => {
                     const newBehaviorPatch = result
                     setDataBehaviorPatch(getAvgData(newBehaviorPatch, role))
-                    setLoading(false)
-                    console.log("Finished getting data for tournament patch")
+                    
 
                 })
             })            
@@ -123,6 +131,7 @@ export default function PlayerOverviewStat(props) {
                 result.json().then(result => {
                     const newBehaviorTournament = result
                     setDataBehaviorTournament(getAvgData(newBehaviorTournament, role))
+                    setLoading(false)
                 })
             })
 
@@ -252,6 +261,7 @@ export default function PlayerOverviewStat(props) {
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgb(255, 99, 132)',
             borderWidth: 1,
+            hidden: !(displayDataPatch)
                         
         },
         {
@@ -260,6 +270,7 @@ export default function PlayerOverviewStat(props) {
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgb(54, 162, 235)',
             borderWidth: 1,
+            hidden: !(displayDataLatest)
         },
         {
             label: `Behavior ${summonnerName} at ${wantedTournament}`,
@@ -267,6 +278,7 @@ export default function PlayerOverviewStat(props) {
             backgroundColor: 'rgba(74, 191, 192, 0.2)',
             borderColor: 'rgb(74, 191, 192)',
             borderWidth: 1,
+            hidden: !(displayDataTournament)
         }
     ]
 
@@ -345,10 +357,10 @@ export default function PlayerOverviewStat(props) {
         },
         plugins: {
             legend: {
-                display: true,
-                labels: {
-                    color: '#FFF'
-                }
+                display: false,
+                // labels: {
+                //     color: '#FFF'
+                // }
             },
             customCanvasBackgroundColor: {
                 color: 'black'
@@ -367,6 +379,11 @@ export default function PlayerOverviewStat(props) {
                     ) : (
                         <div className="playerOverview-graph">
                             <h1>{summonnerName}</h1>
+                            <FormGroup row>
+                                <FormControlLabel control={<RedSwitch onChange={(event => {setDisplayDataPatch(event.target.checked)})}/>} label={`Patch ${patch}`}/>
+                                <FormControlLabel control={<BlueSwitch onChange={(event => {setDisplayDataLatest(event.target.checked)})}/>} label={`Latest ${limit} Games`}/>
+                                <FormControlLabel control={<TealSwith defaultChecked onChange={(event => {setDisplayDataTournament(event.target.checked)})}/>} label={`${wantedTournament}`}/>
+                            </FormGroup>
                             <Radar
                                 data={data}
                                 options={options}
