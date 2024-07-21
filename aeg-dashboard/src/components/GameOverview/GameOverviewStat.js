@@ -1,8 +1,15 @@
-import { useEffect, useState, useContext } from "react"
 import { API_URL } from "../../constants"
 import "../../styles/GameOverviewStat.css"
 import DraftComponent from "../utils/DraftComponent";
-import Loading from "../utils/Loading" 
+import Loading from "../utils/Loading"
+import RedSwitch from "../utils/switches/RedSwitch";
+import BlueSwitch from "../utils/switches/BlueSwitch";
+import PurpleSwitch from "../utils/switches/PurpleSwitch";
+import YellowSwitch from "../utils/switches/YellowSwitch";
+import TealSwitch from "../utils/switches/TealSwitch";
+
+import { useEffect, useState, useContext } from "react"
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -14,8 +21,6 @@ import {
     Legend,
 } from 'chart.js';
 import { FormControlLabel, FormGroup, Switch} from "@mui/material";
-import { alpha, styled } from '@mui/material/styles';
-import { blue, teal, red, yellow, purple } from '@mui/material/colors';
 import { Line } from 'react-chartjs-2';
 import AuthContext from "../context/AuthContext";
 ChartJS.register(
@@ -28,68 +33,6 @@ ChartJS.register(
     Legend
 );
 
-
-
-
-const BlueSwitch = styled(Switch)(({ theme }) => ({
-    '& .MuiSwitch-switchBase.Mui-checked': {
-        color: blue[600],
-        '&:hover': {
-            backgroundColor: alpha(blue[600], theme.palette.action.hoverOpacity),
-        },
-    },
-    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-        backgroundColor: blue[600],
-    },
-}));
-
-const TealSwitch = styled(Switch)(({ theme }) => ({
-    '& .MuiSwitch-switchBase.Mui-checked': {
-        color: teal[600],
-        '&:hover': {
-            backgroundColor: alpha(teal[600], theme.palette.action.hoverOpacity),
-        },
-    },
-    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-        backgroundColor: teal[600],
-    },
-}));
-
-const RedSwitch = styled(Switch)(({ theme }) => ({
-    '& .MuiSwitch-switchBase.Mui-checked': {
-        color: red[600],
-        '&:hover': {
-            backgroundColor: alpha(red[600], theme.palette.action.hoverOpacity),
-        },
-    },
-    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-        backgroundColor: red[600],
-    },
-}));
-
-const YellowSwitch = styled(Switch)(({ theme }) => ({
-    '& .MuiSwitch-switchBase.Mui-checked': {
-        color: yellow[600],
-        '&:hover': {
-            backgroundColor: alpha(yellow[600], theme.palette.action.hoverOpacity),
-        },
-    },
-    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-        backgroundColor: yellow[600],
-    },
-}));
-
-const PurpleSwitch = styled(Switch)(({ theme }) => ({
-    '& .MuiSwitch-switchBase.Mui-checked': {
-        color: purple[600],
-        '&:hover': {
-            backgroundColor: alpha(purple[600], theme.palette.action.hoverOpacity),
-        },
-    },
-    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-        backgroundColor: purple[600],
-    },
-}));
 
 export default function GameOverviewStat({seriesId, gameNumber}) {
     const [dataGamePlayer, setDataGamePlayer] = useState([])
