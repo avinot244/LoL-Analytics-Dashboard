@@ -424,7 +424,6 @@ def getListOfDownloadableTournament(request, year):
     
     tournamentList_unicode = request.body.decode("utf-8")
     tournamentList : list = json.loads(tournamentList_unicode)
-    print(tournamentList)
     
     # Check if result is already computed given the fitler list
     with open(DATA_PATH + "tournament_downloadable.json", "r") as json_file:
@@ -436,7 +435,6 @@ def getListOfDownloadableTournament(request, year):
         while (i < len(tournamentList) and flag):
             flag = flag and (tournamentList[i] in filterList)
             i += 1
-    print(flag)
     if flag:
         # Result is already computed no need to compute it again    
         with open(DATA_PATH + "tournament_downloadable.json", "r") as json_file:
