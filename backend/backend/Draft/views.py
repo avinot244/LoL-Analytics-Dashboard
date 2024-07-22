@@ -350,7 +350,7 @@ def updateChampionDraftStats(request, tournamentListStr : str):
 @api_view(['DELETE'])
 def deleteAllChampionDraftStats(request):
     queryChampionDraftStats = ChampionDraftStats.objects.all()
-    for res in queryChampionDraftStats:
+    for res in tqdm(queryChampionDraftStats):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)

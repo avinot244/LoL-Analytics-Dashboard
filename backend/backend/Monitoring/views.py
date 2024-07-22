@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+import requests
+
 from Monitoring.packages.refresh_behavior.refresh_behavior_adc import refresh_behavior_adc
 from Monitoring.packages.refresh_behavior.refresh_behavior_jungle import refresh_behavior_jungle
 from Monitoring.packages.refresh_behavior.refresh_behavior_mid import refresh_behavior_mid
@@ -16,6 +18,8 @@ from Monitoring.packages.refresh_drafts.refresh_playerChampionPool import refres
 
 from Monitoring.packages.refresh_games.refresh_gameMetadata import refresh_gameMetadata
 
+from dataAnalysis.globals import API_URL
+
 @api_view(['PATCH'])
 def refresh_db(request, dbName : str):
     if not(dbName in ["behavior", "drafts", "games"]):
@@ -28,6 +32,7 @@ def refresh_db(request, dbName : str):
         refresh_behavior_support()
         refresh_behavior_top()
     elif dbName == "drafts":
+        requests.delete(API_URL + "api/draft/championStats/deleteChampionGameStats/")
         refresh_championDraftStats()
         refresh_draftPickOrder()
         refresh_draftPlayerPick()
