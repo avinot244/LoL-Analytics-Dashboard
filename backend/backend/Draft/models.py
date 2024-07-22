@@ -60,6 +60,13 @@ class ChampionDraftStats(models.Model):
     mostPopularPickOrder = models.IntegerField("MostPopularPickOrder")
     blindPick = models.FloatField("BlindPick")
     mostPopularRole = models.CharField("MostPopularRole", max_length=240)
+    
+class ChampionBanStats(models.Model):
+    # We only take champions that have a pickrate of 0% and a banrate greater than 0%
+    championName = models.CharField("ChampionName", max_length=240)
+    patch = models.CharField("Patch", max_length=240)
+    tournament = models.CharField("Tournament", max_length=240)
+    side = models.CharField("Side", max_length=240)
 
 class ChampionPool(models.Model):
     summonnerName = models.CharField("SummonnerName", max_length=240)
@@ -69,4 +76,5 @@ class ChampionPool(models.Model):
     winRate = models.FloatField("WinRate")
     nbGames = models.IntegerField("NbGames")
     kda = models.FloatField("KDA")
+
 
