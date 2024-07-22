@@ -28,7 +28,6 @@ def isChampionPicked(championName : str, tournament : str, patch : str, side : s
             return True
     return False
 
-
 def getChampionWinRate(championName : str, tournament : str, patch : str, side : str) -> float:
     queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
     gameWinCounter : int = 0
@@ -321,6 +320,7 @@ def updateDatabase(path : str,
                    banRate : float,
                    banRate1Rota : float,
                    banRate2Rota : float,
+                   draftPresence : float,
                    mostPopularPickOrder : int,
                    blindPick : float,
                    mostPopularRole : str) -> None:
@@ -338,6 +338,7 @@ def updateDatabase(path : str,
                    and abs(row["BanRate1Rota"] - banRate1Rota) < 0.01
                    and abs(row["BanRate2Rota"] - banRate2Rota) < 0.01
                    and row["MostPopularPickOrder"] == mostPopularPickOrder
+                   and abs(row["DraftPresence"] - draftPresence) < 0.01
                    and abs(row["BlindPick"] - blindPick) < 0.01
                    and row["MostPopularRole"] == mostPopularRole):
                 
@@ -348,6 +349,7 @@ def updateDatabase(path : str,
                 df.at[index, "GlobalBanRate"] = banRate
                 df.at[index, "BanRate1Rota"] = banRate1Rota
                 df.at[index, "BanRate2Rota"] = banRate2Rota
+                df.at[index, "DraftPresence"] = draftPresence
                 df.at[index, "MostPopularPickOrder"] = mostPopularPickOrder
                 df.at[index, "BlindPick"] = blindPick
                 df.at[index, "MostPopularRole"] = mostPopularRole
@@ -417,6 +419,7 @@ def saveChampionDraftStatsCSV(path : str,
                               banRate : float,
                               banRate1Rota : float,
                               banRate2Rota : float,
+                              draftPresence : float,
                               mostPopularPickOrder : int,
                               blindPick : float,
                               mostPopularRole : str) -> None:
@@ -431,9 +434,9 @@ def saveChampionDraftStatsCSV(path : str,
     csv_file = open(path, write_option)
     writer = csv.writer(csv_file, delimiter=";")
     if new:
-        header = ["ChampionName", "Patch", "Tournament", "Side", "WinRate", "GlobalPickRate", "PickRate1Rota", "PickRate2Rota", "GlobalBanRate", "BanRate1Rota", "BanRate2Rota", "MostPopularPickOrder", "BlindPick", "MostPopularRole"]
+        header = ["ChampionName", "Patch", "Tournament", "Side", "WinRate", "GlobalPickRate", "PickRate1Rota", "PickRate2Rota", "GlobalBanRate", "BanRate1Rota", "BanRate2Rota", "DraftPresence", "MostPopularPickOrder", "BlindPick", "MostPopularRole"]
         writer.writerow(header)
-        data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
+        data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, draftPresence, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
         csv_file.close()
@@ -453,13 +456,14 @@ def saveChampionDraftStatsCSV(path : str,
             banRate,
             banRate1Rota,
             banRate2Rota,
+            draftPresence,
             mostPopularPickOrder,
             blindPick,
             mostPopularRole,
         )
     else:
         # print(" Saving to database")
-        data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, mostPopularPickOrder, blindPick, mostPopularRole]
+        data = [championName, patch, tournament, side, winRate, pickRate, pickRate1Rota, pickRate2Rota, banRate, banRate1Rota, banRate2Rota, draftPresence, mostPopularPickOrder, blindPick, mostPopularRole]
 
         writer.writerow(data)
 

@@ -302,8 +302,8 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                         banRate, banRate1Rota, banRate2Rota = ChampionPicksStats.getBanRateInfo(championName, tournament, patch, side)
                         mostPopularPickOrder : int = ChampionPicksStats.getMostPopularPickPosition(championName, tournament, patch, side)
                         blindPick : float = ChampionPicksStats.getBlindPick(championName, tournament, patch, side)
-                        mostPopularRole : str = ChampionPicksStats.getMostPopularRole(championName, tournament, patch, side)                
-                        
+                        mostPopularRole : str = ChampionPicksStats.getMostPopularRole(championName, tournament, patch, side)
+                        draftPresence : float = (pickRate + banRate)/2
                         
                         path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
                         new : bool = not(os.path.exists(path))
@@ -321,12 +321,12 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                             banRate,
                             banRate1Rota,
                             banRate2Rota,
+                            draftPresence,
                             mostPopularPickOrder,
                             blindPick,
                             mostPopularRole
                         )
                     elif ChampionBansStats.isChampionBanned(championName, tournament, patch, side):
-                        print("Champion {} is only banned {}".format(championName, side))
                         banRate, banRate1Rota, banRate2Rota = ChampionBansStats.getBanRateInfo(championName, tournament, patch, side)
                         
                         path : str = DATA_PATH + "drafts/champion_bans_stats.csv"
@@ -386,7 +386,6 @@ def getChampionDraftStats(request, patch, side, tournament):
         
         queryChampionDraftStats = ChampionDraftStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")
         serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
-        
         return Response(serializer.data)
 
     else:

@@ -263,7 +263,7 @@ export default function ChampionOverviewPanel(props) {
                 let newWantedRows = []
                 newData.map((championDraftStats) => {
                     if (championDraftStats.mostPopularRole === roleList[panelIndex]) {
-                        championDraftStats["draftPresence"] = (championDraftStats.globalPickRate + championDraftStats.globalBanRate)/2
+                        console.log(championDraftStats)
                         newWantedRows.push(championDraftStats)
                     }
                 })
@@ -274,6 +274,7 @@ export default function ChampionOverviewPanel(props) {
                 }
             })
         }
+        
 
         fetchChampionsDraftStats(tournament, patch, side)
     }, [])

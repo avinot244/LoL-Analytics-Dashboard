@@ -57,6 +57,7 @@ class ChampionDraftStats(models.Model):
     globalBanRate = models.FloatField("GlobalBanRate")
     banRate1Rota = models.FloatField("BanRate1Rota")
     banRate2Rota = models.FloatField("BanRate2Rota")
+    draftPresence = models.FloatField("DraftPresence")
     mostPopularPickOrder = models.IntegerField("MostPopularPickOrder")
     blindPick = models.FloatField("BlindPick")
     mostPopularRole = models.CharField("MostPopularRole", max_length=240)
