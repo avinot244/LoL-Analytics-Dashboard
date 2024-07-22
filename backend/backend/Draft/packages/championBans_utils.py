@@ -141,7 +141,7 @@ def saveChampionBanStatsCSV(path : str,
         data = [championName, patch, tournament, side, banRate, banRate1Rota, banRate2Rota]
         writer.writerow(data)
         csv_file.close()
-    elif isLineInDatabase(path, championName, patch, tournament):
+    elif isLineInDatabase(path, championName, patch, tournament, side):
         csv_file.close()
         updateDatabase(
             path,

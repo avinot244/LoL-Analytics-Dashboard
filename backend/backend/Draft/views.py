@@ -288,8 +288,9 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                         
                         path : str = DATA_PATH + "drafts/champion_bans_stats.csv"
                         new : bool = not(os.path.exists(path))
-                        ChampionBansStats.updateDatabase(
+                        ChampionBansStats.saveChampionBanStatsCSV(
                             path,
+                            new,
                             championName,
                             patch,
                             tournament,
