@@ -67,6 +67,9 @@ class ChampionBanStats(models.Model):
     patch = models.CharField("Patch", max_length=240)
     tournament = models.CharField("Tournament", max_length=240)
     side = models.CharField("Side", max_length=240)
+    globalBanRate = models.FloatField("GlobalBanRate")
+    banRate1Rota = models.FloatField("BanRate1Rota")
+    banRate2Rota = models.FloatField("BanRate2Rota")
 
 class ChampionPool(models.Model):
     summonnerName = models.CharField("SummonnerName", max_length=240)
