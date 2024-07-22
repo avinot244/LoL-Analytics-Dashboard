@@ -19,7 +19,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchComp from "../utils/SearchComp";
-import RedirectPage from "../Home/RedirectPage";
 import AuthContext from "../context/AuthContext";
 
 const theme = createTheme({

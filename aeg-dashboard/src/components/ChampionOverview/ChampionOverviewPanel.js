@@ -263,7 +263,6 @@ export default function ChampionOverviewPanel(props) {
                 let newWantedRows = []
                 newData.map((championDraftStats) => {
                     if (championDraftStats.mostPopularRole === roleList[panelIndex]) {
-                        console.log(championDraftStats)
                         newWantedRows.push(championDraftStats)
                     }
                 })
