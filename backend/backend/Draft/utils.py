@@ -141,6 +141,40 @@ def delete_draftStats():
 
    
 
+def import_banStats():
+    csv_champion_ban_stats : str = "./databases/drafts/champion_bans_stats.csv"
+    df_champion_ban_stats : pd.DataFrame = pd.read_csv(csv_champion_ban_stats, sep=";", dtype={
+        "ChampionName": 'string',
+        "Patch": 'string',
+        "Tournament": 'string',
+        "Side": 'string',
+        "GlobalBanRate": 'float64',
+        "BanRate1Rota": 'float64',
+        "BanRate2Rota": 'float64'
+    })
+    
+    for _, row in tqdm(df_champion_ban_stats.iterrows(), total=df_champion_ban_stats.shape[0]):
+        championBanStats = ChampionBanStats(
+            championName = row["ChampionName"],
+            patch = row["Patch"],
+            tournament = row["Tournament"],
+            side = row["Side"],
+            globalBanRate = row["GlobalBanRate"],
+            banRate1Rota = row["BanRate1Rota"],
+            banRate2Rota = row["BanRate2Rota"]
+        )
+        if not(ChampionBanStats.objects.filter(
+            championName = row["ChampionName"],
+            patch = row["Patch"],
+            tournament = row["Tournament"],
+            side = row["Side"],
+            globalBanRate = row["GlobalBanRate"],
+            banRate1Rota = row["BanRate1Rota"],
+            banRate2Rota = row["BanRate2Rota"]
+        ).count() > 0):
+            championBanStats.save()
+    # ChampionBanStats
+
 def import_draftStats():
     csv_champion_draft_stats : str = "./databases/drafts/champion_draft_stats.csv"
     df_champion_draft_stats : pd.DataFrame = pd.read_csv(csv_champion_draft_stats, sep=";", dtype={

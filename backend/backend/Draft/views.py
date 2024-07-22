@@ -18,10 +18,11 @@ from dataAnalysis.models import GameMetadata
 from dataAnalysis.serializer import GameMetadataSerializer
 
 from .packages.utils import isDraftDownloaded, isTournamentOngoing
-from .packages.championStats_utils import *
+import Draft.packages.championStats_utils as ChampionPicksStats
+import Draft.packages.championBans_utils as ChampionBansStats
 from .packages.playerStats_utils import *
 
-from .utils import import_draft, import_draftStats, import_championPools, fuseQueriesChampionDraftStats
+from .utils import import_draft, import_draftStats, import_banStats, fuseQueriesChampionDraftStats
 
 
 import pandas as pd
@@ -29,8 +30,6 @@ import requests
 import os
 import re
 from tqdm import tqdm
-import time as t_time
-from datetime import datetime
 
 @api_view(['POST'])
 def saveDrafts(request):
@@ -252,37 +251,56 @@ def updateChampionDraftStats(request, tournamentListStr : str):
             for championName in tqdm(associatedChampionList):
             # for championName in associatedChampionList:
                 for side in ["Blue", "Red"]:
-                    if isChampionPicked(championName, tournament, patch, side):
+                    if ChampionPicksStats.isChampionPicked(championName, tournament, patch, side):
                         # print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="\n")
 
-                        winRate : float = getChampionWinRate(championName, tournament, patch, side)
-                        pickRate, pickRate1Rota, pickRate2Rota = getPickRateInfo(championName, tournament, patch, side)
-                        banRate, banRate1Rota, banRate2Rota = getBanRateInfo(championName, tournament, patch, side)
-                        mostPopularPickOrder : int = getMostPopularPickPosition(championName, tournament, patch, side)
-                        blindPick : float = getBlindPick(championName, tournament, patch, side)
-                        mostPopularRole : str = getMostPopularRole(championName, tournament, patch, side)                
+                        winRate : float = ChampionPicksStats.getChampionWinRate(championName, tournament, patch, side)
+                        pickRate, pickRate1Rota, pickRate2Rota = ChampionPicksStats.getPickRateInfo(championName, tournament, patch, side)
+                        banRate, banRate1Rota, banRate2Rota = ChampionPicksStats.getBanRateInfo(championName, tournament, patch, side)
+                        mostPopularPickOrder : int = ChampionPicksStats.getMostPopularPickPosition(championName, tournament, patch, side)
+                        blindPick : float = ChampionPicksStats.getBlindPick(championName, tournament, patch, side)
+                        mostPopularRole : str = ChampionPicksStats.getMostPopularRole(championName, tournament, patch, side)                
                         
                         
                         path : str = DATA_PATH + "drafts/champion_draft_stats.csv"
                         new : bool = not(os.path.exists(path))
-                        saveChampionDraftStatsCSV(path,
-                                                new,
-                                                championName,
-                                                patch,
-                                                tournament,
-                                                side,
-                                                winRate,
-                                                pickRate,
-                                                pickRate1Rota,
-                                                pickRate2Rota,
-                                                banRate,
-                                                banRate1Rota,
-                                                banRate2Rota,
-                                                mostPopularPickOrder,
-                                                blindPick,
-                                                mostPopularRole)
+                        ChampionPicksStats.saveChampionDraftStatsCSV(
+                            path,
+                            new,
+                            championName,
+                            patch,
+                            tournament,
+                            side,
+                            winRate,
+                            pickRate,
+                            pickRate1Rota,
+                            pickRate2Rota,
+                            banRate,
+                            banRate1Rota,
+                            banRate2Rota,
+                            mostPopularPickOrder,
+                            blindPick,
+                            mostPopularRole
+                        )
+                    elif ChampionBansStats.isChampionBanned(championName, tournament, patch, side):
+                        print("Champion {} is only banned".format(championName))
+                        banRate, banRate1Rota, banRate2Rota = ChampionBansStats.getBanRateInfo(championName, tournament, patch, side)
+                        
+                        path : str = DATA_PATH + "drafts/champion_bans_stats.csv"
+                        new : bool = not(os.path.exists(path))
+                        ChampionBansStats.updateDatabase(
+                            path,
+                            championName,
+                            patch,
+                            tournament,
+                            side,
+                            banRate,
+                            banRate1Rota,
+                            banRate2Rota
+                        )
     
     import_draftStats()
+    import_banStats()
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
