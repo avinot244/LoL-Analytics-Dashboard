@@ -243,14 +243,57 @@ def updateChampionDraftStats(request, tournamentListStr : str):
             # Getting the list of champions played in a given tournament on a given patch
             associatedChampionList : list = list()
         
-            queryDraftPlayerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__contains=patch)
-            for draftPlayerPicks in queryDraftPlayerPicks:
-                if not(draftPlayerPicks.championName in associatedChampionList):
-                    associatedChampionList.append(draftPlayerPicks.championName)
+            queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, patch__contains=patch)
+            for draftPickOrder in queryDraftPickOrder:
+                if not(draftPickOrder.bp1 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bp1)
+                if not(draftPickOrder.bp2 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bp2)
+                if not(draftPickOrder.bp3 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bp3)
+                if not(draftPickOrder.bp4 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bp4)
+                if not(draftPickOrder.bp5 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bp5)
+                
+                if not(draftPickOrder.bb1 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bb1)
+                if not(draftPickOrder.bb2 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bb2)
+                if not(draftPickOrder.bb3 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bb3)
+                if not(draftPickOrder.bb4 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bb4)
+                if not(draftPickOrder.bb5 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.bb5)
+                
+                
+                if not(draftPickOrder.rp1 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rp1)
+                if not(draftPickOrder.rp2 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rp2)
+                if not(draftPickOrder.rp3 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rp3)
+                if not(draftPickOrder.rp4 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rp4)
+                if not(draftPickOrder.rp5 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rp5)
+                
+                if not(draftPickOrder.rb1 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rb1)
+                if not(draftPickOrder.rb2 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rb2)
+                if not(draftPickOrder.rb3 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rb3)
+                if not(draftPickOrder.rb4 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rb4)
+                if not(draftPickOrder.rb5 in associatedChampionList):
+                    associatedChampionList.append(draftPickOrder.rb5)
             
             for championName in tqdm(associatedChampionList):
             # for championName in associatedChampionList:
                 for side in ["Blue", "Red"]:
+                    # print("Checkin stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="\n")
                     if ChampionPicksStats.isChampionPicked(championName, tournament, patch, side):
                         # print("Saving stats of {} during {} at {} in {} side".format(championName, tournament, patch, side), end="\n")
 
@@ -283,7 +326,7 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                             mostPopularRole
                         )
                     elif ChampionBansStats.isChampionBanned(championName, tournament, patch, side):
-                        print("Champion {} is only banned".format(championName))
+                        print("Champion {} is only banned {}".format(championName, side))
                         banRate, banRate1Rota, banRate2Rota = ChampionBansStats.getBanRateInfo(championName, tournament, patch, side)
                         
                         path : str = DATA_PATH + "drafts/champion_bans_stats.csv"

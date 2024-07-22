@@ -26,7 +26,7 @@ def isChampionBanned(championName : str, tournament : str, patch : str, side : s
         if (championName in blueBans) and side == "Blue":
             return True
         elif (championName in redBans) and side == "Red":
-            return False
+            return True
     return False
 
 def getBanRateInfo(championName : str, tournament : str, patch : str, side : str) -> tuple[float, float, float]:
