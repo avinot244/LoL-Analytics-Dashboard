@@ -202,8 +202,10 @@ urlpatterns = [
 
     path('api/draft/championStats/updateStats/<str:tournamentListStr>/', draftViews.updateChampionDraftStats),
     path('api/draft/championStats/getStats/<str:patch>/<str:side>/<str:tournament>/', draftViews.getChampionDraftStats),
+    path('api/draft/championStats/getBans/<str:patch>/<str:side>/<str:tournament>/', draftViews.getChampionDraftBans),
 
     path('api/draft/championStats/deleteChampionGameStats/', draftViews.deleteAllChampionDraftStats),
+    path('api/draft/championStats/deleteChampionBansStats/', draftViews.deleteAllChampionBansStats), 
 
     path('api/draft/championStats/getTopChampions/<str:role>/<str:filter>/<str:side>/<str:patch>/<str:tournament>/', draftViews.getTopChampions),
 

@@ -6,8 +6,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats
-from .serializer import DraftPickOrderSerializer, ChampionDraftStatsSerializer, ChampionPoolSerializer
+from .models import DraftPickOrder, DraftPlayerPick, ChampionDraftStats, ChampionBanStats
+from .serializer import DraftPickOrderSerializer, ChampionDraftStatsSerializer, ChampionPoolSerializer, ChampionBanStatsSerializer
 
 
 from dataAnalysis.packages.api_calls.GRID.api_calls import get_tournament_from_seriesId
@@ -22,7 +22,7 @@ import Draft.packages.championStats_utils as ChampionPicksStats
 import Draft.packages.championBans_utils as ChampionBansStats
 from .packages.playerStats_utils import *
 
-from .utils import import_draft, import_draftStats, import_banStats, fuseQueriesChampionDraftStats
+from .utils import import_draft, import_draftStats, import_banStats, fuseQueriesChampionDraftStats, fuseQueriesChampionBansStats
 
 
 import pandas as pd
@@ -356,6 +356,15 @@ def deleteAllChampionDraftStats(request):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
+def deleteAllChampionBansStats(request):
+    queryChampionDraftStats = ChampionBanStats.objects.all()
+    for res in tqdm(queryChampionDraftStats):
+        res.delete()
+
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
 def deleteDraftStatSingleGame(request, seriesId : int, gameNumber : int):
     # 2682736
     queryDraftPlayerPicks = DraftPlayerPick.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
@@ -394,6 +403,30 @@ def getChampionDraftStats(request, patch, side, tournament):
         
         return Response(fuseQueriesChampionDraftStats(queryRed, queryBlue))
     
+
+@api_view(['GET'])
+def getChampionDraftBans(request, patch : str, side : str, tournament : str):
+    if tournament == "League of Legends Scrims":
+        queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament, date__gte=DATE_LIMIT)
+    else:
+        queryDraftPickOrder = DraftPickOrder.objects.filter(tournament__exact=tournament)
+    availablePatchList : list = list()
+    for res in queryDraftPickOrder:
+        tempPatch = res.patch.split(".")[0] + "." + res.patch.split(".")[1]
+        if not(tempPatch in availablePatchList):
+            availablePatchList.append(tempPatch)
+    
+    if not(patch in availablePatchList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    if side in ["Blue", "Red"]:
+        queryChampionDraftBans = ChampionBanStats.objects.filter(patch__contains=patch, side__exact=side, tournament__exact=tournament).order_by("championName")
+        serializer = ChampionBanStatsSerializer(queryChampionDraftBans, context={"request": request}, many=True)
+        return Response(serializer.data)
+    else:
+        queryBlue = ChampionBanStats.objects.filter(tournament__exact=tournament, patch__contains=patch, side__exact="Blue")
+        queryRed = ChampionBanStats.objects.filter(tournament__exact=tournament, patch__contains=patch, side__exact="Red")
+        return Response(fuseQueriesChampionBansStats(queryRed, queryBlue))        
 
 def lowercase_first_letter(s : str):
     if not s:

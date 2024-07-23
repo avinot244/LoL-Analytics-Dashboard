@@ -1,7 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { API_URL } from "../../constants";
 import { jwtDecode } from "jwt-decode";
-import { redirect, useNavigate } from "react-router-dom";
 
 const AuthContext = createContext()
 
@@ -19,7 +18,6 @@ export const AuthProvider = ({children}) => {
             let patchList = await result.json()
             const newPatch = patchList[0]
             setPatch(newPatch)
-            console.log(newPatch)
         }else {
             console.log("Unable to retrieve data from DDragon API")
         }

@@ -261,54 +261,170 @@ def import_championPools():
             championPool.save()
     print("Champion pools imported")
 
+def computeFusedMapping(championNameList1 : list, championNameList2 : list) -> dict:
+    res : dict = dict()
+    for championName in championNameList1:
+        if championName in championNameList2: # if both champion are in the list
+            res[championName] = 0
+        else: # if only championName is in list 1
+            res[championName] = 1
+    
+    for championName in championNameList2:
+        if not(championName in championNameList1): # we get the champs from list 2 that are not common to list 1
+            res[championName] = 2
+    
+    return res
+
 def fuseQueriesChampionDraftStats(query1 : QuerySet, query2 : QuerySet):
     object1 : ChampionDraftStats
     object2 : ChampionDraftStats
-
-    championList1 = [temp.championName for temp in query1]
-    championList2 = [temp.championName for temp in query2]
-
+    
+    championNameList1 : list = [o.championName for o in query1]
+    championNameList2 : list = [o.championName for o in query2]
+    
+    mapping : dict = computeFusedMapping(championNameList1, championNameList2)
+    
     res : list = list()
-    for object1 in query1:
-        for object2 in query2:
-            if object1.championName == object2.championName and object1.patch == object2.patch:
-                fusedObject = ChampionDraftStats(
-                    championName = object1.championName,
-                    patch = object1.patch,
-                    tournament = object1.tournament,
-                    side = "Both",
-                    winRate = (object1.winRate + object2.winRate) / 2,
-                    globalPickRate = (object1.globalPickRate + object2.globalPickRate) / 2,
-                    pickRate1Rota = (object1.pickRate1Rota + object2.pickRate1Rota) / 2,
-                    pickRate2Rota = (object1.pickRate2Rota + object2.pickRate2Rota) / 2,
-                    globalBanRate = (object1.globalBanRate + object2.globalBanRate) / 2,
-                    banRate1Rota = (object1.banRate1Rota + object2.banRate1Rota) / 2,
-                    banRate2Rota = (object1.banRate2Rota + object2.banRate2Rota) / 2,
-                    draftPresence = (object1.draftPresence + object2.draftPresence) / 2,
-                    mostPopularPickOrder = (object1.mostPopularPickOrder + object2.mostPopularPickOrder) / 2,
-                    blindPick = (object1.blindPick + object2.blindPick) / 2,
-                    mostPopularRole = object1.mostPopularRole
-                )
-                
-                res.append({
-                    "pk": fusedObject.pk,
-                    "championName": fusedObject.championName,
-                    "patch": fusedObject.patch,
-                    "tournament": fusedObject.tournament,
-                    "side": fusedObject.side,
-                    "mostPopularRole": fusedObject.mostPopularRole,
-                    "winRate": fusedObject.winRate,
-                    "globalPickRate": fusedObject.globalPickRate,
-                    "pickRate1Rota": fusedObject.pickRate1Rota,
-                    "pickRate2Rota": fusedObject.pickRate2Rota,
-                    "globalBanRate": fusedObject.globalBanRate,
-                    "banRate1Rota": fusedObject.banRate1Rota,
-                    "banRate2Rota": fusedObject.banRate2Rota,
-                    "draftPresence": fusedObject.draftPresence,
-                    "mostPopularPickOrder": fusedObject.mostPopularPickOrder,
-                    "blindPick": fusedObject.blindPick
-
-                })
+    
+    for champion_name, distsribution in mapping.values():
+        if distsribution == 0:
+            object1 = query1.get(championName__exact=champion_name)
+            object2 = query2.get(championName__exact=champion_name)
+            fusedObject = ChampionDraftStats(
+                championName = object1.championName,
+                patch = object1.patch,
+                tournament = object1.tournament,
+                side = "Both",
+                winRate = (object1.winRate + object2.winRate) / 2,
+                globalPickRate = (object1.globalPickRate + object2.globalPickRate) / 2,
+                pickRate1Rota = (object1.pickRate1Rota + object2.pickRate1Rota) / 2,
+                pickRate2Rota = (object1.pickRate2Rota + object2.pickRate2Rota) / 2,
+                globalBanRate = (object1.globalBanRate + object2.globalBanRate) / 2,
+                banRate1Rota = (object1.banRate1Rota + object2.banRate1Rota) / 2,
+                banRate2Rota = (object1.banRate2Rota + object2.banRate2Rota) / 2,
+                draftPresence = (object1.draftPresence + object2.draftPresence) / 2,
+                mostPopularPickOrder = (object1.mostPopularPickOrder + object2.mostPopularPickOrder) / 2,
+                blindPick = (object1.blindPick + object2.blindPick) / 2,
+                mostPopularRole = object1.mostPopularRole
+            )
             
+            res.append({
+                "pk": fusedObject.pk,
+                "championName": fusedObject.championName,
+                "patch": fusedObject.patch,
+                "tournament": fusedObject.tournament,
+                "side": fusedObject.side,
+                "mostPopularRole": fusedObject.mostPopularRole,
+                "winRate": fusedObject.winRate,
+                "globalPickRate": fusedObject.globalPickRate,
+                "pickRate1Rota": fusedObject.pickRate1Rota,
+                "pickRate2Rota": fusedObject.pickRate2Rota,
+                "globalBanRate": fusedObject.globalBanRate,
+                "banRate1Rota": fusedObject.banRate1Rota,
+                "banRate2Rota": fusedObject.banRate2Rota,
+                "draftPresence": fusedObject.draftPresence,
+                "mostPopularPickOrder": fusedObject.mostPopularPickOrder,
+                "blindPick": fusedObject.blindPick
+            })
+        elif distsribution == 1:
+            object1 = query1.get(championName__exact=champion_name)
+            res.append({
+                "pk": object1.pk,
+                "championName": object1.championName,
+                "patch": object1.patch,
+                "tournament": object1.tournament,
+                "side": object1.side,
+                "mostPopularRole": object1.mostPopularRole,
+                "winRate": object1.winRate,
+                "globalPickRate": object1.globalPickRate,
+                "pickRate1Rota": object1.pickRate1Rota,
+                "pickRate2Rota": object1.pickRate2Rota,
+                "globalBanRate": object1.globalBanRate,
+                "banRate1Rota": object1.banRate1Rota,
+                "banRate2Rota": object1.banRate2Rota,
+                "draftPresence": object1.draftPresence,
+                "mostPopularPickOrder": object1.mostPopularPickOrder,
+                "blindPick": object1.blindPick
+            })
+        elif distsribution == 2:
+            object2 = query2.get(championName__exact=champion_name)
+            res.append({
+                "pk": object2.pk,
+                "championName": object2.championName,
+                "patch": object2.patch,
+                "tournament": object2.tournament,
+                "side": object2.side,
+                "mostPopularRole": object2.mostPopularRole,
+                "winRate": object2.winRate,
+                "globalPickRate": object2.globalPickRate,
+                "pickRate1Rota": object2.pickRate1Rota,
+                "pickRate2Rota": object2.pickRate2Rota,
+                "globalBanRate": object2.globalBanRate,
+                "banRate1Rota": object2.banRate1Rota,
+                "banRate2Rota": object2.banRate2Rota,
+                "draftPresence": object2.draftPresence,
+                "mostPopularPickOrder": object2.mostPopularPickOrder,
+                "blindPick": object2.blindPick
+            })
+                
+    return res
 
+def fuseQueriesChampionBansStats(query1 : QuerySet, query2 : QuerySet):
+    object1 : ChampionBanStats
+    object2 : ChampionBanStats
+    
+    championNameList1 : list = [o.championName for o in query1]
+    championNameList2 : list = [o.championName for o in query2]
+    
+    mapping : dict = computeFusedMapping(championNameList1, championNameList2)
+    
+    res : list = list()
+    for champion_name, distsribution in mapping.values():
+        if distsribution == 0:
+            object1 = query1.get(championName__exact=champion_name)
+            object2 = query2.get(championName__exact=champion_name)
+            fusedObject = ChampionBanStats(
+                championName = object1.championName,
+                patch = object1.patch,
+                tournament = object1.tournament,
+                side = "Both",
+                globalBanRate = (object1.globalBanRate + object2.globalBanRate) / 2,
+                banRate1Rota = (object1.banRate1Rota + object2.banRate1Rota) / 2,
+                banRate2Rota = (object1.banRate2Rota + object2.banRate2Rota) / 2
+            )
+            
+            res.append({
+                "pk": fusedObject.pk,
+                "championName": fusedObject.championName,
+                "patch": fusedObject.patch,
+                "tournament": fusedObject.tournament,
+                "side": fusedObject.side,
+                "globalBanRate": fusedObject.globalBanRate,
+                "banRate1Rota": fusedObject.banRate1Rota,
+                "banRate2Rota": fusedObject.banRate2Rota
+            })
+        elif distsribution == 1:
+            object1 = query1.get(championName__exact=champion_name)
+            res.append({
+                "pk": object1.pk,
+                "championName": object1.championName,
+                "patch": object1.patch,
+                "tournament": object1.tournament,
+                "side": object1.side,
+                "globalBanRate": object1.globalBanRate,
+                "banRate1Rota": object1.banRate1Rota,
+                "banRate2Rota": object1.banRate2Rota
+            })
+        elif distsribution == 2:
+            object2 = query2.get(championName__exact=champion_name)
+            res.append({
+                "pk": object2.pk,
+                "championName": object2.championName,
+                "patch": object2.patch,
+                "tournament": object2.tournament,
+                "side": object2.side,
+                "globalBanRate": object2.globalBanRate,
+                "banRate1Rota": object2.banRate1Rota,
+                "banRate2Rota": object2.banRate2Rota
+            })
     return res
