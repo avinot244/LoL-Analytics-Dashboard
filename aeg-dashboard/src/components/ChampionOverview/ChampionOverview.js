@@ -94,7 +94,7 @@ function ChampionOverview() {
         <div className="wrapper-champOverview">
 
             <NavBarComp/>
-            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10}}>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold"}}>
                 Champion Overview
             </Typography>
 

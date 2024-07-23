@@ -51,9 +51,10 @@ export default function RefreshDBComp() {
     return (
         <div className="wrapper-refresh-db">
             <NavBarComp />
-            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10}}>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
                 Refresh Databases
             </Typography>
+            
 
             <Stack spacing={2} direction="row" alignItems="center" justifyContent="center" sx={{mt: 10}}>
                 <Button

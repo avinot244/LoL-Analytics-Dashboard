@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import {grey} from '@mui/material/colors/'
 
 import { useState, useEffect, useContext } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, Typography } from "@mui/material";
 
 import { API_URL } from "../../constants";
 
@@ -75,7 +75,9 @@ function ChampionOverviewScrim() {
     return(
         <div className="wrapper-champOverview">
             <NavBarComp/>
-            <h1> Champion overview </h1>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold"}}>
+                Champion Overview
+            </Typography>
 
             <div className="dashboard-champOverview-controlPannel">
                 <ul className="dashboard-champOverview-controlPannel-list">

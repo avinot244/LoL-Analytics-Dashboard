@@ -116,7 +116,10 @@ export default function GetTokenComp () {
         <div className="wrapper-getToken">
             <NavBarComp />
             <div className="wrapper-content-token">
-                <Typography variant="h2">Get You Tokens</Typography>
+                <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
+                    Get Your Tokens
+                </Typography>
+
                 <Typography color={"error"} variant="h4">They refresh every 4 mins</Typography>
                 <Typography variant="h5" className="tokens-values">
                     Access Token : 

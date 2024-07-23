@@ -4,10 +4,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import UpdateIcon from '@mui/icons-material/Update';
 import DownloadIcon from '@mui/icons-material/Download';
-import { Autocomplete, Chip } from '@mui/material';
+import { Autocomplete, Chip, ThemeProvider, createTheme, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { ThemeProvider, createTheme } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search';
@@ -335,7 +334,9 @@ export default function Downloader() {
     return (
         <div className='wrapper-downloader'>
             <NavBarComp/>
-            <h1>Download Games</h1>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
+                Download Games
+            </Typography>
             
 
             

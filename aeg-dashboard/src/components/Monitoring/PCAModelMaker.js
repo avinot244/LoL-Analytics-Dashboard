@@ -5,10 +5,9 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, Typography, Autocomplete } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear'
 import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
@@ -303,11 +302,9 @@ export default function PCAModelMaker() {
         <div className="pca-model-maker-wrapper">
             <NavBarComp/>
 
-            <h1>Create Behavior Analysis Models</h1>
-
-            <br/>
-            <br/>
-            <br/>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
+                Create Behavior Analysis Models
+            </Typography>
 
             <div className="PCAMaker-control-panel">
                 <div className="PCAMaker-roleSelected-wrapper">

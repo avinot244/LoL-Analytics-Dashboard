@@ -4,7 +4,7 @@ import SelectComp from "../utils/SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import { API_URL, roleList} from "../../constants";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, Typography } from "@mui/material";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -87,7 +87,9 @@ function PlayerOverviewScrim(){
         
         <div className="wrapper-overview-player">
             <NavBarComp/>
-            <h1> Player Overview </h1>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
+                Player Overview
+            </Typography>
             <div className="dashboard-playerOverview-controlPannel">
                 <ul className="dashboard-playerOverview-controlPannel-list">
                     <li>

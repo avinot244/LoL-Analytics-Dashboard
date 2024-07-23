@@ -9,7 +9,8 @@ function PCADocumentation() {
     return (
         <div className="wrapper-PCAdocumentation">
             <NavBarComp/>
-            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10}}>
+
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
                 Player Analysis Documentation
             </Typography>
             
@@ -28,7 +29,7 @@ function PCADocumentation() {
                         <span className="factor-name">Playing w/ jungle:</span> Tendency of the given player to let go his lane and roam in his topside jungle or river while being somewhat close to his jungler.
                     </li>
                     <li>
-                        <span className="factor-name">Objective/Towers:</span> Tendency of the player to inflict damage on towers and/or objectives?
+                        <span className="factor-name">Objective/Towers:</span> Tendency of the player to inflict damage on towers and/or objectives.
                     </li>
                     <li>
                         <span className="factor-name">Playing Alone:</span> Factor that measures how much the player is not the closest to his jungler while farming and placing vision.

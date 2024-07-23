@@ -5,7 +5,7 @@ import LatestDraftsPanel from "./LatestDraftsPanel";
 import { useContext } from "react";
 
 import { useState } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, Typography } from "@mui/material";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -40,8 +40,9 @@ function Home({loggedIn, setLoggedIn}){
     return(
         <div className="wrapper-overview">
             <NavBarComp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>
-            <br/>
-            <h1>Home Page</h1>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold"}}>
+                Home Page
+            </Typography>
             <Box sx={{ borderBottom: 2, borderColor: 'gray', width: 290}}> 
             <ThemeProvider theme={theme}>
                 <Tabs

@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button"
 import { Stack, TextField } from "@mui/material";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -123,7 +123,9 @@ function PlayerOverview(){
     return(
         <div className="wrapper-overview-player">
             <NavBarComp/>
-            <h1> Player Overview </h1>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
+                Player Overview
+            </Typography>
             <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
                 <div className="dashboard-playerOverview-controlPannel-wrapper">
                     <div className="dashboard-playerOverview-controlPannel">

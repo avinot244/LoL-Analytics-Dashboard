@@ -4,7 +4,7 @@ import SearchComp from "../utils/SearchComp"
 import { API_URL } from "../../constants"
 import GameOverviewStat from "./GameOverviewStat"
 
-import { ThemeProvider, createTheme } from "@mui/material";
+import { ThemeProvider, createTheme, Typography } from "@mui/material";
 import { Autocomplete } from '@mui/material';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -128,72 +128,73 @@ function GameOverview(){
     return(
         <div className="wrapper-overview-game">
             <NavBarComp/>
-                <h1> Game overview </h1>
-                <br/>
+            <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
+                Game Overview
+            </Typography>
+            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                <SearchComp
+                    elementList={tournamentList}
+                    setSelectedElement={setActiveTournament}
+                    label={"Tournament"}
+                    width={550}
+
+                />
+
+                <Button
+                    variant="contained"
+                    endIcon={<SearchIcon />}
+                    onClick={() => {
+                        fetchGamesFromTournament(tournament)
+                        setFlagGameSelecter(true)
+                    }}
+                >
+                    Search Games
+                </Button>
+            </Stack>
+            
+            <br/>
+
+
+            {
+                flagGameSelecter && 
                 <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
-                    <SearchComp
-                        elementList={tournamentList}
-                        setSelectedElement={setActiveTournament}
-                        label={"Tournament"}
-                        width={550}
-
+                    <SearchGames
+                        setSelectedElement={setSelectedGame}
+                        elementList={gameList}
                     />
-
+                    <Button 
+                        variant="contained" 
+                        endIcon={<ArrowForwardIosIcon />}         
+                        onClick = {() => {
+                            setFlagDisplayState(true)
+                        }}               
+                    >
+                        Analyze
+                    </Button>
                     <Button
                         variant="contained"
-                        endIcon={<SearchIcon />}
+                        endIcon={<RestartAltIcon/>}
                         onClick={() => {
-                            fetchGamesFromTournament(tournament)
-                            setFlagGameSelecter(true)
+                            setFlagGameSelecter(false)
+                            setSelectedGame('')
+                            setFlagDisplayState(false)
                         }}
                     >
-                        Search Games
+                        Reset
                     </Button>
+                    
                 </Stack>
-                
-                <br/>
 
-
-                {
-                    flagGameSelecter && 
-                    <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
-                        <SearchGames
-                            setSelectedElement={setSelectedGame}
-                            elementList={gameList}
-                        />
-                        <Button 
-                            variant="contained" 
-                            endIcon={<ArrowForwardIosIcon />}         
-                            onClick = {() => {
-                                setFlagDisplayState(true)
-                            }}               
-                        >
-                            Analyze
-                        </Button>
-                        <Button
-                            variant="contained"
-                            endIcon={<RestartAltIcon/>}
-                            onClick={() => {
-                                setFlagGameSelecter(false)
-                                setSelectedGame('')
-                                setFlagDisplayState(false)
-                            }}
-                        >
-                            Reset
-                        </Button>
-                        
-                    </Stack>
-
-                }
-                
-                
-                {
-                    flagDisplayStat &&
-                    <GameOverviewStat 
-                        seriesId={selectedGame.seriesId}
-                        gameNumber={selectedGame.gameNumber}
-                    />
-                }
+            }
+            
+            
+            {
+                flagDisplayStat &&
+                <GameOverviewStat 
+                    seriesId={selectedGame.seriesId}
+                    gameNumber={selectedGame.gameNumber}
+                />
+            }
         </div>
     )
 }
