@@ -193,11 +193,11 @@ def getTeamNames(request, seriesId, gameNumber):
 @api_view(['DELETE'])
 def deleteAllDrafts(request):
     queryDrafPickOrder = DraftPickOrder.objects.all()
-    for res in queryDrafPickOrder:
+    for res in tqdm(queryDrafPickOrder):
         res.delete()
 
     queryPlayerPicks = DraftPlayerPick.objects.all()
-    for res in queryPlayerPicks:
+    for res in tqdm(queryPlayerPicks):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)
@@ -570,7 +570,7 @@ def getPlayerStats(request, summonnerName, tournament, filter):
 def deleteAllChampionPool(request):
     query = ChampionPool.objects.all()
 
-    for res in query:
+    for res in tqdm(query):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)

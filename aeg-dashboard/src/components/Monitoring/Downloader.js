@@ -325,6 +325,17 @@ export default function Downloader() {
         }
     }
 
+    const refreshTournamentDownloadable = async () => {
+        setLoadingTournamentMapping(true)
+        const result = await fetch(API_URL + 'dataAnalysis/refreshTournamentDownloadable/', {
+            method: "PATCH",
+            headers: header
+        })
+        if (result.status === 200) {
+            setLoadingTournamentMapping(false)
+        }
+    }
+
     React.useEffect(() => {
         fetchTournamentFilterList()
     }, [])
@@ -347,6 +358,15 @@ export default function Downloader() {
                     onClick={() => {fetchTournamentMapping()}}
                 >
                     Update Tournaments
+                </Button>
+
+                <Button
+                    endIcon={<UpdateIcon/>}
+                    variant='contained'
+                    onClick={() => {refreshTournamentDownloadable()}}
+                    sx={{ml: 5}}
+                >
+                    Refresh tournament Downloadable
                 </Button>
             </div>
 

@@ -175,6 +175,7 @@ urlpatterns = [
 
     path('api/dataAnalysis/getListDownlodableTournament/<int:year>/', dataAnalysisViews.getListOfDownloadableTournament),
     path('api/dataAnalysis/getTournamentListShortened/', dataAnalysisViews.get_tournament_list_shortened),
+    path('api/dataAnalysis/refreshTournamentDownloadable/', dataAnalysisViews.refreshTournamentDownloadable),
 
 
     path('api/dataAnalysis/updateDatabase/<str:tournamentList>/', dataAnalysisViews.updateDatabase),

@@ -265,7 +265,7 @@ def update_bins(request):
 @api_view(['DELETE'])
 def delete_all_gameMetadata(request):
     query = GameMetadata.objects.all()
-    for res in query:
+    for res in tqdm(query):
         res.delete()
 
     return Response(status=status.HTTP_200_OK)
@@ -419,6 +419,15 @@ def computeNewBehaviorStats(request, time):
 
     return Response(status=status.HTTP_200_OK)
 
+@api_view(['PATCH'])
+def refreshTournamentDownloadable(requests):
+    newDict : dict = {
+        "data": {},
+        "filter": []
+    }
+    with open(DATA_PATH + "tournament_downloadable.json", "w") as json_file:
+        json.dump(newDict, json_file)
+    return Response(status=status.HTTP_200_OK)
 @api_view(['POST'])
 def getListOfDownloadableTournament(request, year):
     
