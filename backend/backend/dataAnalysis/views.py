@@ -21,6 +21,8 @@ from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, s
 from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
+from .packages.Parsers.Separated.Game.Player import Player
+from .packages.utils_stuff.plots.densityPlot import getPositionsMultipleGames, getPositionsSingleGame, densityPlot
 
 
 from Draft.models import DraftPlayerPick
@@ -789,10 +791,44 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
 
     return Response(status=status.HTTP_200_OK)
 
-
 @api_view(['GET'])
-def testLoadingBar(request):
-    print("Beginning of request")
-    time.sleep(10)
-    print("End of request")
+def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonnerName : str, time : int):
+    
+    
+    # Checking if the user passed a sumonnerName that played the given game
+    playerPicks = DraftPlayerPick.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
+    if not(sumonnerName in sumonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    # Getting the list of position of the given player
+    # Getting the corresponding separated data
+    (data, gameDuration, _, _) = getData(seriesId, gameNumber)
+    splitList : list[int] = [120, time, gameDuration]
+    splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+    dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
+    
+    
+    
+    # Get the player side
+    # Getting the corresponding team index of our player
+    teamIdx : int = -1
+    if dataBeforeTime.gameSnapshotList[0].teams[0].getPlayerID(sumonnerName) == -1 :
+        teamIdx = 1
+    else:
+        teamIdx = 0
+    teamName = dataBeforeTime.gameSnapshotList[0].teams[teamIdx].getTeamName(seriesId)
+    # Get the game metadata we want
+    side : str = ""
+    gameMetada = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    if gameMetada.teamBlue == teamName:
+        side = "Blue"
+    else:
+        side = "Red"
+    
+    # Building the participant position density
+    participantPosition = getPositionsSingleGame([sumonnerName], data)
+    
+    densityPlot(participantPosition, "{}-temp".format(side), DATA_PATH)
+
     return Response(status=status.HTTP_200_OK)

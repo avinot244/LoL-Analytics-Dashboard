@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import gaussian_kde
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 from PIL import Image
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -30,16 +31,6 @@ def getPositionsSingleGame(participantNames : list[str], data : SeparatedData):
 
     return participantPositions
 
-def getPositionsSingleGame(participantNames : list[str], data : SeparatedData):
-    # Getting player positions
-    participantIds : list[int] = [data.getPlayerID(playerName) for playerName in participantNames]
-    participantPositions : list[Position] = list()
-    
-    for playerId in participantIds:
-        participantPositions += data.getPlayerPositionHistory(playerId)
-
-    return participantPositions
-
 def densityPlot(participantPositions : list[Position], graphName : str, save_path : str):
     # Splitting positions and adding map borders to it
     x = [(lambda pos : pos.x)(pos) for pos in participantPositions]
@@ -53,7 +44,8 @@ def densityPlot(participantPositions : list[Position], graphName : str, save_pat
     y = np.array(y)
 
     # Evaluate a gaussian Kernel density estimation on our positions
-    nbins = 300
+    # nbins = 300
+    nbins = 50
     k = gaussian_kde([x, y])
     xi, yi = np.mgrid[x.min():x.max():nbins*1j, y.min():y.max():nbins*1j] # Meshing our positions
     zi = k(np.vstack([xi.flatten(), yi.flatten()])) # Making a kernel density estimation with a gaussian projection
@@ -61,7 +53,8 @@ def densityPlot(participantPositions : list[Position], graphName : str, save_pat
     
     # Making the plot
     fig, ax = plt.subplots()
-    plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', zorder=-1)
+    # plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', zorder=-1)
+    pcm = ax.hexbin(x, y, gridsize=nbins, zorder=-1, cmap=plt.cm.coolwarm, norm=colors.Normalize())
 
     # Plotting minimap
     img = np.asarray(Image.open(DATA_PATH + "plots/Summoner's_Rift_MinimapTransparent.png"))
@@ -82,9 +75,10 @@ def densityPlot(participantPositions : list[Position], graphName : str, save_pat
 
     plt.scatter(inhibitorRedX, inhibitorRedY, color="Orange", s=[100])
     plt.scatter(inhibitorBlueX, inhibitorBlueY, color="Cyan", s=[100])
+    
     ax.set_aspect("equal", adjustable="box")
     plt.axis('off')
-    plt.colorbar(ax=ax, location='right', label="density")
+    fig.colorbar(pcm, ax=ax, location='right', label="density")
     plt.title(graphName)
     plt.savefig("{}/{}.png".format(save_path, graphName))
     plt.clf()
