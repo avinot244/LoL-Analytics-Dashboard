@@ -11,7 +11,7 @@ from .serializer import GameMetadataSerializer
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries
+from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide, getPlayerTeam
 from .packages.utils_stuff.utils_func import getData, getRole
 from .packages.utils_stuff.stats import getProxomityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -793,8 +793,6 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
 
 @api_view(['GET'])
 def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonnerName : str, time : int):
-    
-    
     # Checking if the user passed a sumonnerName that played the given game
     playerPicks = DraftPlayerPick.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
     sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
@@ -809,26 +807,110 @@ def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonner
     dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
     
     
-    
     # Get the player side
-    # Getting the corresponding team index of our player
-    teamIdx : int = -1
-    if dataBeforeTime.gameSnapshotList[0].teams[0].getPlayerID(sumonnerName) == -1 :
-        teamIdx = 1
-    else:
-        teamIdx = 0
-    teamName = dataBeforeTime.gameSnapshotList[0].teams[teamIdx].getTeamName(seriesId)
-    # Get the game metadata we want
-    side : str = ""
-    gameMetada = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
-    if gameMetada.teamBlue == teamName:
-        side = "Blue"
-    else:
-        side = "Red"
+    side = getPlayerSide(dataBeforeTime, seriesId, gameNumber, sumonnerName)
     
     # Building the participant position density
-    participantPosition = getPositionsSingleGame([sumonnerName], data)
-    
-    densityPlot(participantPosition, "{}-temp".format(side), DATA_PATH)
+    participantPosition = getPositionsSingleGame([sumonnerName], dataBeforeTime)
+    densityPlot(participantPosition, "{}-{} side".format(sumonnerName, side), DATA_PATH)
 
     return Response(status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def computePlayerDensityPlotTournament(request, tournament : str, sumonnerName : str, time : int):
+    # Checking if the user passed a sumonnerName that played the given tournament
+    playerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament)
+    sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
+    if not(sumonnerName in sumonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Computing the position list for games played in red and blue side
+    gameList = GameMetadata.objects.filter(tournament__exact=tournament)
+    dataLstBlue : list[SeparatedData] = list()
+    dataLstRed : list[SeparatedData] = list()
+    for gameMetadata in gameList:
+        # Getting the data of the wanted interval
+        (data, gameDuration, _, _) = getData(gameMetadata.seriesId, gameMetadata.gameNumber)
+        splitList : list[int] = [120, time, gameDuration]
+        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+        dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
+        
+        # Filtering if the game was played in blue or red side
+        teamName = getPlayerTeam(dataBeforeTime, sumonnerName, gameMetadata.seriesId)
+        if gameMetadata.teamBlue == teamName:
+            dataLstBlue.append(dataBeforeTime)
+        else:
+            dataLstRed.append(dataBeforeTime)
+    
+    participantPositionBlue = getPositionsMultipleGames([sumonnerName], dataLstBlue)
+    participantPositionRed = getPositionsMultipleGames([sumonnerName], dataLstRed)
+    
+    # Computing the position density
+    densityPlot(participantPositionBlue, "{}-{}-Blue side".format(tournament, sumonnerName))
+    densityPlot(participantPositionRed, "{}-{}-Red side".format(tournament, sumonnerName))
+
+@api_view(['GET'])
+def computePlayerDensityPlotPatch(request, patch : str, sumonnerName : str, time : int):
+    # Checking if the user passed a sumonnerName that played the given patch
+    playerPicks = DraftPlayerPick.objects.filter(patch__contains=patch)
+    sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
+    if not(sumonnerName in sumonnerNameList):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Computing the position list for games played in red and blue side
+    gameList = GameMetadata.objects.filter(patch__contains=patch)
+    dataLstBlue : list[SeparatedData] = list()
+    dataLstRed : list[SeparatedData] = list()
+    for gameMetadata in gameList:
+        # Getting the data of the wanted interval
+        (data, gameDuration, _, _) = getData(gameMetadata.seriesId, gameMetadata.gameNumber)
+        splitList : list[int] = [120, time, gameDuration]
+        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+        dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
+        
+        # Filtering if the game was played in blue or red side
+        teamName = getPlayerTeam(dataBeforeTime, sumonnerName, gameMetadata.seriesId)
+        if gameMetadata.teamBlue == teamName:
+            dataLstBlue.append(dataBeforeTime)
+        else:
+            dataLstRed.append(dataBeforeTime)
+    
+    participantPositionBlue = getPositionsMultipleGames([sumonnerName], dataLstBlue)
+    participantPositionRed = getPositionsMultipleGames([sumonnerName], dataLstRed)
+    
+    # Computing the position density
+    densityPlot(participantPositionBlue, "{}-{}-Blue side".format(patch, sumonnerName))
+    densityPlot(participantPositionRed, "{}-{}-Red side".format(patch, sumonnerName))
+    
+@api_view(['GET'])
+def computePlayerDensityPlotLatest(request,  patch : str, tournament : str, limit : int, sumonnerName : str, time : int):
+    # Getting the pairs of (seriesId, gameNumber) corresponding to the latest limit games that sumonnerName played
+    draftPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__contains=patch, sumonnerName__exact=sumonnerName).order_by("-date")[:int(limit)]
+    gameMetadataList : list[tuple] = list()
+    for temp in draftPicks:
+        gameMetadataList.append((temp.seriesId, temp.gameNumber))
+    
+    # Computing the position list for games played in red and blue side
+    dataLstBlue : list[SeparatedData] = list()
+    dataLstRed : list[SeparatedData] = list()
+    for (seriesId, gameNumber) in gameMetadataList:
+        # Getting the data of the wanted interval
+        gameMetadata = GameMetadata.objects.get(seriesId__exact=seriesId, gamenumber__exact=gameNumber)
+        (data, gameDuration, _, _) = getData(seriesId, gameMetadata.gameNumber)
+        splitList : list[int] = [120, time, gameDuration]
+        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+        dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
+        
+        # Filtering if the game was played in blue or red side
+        teamName = getPlayerTeam(dataBeforeTime, sumonnerName, gameMetadata.seriesId)
+        if gameMetadata.teamBlue == teamName:
+            dataLstBlue.append(dataBeforeTime)
+        else:
+            dataLstRed.append(dataBeforeTime)
+    
+    participantPositionBlue = getPositionsMultipleGames([sumonnerName], dataLstBlue)
+    participantPositionRed = getPositionsMultipleGames([sumonnerName], dataLstRed)
+    
+    # Computing the position density
+    densityPlot(participantPositionBlue, "{}-{}-Blue side".format(patch, sumonnerName))
+    densityPlot(participantPositionRed, "{}-{}-Red side".format(patch, sumonnerName))

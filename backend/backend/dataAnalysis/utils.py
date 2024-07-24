@@ -1,7 +1,9 @@
 from .globals import DATA_PATH, ROLE_LIST, DATE_LIMIT
 
 from behaviorADC.models import *
+from dataAnalysis.models import GameMetadata
 from dataAnalysis.packages.api_calls.GRID.get_token import get_token
+from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 
 import pandas as pd
 import re
@@ -368,3 +370,30 @@ def getNbGamesSeries(fileList : list[dict]) -> int:
         if x != None:
             cpt += 1
     return cpt
+
+def getPlayerSide(data : SeparatedData, seriesId : int, gameNumber : int, sumonnerName : str):
+    # Get the player side
+    # Getting the corresponding team index of our player
+    teamIdx : int = -1
+    if data.gameSnapshotList[0].teams[0].getPlayerID(sumonnerName) == -1 :
+        teamIdx = 1
+    else:
+        teamIdx = 0
+    teamName = data.gameSnapshotList[0].teams[teamIdx].getTeamName(seriesId)
+    # Get the game metadata we want
+    side : str = ""
+    gameMetada = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    if gameMetada.teamBlue == teamName:
+        side = "Blue"
+    else:
+        side = "Red"
+    return side
+
+def getPlayerTeam(data : SeparatedData, sumonnerName : str, seriesId : int):
+    teamIdx : int = -1
+    if data.gameSnapshotList[0].teams[0].getPlayerID(sumonnerName) == -1 :
+        teamIdx = 1
+    else:
+        teamIdx = 0
+    teamName = data.gameSnapshotList[0].teams[teamIdx].getTeamName(seriesId)
+    return teamName

@@ -189,6 +189,9 @@ urlpatterns = [
 
     path('api/dataAnalysis/getProximityMatrix/<int:seriesId>/<int:gameNumber>/<int:time>/', dataAnalysisViews.getProximityMatrix),
     path('api/dataAnalysis/playerDensity/<int:seriesId>/<int:gameNumber>/<str:sumonnerName>/<int:time>/', dataAnalysisViews.computePlayerDensityPlot),
+    path('api/dataAnalysis/playerDensityTournament/<str:tournament>/<str:sumonnerName>/<int:time>/', dataAnalysisViews.computePlayerDensityPlotTournament),
+    path('api/dataAnalysis/playerDensityPatch/<str:patch>/<str:sumonnerName>/<int:time>/', dataAnalysisViews.computePlayerDensityPlotPatch),
+    path('api/dataAnalysis/playerDensityPatch/<str:patch>/<str:tournament>/<int:limit>/<str:sumonnerName>/<int:time>/', dataAnalysisViews.computePlayerDensityPlotLatest),
 
 
 
