@@ -126,7 +126,7 @@ function PlayerOverview(){
             <Typography id="PCAdocumentation-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
                 Player Overview
             </Typography>
-            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+            <Stack spacing={2} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 10, ml: 10}}>
                 <div className="dashboard-playerOverview-controlPannel-wrapper">
                     <div className="dashboard-playerOverview-controlPannel">
                         <ul className="dashboard-playerOverview-controlPannel-list">
@@ -391,7 +391,7 @@ function PlayerOverview(){
             </Stack>
             
 
-            <Stack spacing={5} direction="row" justifyContent="center" alignItems="center">
+            <Stack spacing={5} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 2, ml: 2}}>
                 {
                     flagDisplayPlayerStat1 ? ( 
                         <Stack spacing={1} direction="column" justifyContent="center" alignItems="center">
