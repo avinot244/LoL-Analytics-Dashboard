@@ -18,6 +18,7 @@ import SelectComp from "../utils/SelectComp";
 import SearchComp from "../utils/SearchComp";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
+import PlayerOverviewDensity from "./PlayerOverviewDensity";
 import { API_URL, roleList} from "../../constants";
 import "../../styles/PlayerOverview.css"
 
@@ -413,6 +414,22 @@ function PlayerOverview(){
                                 summonnerName={selectedPlayer1}
                                 tournament={tournament1}
                             />
+                            <br />
+
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />   
+
+
+                            <PlayerOverviewDensity
+                                summonnerName={selectedPlayer1}
+                                patch={activePatch1}
+                                tournament={tournament1}
+                                limit={activeLimit1}
+                            />
+
+
                         </Stack>
                     ) : (
                         <div className="playerOverview-placeholder"></div>
@@ -442,13 +459,25 @@ function PlayerOverview(){
                                 summonnerName={selectedPlayer2}
                                 tournament={tournament2}
                             />
+                            <br />
+
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />   
+
+
+                            <PlayerOverviewDensity
+                                summonnerName={selectedPlayer2}
+                                patch={activePatch2}
+                                tournament={tournament2}
+                                limit={activeLimit2}
+                            />
                         </Stack>
                     ) : (
                         <div className="playerOverview-placeholder"></div>
                     )
                 }
-                
-                
             </Stack>
                     
 
