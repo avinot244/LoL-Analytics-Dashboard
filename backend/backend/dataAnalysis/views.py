@@ -829,6 +829,7 @@ def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonner
 
 @api_view(['GET'])
 def computePlayerDensityPlotTournament(request, tournament : str, sumonnerName : str, time : int, side : str):
+    img_name : str = "{}-{}-{}_side".format(tournament, sumonnerName, side)
     # Checking if the user passed a sumonnerName that played the given tournament
     playerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament)
     sumonnerNameList : list = list()
@@ -867,16 +868,14 @@ def computePlayerDensityPlotTournament(request, tournament : str, sumonnerName :
     
     # Computing the position density
     if side == "Blue":
-        img_name : str = "{}-{}-Blue side".format(tournament, sumonnerName)
-        densityPlot(participantPositionBlue, img_name, DATA_PATH)
+        densityPlot(participantPositionBlue, img_name, DATA_PATH + "plots/position/")
     elif side == "Red":
-        img_name : str = "{}-{}-Red side".format(tournament, sumonnerName)
-        densityPlot(participantPositionRed, img_name, DATA_PATH)
+        densityPlot(participantPositionRed, img_name, DATA_PATH + "plots/position/")
+    
     
     try:
-        with open(DATA_PATH + img_name + ".png", "rb") as f:
+        with open(DATA_PATH + "plots/position/" + img_name + ".png", "rb") as f:
             image = f.read()
-            os.remove(DATA_PATH + img_name + ".png")
             return HttpResponse(image, content_type="image/png")
     except IOError:
         red = Image.new('RGBA', (1, 1), (255,0,0,0))
@@ -886,6 +885,7 @@ def computePlayerDensityPlotTournament(request, tournament : str, sumonnerName :
 
 @api_view(['GET'])
 def computePlayerDensityPlotPatch(request, patch : str, sumonnerName : str, time : int, side : str):
+    img_name : str = "{}-{}-{}_side".format(patch, sumonnerName, side)
     # Checking if the user passed a sumonnerName that played the given patch
     playerPicks = DraftPlayerPick.objects.filter(patch__contains=patch)
     sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
@@ -920,16 +920,13 @@ def computePlayerDensityPlotPatch(request, patch : str, sumonnerName : str, time
     
     # Computing the position density
     if side == "Blue":
-        img_name : str = "{}-{}-Blue side".format(patch, sumonnerName)
-        densityPlot(participantPositionBlue, img_name, DATA_PATH)
+        densityPlot(participantPositionBlue, img_name, DATA_PATH + "plots/position/")
     elif side == "Red":
-        img_name : str = "{}-{}-Red side".format(patch, sumonnerName)
-        densityPlot(participantPositionRed, img_name, DATA_PATH)
+        densityPlot(participantPositionRed, img_name, DATA_PATH + "plots/position/")
     
     try:
-        with open(DATA_PATH + img_name + ".png", "rb") as f:
+        with open(DATA_PATH + "plots/position/" + img_name + ".png", "rb") as f:
             image = f.read()
-            os.remove(DATA_PATH + img_name + ".png")
             return HttpResponse(image, content_type="image/png")
     except IOError:
         red = Image.new('RGBA', (1, 1), (255,0,0,0))
@@ -939,6 +936,7 @@ def computePlayerDensityPlotPatch(request, patch : str, sumonnerName : str, time
     
 @api_view(['GET'])
 def computePlayerDensityPlotLatest(request,  patch : str, tournament : str, limit : int, sumonnerName : str, time : int, side : str):
+    img_name : str = "{}-{}-{}_side".format(patch, sumonnerName, side)
     # Getting the pairs of (seriesId, gameNumber) corresponding to the latest limit games that sumonnerName played
     draftPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__contains=patch, sumonnerName__exact=sumonnerName).order_by("-date")[:int(limit)]
     gameMetadataList : list[tuple] = list()
@@ -968,16 +966,14 @@ def computePlayerDensityPlotLatest(request,  patch : str, tournament : str, limi
     
     # Computing the position density
     if side == "Blue":
-        img_name : str = "{}-{}-Blue side".format(patch, sumonnerName)
-        densityPlot(participantPositionBlue, img_name, DATA_PATH)
+        densityPlot(participantPositionBlue, img_name, DATA_PATH + "plots/position/")
     elif side == "Red":
-        img_name : str = "{}-{}-Red side".format(patch, sumonnerName)
-        densityPlot(participantPositionRed, img_name, DATA_PATH)
+        densityPlot(participantPositionRed, img_name, DATA_PATH + "plots/position/")
+    
     
     try:
-        with open(DATA_PATH + img_name + ".png", "rb") as f:
+        with open(DATA_PATH + "plots/position/" + img_name + ".png", "rb") as f:
             image = f.read()
-            os.remove(DATA_PATH + img_name + ".png")
             return HttpResponse(image, content_type="image/png")
     except IOError:
         red = Image.new('RGBA', (1, 1), (255,0,0,0))
