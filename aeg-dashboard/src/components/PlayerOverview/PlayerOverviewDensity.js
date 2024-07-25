@@ -181,8 +181,8 @@ function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
                     Position Density {patch}
                 </Typography>
                 <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                    <img src={densityPatchBlue} alt="density-player-patch-blue" width={480}/>
                     <img src={densityPatchRed} alt="density-player-patch-red" width={480}/>
-                    <img src={densityPatchBlue} alt="density-player-patch-red" width={480}/>
                 </Stack> 
             </div>
             
@@ -230,8 +230,8 @@ function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
                     Position Density Latest {limit}
                 </Typography>
                 <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                    <img src={densityLimitBlue} alt="density-player-latest-blue" width={480}/>
                     <img src={densityLimitRed} alt="density-player-latest-red" width={480}/>
-                    <img src={densityLimitBlue} alt="density-player-latest-red" width={480}/>
                 </Stack> 
             </div>
             
