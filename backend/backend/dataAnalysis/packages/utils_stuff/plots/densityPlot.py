@@ -53,7 +53,7 @@ def densityPlot(participantPositions : list[Position], graphName : str, save_pat
     
     # Making the plot
     fig, ax = plt.subplots()
-    # plt.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', zorder=-1)
+    # pcm = ax.pcolormesh(xi, yi, zi.reshape(xi.shape), shading='auto', zorder=-1, cmap=plt.cm.coolwarm, norm=colors.Normalize())
     pcm = ax.hexbin(x, y, gridsize=nbins, zorder=-1, cmap=plt.cm.coolwarm, norm=colors.Normalize())
 
     # Plotting minimap
