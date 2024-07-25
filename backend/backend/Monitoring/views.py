@@ -27,24 +27,41 @@ def refresh_db(request, dbName : str):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
     if dbName == "behavior":
-        request.delete(API_URL + "api/behavior/deleteAll/") # Deleting all behaviors
+        print(f"{' Deleting All Behaviors ' :#^50}")
+        requests.delete(API_URL + "api/behavior/deleteAll/") # Deleting all behaviors
+        print(f"{' Importing ADC Behaviors ' :#^50}")
         refresh_behavior_adc()
+        print(f"{' Importing Jungle Behaviors ' :#^50}")
         refresh_behavior_jungle()
+        print(f"{' Importing Mid Behaviors ' :#^50}")
         refresh_behavior_mid()
+        print(f"{' Importing Support Behaviors ' :#^50}")
         refresh_behavior_support()
+        print(f"{' Importing Top Behaviors ' :#^50}")
         refresh_behavior_top()
     elif dbName == "drafts":
+        print(f"{' Deleting Champion draft stats ' :#^50}")
         requests.delete(API_URL + "api/draft/championStats/deleteChampionGameStats/") # Deleting champion draft stats
+        print(f"{' Deleting Draft pick order and player picks ' :#^50}")
         requests.delete(API_URL + "api/draft/delete/") # Deleting draft pick order and draft player picks
+        print(f"{' Deleting Champion pools ' :#^50}")
         requests.delete(API_URL + "api/draft/playerStat/deleteAll/") # Deleting champion pools
-        requests.delete(API_URL + "draft/championStats/deleteChampionBansStats/") # Deleting banned champs
+        print(f"{' Deleting Champion ban stats' :#^50}")
+        requests.delete(API_URL + "api/draft/championStats/deleteChampionBansStats/") # Deleting banned champs
+        print(f"{' Importing Champion draft stats ' :#^50}")
         refresh_championDraftStats()
+        print(f"{' Importing Draft pick order ' :#^50}")
         refresh_draftPickOrder()
+        print(f"{' Importing Draft player picks ' :#^50}")
         refresh_draftPlayerPick()
+        print(f"{' Importing Champion pools ' :#^50}")
         refresh_playerChampionPool()
+        print(f"{' Importing Champion ban stats ' :#^50}")
         refresh_championBanStats()
     elif dbName == "games":
+        print(f"{' Deleting All Game Metadata' :#^50}")
         requests.delete(API_URL + "api/dataAnalysis/deleteAllMeta/") # Deleting all game meta data
+        print(f"{' Importing Game Metadata ' :#^50}")
         refresh_gameMetadata()
     
     return Response(status=status.HTTP_200_OK)

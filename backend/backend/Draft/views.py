@@ -436,10 +436,11 @@ def lowercase_first_letter(s : str):
 @api_view(['GET'])
 def getTopChampions(request, role, filter, patch, side, tournament):
     if side != "Both":
-        if tournament == "League of Legends Scrims":
-            query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side,  date__gte=DATE_LIMIT)
-        else:
-            query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side)
+        # if tournament == "League of Legends Scrims":
+        #     query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side,  date__gte=DATE_LIMIT)
+        # else:
+        # TODO : Get list of championDraftStats where associated patch is linked to a date gte than DATE_LIMIT
+        query = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact=side)
 
         if filter == "WinRate":
             queryFiltered = query.order_by("-winRate")

@@ -42,7 +42,6 @@ function TopMetaPicksPanel(props) {
             setPatchList(newPatchList)
             const latestPatch = newPatchList[newPatchList.length - 1]
             setActivePatch(latestPatch)
-            setFlagChampionOverview(true)
         })
     }
 
@@ -62,7 +61,6 @@ function TopMetaPicksPanel(props) {
         fetchTournamentList();
         setActiveSide("Blue")
         setActiveFilter(filterList[0])
-        // fetchPatchListFromTournament(activeTournament)
     }, [])
     
     return (

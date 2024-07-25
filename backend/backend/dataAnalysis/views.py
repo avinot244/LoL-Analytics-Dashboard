@@ -195,7 +195,7 @@ def get_patch_list(request, scrim : int):
 
 @api_view(['GET'])
 def get_tournament_list(request):
-    queryResult = DraftPlayerPick.objects.all()
+    queryResult = DraftPlayerPick.objects.all().filter(date__gte=DATE_LIMIT)
     tournamentList : list = list()
 
     for res in queryResult:
@@ -281,6 +281,8 @@ def getPatchListFromTournament(request, tournament):
     for res in queryTournamentList:
         if not(res.tournament in tournamentList):
             tournamentList.append(res.tournament)
+
+    print(tournamentList)
 
     if not(tournament in tournamentList):
         return Response(status=status.HTTP_400_BAD_REQUEST)

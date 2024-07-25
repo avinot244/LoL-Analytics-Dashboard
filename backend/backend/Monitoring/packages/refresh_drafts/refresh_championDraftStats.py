@@ -38,7 +38,8 @@ def refresh_championDraftStats():
             banRate2Rota = row["BanRate2Rota"],
             mostPopularPickOrder = row["MostPopularPickOrder"],
             blindPick = row["BlindPick"],
-            mostPopularRole = row["MostPopularRole"]
+            mostPopularRole = row["MostPopularRole"],
+            draftPresence = row["DraftPresence"]
         )
         
         if not(ChampionDraftStats.objects.filter(
