@@ -14,17 +14,17 @@ import AuthContext from "../context/AuthContext";
 function TopMetaPicksPanel(props) {
     const [patchList, setPatchList] = useState([]);
     
-    const [activePatch, setActivePatch] = useState("14.11")
-    const [activeSide, setActiveSide] = useState("Blue")
-    const [activeTournament, setActiveTournament] = useState("La Ligue Française - Summer 2024 (Regular Season: Regular Season)")
-    const [activeFilter, setActiveFilter] = useState("PickRate")
+    const [activePatch, setActivePatch] = useState()
+    const [activeSide, setActiveSide] = useState()
+    const [activeTournament, setActiveTournament] = useState()
+    const [activeFilter, setActiveFilter] = useState()
 
     const [flagChampionOverview, setFlagChampionOverview] = useState(false)
 
     const {value, panelIndex} = props
     const side = ["Blue", "Red", "Both"];
     const [tournamentList, setTournamentList] = useState([])
-    const [displayPatchFlag, setDisplayPatchFlag] = useState(true)
+    const [displayPatchFlag, setDisplayPatchFlag] = useState(false)
     const filterList = ["WinRate", "PickRate", "BanRate"]
 
     let {authTokens} = useContext(AuthContext)
@@ -62,7 +62,7 @@ function TopMetaPicksPanel(props) {
         fetchTournamentList();
         setActiveSide("Blue")
         setActiveFilter(filterList[0])
-        fetchPatchListFromTournament(activeTournament)
+        // fetchPatchListFromTournament(activeTournament)
     }, [])
     
     return (
