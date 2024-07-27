@@ -45,6 +45,8 @@ def compute(wantedDB : pd.DataFrame, uuid : str, tournamentDict : dict, header_o
     # Getting the fa model
     behaviorModelsMetadata = BehaviorModelsMetadata.objects.get(uuid__exact=uuid, modelType__exact="PCA", role__exact=role)
     fa_model : FactorAnalyzer = getFAModel(behaviorModelsMetadata)
+    
+    # Transforming our db with the model
     transformed_wantedDB : pd.DataFrame = project(wantedDB, fa_model, role, header_offset) # Transform the wanted database
     
     # Scaling the wantedDB
