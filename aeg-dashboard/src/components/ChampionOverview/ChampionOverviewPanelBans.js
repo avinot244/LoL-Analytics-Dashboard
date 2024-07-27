@@ -22,6 +22,7 @@ import { API_URL } from '../../constants';
 import RelatedDraftModal from './RelatedDraftModal';
 
 import AuthContext from '../context/AuthContext';
+import ChampionIconSmall from '../utils/ChampionIconSmall';
 
 function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -338,7 +339,11 @@ export default function ChampionOverviewPanelBans(props) {
                                             scope="row"
                                             padding="none"
                                         >
-                                        {row.championName}
+                                            <ChampionIconSmall 
+                                                championName={row.championName} 
+                                                width={50} 
+                                                height={50}
+                                            />
                                         </TableCell>
                                         <TableCell align="right">{(row.globalBanRate*100).toFixed(2)}%</TableCell>
                                         <TableCell align="right">{(row.banRate1Rota*100).toFixed(2)}%</TableCell>
