@@ -286,7 +286,7 @@ def fuseQueriesChampionDraftStats(query1 : QuerySet, query2 : QuerySet):
     
     res : list = list()
     
-    for champion_name, distsribution in mapping.values():
+    for champion_name, distsribution in mapping.items():
         if distsribution == 0:
             object1 = query1.get(championName__exact=champion_name)
             object2 = query2.get(championName__exact=champion_name)
@@ -379,7 +379,7 @@ def fuseQueriesChampionBansStats(query1 : QuerySet, query2 : QuerySet):
     mapping : dict = computeFusedMapping(championNameList1, championNameList2)
     
     res : list = list()
-    for champion_name, distsribution in mapping.values():
+    for champion_name, distsribution in mapping.items():
         if distsribution == 0:
             object1 = query1.get(championName__exact=champion_name)
             object2 = query2.get(championName__exact=champion_name)
