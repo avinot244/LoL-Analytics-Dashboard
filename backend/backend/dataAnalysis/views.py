@@ -282,7 +282,6 @@ def getPatchListFromTournament(request, tournament):
         if not(res.tournament in tournamentList):
             tournamentList.append(res.tournament)
 
-    print(tournamentList)
 
     if not(tournament in tournamentList):
         return Response(status=status.HTTP_400_BAD_REQUEST)
