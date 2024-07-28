@@ -455,8 +455,8 @@ def getTopChampions(request, role, filter, patch, side, tournament):
 
     elif side == "Both":
         if tournament == "League of Legends Scrims":
-            queryBlue = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Blue",  date__gte=DATE_LIMIT)
-            queryRed = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Red",  date__gte=DATE_LIMIT)
+            queryBlue = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Blue")
+            queryRed = ChampionDraftStats.objects.filter(mostPopularRole__exact=role, tournament__exact=tournament, patch__contains=patch, side__exact="Red")
 
             res : dict = fuseQueriesChampionDraftStats(queryRed, queryBlue)
             

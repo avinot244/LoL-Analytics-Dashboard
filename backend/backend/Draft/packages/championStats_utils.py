@@ -355,6 +355,9 @@ def updateDatabase(path : str,
                 df.at[index, "MostPopularRole"] = mostPopularRole
 
                 os.remove(path)
+                
+                toRemove = ChampionDraftStats.objects.get(championName__exact=championName, patch__exact=patch, tournament__exact=tournament)
+                toRemove.delete()
                 df.to_csv(path, sep=";", index=False)
                 break
             
