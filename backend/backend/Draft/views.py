@@ -22,7 +22,7 @@ import Draft.packages.championStats_utils as ChampionPicksStats
 import Draft.packages.championBans_utils as ChampionBansStats
 from .packages.playerStats_utils import *
 
-from .utils import import_draft, import_draftStats, import_banStats, fuseQueriesChampionDraftStats, fuseQueriesChampionBansStats
+from .utils import import_draft, import_draftStats, delete_draftStats, delete_banStats, import_banStats, fuseQueriesChampionDraftStats, fuseQueriesChampionBansStats
 
 
 import pandas as pd
@@ -343,6 +343,8 @@ def updateChampionDraftStats(request, tournamentListStr : str):
                             banRate2Rota
                         )
     
+    delete_draftStats()
+    delete_banStats()
     import_draftStats()
     import_banStats()
     return Response(status=status.HTTP_200_OK)

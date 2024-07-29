@@ -139,6 +139,10 @@ def delete_draftStats():
     for res in tqdm(queryChampionDraftStats):
         res.delete()
 
+def delete_banStats():
+    queryChampionBanStats = ChampionBanStats.objects.all()
+    for res in tqdm(queryChampionBanStats):
+        res.delete()
    
 
 def import_banStats():
