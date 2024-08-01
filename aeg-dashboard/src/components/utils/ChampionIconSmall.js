@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "../../styles/ChampionIconSmall.css"
 
 function ChampionIconSmall({championName, width, height}) {
+    console.log(championName)
     const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championName}.png`
     const [img, setImg] = useState();
 

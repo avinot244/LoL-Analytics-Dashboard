@@ -270,10 +270,12 @@ export default function ChampionOverviewPanelPicks(props) {
                 if (panelIndex > 4) {
                     setRows(newData)
                 } else {
-                    setRows(newWantedRows)   
+                    setRows(newWantedRows)
                 }
             })
         }
+
+        
         
 
         fetchChampionsDraftStats(tournament, patch, side)
@@ -399,11 +401,13 @@ export default function ChampionOverviewPanelPicks(props) {
                                     scope="row"
                                     padding="none"
                                 >
-                                <ChampionIconSmall 
-                                                championName={row.championName} 
-                                                width={50} 
-                                                height={50}
-                                            />
+                                    {row.championName}
+                                    {/* <ChampionIconSmall 
+                                        championName={row.championName} 
+                                        width={50} 
+                                        height={50}
+                                    /> */}
+                                
                                 </TableCell>
                                 <TableCell align="right">{(row.winRate*100).toFixed(2)}%</TableCell>
                                 <TableCell align="right">{(row.draftPresence*100).toFixed(2)}%</TableCell>
