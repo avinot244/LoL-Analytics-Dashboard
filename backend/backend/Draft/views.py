@@ -234,7 +234,6 @@ def updateChampionDraftStats(request, tournamentListStr : str):
             tempPatch = draftPickOrder.patch.split(".")[0] + "." + draftPickOrder.patch.split(".")[1]
             if not(tempPatch in assosiatedPatchList):
                 assosiatedPatchList.append(tempPatch)
-
         if tournament == "League of Legends Scrims":
             assosiatedPatchList = [assosiatedPatchList[-1]]
 

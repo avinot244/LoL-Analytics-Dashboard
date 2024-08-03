@@ -346,7 +346,6 @@ def computeNewBehaviorStats(request, time):
     for game in tqdm(queryAllGames):
     # for game in queryAllGames:
         if not(BehaviorADC.objects.filter(date=game.date, seriesId=game.seriesId, gameNumber=game.gameNumber).count() > 0):
-            print(game.tournament)
             seriesId : int = game.seriesId
             gameNumber : int = game.gameNumber
             (data, gameDuration, begGameTime, endGameTime) = getData(seriesId, gameNumber)

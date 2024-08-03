@@ -114,9 +114,9 @@ def updateDatabase(path : str,
                 df.at[index, "BanRate1Rota"] = banRate1Rota
                 df.at[index, "BanRate2Rota"] = banRate2Rota
 
-                os.remove(path)
                 toDelete = ChampionBanStats.objects.get(championName__exact=championName, tournament__exact=tournament, patch__exact=patch)
                 toDelete.delete()
+                os.remove(path)
                 df.to_csv(path, sep=";", index=False)
                 break
 
