@@ -392,7 +392,7 @@ function PlayerOverview(){
             </Stack>
             
 
-            <Stack spacing={5} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 2, ml: 2}}>
+            <Stack spacing={-1} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 2, ml: 2}}>
                 {
                     flagDisplayPlayerStat1 ? ( 
                         <Stack spacing={1} direction="column" justifyContent="center" alignItems="center">

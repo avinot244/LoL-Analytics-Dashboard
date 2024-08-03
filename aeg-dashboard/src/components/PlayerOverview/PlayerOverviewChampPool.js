@@ -36,7 +36,7 @@ function PlayerOverviewChampPool({summonnerName, tournament}) {
             }
             return championPoolPRListTemp
         }).then(list => {
-            newChampionPoolPRList.push(list.slice(0, 6))
+            newChampionPoolPRList.push(list.slice(0, 5))
             setChampPoolPickRate(newChampionPoolPRList)
         })
     }
@@ -62,7 +62,7 @@ function PlayerOverviewChampPool({summonnerName, tournament}) {
             }
             return championPoolWRListTemp
         }).then(list => {
-            newChampionPoolWRList.push(list.slice(0, 6))
+            newChampionPoolWRList.push(list.slice(0, 5))
             setChampPoolWinRate(newChampionPoolWRList)
         })
     }
