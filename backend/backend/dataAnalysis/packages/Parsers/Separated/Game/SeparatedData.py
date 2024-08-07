@@ -269,6 +269,7 @@ class SeparatedData:
 
     def draftToCSV(self, path : str, new : bool, patch : str, seriesId : int, tournament : str, gameNumber : int, date : str, teamBlue : str, teamRed : str):
         draft : DraftSnapshot = self.draftSnapshotList[-1]
+        patch_for_champions : str = patch.split(".")[0] + "." + patch.split(".")[1] + ".1"
         # Asserting the right open option
         if new:
             open_option = 'w'
@@ -301,27 +302,27 @@ class SeparatedData:
                 if len(draft.teams[i].playerDraftList) < 5:
                     for _ in range(5-len(draft.teams[0].playerDraftList)):
                         draft.teams[i].playerDraftList.append(PlayerDraft(-1, ""))
-
+            
             # Getting bans of blue side
             for i in range(3):
-                data.append(convertToChampionName(draft.bans[2*i].championID))
-            data.append(convertToChampionName(draft.bans[7].championID))
-            data.append(convertToChampionName(draft.bans[9].championID))
+                data.append(convertToChampionName(draft.bans[2*i].championID, patch_for_champions))
+            data.append(convertToChampionName(draft.bans[7].championID, patch_for_champions))
+            data.append(convertToChampionName(draft.bans[9].championID, patch_for_champions))
 
             # Getting pick of blue side
             for i in range(len(draft.teams[0].playerDraftList)):
-                data.append(convertToChampionName(draft.teams[0].playerDraftList[i].championID))
+                data.append(convertToChampionName(draft.teams[0].playerDraftList[i].championID, patch_for_champions))
             
             # Getting bans for red side 
             for i in range(3):
-                data.append(convertToChampionName(draft.bans[2*i + 1].championID))
-            data.append(convertToChampionName(draft.bans[6].championID))
-            data.append(convertToChampionName(draft.bans[8].championID))
+                data.append(convertToChampionName(draft.bans[2*i + 1].championID, patch_for_champions))
+            data.append(convertToChampionName(draft.bans[6].championID, patch_for_champions))
+            data.append(convertToChampionName(draft.bans[8].championID, patch_for_champions))
             
             
             # Getting picks fo red side
             for i in range(len(draft.teams[1].playerDraftList)):
-                data.append(convertToChampionName(draft.teams[1].playerDraftList[i].championID))
+                data.append(convertToChampionName(draft.teams[1].playerDraftList[i].championID, patch_for_champions))
             writer.writerow(data)
         
         # Writing the draft player picks database
@@ -340,7 +341,7 @@ class SeparatedData:
                     data.append(patch)
                     data.append(seriesId)
                     data.append(playerPick.summonerName)
-                    data.append(convertToChampionName(playerPick.championID))
+                    data.append(convertToChampionName(playerPick.championID, patch_for_champions))
 
                     # Geting role
                     role : str = ""

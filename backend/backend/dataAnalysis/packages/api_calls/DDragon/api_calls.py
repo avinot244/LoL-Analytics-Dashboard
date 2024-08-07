@@ -1,15 +1,8 @@
 import requests
-import os
-import zipfile, io
-from datetime import datetime
-from enum import Enum
-import urllib.request
-import json
-import shutil
 
-def get_champion_mapping_key():
+def get_champion_mapping_key(patch : str):
     response = requests.get(
-        'https://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json'
+        'https://ddragon.leagueoflegends.com/cdn/{}/data/en_US/champion.json'.format(patch)
     )
 
     if response.status_code != 200:
@@ -20,9 +13,9 @@ def get_champion_mapping_key():
         res[int(data['key'])] = championName
     return res
 
-def get_champion_mapping_key_reversed():
+def get_champion_mapping_key_reversed(patch : str):
     response = requests.get(
-        'https://ddragon.leagueoflegends.com/cdn/14.13.1/data/en_US/champion.json'
+        'https://ddragon.leagueoflegends.com/cdn/{}/data/en_US/champion.json'.format(patch)
     )
 
     if response.status_code != 200:
