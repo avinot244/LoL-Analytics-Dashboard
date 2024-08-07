@@ -5,6 +5,7 @@ import AuthContext from "../context/AuthContext";
 
 function LatestDraftsPanel(props) {
     const {value, panelIndex} = props
+    const [patch, setPatch] = useState("")
     const [draftList, setActiveDraftList] = useState([])
 
     let {authTokens} = useContext(AuthContext)
@@ -19,7 +20,10 @@ function LatestDraftsPanel(props) {
             })
             result.json().then(result => {
                 const newDraftList = result;
-                setActiveDraftList(newDraftList)                
+                setActiveDraftList(newDraftList)
+                let temp = newDraftList[0].patch
+                const newPatch = temp.split(".")[0] + "." + temp.split(".")[1] + ".1"
+                setPatch(newPatch)
             })
         }
 
@@ -48,6 +52,7 @@ function LatestDraftsPanel(props) {
                         bansR1rota={[draftObject.rb1, draftObject.rb2, draftObject.rb3]}
                         bansR2rota={[draftObject.rb4, draftObject.rb5]}
                         win={draftObject.winner}
+                        patch={patch}
                     />
                 )
             }        

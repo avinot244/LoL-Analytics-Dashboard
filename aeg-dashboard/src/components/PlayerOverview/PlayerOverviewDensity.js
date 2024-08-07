@@ -30,6 +30,9 @@ function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
             method: "GET",
             headers: header
         })
+
+        console.log(res.body)
+
         if (res.status === 200) {
             const imageBlob = await res.blob()
             const imageObjectURL = URL.createObjectURL(imageBlob)
