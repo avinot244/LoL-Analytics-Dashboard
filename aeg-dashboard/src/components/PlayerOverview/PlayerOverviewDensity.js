@@ -7,6 +7,8 @@ import { API_URL } from "../../constants"
 
 function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
     // React useStates for position density images for red side
+    const [progress, setProgress] = useState(0)
+
     const [densityTournamentRed, setDensityTournamentRed] = useState()
     const [densityPatchRed, setDensityPatchRed] = useState()
     const [densityLimitRed, setDensityLimitRed] = useState()
@@ -31,10 +33,31 @@ function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
             headers: header
         })
 
-        console.log(res.body)
+        const reader = res.body.getReader();
+        const contentLength = res.headers.get("Content-Length");
+        const totalLength = typeof contentLength === 'string' && parseInt(contentLength);
+        console.log(totalLength)
+        
+        const chunks = [];
+
+        let receivedLength = 0;
+
+        while (true) {
+            const {done, value} = reader.read();
+            if (done) break;
+            chunks.push(value)
+            receivedLength = receivedLength + value.length
+            if (typeof totalLength === 'number'){
+                const step = receivedLength / totalLength * 100
+                console.log(step)
+                requestAnimationFrame(()=>setProgress(step))
+            }
+        }
+
+        const imageBlob = new Blob(chunks)
+        
 
         if (res.status === 200) {
-            const imageBlob = await res.blob()
             const imageObjectURL = URL.createObjectURL(imageBlob)
             if (side === "Red") {
                 setDensityTournamentRed(imageObjectURL)
@@ -133,6 +156,7 @@ function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
                     Position Density {tournament}
                 </Typography>
                 <Stack spacing={2} direction="row" justifyContent="center" alignItems="center">
+                    <p>{progress}%</p>
                     <img src={densityTournamentBlue} alt="density-player-tournament-blue" width={480}/>
                     <img src={densityTournamentRed} alt="density-player-tournament-red" width={480}/>
                 </Stack>

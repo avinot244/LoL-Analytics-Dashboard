@@ -185,13 +185,15 @@ class SeparatedData:
                 snapshot = self.gameSnapshotList[0]
                 self.matchId = snapshot.gameName
                 self.matchName = snapshot.gameName
+                
                 for i in range(2):
                     for j in range(5):
                         summonerName : str = snapshot.teams[i].players[j].playerName
                         if snapshot.teams[i].players[j].championName == "FiddleSticks":
                             championID : int = convertToChampionID("Fiddlesticks")
                         else:
-                            championID : int = convertToChampionID(snapshot.teams[i].players[j].championName)
+                            tempPatch : str = self.patch.split(".")[0] + "." +self.patch.split(".")[1] + ".1"
+                            championID : int = convertToChampionID(snapshot.teams[i].players[j].championName, tempPatch)
                         self.playerPicks.append(PlayerDraft(championID, summonerName))
             else:
                 self.matchId = "Remake"
