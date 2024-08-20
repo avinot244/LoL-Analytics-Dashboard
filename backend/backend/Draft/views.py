@@ -165,7 +165,7 @@ def getDraftChampion(request, championName, patch):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
     # Checking if championName is correct
-    if not(championName in list(get_champion_mapping_key_reversed().keys())):
+    if not(championName in list(get_champion_mapping_key_reversed(patch + ".1").keys())):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
     draftQuery = DraftPickOrder.objects.filter(
