@@ -33,28 +33,7 @@ function PlayerOverviewDensity({summonnerName, patch, tournament, limit}){
             headers: header
         })
 
-        const reader = res.body.getReader();
-        const contentLength = res.headers.get("Content-Length");
-        const totalLength = typeof contentLength === 'string' && parseInt(contentLength);
-        console.log(totalLength)
-        
-        const chunks = [];
-
-        let receivedLength = 0;
-
-        while (true) {
-            const {done, value} = reader.read();
-            if (done) break;
-            chunks.push(value)
-            receivedLength = receivedLength + value.length
-            if (typeof totalLength === 'number'){
-                const step = receivedLength / totalLength * 100
-                console.log(step)
-                requestAnimationFrame(()=>setProgress(step))
-            }
-        }
-
-        const imageBlob = new Blob(chunks)
+        const imageBlob = await res.blob()
         
 
         if (res.status === 200) {
