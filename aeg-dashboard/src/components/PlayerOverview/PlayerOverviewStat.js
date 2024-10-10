@@ -293,8 +293,12 @@ export default function PlayerOverviewStat(props) {
         const maxTournament = Math.max(...dataBehaviorTournament)
 
         const max = Math.max(maxPatch, maxLatest, maxTournament)
+        if (max > 2.33) {
+            return 2.33
+        }
         if (max > 1.5) {
             return Math.ceil(max)
+            
         }else{
             return 1.5
         }
