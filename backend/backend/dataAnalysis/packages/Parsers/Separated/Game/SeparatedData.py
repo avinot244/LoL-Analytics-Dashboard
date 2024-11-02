@@ -189,10 +189,10 @@ class SeparatedData:
                 for i in range(2):
                     for j in range(5):
                         summonerName : str = snapshot.teams[i].players[j].playerName
+                        tempPatch : str = self.patch.split(".")[0] + "." +self.patch.split(".")[1] + ".1"
                         if snapshot.teams[i].players[j].championName == "FiddleSticks":
-                            championID : int = convertToChampionID("Fiddlesticks")
+                            championID : int = convertToChampionID("Fiddlesticks", tempPatch)
                         else:
-                            tempPatch : str = self.patch.split(".")[0] + "." +self.patch.split(".")[1] + ".1"
                             championID : int = convertToChampionID(snapshot.teams[i].players[j].championName, tempPatch)
                         self.playerPicks.append(PlayerDraft(championID, summonerName))
             else:
