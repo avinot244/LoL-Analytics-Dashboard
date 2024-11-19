@@ -17,7 +17,6 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ClearIcon from '@mui/icons-material/Clear';
 
 import { useState, useEffect, useContext } from "react"
-import RedirectPage from "../Home/RedirectPage"
 import AuthContext from "../context/AuthContext"
 
 const theme = createTheme ({

@@ -15,7 +15,6 @@ from joblib import load
 query = BehaviorModelsMetadata.objects.all()
 
 for res in tqdm(query):
-   
     if not os.path.exists(DATA_PATH + "behavior/models/loadings/{}/results_{}.png".format(res.uuid, res.role)):
 
         wantedModel = BehaviorModelsMetadata.objects.get(role__exact=res.role, uuid__exact=res.uuid)

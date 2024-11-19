@@ -615,7 +615,6 @@ def getGameStatsPlayers(request, seriesId : int, gameNumber : int):
                 GPM = 60*playerBlue.totalGold/time
             XPM = 60*playerBlue.XP/time
             CSM = 60*playerBlue.stats.minionsKilled/time
-                       
             resultData["data"][playerIdx[playerBlue.playerName]]["DPM"].append(DPM)
             resultData["data"][playerIdx[playerBlue.playerName]]["currentGold"].append(currentGold)
             resultData["data"][playerIdx[playerBlue.playerName]]["GPM"].append(GPM)

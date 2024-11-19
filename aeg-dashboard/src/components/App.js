@@ -11,6 +11,7 @@ import PCAModelMaker from './Monitoring/PCAModelMaker';
 import PCAModelOverview from './Monitoring/PCAModelOverview';
 import PCADocumentation from './PlayerOverview/Documentation'
 import RefreshDBComp from './Monitoring/RefreshDBComp';
+import ScoutingPlayer from './PlayerOverview/Scouting'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignInSide from './Home/Login';
@@ -40,6 +41,9 @@ function App() {
 					</Route>
 					<Route element={<PrivateRoute />}>
 						<Route element={<PlayerOverview />} path="/PlayerOverview/Esports" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<ScoutingPlayer />} path="/PlayerOverview/Scouting" exact/>
 					</Route>
 					<Route element={<PrivateRoute />}>
 						<Route element={<GameOverview />} path="/GameOverview/Scrims" exact/>

@@ -2,9 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import {Outlet, Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from '@mui/material';
-import { API_URL } from '../../constants';
 import { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 
@@ -12,13 +11,6 @@ import AuthContext from '../context/AuthContext';
 
 function NavBarComp() {
 	let {logoutUser} = useContext(AuthContext)
-	function isResponseOk(response) {
-        if (response.status >= 200 && response.status <= 299) {
-            return response.json();
-        }else{
-            throw Error(response.statusText)
-        }
-    }
 	function logout() {
 		logoutUser()
 	}
@@ -28,7 +20,7 @@ function NavBarComp() {
 		<Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
 			<Container>
 				<Link to="/Home">
-					<Navbar.Brand>Aegis DashBoard</Navbar.Brand>
+					<Navbar.Brand>XXXXX DashBoard</Navbar.Brand>
 				</Link>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
@@ -43,6 +35,7 @@ function NavBarComp() {
 						<NavDropdown title="Player Overview">
 							<NavDropdown.Item as={Link} to='/PlayerOverview/Scrims'>Scrims</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/PlayerOverview/Esports'>Esports</NavDropdown.Item>
+							<NavDropdown.Item as={Link} to='/PlayerOverview/Scouting'>Scouting</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/PlayerOverview/Docs'>Documentation</NavDropdown.Item>
 						</NavDropdown>
 
