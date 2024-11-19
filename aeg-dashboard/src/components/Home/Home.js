@@ -11,7 +11,6 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { grey } from '@mui/material/colors/'
 
-import RedirectPage from "./RedirectPage";
 import AuthContext from "../context/AuthContext";
 
 
@@ -29,11 +28,9 @@ const theme = createTheme({
 
 
 function Home({loggedIn, setLoggedIn}){
-    let {user} = useContext(AuthContext)
-    
     const [value, setValue] = useState(0)
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (_, newValue) => {
         setValue(newValue);
     }
 

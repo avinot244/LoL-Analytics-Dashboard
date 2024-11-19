@@ -9,3 +9,8 @@
 h1 {
     text-align: center;
 }
+
+.simple-tabpanel-0, .simple-tabpanel-1, .simple-tabpanel-2, .simple-tabpanel-3, .simple-tabpanel-4, .simple-tabpanel-5{
+	width:1200px;
+	margin: 0 auto;
+}
