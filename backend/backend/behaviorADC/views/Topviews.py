@@ -270,8 +270,9 @@ def behaviorTop_behavior_singleGamesLatest(request, summonnerName, uuid, limit, 
 
     return Response(resultList)
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def behaviorTop_behavior_multiple_tournaments(request):
+    print(request.body)
     data = json.loads(request.body)
     wantedTournaments : list[str] = list()
     model_uuid : str = ""

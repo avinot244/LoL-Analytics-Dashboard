@@ -1,19 +1,17 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { Box, Autocomplete, TextField, Chip, createTheme, ThemeProvider, Stack, Button } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 import AuthContext from '../context/AuthContext';
 import GradientTypography from '../utils/GradientTypography';
-
-const columns_bis = [
-    { field: 'playerName', headerName: 'Player Name', width: 130 },
-    { field: 'aggressive', headerName: 'Agressive', width: 130 },
-    { field: 'farming_safely', headerName: 'Farming Safely', width: 130 },
-    { field: 'objectives_towers', headerName: 'Objectives/Towers', width: 130 },
-    { field: 'playing_alone', headerName: 'Playing Alone', width: 130 },
-    { field: 'invader', headerName: 'Invader', width: 130 },
-];
+import { API_URL } from '../../constants';
+import Loading from '../utils/Loading';
+import NormalDistribution from 'normal-distribution';
 
 function RenderData(props) {
     const {_, value} = props
@@ -22,80 +20,177 @@ function RenderData(props) {
     )
 }
 
-const columns = [
-    {
-        field: 'playerName',
-        headerName: 'Player Name', 
-        width: 130
-    },
-    {
-        field: 'region',
-        headerName: 'Region', 
-        width: 130
-    },
-    {
-        field: 'aggressive',
-        headerName: 'Aggressive',
-        renderCell: RenderData,
-        width: 130
-    },
-    {
-        field: 'farming_safely',
-        headerName: 'Farming Safely',
-        renderCell: RenderData,
-        width: 130
-    },
-    {
-        field: 'objectives_towers',
-        headerName: 'Objectives/Towers',
-        renderCell: RenderData,
-        width: 150
-    },
-    {
-        field: 'playing_alone',
-        headerName: 'Playing Alone',
-        renderCell: RenderData,
-        width: 130
-    },
-    {
-        field: 'invader',
-        headerName: 'Invader',
-        renderCell: RenderData,
-        width: 130
-    },
-]
-
-
-let rows = []
-for (let i = 0 ; i < 10; i++) {
-    rows.push({
-        id: i,
-        playerName: i,
-        region: i+i,
-        aggressive: (Math.random()*100).toFixed(2),
-        farming_safely: (Math.random()*100).toFixed(2),
-        objectives_towers: (Math.random()*100).toFixed(2),
-        playing_alone: (Math.random()*100).toFixed(2),
-        invader: (Math.random()*100).toFixed(2)
-    })
-}
 const paginationModel = { page: 0, pageSize: 5 };
+
+
+function TournamentFilter ({tournamentFilterList, selectedFilters, setSelectedFilters}) {
+    const handleChange = (list) => {
+        const newFilters = list
+        setSelectedFilters(newFilters)
+        console.log(selectedFilters)
+    }
+    const theme = createTheme ({
+        palette: {
+            primary : {
+                main: '#fff',
+            },
+            text : {
+                disabled: '#fff'
+            }
+            
+        },
+        action: {
+            active: '#fff'
+        }
+    })
+
+    return (
+        <>	
+            <ThemeProvider theme={theme}>
+                <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+                    <Autocomplete
+                        multiple
+                        clearIcon={<ClearIcon color="error"/>}
+                        popupIcon={<ArrowDropDownIcon color="primary"/>}
+                        className="searchComp"
+                        options={tournamentFilterList}
+                        renderInput={(params) => (
+                            <TextField 
+                                {...params} 
+                                className='textField-searchComp'
+                                label={"Tournament Filter"}
+                                focused
+                                sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                
+                            />
+                        )}
+                        renderTags={(value, getTagProps) => 
+                            value.map((option, index) => (
+                                <Chip
+                                    color="primary"
+                                    variant='outlined'
+                                    label={option}
+                                    {...getTagProps({index})}
+                                />
+                            ))
+                        }
+                        onChange={(_, value) => {handleChange(value)}}
+                        sx={{color: 'primary.main', borderColor: 'primary.main', width: 550}}
+                        fullWidth={true}
+                    />
+                </Box>
+                
+            </ThemeProvider>
+        </>
+	);
+}
 
 export default function PlayerScoutingTop(props){
     const {value, panelIndex} = props
+    
+    const [tournamentList, setTournamentList] = React.useState([])
+    const [selectedFilters, setSelectedFilters] = React.useState([])
+    const [loadingData, setLoadingData] = React.useState(true)
+    const [flagDisplayData, setFlagDisplayData] = React.useState(false)
 
-    const { data, loading } = useDemoData({
-        dataSet: 'Commodity',
-        rowLength: 10,
-        editable: true,
-    });
-
-    console.log(data)
+    const [rows, setRows] = React.useState([])
+    const [columns, setColumns] = React.useState([])
 
     let {authTokens} = React.useContext(AuthContext)
     const header = {
         Authorization: "Bearer " + authTokens.access
     }
+    
+    const fetchData = async (tournamentList) => {
+        setLoadingData(true)
+        const modelResult = await fetch(API_URL + `behaviorModels/getModel/Top/`, {
+            method: "GET",
+            headers:header
+        })
+        modelResult.json().then(async model => {
+            const jsonString = model.factorsName.replace(/'/g, '"')
+            let factorsNameTemp = JSON.parse(jsonString)
+            console.log(factorsNameTemp)
+
+            let newColumns = [
+                {
+                    field: 'playerName',
+                    headerName: 'Player Name', 
+                    width: 130
+                }
+            ]
+
+            for (let i = 0 ; i < factorsNameTemp.length ; i ++) {
+                newColumns.push({
+                    field: factorsNameTemp[i].toLowerCase().replace(/[ /]/g, "_"),
+                    headerName: factorsNameTemp[i],
+                    renderCell: RenderData,
+                    width: 150
+                })
+            }
+
+            setColumns(newColumns)
+            console.log(newColumns)
+
+            let data = {
+                "wantedTournaments": tournamentList,
+                "model_uuid": model.uuid
+            }
+    
+            const dataResult = await fetch(API_URL + "behavior/Top/computeScouting/", {
+                method: "PATCH",
+                body: JSON.stringify(data),
+                headers: header
+            })
+
+            dataResult.json().then(result => {
+                const newData = result
+                const normDist = new NormalDistribution(0, 1)
+                let temp = []
+                console.log(newData)
+                for (let i = 0; i < newData.summonnerName.length; i++) {
+                    temp.push({
+                        id: i,
+                        playerName: newData.summonnerName[i],
+                        aggression_w__jungle: ((1-normDist.cdf(newData.Factor_1[i]))*100).toFixed(2),
+                        farming_safely: ((1-normDist.cdf(newData.Factor_2[i]))*100).toFixed(2),
+                        tower_objective: ((1-normDist.cdf(newData.Factor_3[i]))*100).toFixed(2),
+                        lane_player: ((1-normDist.cdf(newData.Factor_4[i]))*100).toFixed(2),
+                        skirmish: ((1-normDist.cdf(newData.Factor_5[i]))*100).toFixed(2),
+                        vision: ((1-normDist.cdf(newData.Factor_6[i]))*100).toFixed(2),
+                    })
+                }
+
+                setRows(temp)
+                setLoadingData(false)
+            })
+        })
+    }
+
+    const handleClick = () => {
+        console.log("Scouting")
+        fetchData(selectedFilters)
+        setFlagDisplayData(true)
+    }
+
+    React.useEffect(() => {
+        const fetchTournamentList = async () => {
+            const result = await fetch(API_URL + "dataAnalysis/tournament/getList", {
+                method: "GET",
+                headers: header
+            })
+            result.json().then(result => {
+                const newTournamentList = result.sort();
+                console.log(newTournamentList)
+                setTournamentList(newTournamentList)
+            })
+        }
+        
+        fetchTournamentList();
+    }, [])
 
     return (
         <div className="wrapper-player-scouting-Top">
@@ -106,18 +201,52 @@ export default function PlayerScoutingTop(props){
                 aria-labelledby={`simple-tab-${panelIndex}`}
             >
                 {
-                    panelIndex === 0 &&
-                    <Paper sx={{ height: 400, width: '100%', marginTop: '15px'}}>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            initialState={{ pagination: { paginationModel } }}
-                            pageSizeOptions={[5, 10]}
-                            checkboxSelection
-                            sx={{ border: 0 }}
-                        />
-                    </Paper>
+                    panelIndex === 0 && (
+                        <>
+                            <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
+                                <TournamentFilter 
+                                    tournamentFilterList={tournamentList}
+                                    selectedFilters={selectedFilters}
+                                    setSelectedFilters={setSelectedFilters}
+                                />
+                                <Button
+                                    endIcon={<SearchIcon/>}
+                                    variant='contained'
+                                    onClick={() => handleClick()}
+                                >
+                                    Analyze
+                                </Button>
 
+                                <Button 
+                                    variant="contained" 
+                                    endIcon={<RestartAltIcon />}
+                                    onClick={() => {
+                                        setFlagDisplayData(false)
+                                    }}    
+                                >
+                                    Reset
+                                </Button>
+                            </Stack>
+                            {
+                                flagDisplayData && (
+                                    loadingData ? (
+                                        <Loading/>
+                                    ) : (
+                                        <Paper sx={{ height: 400, width: '100%', marginTop: '15px'}}>
+                                            <DataGrid
+                                                rows={rows}
+                                                columns={columns}
+                                                initialState={{ pagination: { paginationModel } }}
+                                                pageSizeOptions={[5, 10]}
+                                                checkboxSelection
+                                                sx={{ border: 0 }}
+                                            />
+                                        </Paper>
+                                    )
+                                )
+                            }
+                        </>
+                    )
                 }
             </div>
         </div>

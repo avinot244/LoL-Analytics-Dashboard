@@ -119,7 +119,7 @@ export default function ModalAnalyze({open, handleClose, model, flag, setFlag, s
                                     inputRef={el => textFieldRefs.current[i] = el}
                                     variant="outlined"
                                 />
-                            )            
+                            )
                         }
                     </Stack>
                 </FormControl>
