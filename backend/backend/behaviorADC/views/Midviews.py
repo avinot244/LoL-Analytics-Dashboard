@@ -152,7 +152,7 @@ def behaviorMid_stats_game(request, summonnerName, seriesId, gameNumber):
 def behaviorMid_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
+        "comparison" : [comparisonTournament],
     }
 
     # Checking if the tournament in tournamentDict are in our database
@@ -181,7 +181,7 @@ def behaviorMid_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
 def behaviorMid_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
+        "comparison" : [comparisonTournament],
     }
 
     # Checking if the tournament in tournamentDict are in our database
@@ -210,7 +210,7 @@ def behaviorMid_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
 def behaviorMid_behavior_tournament(request, summonnerName, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted": wantedTournament,
-        "comparison": comparisonTournament,
+        "comparison": [comparisonTournament],
     }
 
     # Checking if the tournament in tournamentDict are in our database
@@ -240,7 +240,7 @@ def behaviorMid_behavior_game(request, summonnerName, uuid, seriesId, gameNumber
     print("Behavior Game")
     tournamentDict = {
         "wanted": wantedTournament,
-        "comparison": comparisonTournament,
+        "comparison": [comparisonTournament],
     }
 
     # Getting the db we want given a player and a tournament

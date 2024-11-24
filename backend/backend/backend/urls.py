@@ -58,6 +58,7 @@ urlpatterns = [
     path('api/behavior/Top/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_singleGamesLatest),
     
     path('api/behavior/Top/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Topviews.behaviorTop_behavior_tournament),
+    path('api/behavior/Top/computeScouting/', Topviews.behaviorTop_behavior_multiple_tournaments),
 
 
     # Behavior Jungle

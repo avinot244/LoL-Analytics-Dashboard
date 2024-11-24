@@ -153,7 +153,7 @@ def behaviorJungle_stats_game(request, summonnerName, seriesId, gameNumber):
 def behaviorJungle_behavior_latest(request, summonnerName, limit, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
+        "comparison" : [comparisonTournament],
     }
 
     # Checking if the tournament in tournamentDict are in our database
@@ -182,7 +182,7 @@ def behaviorJungle_behavior_latest(request, summonnerName, limit, uuid, wantedTo
 def behaviorJungle_behavior_patch(request, summonnerName, patch, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted" : wantedTournament,
-        "comparison" : comparisonTournament,
+        "comparison" : [comparisonTournament],
     }
 
     # Checking if the tournament in tournamentDict are in our database
@@ -211,7 +211,7 @@ def behaviorJungle_behavior_patch(request, summonnerName, patch, uuid, wantedTou
 def behaviorJungle_behavior_tournament(request, summonnerName, uuid, wantedTournament, comparisonTournament):
     tournamentDict = {
         "wanted": wantedTournament,
-        "comparison": comparisonTournament,
+        "comparison": [comparisonTournament],
     }
 
     # Checking if the tournament in tournamentDict are in our database
@@ -241,7 +241,7 @@ def behaviorJungle_behavior_game(request, summonnerName, uuid, seriesId, gameNum
     print("Behavior Game")
     tournamentDict = {
         "wanted": wantedTournament,
-        "comparison": comparisonTournament,
+        "comparison": [comparisonTournament],
     }
 
     # Getting the db we want given a player and a tournament
