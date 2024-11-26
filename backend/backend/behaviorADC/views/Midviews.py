@@ -14,7 +14,7 @@ from dataAnalysis.globals import DATE_LIMIT
 
 import pandas as pd
 import requests
-from datetime import datetime
+import json
 
 @api_view(['GET'])
 def behaviorMid_get_player_list(request, patch, scrim):
@@ -269,3 +269,61 @@ def behaviorMid_behavior_singleGamesLatest(request, summonnerName, uuid, limit, 
         resultList.append(behaviorGame.json())
 
     return Response(resultList)
+
+@api_view(['PATCH'])
+def behaviorMid_behavior_multiple_tournaments(request):
+    print(request.body)
+    data = json.loads(request.body)
+    wantedTournaments : list[str] = list()
+    model_uuid : str = ""
+    try:
+        wantedTournaments = data["wantedTournaments"]
+        model_uuid = data["model_uuid"]
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Get the list of all players in the list of wanted tournaments
+    df_list : list[pd.DataFrame] = list()
+    for tournament in wantedTournaments:
+        queryResult = BehaviorMid.objects.filter(tournament__exact=tournament)
+        serializer = BehaviorMidSerializer(queryResult, context={"request": request}, many=True)
+        df : pd.DataFrame = pd.DataFrame(serializer.data)
+        df_list.append(df)
+    
+    df_all_player : pd.DataFrame = pd.concat(df_list)
+
+    # Transform and scale the database
+    tournamentDict = {
+        "wanted": wantedTournaments,
+        "comparison": wantedTournaments,
+    }
+    transformed_result_scaled : pd.DataFrame = compute(df_all_player, model_uuid, tournamentDict, header_offset=8, role="Mid")
+    
+    # Make the average for each player
+    # Get the list of players
+    summonnerNameList : list = list()
+    for tournament in wantedTournaments:
+        allObjects = BehaviorMid.objects.filter(tournament__exact=tournament)
+        for res in allObjects:
+            if not(res.summonnerName in summonnerNameList):
+                summonnerNameList.append(res.summonnerName)
+
+    # make the average by summonnerName
+    df_list_avg : list[pd.DataFrame] = list()
+    columns_to_scale_on : list[str] = transformed_result_scaled.columns[8:].to_list()
+    for summonnerName in summonnerNameList:
+        df_player : pd.DataFrame = transformed_result_scaled[transformed_result_scaled["summonnerName"] == summonnerName]
+        df_player = df_player[columns_to_scale_on].mean()
+        
+        data : dict = {
+            "summonnerName": summonnerName
+        }
+        for col in columns_to_scale_on:
+            data[col] = [df_player[col]]
+        
+        temp = pd.DataFrame(data)
+        df_list_avg.append(temp)
+    
+    result : pd.DataFrame = pd.concat(df_list_avg)
+    
+    return Response(result)

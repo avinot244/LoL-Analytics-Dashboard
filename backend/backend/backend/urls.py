@@ -79,6 +79,7 @@ urlpatterns = [
     path('api/behavior/Jungle/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_singleGamesLatest),
     
     path('api/behavior/Jungle/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Jungleviews.behaviorJungle_behavior_tournament),
+    path('api/behavior/Jungle/computeScouting/', Jungleviews.behaviorJungle_behavior_multiple_tournaments),
 
 
     # Behavior Mid
@@ -99,6 +100,7 @@ urlpatterns = [
     path('api/behavior/Mid/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_singleGamesLatest),
     
     path('api/behavior/Mid/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', Midviews.behaviorMid_behavior_tournament),
+    path('api/behavior/Mid/computeScouting/', Midviews.behaviorMid_behavior_multiple_tournaments),
 
 
     # Behavior ADC
@@ -120,6 +122,7 @@ urlpatterns = [
 
 
     path('api/behavior/ADC/compute/<str:summonnerName>/<str:uuid>/<str:wantedTournament>/<str:comparisonTournament>/', ADCviews.behaviorADC_behavior_tournament),
+    path('api/behavior/ADC/computeScouting/', ADCviews.behaviorADC_behavior_multiple_tournaments),
 
 
 
@@ -142,6 +145,7 @@ urlpatterns = [
     path('api/behavior/Support/compute/singleGamesLatest/<str:summonnerName>/<str:uuid>/<int:limit>/<str:wantedTournament>/<str:comparisonTournament>/', Supportviews.behaviorSupport_behavior_singleGamesLatest),
 
     path('api/behavior/Support/deleteDuplicates', Supportviews.behaviorSupport_deleteDuplicates),
+    path('api/behavior/Support/computeScouting/', Supportviews.behaviorSupport_behavior_multiple_tournaments),
     
     # Behavior Models
     path('api/behaviorModels/<str:role>/getBestModel/', behaviorModelsViews.get_best_model),
