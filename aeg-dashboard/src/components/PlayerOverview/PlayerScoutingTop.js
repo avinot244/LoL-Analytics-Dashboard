@@ -27,7 +27,6 @@ function TournamentFilter ({tournamentFilterList, selectedFilters, setSelectedFi
     const handleChange = (list) => {
         const newFilters = list
         setSelectedFilters(newFilters)
-        console.log(selectedFilters)
     }
     const theme = createTheme ({
         palette: {
@@ -113,7 +112,6 @@ export default function PlayerScoutingTop(props){
         modelResult.json().then(async model => {
             const jsonString = model.factorsName.replace(/'/g, '"')
             let factorsNameTemp = JSON.parse(jsonString)
-            console.log(factorsNameTemp)
 
             let newColumns = [
                 {
@@ -133,7 +131,6 @@ export default function PlayerScoutingTop(props){
             }
 
             setColumns(newColumns)
-            console.log(newColumns)
 
             let data = {
                 "wantedTournaments": tournamentList,
@@ -150,7 +147,6 @@ export default function PlayerScoutingTop(props){
                 const newData = result
                 const normDist = new NormalDistribution(0, 1)
                 let temp = []
-                console.log(newData)
                 for (let i = 0; i < newData.summonnerName.length; i++) {
                     temp.push({
                         id: i,
@@ -171,7 +167,6 @@ export default function PlayerScoutingTop(props){
     }
 
     const handleClick = () => {
-        console.log("Scouting")
         fetchData(selectedFilters)
         setFlagDisplayData(true)
     }

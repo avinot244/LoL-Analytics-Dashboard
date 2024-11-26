@@ -14,7 +14,19 @@ h1 {
 	width: 1095px;
 	margin: 0 auto;
 }
-.simple-tabpanel-1, .simple-tabpanel-2, .simple-tabpanel-3, .simple-tabpanel-4, .simple-tabpanel-5{
-	width:1200px;
+.simple-tabpanel-1{
+	width: 1080px;
+	margin: 0 auto;
+}
+.simple-tabpanel-2{
+	width: 1380px;
+	margin: 0 auto;
+}
+.simple-tabpanel-3{
+	width: 780px;
+	margin: 0 auto;
+}
+.simple-tabpanel-4{
+	width: 1230px;
 	margin: 0 auto;
 }
