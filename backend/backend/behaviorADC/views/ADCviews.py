@@ -273,8 +273,8 @@ def behaviorADC_behavior_singleGamesLatest(request, summonnerName, uuid, limit, 
 
 @api_view(['PATCH'])
 def behaviorADC_behavior_multiple_tournaments(request):
-    print(request.body)
     data = json.loads(request.body)
+    print(data)
     wantedTournaments : list[str] = list()
     model_uuid : str = ""
     try:
@@ -282,6 +282,13 @@ def behaviorADC_behavior_multiple_tournaments(request):
         model_uuid = data["model_uuid"]
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # If no wanted tournaments are provided, we take all tournaments by default
+    if not data["wantedTournaments"]:
+        queryResult = BehaviorADC.objects.exclude(tournament__exact="League of Legends Scrims")
+        for temp in queryResult:
+            if temp.tournament not in wantedTournaments:
+                wantedTournaments.append(temp.tournament)
     
     # Get the list of all players in the list of wanted tournaments
     df_list : list[pd.DataFrame] = list()
@@ -304,7 +311,7 @@ def behaviorADC_behavior_multiple_tournaments(request):
     # Get the list of players
     summonnerNameList : list = list()
     for tournament in wantedTournaments:
-        allObjects = BehaviorADC.objects.filter(tournament__exact=tournament)
+        allObjects = BehaviorADC.objects.filter(~Q(tournament != "League"))
         for res in allObjects:
             if not(res.summonnerName in summonnerNameList):
                 summonnerNameList.append(res.summonnerName)

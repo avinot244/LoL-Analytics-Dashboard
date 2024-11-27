@@ -282,6 +282,13 @@ def behaviorTop_behavior_multiple_tournaments(request):
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    # If no wanted tournaments are provided, we take all tournaments by default
+    if not data["wantedTournaments"]:
+        queryResult = BehaviorTop.objects.exclude(tournament__exact="League of Legends Scrims")
+        for temp in queryResult:
+            if temp.tournament not in wantedTournaments:
+                wantedTournaments.append(temp.tournament)
+    
     # Get the list of all players in the list of wanted tournaments
     df_list : list[pd.DataFrame] = list()
     for tournament in wantedTournaments:
