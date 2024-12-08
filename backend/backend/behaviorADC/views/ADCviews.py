@@ -163,9 +163,11 @@ def behaviorADC_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -193,9 +195,11 @@ def behaviorADC_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -222,9 +226,11 @@ def behaviorADC_behavior_tournament(request, summonnerName, uuid, wantedTourname
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -273,8 +279,8 @@ def behaviorADC_behavior_singleGamesLatest(request, summonnerName, uuid, limit, 
 
 @api_view(['PATCH'])
 def behaviorADC_behavior_multiple_tournaments(request):
+    print(request.body)
     data = json.loads(request.body)
-    print(data)
     wantedTournaments : list[str] = list()
     model_uuid : str = ""
     try:
@@ -311,7 +317,7 @@ def behaviorADC_behavior_multiple_tournaments(request):
     # Get the list of players
     summonnerNameList : list = list()
     for tournament in wantedTournaments:
-        allObjects = BehaviorADC.objects.filter(~Q(tournament != "League"))
+        allObjects = BehaviorADC.objects.filter(tournament__exact=tournament)
         for res in allObjects:
             if not(res.summonnerName in summonnerNameList):
                 summonnerNameList.append(res.summonnerName)

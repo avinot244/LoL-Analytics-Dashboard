@@ -164,9 +164,11 @@ def behaviorTop_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -193,9 +195,11 @@ def behaviorTop_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -222,9 +226,11 @@ def behaviorTop_behavior_tournament(request, summonnerName, uuid, wantedTourname
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     

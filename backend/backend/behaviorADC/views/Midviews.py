@@ -163,9 +163,11 @@ def behaviorMid_behavior_latest(request, summonnerName, limit, uuid, wantedTourn
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -183,7 +185,7 @@ def behaviorMid_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
         "wanted" : wantedTournament,
         "comparison" : [comparisonTournament],
     }
-
+    
     # Checking if the tournament in tournamentDict are in our database
     response = requests.get(
         API_URL + 'api/dataAnalysis/tournament/getList'
@@ -192,9 +194,11 @@ def behaviorMid_behavior_patch(request, summonnerName, patch, uuid, wantedTourna
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -221,9 +225,11 @@ def behaviorMid_behavior_tournament(request, summonnerName, uuid, wantedTourname
     for tournament in response.json():
         tournamentListDB.append(tournament)
     
-    for key in tournamentDict.keys():
-        flag : bool = tournamentDict[key] in tournamentListDB
+    if not(tournamentDict["wanted"] in tournamentListDB):
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
+    for tournament in tournamentDict["comparison"]:
+        flag : bool = tournament in tournamentListDB
         if not(flag):
             return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -248,7 +254,6 @@ def behaviorMid_behavior_game(request, summonnerName, uuid, seriesId, gameNumber
         API_URL + "api/behavior/Mid/stats/game/{}/{}/{}/".format(summonnerName, seriesId, gameNumber)
     )
     wantedDB = pd.DataFrame(response.json())
-    print(wantedDB)
     transformed_wantedDB_scaled = compute(wantedDB, uuid, tournamentDict, header_offset=8, role="Mid")
     return Response(transformed_wantedDB_scaled)
 
