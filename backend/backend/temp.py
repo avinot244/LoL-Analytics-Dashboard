@@ -14,18 +14,20 @@ for q in tqdm(query):
 
 with open("./databases/games/data_metadata_copy.csv", "r") as csv_copy:
     reader = csv.reader(csv_copy, delimiter=";")
-    
+    print("Updating database")
     for line in tqdm(reader):
+        temp = (date, tournament, name, patch, seriesId, teamBlue, teamRed, winningTeam, gameNumber) = line        
         
-        summaryData : SummaryData = getSummaryData(seriesId, gameNumber)
+        try:
+            summaryData : SummaryData = getSummaryData(seriesId, gameNumber)
+        except:
+            print(seriesId)
         dragonBlueKills : int = summaryData.getObjectiveCount(0, "dragon")
         dragonRedKills : int = summaryData.getObjectiveCount(1, "dragon")
         krubsBlueKills : int = summaryData.getObjectiveCount(0, "horde")
         krubsRedKills : int = summaryData.getObjectiveCount(1, "horde")
         
-        temp = (date, tournament, name, patch, seriesId, teamBlue, teamRed, winningTeam, gameNumber) = line        
         
-
         gameMetadata : GameMetadata = GameMetadata(
             date=date, 
             tournament=tournament, 

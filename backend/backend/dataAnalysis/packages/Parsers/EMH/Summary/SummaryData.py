@@ -14,6 +14,9 @@ class SummaryData:
         try:
             with open(json_path) as f:
                 data = json.loads(f.read())
+                df = pd.json_normalize(data)
+
+                self.patch : str = df["gameVersion"][0]
         except:
             self.tencentData = True
         
