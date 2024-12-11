@@ -228,6 +228,7 @@ class PlayerEndGameStat:
         self.totalDamageDealtToChampions = totalDamageDealtToChampions
         self.totalDamageShieldedOnTeammates = totalDamageShieldedOnTeammates
         self.totalDamageTaken = totalDamageTaken
+        self.totalEnemyJungleMinionsKilled=totalEnemyJungleMinionsKilled
         self.totalHeal = totalHeal
         self.totalHealsOnTeammates = totalHealsOnTeammates
         self.totalMinionsKilled = totalMinionsKilled

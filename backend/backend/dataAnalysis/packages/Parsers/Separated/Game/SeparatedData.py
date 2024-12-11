@@ -20,10 +20,12 @@ from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampi
 
 
 class SeparatedData:
-    def __init__(self, root_dir : str = None,
-                 gameSnapshotList : list[Snapshot] = None,
-                 begGameTime : int = -1,
-                 endGameTime : int = -1) -> None:
+    def __init__(
+        self, root_dir : str = None,
+        gameSnapshotList : list[Snapshot] = None,
+        begGameTime : int = -1,
+        endGameTime : int = -1
+    ) -> None:
         self.winningTeam = -1
 
         if not(gameSnapshotList == None) and not(begGameTime == -1) and not(endGameTime == -1):

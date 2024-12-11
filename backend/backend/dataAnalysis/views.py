@@ -9,19 +9,20 @@ from rest_framework import status
 from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
 from .serializer import GameMetadataSerializer
 
+
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide, getPlayerTeam
-from .packages.utils_stuff.utils_func import getData, getRole
+from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
 from .packages.utils_stuff.stats import getProxomityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
 from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
+from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
-from .packages.Parsers.Separated.Game.Player import Player
 from .packages.utils_stuff.plots.densityPlot import getPositionsMultipleGames, getPositionsSingleGame, densityPlot
 
 
@@ -136,8 +137,26 @@ def download_latest(request, rawTournamentList : str):
                             winningTeam : int = data.winningTeam
                             tournament : str = get_tournament_from_seriesId(seriesId)
                             
+                            summaryData : SummaryData = getSummaryData(seriesId, gameNumber)
+                            dragonBlueKills : int = summaryData.getObjectiveCount(0, "dragon")
+                            dragonRedKills : int = summaryData.getObjectiveCount(1, "dragon")
+                            krubsBlueKills : int = summaryData.getObjectiveCount(0, "horde")
+                            krubsRedKills : int = summaryData.getObjectiveCount(1, "horde")
                             # Saving game metadata to SQLite datbase
-                            gameMetadata : GameMetadata = GameMetadata(date=date, tournament=tournament, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumberIt)
+                            gameMetadata : GameMetadata = GameMetadata(
+                                date=date, 
+                                tournament=tournament, 
+                                name=name, patch=patch, 
+                                seriesId=seriesId, 
+                                teamBlue=teamBlue, 
+                                teamRed=teamRed, 
+                                winningTeam=winningTeam, 
+                                gameNumber=gameNumberIt,
+                                dragonBlueKills=dragonBlueKills,
+                                dragonRedKills=dragonRedKills,
+                                krubsBlueKills=krubsBlueKills,
+                                krubsRedKills=krubsRedKills
+                            )
                             gameMetadata.save()
                         else :
                             print("game already downloaded")

@@ -63,6 +63,13 @@ def getGameDuration(seriesId : int, gameNumber : int):
             res : dict = json.load(json_file)
             return res["gameDuration"]
 
+def getSummaryData(seriesId : int, gameNumber : int) -> SummaryData:
+    match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
+
+    pathSummaryData : str = DATA_PATH + "games/bin" + match + "end_state_summary_riot_" + seriesId + "_" + gameNumber + ".json"
+    summaryData : SummaryData = SummaryData(pathSummaryData)
+    return summaryData
+
 def getData(seriesId : int, gameNumber : int):
     
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
@@ -94,7 +101,27 @@ def getData(seriesId : int, gameNumber : int):
                 t_time.sleep(1)
                 winningTeam = data.winningTeam
                 tournament = get_tournament_from_seriesId(seriesId)
-                dataCSV = [matchDate, tournament, matchName, patch, int(seriesId), teamBlue, teamRed, winningTeam, gameNumber]
+                summaryData : SummaryData = getSummaryData(seriesId, gameNumber)
+                dragonBlueKills : int = summaryData.getObjectiveCount(0, "dragon")
+                dragonRedKills : int = summaryData.getObjectiveCount(1, "dragon")
+                krubsBlueKills : int = summaryData.getObjectiveCount(0, "horde")
+                krubsRedKills : int = summaryData.getObjectiveCount(1, "horde")
+                dataCSV = [
+                    matchDate, 
+                    tournament, 
+                    matchName, 
+                    patch, 
+                    int(seriesId), 
+                    teamBlue, 
+                    teamRed, 
+                    winningTeam, 
+                    gameNumber, 
+                    dragonBlueKills, 
+                    dragonRedKills,
+                    krubsBlueKills,
+                    krubsRedKills
+                ]
+                
                 writer.writerow(dataCSV)
     else:
         if os.path.exists(DATA_PATH + "games/bin/" + match + "/Separated/"):

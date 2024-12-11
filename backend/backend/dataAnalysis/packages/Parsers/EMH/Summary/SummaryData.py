@@ -174,12 +174,23 @@ class SummaryData:
             
             objectiveList : list[Objective] = list()
             for objectiveName, objectiveStat in objectives.items():
-                objectiveObject = Objective(objectiveName,
-                                            objectiveStat['first'],
-                                            objectiveStat['kills'])
+                objectiveObject = Objective(
+                    objectiveName,
+                    objectiveStat['first'],
+                    objectiveStat['kills']
+                )
                 objectiveList.append(objectiveObject)
             
-            teamObject = TeamEndGameStat(banList, objectiveList,
-                                         team['teamId'],
-                                         team['win'])
+            teamObject = TeamEndGameStat(
+                banList, objectiveList,
+                team['teamId'],
+                team['win']
+            )
             self.teams.append(teamObject)
+            
+    def getObjectiveCount(self, side : int, objectiveName : str) -> int:
+        # Blue side : 0, red side : 1
+        objectiveObject : Objective
+        for objectiveObject in self.teams[side].objectives:
+            if objectiveObject.objectiveName == objectiveName:
+                return objectiveObject.kills

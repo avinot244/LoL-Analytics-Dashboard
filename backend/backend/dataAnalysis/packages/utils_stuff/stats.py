@@ -24,7 +24,6 @@ def saveDiffStatGame(stat : GameStat, path : str, snapShot : Snapshot):
             data.append(stat.playerCSDiff[i])
             data.append(stat.playerGoldDiff[i])
             writer.writerow(data)
-              
 
 def saveDiffStatBO(statList : list[GameStat], path : str, snapShotList : list[Snapshot]):
     teamOneName = snapShotList[0].teams[0].getTeamName()
