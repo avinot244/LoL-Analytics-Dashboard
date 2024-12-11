@@ -66,7 +66,7 @@ def getGameDuration(seriesId : int, gameNumber : int):
 def getSummaryData(seriesId : int, gameNumber : int) -> SummaryData:
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
 
-    pathSummaryData : str = DATA_PATH + "games/bin" + match + "end_state_summary_riot_" + seriesId + "_" + gameNumber + ".json"
+    pathSummaryData : str = DATA_PATH + "games/bin/" + match + "/end_state_summary_riot_" + seriesId + "_" + gameNumber + ".json"
     summaryData : SummaryData = SummaryData(pathSummaryData)
     return summaryData
 
