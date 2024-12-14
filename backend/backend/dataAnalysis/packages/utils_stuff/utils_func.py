@@ -6,9 +6,11 @@ import pickle
 import shutil
 import csv
 import time as t_time
+from typing import Union
 
 from dataAnalysis.packages.utils_stuff.globals import *
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
+from dataAnalysis.packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from dataAnalysis.globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -63,11 +65,17 @@ def getGameDuration(seriesId : int, gameNumber : int):
             res : dict = json.load(json_file)
             return res["gameDuration"]
 
-def getSummaryData(seriesId : int, gameNumber : int) -> SummaryData:
-    match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
+def getSummaryData(seriesId : int, gameNumber : int, type_s : str) -> Union[SummaryData, SummaryDataGrid]:
+    if type_s == "riot":
+        
+        match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
 
-    pathSummaryData : str = DATA_PATH + "games/bin/" + match + "/end_state_summary_riot_" + seriesId + "_" + gameNumber + ".json"
-    summaryData : SummaryData = SummaryData(pathSummaryData)
+        pathSummaryData : str = DATA_PATH + "games/bin/" + match + "/end_state_summary_riot_" + seriesId + "_" + gameNumber + ".json"
+        summaryData : SummaryData = SummaryData(pathSummaryData)
+    elif type_s == "grid":
+        pathSummaryData : str = DATA_PATH + "games/bin/end_state_" + seriesId + "_grid.json"
+        summaryData : SummaryDataGrid = SummaryDataGrid(pathSummaryData)
+        
     return summaryData
 
 def getData(seriesId : int, gameNumber : int):

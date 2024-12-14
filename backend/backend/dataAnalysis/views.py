@@ -20,7 +20,7 @@ from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
 from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
-from .packages.Parsers.EMH.Summary.SummaryData import SummaryData
+from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
 from .packages.utils_stuff.plots.densityPlot import getPositionsMultipleGames, getPositionsSingleGame, densityPlot
@@ -137,11 +137,11 @@ def download_latest(request, rawTournamentList : str):
                             winningTeam : int = data.winningTeam
                             tournament : str = get_tournament_from_seriesId(seriesId)
                             
-                            summaryData : SummaryData = getSummaryData(seriesId, gameNumber)
-                            dragonBlueKills : int = summaryData.getObjectiveCount(0, "dragon")
-                            dragonRedKills : int = summaryData.getObjectiveCount(1, "dragon")
-                            krubsBlueKills : int = summaryData.getObjectiveCount(0, "horde")
-                            krubsRedKills : int = summaryData.getObjectiveCount(1, "horde")
+                            summaryDataGrid : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
+                            dragonBlueKills : int = summaryDataGrid.getDrakeCount(0)
+                            dragonRedKills : int = summaryDataGrid.getDrakeCount(1)
+                            krubsBlueKills : int = summaryDataGrid.getGrubsCount(0)
+                            krubsRedKills : int = summaryDataGrid.getGrubsCount(1)
                             # Saving game metadata to SQLite datbase
                             gameMetadata : GameMetadata = GameMetadata(
                                 date=date, 

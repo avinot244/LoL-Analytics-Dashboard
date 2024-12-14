@@ -91,3 +91,19 @@ class SummaryDataGrid:
         for objectiveObject in self.teams[side].objectives:
             if objectiveObject.id == objectiveId:
                 return objectiveObject.completionCount
+            
+    def getDrakeCount(self, side : int) -> int:
+        # Blue side : 0, red side : 1
+        objectiveObject : ObjectiveGrid
+        completionCount : int = 0
+        for objectiveObject in self.teams[side].objectives:
+            if "Drake" in objectiveObject.id:
+                completionCount += objectiveObject.completionCount
+        return completionCount
+    
+    def getGrubsCount(self, side : int) -> int:
+        # Blue side : 0, red side : 1
+        objectiveObject : ObjectiveGrid
+        for objectiveObject in self.teams[side].objectives:
+            if objectiveObject.id == "slayVoidGrub":
+                return objectiveObject.completionCount
