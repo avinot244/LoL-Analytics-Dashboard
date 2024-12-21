@@ -231,7 +231,7 @@ class SeparatedData:
             return self.gameSnapshotList[0].teams[0].getPlayerID(playerName)
         else:
             return self.gameSnapshotList[0].teams[1].getPlayerID(playerName)
- 
+
     def splitData(self, gameDuration : int, splitList : list[int]):
         snapshotListTemp : list[list[Snapshot]] = [[] for _ in range(len(splitList))]
         res : list[SeparatedData] = list() # List of len 1+len(splitList)

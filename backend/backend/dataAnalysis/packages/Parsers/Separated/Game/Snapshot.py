@@ -1,13 +1,15 @@
 from dataAnalysis.packages.Parsers.Separated.Game.Team import Team
 
 class Snapshot:
-    def __init__(self,
-                 gameID : int,
-                 gameName : str,
-                 seqIdx : int,
-                 gameTime : int,
-                 platformID : str,
-                 teams : list[Team]):
+    def __init__(
+        self,
+        gameID : int,
+        gameName : str,
+        seqIdx : int,
+        gameTime : int,
+        platformID : str,
+        teams : list[Team]
+    ):
         self.gameID = gameID
         self.gameName = gameName
         self.seqIdx = seqIdx
