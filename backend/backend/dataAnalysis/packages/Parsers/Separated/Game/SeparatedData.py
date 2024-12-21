@@ -226,6 +226,24 @@ class SeparatedData:
                     positionList.append(positionPlayer)
         return positionList
     
+    def getPlayerPositionHistory(self, gameDuration: int, participantID : int, begTime : int, endTime : int) -> list[Position]:
+        positionList : list[Position] = list()
+        splitList : list[int] = [begTime, endTime]
+        data : SeparatedData = self.splitData(gameDuration, splitList)[1]
+        
+        for gameSnapshot in data.gameSnapshotList:
+            if gameSnapshot.teams[0].isPlayerInTeam(participantID):
+                playerIdx : int = gameSnapshot.teams[0].getPlayerIdx(participantID)
+                if gameSnapshot.teams[0].players[playerIdx].isAlive():
+                    positionPlayer : Position = gameSnapshot.teams[0].getPlayerPosition(playerIdx)
+                    positionList.append(positionPlayer)
+            else:
+                playerIdx : int = gameSnapshot.teams[1].getPlayerIdx(participantID)
+                if gameSnapshot.teams[1].players[playerIdx].isAlive():
+                    positionPlayer : Position = gameSnapshot.teams[1].getPlayerPosition(playerIdx)
+                    positionList.append(positionPlayer)
+        return positionList
+    
     def getPlayerID(self, playerName : str) -> int:
         assert (playerName in self.gameSnapshotList[0].teams[0].getPlayerList()) or (playerName in self.gameSnapshotList[0].teams[1].getPlayerList())
         if playerName in self.gameSnapshotList[0].teams[0].getPlayerList():
