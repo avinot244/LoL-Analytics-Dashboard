@@ -60,7 +60,6 @@ def saveDiffStatBO(statList : list[GameStat], path : str, snapShotList : list[Sn
             data.append(playerGoldDiffAvg[i])
             writer.writerow(data)
 
-            
 def getJungleProximity(data : SeparatedData, team : int):
     """team attribute stands for the number of the team (can be either zero or one)"""
     jungleProximitySummary : dict = dict()
@@ -89,7 +88,7 @@ def getJungleProximity(data : SeparatedData, team : int):
     
     return jungleProximitySummary
 
-def getProxomityMatrix(data : SeparatedData, team : int):
+def getProximityMatrix(data : SeparatedData, team : int):
     proximityMatrix : list[list] = list()
     for _ in range(5):
         proximityMatrix.append([0, 0, 0, 0, 0])

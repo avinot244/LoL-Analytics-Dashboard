@@ -87,6 +87,17 @@ jungleRedBot = [Position(10049, 6069), Position(10826, 5910), Position(11225, 56
 
 mapCenter = Position(MINIMAP_WIDTH//2, MINIMAP_HEIGHT//2)
 
+baseBlueBoundaries = [
+    Position(0, 0), Position(0, 1237), Position(457, 1393), Position(785, 1364), Position(1144, 1229), Position(1383, 833),
+    Position(1457, 475), Position(1278, 0)
+]
+
+baseRedBoundaries = [
+    Position(14750, 14750), Position(14750, 1352), Position(13327, 14318), Position(13357, 13959), Position(13586, 13565),
+    Position(13929, 13334), Position(14267, 13275), Position(14750, 13447)
+]
+
+
 roleMap : dict = {0 : "Top",
                   1 : "Jungle",
                   2 : "Mid",

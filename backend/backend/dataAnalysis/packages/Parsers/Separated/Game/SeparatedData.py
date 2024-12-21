@@ -364,3 +364,9 @@ class SeparatedData:
                     
                     writer.writerow(data)
                     data = []
+
+    def getResetTriggers(self):
+        pass
+    
+    def getResetPosition(self):
+        pass

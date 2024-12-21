@@ -14,7 +14,7 @@ from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide, getPlayerTeam
 from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
-from .packages.utils_stuff.stats import getProxomityMatrix
+from .packages.utils_stuff.stats import getProximityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
@@ -784,8 +784,8 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
     splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
 
     dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-    proximityMatrixBlue : list[list] = getProxomityMatrix(dataBeforeTime, 0)
-    proximityMatrixRed : list[list] = getProxomityMatrix(dataBeforeTime, 1)
+    proximityMatrixBlue : list[list] = getProximityMatrix(dataBeforeTime, 0)
+    proximityMatrixRed : list[list] = getProximityMatrix(dataBeforeTime, 1)
 
     teamBlue : Team = dataBeforeTime.gameSnapshotList[0].teams[0]
     teamRed : Team = dataBeforeTime.gameSnapshotList[0].teams[1]
