@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from dataAnalysis.packages.utils_stuff.Position import Position
-from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import item_destroyed_reason_types
+from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import *
 
 @dataclass
 class ItemPurchasedEvent():
@@ -45,7 +45,7 @@ class SummonnerSpellUsedEvent():
     maxCooldown : int
     maxRechargeTume : int
     participantID : int
-    summonnerSpellName : str # add Literal typing
+    summonnerSpellName : summonner_spell_name_types
     summonnerSpellSlot : int
     
     
@@ -95,14 +95,14 @@ class ChampionKillEvent():
 @dataclass
 class ChampionKillSpecialEvent():
     gameTume : int
-    killType : str # add Literal typing
+    killType : champion_kill_types
     killerID : int
     position : Position
     sequenceIndex : int
     
 @dataclass
 class ChannelingStartedEvent():
-    channelingType : str # add Literal typing
+    channelingType : channeling_types
     gameTime : int
     inventorySlot : int
     participantID : int
@@ -123,11 +123,11 @@ class WardPlacedEvent():
     placerID : int
     position : Position
     sequenceIndex : int
-    wardType: str # add Literal typing
+    wardType: ward_types
     
 @dataclass
 class ChannelingEndedEvent():
-    channelingType : str # add Literal typing
+    channelingType : channeling_types
     gameTime : int
     inventorySlot : int
     isInterrupted : bool
@@ -137,23 +137,23 @@ class ChannelingEndedEvent():
 @dataclass
 class NeutralMinionSpawnEvent():
     gameTime : int
-    monsterType : str # add Literal typing
+    monsterType : monster_types
     position : Position
     sequenceIndex : int
-    teamSide : str # add Literal typing
+    teamSide : team_side_types
     
 @dataclass
 class EpicMonsterKillEvent(): #parse more events epic_monster_kill
-    assistants : list
+    assistants : list[int] # List of participant IDs that helped killing said building
     bountyGold : int
     gameTime : int
     inEnemyJungle : bool
-    killType : str # add Literal typing
+    killType : epic_monster_kill_types
     killerID : int
     killerGold : int
     killerTeamID : int
     localGold : int
-    monsterType : str # add Literal typing
+    monsterType : monster_types
     position : Position
     sequenceIndex : int
     
@@ -170,13 +170,13 @@ class WardKilledEvent():
     killerID : int
     position : Position
     sequenceIndex : int
-    wardType : str # add Literal typing
+    wardType : ward_types
     
 @dataclass
 class EpicMonsterSpawnEvent():
-    dragonType : str # add Literal typing
+    dragonType : dragon_types
     gameTime : int
-    monsterType : str # add Literal typing
+    monsterType : epic_monster_types
     sequenceIndex : int
     
 @dataclass
@@ -197,7 +197,7 @@ class ItemUndoEvent():
     
 @dataclass
 class TurretPlateDestroyedEvent():
-    lane : str # add Literal typing
+    lane : lane_types
     lastHitterID : int
     position : Position
     sequenceIndex : int
@@ -213,29 +213,29 @@ class TurretPlateGoldEarnedEvent():
 @dataclass
 class BuildingGoldGrantEvent():
     amount : int
-    lane : str # add Literal typing
+    lane : lane_types
     position : Position
     recipientID : int
     sequenceIndex : int
-    source : str # add Literal typing
+    source : source_gold_grant_types
     teamID : int
-    turretTier : str # add Literal typing
+    turretTier : turret_tier_types # /!\ field value might not exist
     
 @dataclass
 class BuildingDestroyedEvent(): # parse more events building_destroyed
-    assistants : list
+    assistants : list[int] # List of participant IDs that helped killing said building
     bountyGold : int
-    buildingType : str # add Literal typing
+    buildingType : building_types
     gameTime : int
-    lane : str # add Literal typing
+    lane : lane_types
     lastHitterID : int
     position : Position
     sequenceIndex : int
     teamID : int
-    turretTier : str # add Literal typing
+    turretTier : turret_tier_types # /!\ field value might not exist
 
 @dataclass 
-class ObjectiveBOuntyPrestartEvent():
+class ObjectiveBountyPrestartEvent():
     actualStartTime : int
     gameTime : int
     sequenceIndex : int

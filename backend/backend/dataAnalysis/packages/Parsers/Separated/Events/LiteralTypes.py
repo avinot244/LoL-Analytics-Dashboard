@@ -1,3 +1,16 @@
 from typing import Literal
 
 item_destroyed_reason_types = Literal["sidegrade", "consume", "component", "other"]
+summonner_spell_name_types = Literal["SummonerDot", "SummonerFlash", "SummonerSmite", "SummonerTeleport", "SummonerBoost", "SummonerFlashPerksHextechFlashtraptionV2", "S5_SummonerSmitePlayerGanker", "S12_SummonerTeleportUpgrade", "SummonerSmiteAvatarUtility", "SummonerHeal", "SummonerSmiteAvatarOffensive", "SummonerBarrier"]
+champion_kill_types = Literal["firstBlood", "multi", "ace"]
+channeling_types = Literal["recall", "skill", "summonerSpell"]
+ward_types = Literal["yellowTrinket", "unknown", "control", "sight", "blueTrinket"]
+monster_types = Literal["RedCamp", "BlueCamp", "Raptor", "Wolf", "Gromp", "Krug", "ScuttleCrab", "VoidGrub", "RiftHerald", "Baron"]
+team_side_types = Literal["Order", "Chaos", "Unknown"]
+epic_monster_kill_types = Literal["kill", "steal"]
+dragon_types = Literal["air", "fire", "earth", "water", "chemtech", "hextech", "elder"]
+epic_monster_types = Literal["dragon"]
+lane_types = Literal["top", "bot", "mid"]
+source_gold_grant_types = Literal["turretPlate", "turret", "inhibitor", "nexus"]
+turret_tier_types = Literal["outer", "inner", "base", "nexus"]
+building_types = Literal["turret", "inhibitor", "nexus"]
