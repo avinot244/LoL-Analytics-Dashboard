@@ -226,7 +226,7 @@ class SeparatedData:
                     positionList.append(positionPlayer)
         return positionList
     
-    def getPlayerPositionHistory(self, gameDuration: int, participantID : int, begTime : int, endTime : int) -> list[Position]:
+    def getPlayerPositionHistoryTimeFramed(self, gameDuration: int, participantID : int, begTime : int, endTime : int) -> list[Position]:
         positionList : list[Position] = list()
         splitList : list[int] = [begTime, endTime]
         data : SeparatedData = self.splitData(gameDuration, splitList)[1]
