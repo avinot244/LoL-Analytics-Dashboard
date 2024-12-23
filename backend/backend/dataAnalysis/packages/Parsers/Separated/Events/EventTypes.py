@@ -2,16 +2,17 @@ from dataclasses import dataclass
 
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import *
+from dataAnalysis.packages.Parsers.Separated.Events.Event import Event
 
 @dataclass
-class ItemPurchasedEvent():
+class ItemPurchasedEvent(Event):
     gameTime : int
     itemID : int
     participantID : int
     sequenceIndex : int 
     
 @dataclass
-class ItemDestroyedEvent():
+class ItemDestroyedEvent(Event):
     gameTime : int
     itemID : int
     participantID : int
@@ -19,7 +20,7 @@ class ItemDestroyedEvent():
     sequenceIndex : int
     
 @dataclass 
-class SkillLevelUpEvent():
+class SkillLevelUpEvent(Event):
     evolved : bool
     gameTime : int
     participantID : int
@@ -27,7 +28,7 @@ class SkillLevelUpEvent():
     skillSlot : int
     
 @dataclass
-class SkillUsedEvent():
+class SkillUsedEvent(Event):
     chargesRemaining : int
     gameTime : int
     maxCharges : int
@@ -38,7 +39,7 @@ class SkillUsedEvent():
     skillSlot : int
     
 @dataclass
-class SummonnerSpellUsedEvent():
+class SummonnerSpellUsedEvent(Event):
     chargesRemaining : int
     gameTime : int
     maxCharges : int
@@ -50,7 +51,7 @@ class SummonnerSpellUsedEvent():
     
     
 @dataclass
-class ChampionKillEvent():
+class ChampionKillEvent(Event):
     assistants : list[int]
     bounty : int
     deathRecap : list[dict]
@@ -93,7 +94,7 @@ class ChampionKillEvent():
 # ]
 
 @dataclass
-class ChampionKillSpecialEvent():
+class ChampionKillSpecialEvent(Event):
     gameTume : int
     killType : champion_kill_types
     killerID : int
@@ -101,7 +102,7 @@ class ChampionKillSpecialEvent():
     sequenceIndex : int
     
 @dataclass
-class ChannelingStartedEvent():
+class ChannelingStartedEvent(Event):
     channelingType : channeling_types
     gameTime : int
     inventorySlot : int
@@ -109,7 +110,7 @@ class ChannelingStartedEvent():
     sequenceIndex : int
     
 @dataclass
-class ItemActiveAbilityUsedEvent():
+class ItemActiveAbilityUsedEvent(Event):
     gameTime : int
     inventorySlot : int
     itemID : int
@@ -118,7 +119,7 @@ class ItemActiveAbilityUsedEvent():
     sequenceIndex : int
     
 @dataclass
-class WardPlacedEvent():
+class WardPlacedEvent(Event):
     gameTime : int
     placerID : int
     position : Position
@@ -126,7 +127,7 @@ class WardPlacedEvent():
     wardType: ward_types
     
 @dataclass
-class ChannelingEndedEvent():
+class ChannelingEndedEvent(Event):
     channelingType : channeling_types
     gameTime : int
     inventorySlot : int
@@ -135,7 +136,7 @@ class ChannelingEndedEvent():
     sequenceIndex : int
     
 @dataclass
-class NeutralMinionSpawnEvent():
+class NeutralMinionSpawnEvent(Event):
     gameTime : int
     monsterType : monster_types
     position : Position
@@ -143,7 +144,7 @@ class NeutralMinionSpawnEvent():
     teamSide : team_side_types
     
 @dataclass
-class EpicMonsterKillEvent(): #parse more events epic_monster_kill
+class EpicMonsterKillEvent(Event): #parse more events epic_monster_kill
     assistants : list[int] # List of participant IDs that helped killing said building
     bountyGold : int
     gameTime : int
@@ -158,14 +159,14 @@ class EpicMonsterKillEvent(): #parse more events epic_monster_kill
     sequenceIndex : int
     
 @dataclass
-class ChampionLevelUPEvent():
+class ChampionLevelUPEvent(Event):
     gameTime : int
     level : int
     participantID : int
     sequenceIndex : int
     
 @dataclass 
-class WardKilledEvent():
+class WardKilledEvent(Event):
     gameTime : int
     killerID : int
     position : Position
@@ -173,21 +174,21 @@ class WardKilledEvent():
     wardType : ward_types
     
 @dataclass
-class EpicMonsterSpawnEvent():
+class EpicMonsterSpawnEvent(Event):
     dragonType : dragon_types
     gameTime : int
     monsterType : epic_monster_types
     sequenceIndex : int
     
 @dataclass
-class ItemSoldEvent():
+class ItemSoldEvent(Event):
     gameTime : int
     itemID : int
     participantID : int
     sequenceIndex : int
     
 @dataclass
-class ItemUndoEvent():
+class ItemUndoEvent(Event):
     gameTime : int
     goldGain : int
     itemIDAfterUndo : int
@@ -196,14 +197,14 @@ class ItemUndoEvent():
     sequenceIndex : int
     
 @dataclass
-class TurretPlateDestroyedEvent():
+class TurretPlateDestroyedEvent(Event):
     lane : lane_types
     lastHitterID : int
     position : Position
     sequenceIndex : int
     
 @dataclass
-class TurretPlateGoldEarnedEvent():
+class TurretPlateGoldEarnedEvent(Event):
     bounty : int
     gameTime : int
     participantID : int
@@ -211,7 +212,7 @@ class TurretPlateGoldEarnedEvent():
     teamID : int
     
 @dataclass
-class BuildingGoldGrantEvent():
+class BuildingGoldGrantEvent(Event):
     amount : int
     lane : lane_types
     position : Position
@@ -222,7 +223,7 @@ class BuildingGoldGrantEvent():
     turretTier : turret_tier_types # /!\ field value might not exist
     
 @dataclass
-class BuildingDestroyedEvent(): # parse more events building_destroyed
+class BuildingDestroyedEvent(Event): # parse more events building_destroyed
     assistants : list[int] # List of participant IDs that helped killing said building
     bountyGold : int
     buildingType : building_types
@@ -235,14 +236,14 @@ class BuildingDestroyedEvent(): # parse more events building_destroyed
     turretTier : turret_tier_types # /!\ field value might not exist
 
 @dataclass 
-class ObjectiveBountyPrestartEvent():
+class ObjectiveBountyPrestartEvent(Event):
     actualStartTime : int
     gameTime : int
     sequenceIndex : int
     teamID : int
 
 @dataclass
-class ObjectiveBountyFInishedEvent():
+class ObjectiveBountyFInishedEvent(Event):
     gameTime : int
     sequenceIndex : int
     teamID : int
