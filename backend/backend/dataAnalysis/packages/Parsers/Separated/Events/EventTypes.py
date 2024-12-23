@@ -5,6 +5,31 @@ from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import *
 from dataAnalysis.packages.Parsers.Separated.Events.Event import Event
 
 @dataclass
+class QueuedEpicMonsterInfoEvent(Event):
+    gameTime : int
+    monsterName: monster_names_types
+    sequenceIndex : int
+    spawnTime : int
+
+@dataclass
+class ReconnectEvent(Event):
+    gameTime : int
+    participantID : int
+    sequenceIndex : int
+    
+@dataclass
+class PauseEndedEvent(Event):
+    gameTime : int
+    sequenceIndex : int
+
+@dataclass
+class QueuedDragonInfoEvent(Event):
+    gameTime : int
+    nextDragonName: dragon_types
+    nexDragonSpawnTime : int
+    sequenceIndex : int
+
+@dataclass
 class ItemPurchasedEvent(Event):
     gameTime : int
     itemID : int
