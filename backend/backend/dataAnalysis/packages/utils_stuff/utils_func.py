@@ -109,11 +109,7 @@ def getData(seriesId : int, gameNumber : int) -> tuple[SeparatedData, int, int, 
                 t_time.sleep(1)
                 winningTeam = data.winningTeam
                 tournament = get_tournament_from_seriesId(seriesId)
-                summaryData : SummaryData = getSummaryData(seriesId, gameNumber)
-                dragonBlueKills : int = summaryData.getObjectiveCount(0, "dragon")
-                dragonRedKills : int = summaryData.getObjectiveCount(1, "dragon")
-                krubsBlueKills : int = summaryData.getObjectiveCount(0, "horde")
-                krubsRedKills : int = summaryData.getObjectiveCount(1, "horde")
+                symmaryDataGrid : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
                 dataCSV = [
                     matchDate, 
                     tournament, 
@@ -124,10 +120,18 @@ def getData(seriesId : int, gameNumber : int) -> tuple[SeparatedData, int, int, 
                     teamRed, 
                     winningTeam, 
                     gameNumber, 
-                    dragonBlueKills, 
-                    dragonRedKills,
-                    krubsBlueKills,
-                    krubsRedKills
+                    symmaryDataGrid.getDrakeCount(0), 
+                    symmaryDataGrid.getDrakeCount(1),
+                    symmaryDataGrid.getGrubsCount(0),
+                    symmaryDataGrid.getGrubsCount(1),
+                    data.getHeraldKills(0),
+                    data.getHeraldKills(1),
+                    data.getBaronKills(0),
+                    data.getBaronKills(1),
+                    data.getFirstBlood(),
+                    data.getFirstTower(),
+                    data.getTurretKills(0),
+                    data.getTurretKills(1)
                 ]
                 
                 writer.writerow(dataCSV)
