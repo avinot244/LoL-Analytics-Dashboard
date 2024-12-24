@@ -120,7 +120,7 @@ class ChampionKillEvent(Event):
 
 @dataclass
 class ChampionKillSpecialEvent(Event):
-    gameTume : int
+    gameTime : int
     killType : champion_kill_types
     killerID : int
     position : Position
@@ -184,7 +184,7 @@ class EpicMonsterKillEvent(Event): #parse more events epic_monster_kill
     sequenceIndex : int
     
 @dataclass
-class ChampionLevelUPEvent(Event):
+class ChampionLevelUpEvent(Event):
     gameTime : int
     level : int
     participantID : int
@@ -268,7 +268,7 @@ class ObjectiveBountyPrestartEvent(Event):
     teamID : int
 
 @dataclass
-class ObjectiveBountyFInishedEvent(Event):
+class ObjectiveBountyFinishedEvent(Event):
     gameTime : int
     sequenceIndex : int
     teamID : int

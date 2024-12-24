@@ -78,7 +78,7 @@ def getSummaryData(seriesId : int, gameNumber : int, type_s : str) -> Union[Summ
         
     return summaryData
 
-def getData(seriesId : int, gameNumber : int):
+def getData(seriesId : int, gameNumber : int) -> tuple[SeparatedData, int, int, int]:
     
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
 

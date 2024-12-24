@@ -212,6 +212,58 @@ class SeparatedData:
             # self.begGameTime = self.gameSnapshotList[0].gameTime
             self.matchName = ""
     
+    def getHeraldKills(self, team : int):
+        # team : 0 for blue team, 1 for red team
+        heraldKills : int = 0
+        
+        for event in self.eventList:
+            if event.event_type == "epic_monster_kill" and event.getEvent().monsterType == "RiftHerald":
+                if team == 0 and event.getEvent().killerTeamID == 100:
+                    heraldKills += 1
+                elif team == 1 and event.getEvent().killerTeamID == 200:
+                    heraldKills += 1
+        return heraldKills
+    
+    def getBaronKills(self, team : int):
+        # team : 0 for blue team, 1 for red team
+        heraldKills : int = 0
+        
+        for event in self.eventList:
+            if event.event_type == "epic_monster_kill" and event.getEvent().monsterType == "Baron":
+                if team == 0 and event.getEvent().killerTeamID == 100:
+                    heraldKills += 1
+                elif team == 1 and event.getEvent().killerTeamID == 200:
+                    heraldKills += 1
+        return heraldKills
+    
+    def getFirstBlood(self):
+        championKillEventList : list[Event] = [event for event in self.eventList if event.event_type == "champion_kill"]
+        championKillEventList.sort(key=lambda event: event.getEvent().gameTime)
+        if championKillEventList[0].getEvent().killerTeamID == 100:
+            return 0
+        else:
+            return 1
+    
+    def getFirstTower(self):
+        turretDestroyedEventList : list[Event] = [event for event in self.eventList if event.event_type == "building_destroyed" and event.getEvent().buildingType == "turret"]
+        turretDestroyedEventList.sort(key=lambda event: event.getEvent().gameTime)
+        if turretDestroyedEventList[0].getEvent().teamID == 100:
+            return 0
+        else:
+            return 1
+    
+    def getTurretKills(self, team : int):
+        # team : 0 for blue team, 1 for red team
+        turretKills : int = 0
+        
+        for event in self.eventList:
+            if event.event_type == "building_destroyed" and event.getEvent().buildingType == "turret":
+                if team == 0 and event.getEvent().teamID == 100:
+                    turretKills += 1
+                elif team == 1 and event.getEvent().teamID == 200:
+                    turretKills += 1
+        return turretKills
+    
     def getPlayerList(self):
         firstGameSnapshot = self.gameSnapshotList[0]
         playersTeamOne : list[str] = firstGameSnapshot.teams[0].getPlayerList()

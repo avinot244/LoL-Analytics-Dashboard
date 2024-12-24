@@ -128,34 +128,32 @@ def download_latest(request, rawTournamentList : str):
                         if not(isGameDownloaded(int(seriesId), gameNumberIt)) and flag:
                             # print("saving to db")
                             # Getting relative information about the game
-                            date = convertDate(get_date_from_seriesId(seriesId))
-                            name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
                             (data, _, _, _) = getData(int(seriesId), gameNumberIt)
-                            patch : str = data.patch
-                            teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
-                            teamRed : str = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
-                            winningTeam : int = data.winningTeam
-                            tournament : str = get_tournament_from_seriesId(seriesId)
                             
                             summaryDataGrid : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
-                            dragonBlueKills : int = summaryDataGrid.getDrakeCount(0)
-                            dragonRedKills : int = summaryDataGrid.getDrakeCount(1)
-                            krubsBlueKills : int = summaryDataGrid.getGrubsCount(0)
-                            krubsRedKills : int = summaryDataGrid.getGrubsCount(1)
                             # Saving game metadata to SQLite datbase
                             gameMetadata : GameMetadata = GameMetadata(
-                                date=date, 
-                                tournament=tournament, 
-                                name=name, patch=patch, 
+                                date=convertDate(get_date_from_seriesId(seriesId)), 
+                                tournament=get_tournament_from_seriesId(seriesId), 
+                                name="{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt), 
+                                patch=data.patch, 
                                 seriesId=seriesId, 
-                                teamBlue=teamBlue, 
-                                teamRed=teamRed, 
-                                winningTeam=winningTeam, 
+                                teamBlue=data.gameSnapshotList[0].teams[0].getTeamName(seriesId), 
+                                teamRed=data.gameSnapshotList[0].teams[1].getTeamName(seriesId), 
+                                winningTeam=data.winningTeam, 
                                 gameNumber=gameNumberIt,
-                                dragonBlueKills=dragonBlueKills,
-                                dragonRedKills=dragonRedKills,
-                                krubsBlueKills=krubsBlueKills,
-                                krubsRedKills=krubsRedKills
+                                dragonBlueKills=summaryDataGrid.getDrakeCount(0),
+                                dragonRedKills=summaryDataGrid.getDrakeCount(1),
+                                voidGrubsBlueKills=summaryDataGrid.getGrubsCount(0),
+                                voidGrubsRedKills=summaryDataGrid.getGrubsCount(1),
+                                heraldBlueKills=data.getHeraldKills(0),
+                                heraldRedKills=data.getHeraldKills(1),
+                                baronBlueKills=data.getBaronKills(0),
+                                baronRedKills=data.getBaronKills(1),
+                                firstBlood=data.getFirstBlood(),
+                                firstTower=data.getFirstTower(),
+                                turretBlueKills=data.getTurretKills(0),
+                                turretRedKills=data.getTurretKills(1),
                             )
                             gameMetadata.save()
                         else :
@@ -233,55 +231,6 @@ def get_tournament_dict(request):
             tournamentList.append({res.tournament:queryResult.filter(tournament__exact=res.tournament).count()})
     
     return Response(tournamentList)
-
-@api_view(['PATCH'])
-def update_bins(request):
-    df = pd.read_csv(DATA_PATH + "games/data_metadata.csv",sep=";")
-
-    for seriesId in df["SeriesId"].unique().tolist():
-        gameNumber = 1
-        if not(seriesId in BLACKLIST) and not(os.path.exists(DATA_PATH + "games/bin/{}_ESPORTS_1dataSeparatedRIOT".format(seriesId))):
-            dlDict : dict = get_all_download_links(seriesId)
-            print("\tChecking game of seriesId :", seriesId)
-            i = 0
-            for downloadDict in dlDict['files']:
-                fileType = downloadDict["fileName"].split(".")[-1]
-                fileName = downloadDict["fileName"].split(".")[0]
-
-                if fileType != "rofl" and downloadDict["status"] == "ready":
-                    if i > 1:
-                        # The first 2 files are global info about the Best-of
-                        # We have 4 files per games
-                        # We add 1 to start the gameNumber list at 1
-                        gameNumber = (i-2)//4 + 1
-                        if gameNumber < get_nb_games_seriesId(seriesId) + 1:
-                            path : str = DATA_PATH + "games/bin/" + "{}_{}_{}/".format(seriesId, "ESPORTS", gameNumber)
-                            print("\t\tDownloading {} files".format(fileName))
-                            download_from_link(downloadDict['fullURL'], fileName, path, fileType)
-
-                elif fileType == "rofl":
-                    print("\t\twe don't download rofl file")
-                i += 1
-
-            # Save game metadata in csv and sqlite databases
-            print("Saving to database ({} games)".format(get_nb_games_seriesId(seriesId)))
-            for gameNumberIt in range(1, get_nb_games_seriesId(seriesId) + 1):
-                # Getting relative information about the game
-                date = get_date_from_seriesId(seriesId)
-                name : str = "{}_ESPORTS_{}dataSeparatedRIOT".format(seriesId, gameNumberIt)
-
-                (data, _, _, _) = getData(int(seriesId), gameNumberIt)
-                patch : str = data.patch
-                teamBlue : str = data.gameSnapshotList[0].teams[0].getTeamName()
-                teamRed : str = data.gameSnapshotList[1].teams[0].getTeamName()
-                winningTeam : int = data.winningTeam
-
-                
-                # Saving game metadata to SQLite datbase
-                gameMetadata : GameMetadata = GameMetadata(date=date, name=name, patch=patch, seriesId=seriesId, teamBlue=teamBlue, teamRed=teamRed, winningTeam=winningTeam, gameNumber=gameNumber)
-                gameMetadata.save()
-
-    return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
 def delete_all_gameMetadata(request):
