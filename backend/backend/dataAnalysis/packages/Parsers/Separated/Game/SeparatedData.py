@@ -15,6 +15,9 @@ from dataAnalysis.packages.Parsers.Separated.Draft.Ban import Ban
 from dataAnalysis.packages.Parsers.Separated.Draft.TeamDraft import TeamDraft
 from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraft
 
+from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import event_types
+from dataAnalysis.packages.Parsers.Separated.Events.Event import Event
+
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
 from dataAnalysis.packages.utils_stuff.reset_trigger import didPlayerReset
@@ -41,6 +44,7 @@ class SeparatedData:
             self.endGameTime : int = 0
             self.patch : str = ""
             self.draftSnapshotList : list[DraftSnapshot] = list()
+            self.eventList : list[Event] = list()
             print("Parsing game snapshot files from root directory {}".format(root_dir))
 
             for subdir, _, files in os.walk(root_dir, topdown=True):
@@ -181,7 +185,10 @@ class SeparatedData:
                                                                     df["name"][0], 
                                                                     tempBanList,
                                                                     tempTeamDraft))
-
+                    elif df["rfc461Schema"][0] in event_types:
+                        event : Event = Event(df["rfc461Schema"][0])
+                        self.eventList.append(event.getEvent())
+            
             if len(self.gameSnapshotList) > 0:
                 self.endGameTime = self.gameSnapshotList[-1].gameTime
                 self.playerPicks : list[PlayerDraft] = list()
