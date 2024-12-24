@@ -170,7 +170,7 @@ class NeutralMinionSpawnEvent(Event):
     
 @dataclass
 class EpicMonsterKillEvent(Event): #parse more events epic_monster_kill
-    assistants : list[int] # List of participant IDs that helped killing said building
+    assistants : list[int] # List of participant IDs that helped killing said epic monster
     bountyGold : int
     gameTime : int
     inEnemyJungle : bool
