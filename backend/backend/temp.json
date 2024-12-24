@@ -1,20 +1,18 @@
 {
-    "evolved": false,
     "gameID": 90304,
     "gameName": "112966669924194881|game1",
-    "gameTime": 27075,
-    "participant": 7,
+    "gameTime": 0,
     "path": "/events/lol",
     "platformID": "LOLTMNT05",
     "playbackID": 1,
-    "repeater_timestamp": "2024-11-02T14:36:17.938412900Z",
+    "repeater_timestamp": "2024-11-02T14:35:50.705271600Z",
     "rfc001Scope": "riot.lol.mgs.sx",
     "rfc190Scope": "lolesports.off1.loltmnt05-gbl02.lolgame.livestats",
     "rfc460Hostname": "gbl02-lolvm-srv05.gbl02.riotsports.io",
-    "rfc460Timestamp": "2024-11-02T14:36:17.186Z",
-    "rfc461Schema": "skill_level_up",
-    "sequenceIndex": 79,
-    "skillSlot": 1,
+    "rfc460Timestamp": "2024-11-02T14:35:50.114Z",
+    "rfc461Schema": "pause_ended",
+    "sequenceIndex": 14,
     "source_type": "http_server",
-    "stageID": 1
+    "stageID": 1,
+    "wallTime": 1730558150113
 }
