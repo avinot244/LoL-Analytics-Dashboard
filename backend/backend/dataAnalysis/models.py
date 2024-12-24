@@ -19,8 +19,6 @@ class GameMetadata(models.Model):
     heraldRedKills = models.IntegerField("heraldRedKills")
     baronBlueKills = models.IntegerField("baronBlueKills")
     baronRedKills = models.IntegerField("baronRedKills")
-    elderBlueKills = models.IntegerField("elderBlueKills")
-    elderRedKills = models.IntegerField("elderRedKills")
     firstBlood = models.IntegerField("firstBlood")
     firstTower = models.IntegerField("firstTower")
     turretBlueKills = models.IntegerField("turretBlueKills")
