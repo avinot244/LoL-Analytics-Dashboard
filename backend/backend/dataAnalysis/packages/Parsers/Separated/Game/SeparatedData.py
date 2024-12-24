@@ -52,9 +52,9 @@ class SeparatedData:
                 files = [l(f) for f in files]
                 for file in tqdm(sorted(files, key=int)):
                     with open(os.path.join(subdir, file + ".json")) as f:
-                        data = ujson.loads(f.read())
+                        json_data : dict = ujson.loads(f.read())
                     
-                    df = pd.json_normalize(data)
+                    df = pd.json_normalize(json_data)
                     if df["rfc461Schema"][0] == "game_info":
                         self.patch = df["gameVersion"][0]                   
                     if df['rfc461Schema'][0] == "stats_update":
@@ -186,7 +186,7 @@ class SeparatedData:
                                                                     tempBanList,
                                                                     tempTeamDraft))
                     elif df["rfc461Schema"][0] in event_types:
-                        event : Event = Event(df["rfc461Schema"][0])
+                        event : Event = Event(df["rfc461Schema"][0], json_data)
                         self.eventList.append(event.getEvent())
             
             if len(self.gameSnapshotList) > 0:

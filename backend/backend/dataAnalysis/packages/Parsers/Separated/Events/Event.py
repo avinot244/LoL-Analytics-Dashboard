@@ -11,6 +11,7 @@ class Event() :
     def getEvent(self):
         event_class = globals().get(self.event_type)
         if event_class:
-            return event_class(**self.data)
+            filtered_dict : dict = {k: v for k, v in self.data.items() if k in event_class.__annotations__}
+            return event_class(**filtered_dict)
         else:
             raise ValueError(f"Unknown event type: {self.event_type}")
