@@ -3,6 +3,8 @@ from tqdm import tqdm
 import ujson
 import pandas as pd
 import csv
+from typing import get_args
+import re
 
 from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
 from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
@@ -76,8 +78,8 @@ class SeparatedData:
                                 tempItems = None
                             
                             # Parsing position of current participant
-                            playerPosition : Position = Position(participant_dict["position"]["x"],
-                                                                 participant_dict["position"]["z"])
+                            playerPosition : Position = Position(x=participant_dict["position"]["x"],
+                                                                 y=participant_dict["position"]["z"])
                             tempStatDict : dict = dict()
                             # Parsing stats of current participant
                             for stat_dict in participant_dict["stats"]:
@@ -185,7 +187,7 @@ class SeparatedData:
                                                                     df["name"][0], 
                                                                     tempBanList,
                                                                     tempTeamDraft))
-                    elif df["rfc461Schema"][0] in event_types:
+                    elif df["rfc461Schema"][0] in get_args(event_types):
                         event : Event = Event(df["rfc461Schema"][0], json_data)
                         self.eventList.append(event.getEvent())
             
@@ -217,10 +219,11 @@ class SeparatedData:
         heraldKills : int = 0
         
         for event in self.eventList:
-            if event.event_type == "epic_monster_kill" and event.getEvent().monsterType == "RiftHerald":
-                if team == 0 and event.getEvent().killerTeamID == 100:
+            event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+            if event_name == "epic_monster_kill" and event.monsterType == "RiftHerald":
+                if team == 0 and event.killerTeamID == 100:
                     heraldKills += 1
-                elif team == 1 and event.getEvent().killerTeamID == 200:
+                elif team == 1 and event.killerTeamID == 200:
                     heraldKills += 1
         return heraldKills
     
@@ -229,25 +232,36 @@ class SeparatedData:
         heraldKills : int = 0
         
         for event in self.eventList:
-            if event.event_type == "epic_monster_kill" and event.getEvent().monsterType == "Baron":
-                if team == 0 and event.getEvent().killerTeamID == 100:
+            event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+            if event_name == "epic_monster_kill" and event.monsterType == "Baron":
+                if team == 0 and event.killerTeamID == 100:
                     heraldKills += 1
-                elif team == 1 and event.getEvent().killerTeamID == 200:
+                elif team == 1 and event.killerTeamID == 200:
                     heraldKills += 1
         return heraldKills
     
     def getFirstBlood(self):
-        championKillEventList : list[Event] = [event for event in self.eventList if event.event_type == "champion_kill"]
-        championKillEventList.sort(key=lambda event: event.getEvent().gameTime)
-        if championKillEventList[0].getEvent().killerTeamID == 100:
+        championKillEventList : list[Event] = []
+        for event in self.eventList:
+            event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+            if event_name == "champion_kill":
+                championKillEventList.append(event)
+        
+        championKillEventList.sort(key=lambda event: event.gameTime)
+        if championKillEventList[0].killerTeamID == 100:
             return 0
         else:
             return 1
     
     def getFirstTower(self):
-        turretDestroyedEventList : list[Event] = [event for event in self.eventList if event.event_type == "building_destroyed" and event.getEvent().buildingType == "turret"]
-        turretDestroyedEventList.sort(key=lambda event: event.getEvent().gameTime)
-        if turretDestroyedEventList[0].getEvent().teamID == 100:
+        turretDestroyedEventList : list[Event] = []
+        for event in self.eventList:
+            event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+            if event_name == "building_destroyed" and event.buildingType == "turret":
+                turretDestroyedEventList.append(event)
+        
+        turretDestroyedEventList.sort(key=lambda event: event.gameTime)
+        if turretDestroyedEventList[0].teamID == 100:
             return 0
         else:
             return 1
@@ -257,10 +271,11 @@ class SeparatedData:
         turretKills : int = 0
         
         for event in self.eventList:
-            if event.event_type == "building_destroyed" and event.getEvent().buildingType == "turret":
-                if team == 0 and event.getEvent().teamID == 100:
+            event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+            if event_name == "building_destroyed" and event.buildingType == "turret":
+                if team == 0 and event.teamID == 100:
                     turretKills += 1
-                elif team == 1 and event.getEvent().teamID == 200:
+                elif team == 1 and event.teamID == 200:
                     turretKills += 1
         return turretKills
     

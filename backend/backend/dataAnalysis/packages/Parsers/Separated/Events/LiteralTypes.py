@@ -1,7 +1,7 @@
 from typing import Literal
 
 item_destroyed_reason_types = Literal["sidegrade", "consume", "component", "other"]
-summonner_spell_name_types = Literal["SummonerDot", "SummonerFlash", "SummonerSmite", "SummonerTeleport", "SummonerBoost", "SummonerFlashPerksHextechFlashtraptionV2", "S5_SummonerSmitePlayerGanker", "S12_SummonerTeleportUpgrade", "SummonerSmiteAvatarUtility", "SummonerHeal", "SummonerSmiteAvatarOffensive", "SummonerBarrier"]
+summoner_spell_name_types = Literal["SummonerDot", "SummonerFlash", "SummonerSmite", "SummonerTeleport", "SummonerBoost", "SummonerFlashPerksHextechFlashtraptionV2", "S5_SummonerSmitePlayerGanker", "S12_SummonerTeleportUpgrade", "SummonerSmiteAvatarUtility", "SummonerHeal", "SummonerSmiteAvatarOffensive", "SummonerBarrier"]
 champion_kill_types = Literal["firstBlood", "multi", "ace"]
 channeling_types = Literal["recall", "skill", "summonerSpell"]
 ward_types = Literal["yellowTrinket", "unknown", "control", "sight", "blueTrinket"]

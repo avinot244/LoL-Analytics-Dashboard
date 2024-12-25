@@ -12,7 +12,6 @@ class PlayerEndGameStatGrid:
         killAssistsReceivedFromPlayer : list[AssistObject],
         deaths : int,
         structuredDestroyed : int,
-        objectives : list[ObjectiveGrid],
     ):
         self.id = id
         self.name = name
@@ -22,4 +21,3 @@ class PlayerEndGameStatGrid:
         self.killAssistsReceivedFromPlayer = killAssistsReceivedFromPlayer
         self.deaths = deaths,
         self.structuredDestroyed = structuredDestroyed
-        self.objectives = objectives

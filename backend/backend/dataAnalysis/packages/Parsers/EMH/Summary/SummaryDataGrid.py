@@ -13,17 +13,14 @@ class SummaryDataGrid:
         with open(json_path) as f:
             data = json.loads(f.read())
         
-        print(json.dumps(data, indent=4))
-        
         # Parsing global info
         self.seriesType = data["format"]
         
         # Parsing global team info
-        self.teams : list[TeamEndGameStatGrid] = list()
+        self.teams : list[TeamEndGameStatGrid] = []
         for teamDict in data["teams"]:
-            
             # parsing objectives
-            objectives : list[ObjectiveGrid] = list()
+            objectives : list[ObjectiveGrid] = []
             for objectiveDict in teamDict["objectives"]:
                 objectives.append(
                     ObjectiveGrid(
@@ -32,12 +29,11 @@ class SummaryDataGrid:
                         objectiveDict["completionCount"]
                     )
                 )
-            
             # parsing players
-            players : list[PlayerEndGameStatGrid] = list()
+            players : list[PlayerEndGameStatGrid] = []
             for playerDict in teamDict["players"]:
                 playerId : str = playerDict["id"]
-                killAssistsReceivedFromPlayer : list[AssistObject] = list()
+                killAssistsReceivedFromPlayer : list[AssistObject] = []
                 for assistDict in playerDict["killAssistsReceivedFromPlayer"]:
                     killAssistsReceivedFromPlayer.append(
                         AssistObject(
@@ -46,14 +42,6 @@ class SummaryDataGrid:
                             assistDict["killAssistsReceived"]
                         )
                     )
-                    
-                objectives : list[ObjectiveGrid] = list()
-                for objectiveDict in playerDict["objectives"]:
-                    objectives.append(ObjectiveGrid(
-                        objectiveDict["id"],
-                        objectiveDict["type"],
-                        objectiveDict["completionCount"]
-                    ))
                 
                 players.append(
                     PlayerEndGameStatGrid(
@@ -65,7 +53,6 @@ class SummaryDataGrid:
                         killAssistsReceivedFromPlayer,
                         playerDict["deaths"],
                         playerDict["structuresDestroyed"],
-                        objectives
                     )
                 )
             
@@ -84,26 +71,39 @@ class SummaryDataGrid:
                     players
                 )
             )
+            
     
     def getObjectiveCount(self, side : int, objectiveId : str) -> int:
         # Blue side : 0, red side : 1
         objectiveObject : ObjectiveGrid
-        for objectiveObject in self.teams[side].objectives:
-            if objectiveObject.id == objectiveId:
-                return objectiveObject.completionCount
-            
+        if len(self.teams[side].objectives) == 0:
+            return 0
+        else:
+            for objectiveObject in self.teams[side].objectives:
+                if objectiveObject.id == objectiveId:
+                    return objectiveObject.completionCount
+            return 0
     def getDrakeCount(self, side : int) -> int:
         # Blue side : 0, red side : 1
         objectiveObject : ObjectiveGrid
         completionCount : int = 0
-        for objectiveObject in self.teams[side].objectives:
-            if "Drake" in objectiveObject.id:
-                completionCount += objectiveObject.completionCount
-        return completionCount
+        if len(self.teams[side].objectives) == 0:
+            return 0
+        else:
+            print(json.dumps(self.teams[side].objectives, indent=4))
+            for objectiveObject in self.teams[side].objectives:
+                print(objectiveObject)
+                if "Drake" in objectiveObject.id:
+                    completionCount += objectiveObject.completionCount
+            return completionCount
     
     def getGrubsCount(self, side : int) -> int:
         # Blue side : 0, red side : 1
         objectiveObject : ObjectiveGrid
-        for objectiveObject in self.teams[side].objectives:
-            if objectiveObject.id == "slayVoidGrub":
-                return objectiveObject.completionCount
+        if len(self.teams[side].objectives) == 0:
+            return 0
+        else:
+            for objectiveObject in self.teams[side].objectives:
+                if objectiveObject.id == "slayVoidGrub":
+                    return objectiveObject.completionCount
+            return 0

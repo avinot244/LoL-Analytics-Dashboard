@@ -37,7 +37,6 @@ def get_all_event_types(json_path_details:str) -> dict:
     
     return unique_event_type
 
-
 def getGameDuration(seriesId : int, gameNumber : int):
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
     rootdir = DATA_PATH + "games/bin/{}".format(match)
@@ -66,14 +65,12 @@ def getGameDuration(seriesId : int, gameNumber : int):
             return res["gameDuration"]
 
 def getSummaryData(seriesId : int, gameNumber : int, type_s : str) -> Union[SummaryData, SummaryDataGrid]:
+    match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
     if type_s == "riot":
-        
-        match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
-
-        pathSummaryData : str = DATA_PATH + "games/bin/" + match + "/end_state_summary_riot_" + seriesId + "_" + gameNumber + ".json"
+        pathSummaryData : str = f"{DATA_PATH}games/bin/{match}/end_state_summary_riot_{seriesId}_{gameNumber}.json"
         summaryData : SummaryData = SummaryData(pathSummaryData)
     elif type_s == "grid":
-        pathSummaryData : str = DATA_PATH + "games/bin/end_state_" + seriesId + "_grid.json"
+        pathSummaryData : str = f"{DATA_PATH}games/bin/{match}/end_state_{seriesId}_grid.json"
         summaryData : SummaryDataGrid = SummaryDataGrid(pathSummaryData)
         
     return summaryData

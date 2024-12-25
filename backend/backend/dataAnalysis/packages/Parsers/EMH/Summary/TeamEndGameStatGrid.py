@@ -25,5 +25,5 @@ class TeamEndGameStatGrid:
         self.killAssistsGiven = killAssistsGiven
         self.deaths = deaths
         self.structureDestroyed = structureDestroyed
-        self.objectives = objectives,
+        self.objectives = objectives
         self.players = players
