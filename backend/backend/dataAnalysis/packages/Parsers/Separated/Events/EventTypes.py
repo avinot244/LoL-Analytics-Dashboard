@@ -5,9 +5,9 @@ from dataAnalysis.packages.Parsers.Separated.Events.Event import Event
 @dataclass
 class QueuedEpicMonsterInfoEvent(Event):
     gameTime : int
-    monsterName: monster_names_types
     sequenceIndex : int
     spawnTime : int
+    monsterName: monster_names_types = None
 
 @dataclass
 class ReconnectEvent(Event):
