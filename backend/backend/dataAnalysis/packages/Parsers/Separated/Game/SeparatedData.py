@@ -5,6 +5,7 @@ import pandas as pd
 import csv
 from typing import get_args
 import re
+import json
 
 from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
 from dataAnalysis.packages.Parsers.Separated.Game.Player import Player
@@ -78,8 +79,10 @@ class SeparatedData:
                                 tempItems = None
                             
                             # Parsing position of current participant
-                            playerPosition : Position = Position(x=participant_dict["position"]["x"],
-                                                                 y=participant_dict["position"]["z"])
+                            playerPosition : Position = Position(
+                                x=participant_dict["position"]["x"],
+                                y=participant_dict["position"]["z"]
+                            )
                             tempStatDict : dict = dict()
                             # Parsing stats of current participant
                             for stat_dict in participant_dict["stats"]:
@@ -220,7 +223,7 @@ class SeparatedData:
         
         for event in self.eventList:
             event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
-            if event_name == "epic_monster_kill" and event.monsterType == "RiftHerald":
+            if event_name == "epic_monster_kill" and event.monsterType == "riftHerald":
                 if team == 0 and event.killerTeamID == 100:
                     heraldKills += 1
                 elif team == 1 and event.killerTeamID == 200:
@@ -229,16 +232,16 @@ class SeparatedData:
     
     def getBaronKills(self, team : int):
         # team : 0 for blue team, 1 for red team
-        heraldKills : int = 0
+        baronKills : int = 0
         
         for event in self.eventList:
             event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
-            if event_name == "epic_monster_kill" and event.monsterType == "Baron":
+            if event_name == "epic_monster_kill" and event.monsterType == "baron":
                 if team == 0 and event.killerTeamID == 100:
-                    heraldKills += 1
+                    baronKills += 1
                 elif team == 1 and event.killerTeamID == 200:
-                    heraldKills += 1
-        return heraldKills
+                    baronKills += 1
+        return baronKills
     
     def getFirstBlood(self):
         championKillEventList : list[Event] = []

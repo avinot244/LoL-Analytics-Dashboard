@@ -71,11 +71,21 @@ def getSummaryData(seriesId : int, gameNumber : int, type_s : str) -> Union[Summ
         summaryData : SummaryData = SummaryData(pathSummaryData)
     elif type_s == "grid":
         pathSummaryData : str = f"{DATA_PATH}games/bin/{match}/end_state_{seriesId}_grid.json"
-        summaryData : SummaryDataGrid = SummaryDataGrid(pathSummaryData)
+        summaryData : SummaryDataGrid = SummaryDataGrid(pathSummaryData, gameNumber)
         
     return summaryData
 
-def getData(seriesId : int, gameNumber : int) -> tuple[SeparatedData, int, int, int]:
+def getData(
+    seriesId : int, 
+    gameNumber : int,
+    _date : str = None, 
+    _tournament_name : str = None, 
+    _name : str = None, 
+    _patch : str = None, 
+    _teamBlue : str = None, 
+    _teamRed : str = None, 
+    _winningTeam : int = None
+) -> tuple[SeparatedData, int, int, int]:
     
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
 
@@ -97,15 +107,15 @@ def getData(seriesId : int, gameNumber : int) -> tuple[SeparatedData, int, int, 
         if not(isGameDownloaded(seriesId, gameNumber)):
             with open(DATA_PATH + "games/data_metadata.csv", "a") as csv_file:
                 writer = csv.writer(csv_file, delimiter=";")
-                matchDate = convertDate(get_date_from_seriesId(seriesId))
-                matchName = match + "dataSeparatedRIOT"
-                patch = data.patch
-                teamBlue = data.gameSnapshotList[0].teams[0].getTeamName(seriesId)
+                matchDate = convertDate(get_date_from_seriesId(seriesId)) if _date == None else _date
+                matchName = match + "dataSeparatedRIOT" if _name == None else _name
+                patch = data.patch if _patch == None else _patch
+                teamBlue = data.gameSnapshotList[0].teams[0].getTeamName(seriesId) if _teamBlue == None else _teamBlue
                 t_time.sleep(1)
-                teamRed = data.gameSnapshotList[0].teams[1].getTeamName(seriesId)
+                teamRed = data.gameSnapshotList[0].teams[1].getTeamName(seriesId) if _teamRed == None else _teamRed
                 t_time.sleep(1)
-                winningTeam = data.winningTeam
-                tournament = get_tournament_from_seriesId(seriesId)
+                winningTeam = data.winningTeam if _winningTeam == None else _winningTeam
+                tournament = get_tournament_from_seriesId(seriesId) if _tournament_name == None else _tournament_name
                 symmaryDataGrid : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
                 dataCSV = [
                     matchDate, 

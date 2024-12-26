@@ -128,9 +128,9 @@ class ChampionKillSpecialEvent(Event):
 class ChannelingStartedEvent(Event):
     channelingType : channeling_types
     gameTime : int
-    inventorySlot : int
     participantID : int
     sequenceIndex : int
+    inventorySlot : int = None
     
 @dataclass
 class ItemActiveAbilityUsedEvent(Event):
@@ -153,10 +153,10 @@ class WardPlacedEvent(Event):
 class ChannelingEndedEvent(Event):
     channelingType : channeling_types
     gameTime : int
-    inventorySlot : int
     isInterrupted : bool
     participantID : int
     sequenceIndex : int
+    inventorySlot : int = None
     
 @dataclass
 class NeutralMinionSpawnEvent(Event):
@@ -252,12 +252,12 @@ class BuildingDestroyedEvent(Event): # parse more events building_destroyed
     assistants : list[int] # List of participant IDs that helped killing said building
     buildingType : building_types
     gameTime : int
-    lane : lane_types
     lastHitter : int # participant ID that destroyed the tower
     position : dict
     sequenceIndex : int
     teamID : int
     bountyGold : int = None
+    lane : lane_types = None
     turretTier : turret_tier_types = None # /!\ field value might not exist
 
 @dataclass 
