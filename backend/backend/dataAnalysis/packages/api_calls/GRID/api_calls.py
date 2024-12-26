@@ -50,7 +50,7 @@ def get_last_games(amount : int, gameType : str) -> list[str]:
     idList : list = list()
     edges = result["data"]["allSeries"]["edges"]
     for edge in edges:
-       idList.append(edge["node"]["id"])
+        idList.append(edge["node"]["id"])
     
     return idList
 
@@ -61,10 +61,11 @@ def get_all_download_links(seriesId):
     headers = {
         "x-api-key": token
     }
+    
     response = requests.get(url=url, headers=headers)
     if response.status_code != 200:
         response.raise_for_status()
-    
+        raise Exception(f"Can't download seriesId {seriesId}")
     result : dict = response.json()
     return result
     
