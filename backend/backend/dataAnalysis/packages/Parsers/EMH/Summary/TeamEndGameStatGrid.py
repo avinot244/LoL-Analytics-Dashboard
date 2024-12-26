@@ -7,7 +7,6 @@ class TeamEndGameStatGrid:
         id : str,
         name : str,
         score : int,
-        won : bool,
         kills : int,
         killAssistsReceived : int, # Assists
         killAssistsGiven : int,
@@ -19,7 +18,6 @@ class TeamEndGameStatGrid:
         self.id = id
         self.name = name
         self.score = score
-        self.won = won,
         self.kills = kills,
         self.killAssistsReceived = killAssistsReceived
         self.killAssistsGiven = killAssistsGiven

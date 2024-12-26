@@ -7,8 +7,9 @@ from dataAnalysis.packages.Parsers.EMH.Summary.PlayerEndGameStatGrid import Play
 from dataAnalysis.packages.Parsers.EMH.Summary.AssistObject import AssistObject
 
 class SummaryDataGrid:
-    def __init__(self, json_path : str):
+    def __init__(self, json_path : str, gameNumber : int):
         self.json_path = json_path
+        self.gameNumber = gameNumber-1
         
         with open(json_path) as f:
             data = json.loads(f.read())
@@ -18,7 +19,7 @@ class SummaryDataGrid:
         
         # Parsing global team info
         self.teams : list[TeamEndGameStatGrid] = []
-        for teamDict in data["teams"]:
+        for teamDict in data["games"][self.gameNumber]["teams"]:
             # parsing objectives
             objectives : list[ObjectiveGrid] = []
             for objectiveDict in teamDict["objectives"]:
@@ -61,7 +62,6 @@ class SummaryDataGrid:
                     teamDict["id"],
                     teamDict["name"],
                     teamDict["score"],
-                    teamDict["won"],
                     teamDict["kills"],
                     teamDict["killAssistsReceived"],
                     teamDict["killAssistsGiven"],
@@ -90,9 +90,7 @@ class SummaryDataGrid:
         if len(self.teams[side].objectives) == 0:
             return 0
         else:
-            print(json.dumps(self.teams[side].objectives, indent=4))
             for objectiveObject in self.teams[side].objectives:
-                print(objectiveObject)
                 if "Drake" in objectiveObject.id:
                     completionCount += objectiveObject.completionCount
             return completionCount
