@@ -128,7 +128,7 @@ def download_latest(request, rawTournamentList : str):
                         if not(isGameDownloaded(int(seriesId), gameNumberIt)) and flag:
                             # print("saving to db")
                             # Getting relative information about the game
-                            (data, _, _, _) = getData(int(seriesId), gameNumberIt)
+                            (data, gameDuration, _, _) = getData(int(seriesId), gameNumberIt)
                             
                             summaryDataGrid : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
                             # Saving game metadata to SQLite datbase
@@ -142,6 +142,7 @@ def download_latest(request, rawTournamentList : str):
                                 teamRed=data.gameSnapshotList[0].teams[1].getTeamName(seriesId), 
                                 winningTeam=data.winningTeam, 
                                 gameNumber=gameNumberIt,
+                                gameDuration=gameDuration,
                                 dragonBlueKills=summaryDataGrid.getDrakeCount(0),
                                 dragonRedKills=summaryDataGrid.getDrakeCount(1),
                                 voidGrubsBlueKills=summaryDataGrid.getGrubsCount(0),

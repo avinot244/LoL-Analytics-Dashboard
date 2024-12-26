@@ -93,6 +93,7 @@ def getData(
 
     pathData = DATA_PATH + "games/bin/" + match + "dataSeparatedRIOT"
     data : SeparatedData = None
+    gameDuration : int = getGameDuration(seriesId, gameNumber)
 
     if not(os.path.exists(pathData)):
         data = SeparatedData(rootdir + "/Separated")
@@ -127,6 +128,7 @@ def getData(
                     teamRed, 
                     winningTeam, 
                     gameNumber, 
+                    gameDuration,
                     symmaryDataGrid.getDrakeCount(0), 
                     symmaryDataGrid.getDrakeCount(1),
                     symmaryDataGrid.getGrubsCount(0),
