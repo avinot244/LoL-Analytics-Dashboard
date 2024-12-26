@@ -11,6 +11,7 @@ class GameMetadata(models.Model):
     teamRed = models.CharField("teamRed", max_length=240)
     winningTeam = models.IntegerField("winningTeam")
     gameNumber = models.IntegerField("gameNumber")
+    gameDuration = models.IntegerField("gameDuration")
     dragonBlueKills = models.IntegerField("dragonBlueKills")
     dragonRedKills = models.IntegerField("dragonRedKills")
     voidGrubsBlueKills = models.IntegerField("voidGrubsBlueKills")
