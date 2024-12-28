@@ -264,6 +264,10 @@ class SeparatedData:
                 turretDestroyedEventList.append(event)
         
         turretDestroyedEventList.sort(key=lambda event: event.gameTime)
+        
+        if len(turretDestroyedEventList) == 0:
+            return -1
+        
         if turretDestroyedEventList[0].teamID == 100:
             return 0
         else:

@@ -10,6 +10,7 @@ import re
 import time
 from datetime import datetime
 import requests
+import json
 
 def isGameDownloaded(seriesId : int, gameNumber : int):
     df = pd.read_csv(DATA_PATH + "games/data_metadata.csv", sep=";")
@@ -342,6 +343,26 @@ def isDateValid(date:str):
     date_limit = datetime.strptime(DATE_LIMIT, "%Y-%m-%d")
     date_to_compare = datetime.strptime(date, "%Y-%m-%d")
     return date_to_compare > date_limit
+
+def checkFiles(fileList : list[dict]) -> bool:
+    i = 0
+    firstFile = fileList[i]
+    grid_summary_regex = re.search(r"Grid Post Series State", firstFile["description"])
+    flag_grid_summary : bool = grid_summary_regex != None
+    while not(flag_grid_summary) and i < len(fileList):
+        i += 1
+        grid_summary_regex = re.search(r"Grid Post Series State", fileList[i]["description"])
+        flag_grid_summary : bool = grid_summary_regex != None
+    j = 0
+    firstFile = fileList[j]
+    riot_livestats_regex = re.search(r"Riot LiveStats", firstFile["description"])
+    flag_riot_livestats : bool = riot_livestats_regex != None
+    while not(flag_riot_livestats) and j < len(fileList):
+        j += 1
+        riot_livestats_regex = re.search(r"Riot LiveStats", fileList[j]["description"])
+        flag_riot_livestats : bool = riot_livestats_regex != None
+
+    return i < len(fileList) and j < len(fileList)
 
 def checkSeries(fileList : list[dict]) -> bool:
     time.sleep(1)

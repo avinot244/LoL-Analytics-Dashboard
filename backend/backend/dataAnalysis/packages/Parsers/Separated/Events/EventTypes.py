@@ -77,7 +77,6 @@ class SummonerSpellUsedEvent(Event):
 class ChampionKillEvent(Event):
     assistants : list[int]
     bounty : int
-    deathRecap : list[dict]
     fightDuration : float
     gameTime : int
     killStreakLength : int
@@ -87,6 +86,7 @@ class ChampionKillEvent(Event):
     sequenceIndex : int
     victim : int # participant ID of the player that got killed
     victimTeamID : int
+    deathRecap : list[dict] = None
 # "deathRecap": [
 #     {
 #         "breakdown": [
