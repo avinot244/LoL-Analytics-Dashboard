@@ -1,5 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import "../../styles/ChampionIconSmall.css"
+import AuthContext from "../context/AuthContext";
+
 
 function ChampionIconSmallGlow({championName, width, height, glow}) {
     let {patch} = useContext(AuthContext)
