@@ -18,6 +18,7 @@ export const AuthProvider = ({children}) => {
             let patchList = await result.json()
             const newPatch = patchList[0]
             setPatch(newPatch)
+            console.log(newPatch)
         }else {
             console.log("Unable to retrieve data from DDragon API")
         }

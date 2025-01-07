@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import "../../styles/ChampionIconSmall.css"
 
 function ChampionIconSmallGlow({championName, width, height, glow}) {
-    const apiURL = `https://ddragon.leagueoflegends.com/cdn/14.13.1/img/champion/${championName}.png`
+    let {patch} = useContext(AuthContext)
+    const apiURL = `https://ddragon.leagueoflegends.com/cdn/${patch}/img/champion/${championName}.png`
     const [img, setImg] = useState();
 
     const fetchImage = async () => {
