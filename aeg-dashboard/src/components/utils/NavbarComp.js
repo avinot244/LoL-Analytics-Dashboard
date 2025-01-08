@@ -16,7 +16,7 @@ function NavBarComp() {
 	}
 	
 
-  	return (
+	return (
 		<Navbar data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
 			<Container>
 				<Link to="/Home">
@@ -49,6 +49,7 @@ function NavBarComp() {
 							<NavDropdown.Item as={Link} to='/Monitoring/PCAMaker'>PCA Model Maker</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/Monitoring/PCAOverview'>PCA Model Overview</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/Monitoring/RefreshDB'>Refresh DB</NavDropdown.Item>
+							<NavDropdown.Item as={Link} to='/Monitoring/TestComp'>Test</NavDropdown.Item>
 						</NavDropdown>
 						<Nav.Link as ={Link} to="/getToken">Get Tokens</Nav.Link>
 					</Nav>
@@ -56,7 +57,7 @@ function NavBarComp() {
 			</Container>
 			<Link to="/"><Button variant='contained' sx={{mr: 5}} onClick={() => logout()}>Log Out</Button></Link>
 		</Navbar>
-  	);
+	);
 }
 
 export default NavBarComp;

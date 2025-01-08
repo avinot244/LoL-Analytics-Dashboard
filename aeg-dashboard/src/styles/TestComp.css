@@ -1,0 +1,12 @@
+.wrapper-Test{
+    background: rgba(43,48,53, 0.95);
+	height: 100vh;
+	color: white;
+	overflow: auto;
+}
+.wrapper-plot{
+    width: fit-content;
+    height: fit-content;
+    margin: 0px auto;
+    background-color: red;
+}
