@@ -1,6 +1,7 @@
 import NavBarComp from "./utils/NavbarComp"
 import "../styles/TestComp.css"
 import Heatmap from "./Heatmap"
+import minimapImage from "../assets/2dlevelminimap_base_baron1.png"
 
 import { Typography } from "@mui/material"
 import { useState } from "react"
@@ -127,26 +128,16 @@ function TestComp() {
         newDataset.push({x:Math.abs(x[i]), y:Math.abs(y[i])})
     }
     const [dataset, setDataset] = useState([
-        { x: 10, y: 20 },
-        { x: 15, y: 25 },
-        { x: 30, y: 40 },
-        { x: 50, y: 60 },
-        { x: 100, y: 200 },
-        { x: 120, y: 220 },
-        { x: 250, y: 300 },
-        { x: 270, y: 320 },
-        { x: 15, y: 20 },
-        { x: 35, y: 50 },
-        { x: 45, y: 55 },
-        { x: 80, y: 90 },
-        { x: 95, y: 100 },
-        { x: 200, y: 250 },
-        { x: 220, y: 270 },
-        { x: 275, y: 310 },
-        { x: 290, y: 330 },
-        { x: 15, y: 15 },
-        { x: 60, y: 70 },
-        { x: 75, y: 85 },
+        {x: 10, y: 0},
+        {x: 10, y: 10},
+        {x: 15, y: 0},
+        {x: 15, y: 10},
+
+        {x: 100, y: 0},
+        {x: 100, y: 10},
+        {x: 105, y: 0},
+        {x: 105, y: 10}
+        
     ]);
     
     // const [dataset, setDataset] = useState(
@@ -169,15 +160,7 @@ function TestComp() {
                 Test page
             </Typography>
 
-            <div className="wrapper-plot">
-                <Plot
-                    data={data}
-                    layout={layout}
-                    config={{ responsive: true }}
-                />
-            </div>
-
-            <Heatmap data={dataset} bandwidth={bandwidth} resolution={resolution} />
+            <Heatmap data={dataset} bandwidth={bandwidth} resolution={resolution} backgroundImage={minimapImage} />
         </div>
     )
 }

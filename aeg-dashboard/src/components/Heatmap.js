@@ -39,7 +39,7 @@ function calculateKDE(points, bandwidth, resolution) {
 }
 
 
-const Heatmap = ({ data, bandwidth, resolution }) => {
+const Heatmap = ({ data, bandwidth, resolution, backgroundImage }) => {
     const heatmapContainerRef = useRef(null);
 
     // Initialize the heatmap when the component is mounted
@@ -49,7 +49,7 @@ const Heatmap = ({ data, bandwidth, resolution }) => {
         // Initialize the heatmap.js
         const heatmap = h337.create({
             container: heatmapContainerRef.current,
-            radius: 50, // Adjust for smoother points
+            radius: 10, // Adjust for smoother points
             maxOpacity: 0.6,
             minOpacity: 0,
             blur: 0.75,
@@ -70,7 +70,16 @@ const Heatmap = ({ data, bandwidth, resolution }) => {
     }, [data, bandwidth, resolution]);
 
     
-    return <div ref={heatmapContainerRef} style={{ height: '500px', width: '500px', margin: '0px auto'}} />;
+    return <div ref={heatmapContainerRef} style={{ 
+        position: 'relative', // Relative positioning
+        height: '500px', // 10/295 ratio original size : 14750px
+        width: '500px',
+        backgroundImage: `url(${backgroundImage})`, // Local image as background
+        backgroundSize: 'cover', // Adjust image size
+        backgroundPosition: 'center', // Center the image
+        backgroundRepeat: 'no-repeat', // Avoid repeating the image
+        margin: '0px auto'
+    }} />;
 };
 
 export default Heatmap;
