@@ -194,7 +194,7 @@ urlpatterns = [
     path('api/dataAnalysis/getProximityMatrix/<int:seriesId>/<int:gameNumber>/<int:time>/', dataAnalysisViews.getProximityMatrix),
     path('api/dataAnalysis/playerDensity/<int:seriesId>/<int:gameNumber>/<str:sumonnerName>/<int:time>/', dataAnalysisViews.computePlayerDensityPlot),
     path('api/dataAnalysis/getPlayerPosition/', dataAnalysisViews.getPlayerPosition),
-
+    path('api/dataAnalysis/getResetTriggers/', dataAnalysisViews.getPlayerResetPositions),
 
 
     # Draft

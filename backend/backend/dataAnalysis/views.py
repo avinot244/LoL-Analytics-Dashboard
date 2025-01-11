@@ -14,6 +14,7 @@ from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, 
 from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
 from .packages.utils_stuff.stats import getProximityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
+from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
@@ -31,13 +32,12 @@ from Draft.models import DraftPlayerPick
 from .models import GameMetadata
 
 import json
-import pandas as pd
+from json import JSONEncoder
 from datetime import datetime
 import re
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
-import sys
 from PIL import Image
 
 
@@ -797,8 +797,33 @@ def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonner
         return response
 
 @api_view(['GET'])
-def getPlayerPosition(request : PlayerPositionRequest):
-    data = json.loads(request.body)
-    print(json.dumps(data))
-    return Response(status=status.HTTP_200_OK)
+def getPlayerPosition(request):
+    data_ : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
+    (data, gameDuration, _, _) = getData(int(data_.seriesId), data_.gameNumber)
+    
+    participantID = data.getPlayerID(data_.playerName)
+    playerPosition = data.getPlayerPositionHistoryTimeFramed(gameDuration, participantID, data_.begTime, data_.endTime)
+    
+    # Building the response
+    res : list[list] = [pos.toList() for pos in playerPosition]
+    
+    return Response(res)
 
+@api_view(['GET'])
+def getPlayerResetPositions(request):
+    o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
+    (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
+    
+    participantID = data.getPlayerID(o.playerName)
+    team : str = ""
+    if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+        team = "blueTeam"
+    elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+        team = "redTeam"
+    
+    resetTriggers = data.getResetTriggers(gameDuration)[team][o.playerName]
+    
+    # Building the response
+    res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
+    
+    return Response(res)

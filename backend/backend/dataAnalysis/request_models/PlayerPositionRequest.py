@@ -1,9 +1,9 @@
-from pydantic import BaseModel
 from dataclasses import dataclass
 
 @dataclass
-class PlayerPositionRequest(BaseModel):
-    playerName: str
-    seriesIdList: list[int]
-    begTime: int
-    endTime: int
+class PlayerPositionRequest:
+    playerName : str
+    seriesId : int
+    gameNumber : int
+    begTime : int
+    endTime : int

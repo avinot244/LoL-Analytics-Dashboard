@@ -8,17 +8,19 @@ from dataAnalysis.packages.api_calls.GRID.api_calls import get_team_info_from_se
 from dataAnalysis.globals import ROLE_LIST
 
 class Team:
-    def __init__(self,
-                 assists : int,
-                 baronKills : int,
-                 championKills : int,
-                 deaths : int,
-                 dragonKills : int,
-                 teamID : int,
-                 inhibKills : int,
-                 totalGold : int,
-                 towerKills : int,
-                 players : list[Player]) -> None:
+    def __init__(
+        self,
+        assists : int,
+        baronKills : int,
+        championKills : int,
+        deaths : int,
+        dragonKills : int,
+        teamID : int,
+        inhibKills : int,
+        totalGold : int,
+        towerKills : int,
+        players : list[Player]
+    ) -> None:
         self.assists = assists
         self.baronKills = baronKills
         self.championKills = championKills
@@ -30,6 +32,10 @@ class Team:
         self.towerKills = towerKills
         self.players = players
 
+    def getPlayerNameFromID(self, participantID : int):
+        for player in self.players:
+            if player.participantID == participantID:
+                return player.playerName
     
     def getPlayerList(self):
         playerList : list[str] = list()

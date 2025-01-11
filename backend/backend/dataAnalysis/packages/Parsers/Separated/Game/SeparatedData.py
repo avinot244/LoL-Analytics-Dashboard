@@ -20,6 +20,7 @@ from dataAnalysis.packages.Parsers.Separated.Draft.PlayerDraft import PlayerDraf
 
 from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import event_types
 from dataAnalysis.packages.Parsers.Separated.Events.Event import Event
+from dataAnalysis.packages.Parsers.Separated.Events.EventTypes import *
 
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
@@ -465,35 +466,4 @@ class SeparatedData:
                     writer.writerow(data)
                     data = []
 
-    def getResetTriggers(self, gameDuration : int):
-        result : dict = {
-            "blueTeam": {},
-            "redTeam": {}
-        }
-        
-        firstSnapshot : Snapshot = self.gameSnapshotList[0]
-        for player in firstSnapshot.teams[0].players:
-            result["blueTeam"][player.playerName] = []
-            
-        for player in firstSnapshot.teams[1].players:
-            result["redTeam"][player.playerName] = []
-        
-        for time in tqdm(range(120, gameDuration + 1)):
-            currentSnapshot : Snapshot = self.getSnapShotByTime(time, gameDuration)
-            dataWindow : list[Snapshot] = [self.getSnapShotByTime(t, gameDuration) for t in range(time, time+2, 1)]
-            
-            for player in currentSnapshot.teams[0].players:
-                if didPlayerReset(player.playerName, dataWindow, 0):
-                    result["blueTeam"][player.playerName].append({
-                        "time": time,
-                        "position": player.position.__dict__
-                    })
-                    
-            for player in currentSnapshot.teams[1].players:
-                if didPlayerReset(player.playerName, dataWindow, 1):
-                    result["redTeam"][player.playerName].append({
-                        "time": time,
-                        "position": player.position.__dict__
-                    })
-        
-        return result   
+    
