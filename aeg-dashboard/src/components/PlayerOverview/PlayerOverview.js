@@ -465,14 +465,6 @@ function PlayerOverview(){
                                 style={{ background: 'white', borderWidth: 1}}
                                 variant="middle"
                             />   
-
-
-                            <PlayerOverviewDensity
-                                summonnerName={selectedPlayer2}
-                                patch={activePatch2}
-                                tournament={tournament2}
-                                limit={activeLimit2}
-                            />
                         </Stack>
                     ) : (
                         <div className="playerOverview-placeholder"></div>

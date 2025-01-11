@@ -285,7 +285,6 @@ def behaviorSupport_deleteDuplicates(request):
 
 @api_view(['PATCH'])
 def behaviorSupport_behavior_multiple_tournaments(request):
-    print(request.body)
     data = json.loads(request.body)
     wantedTournaments : list[str] = list()
     model_uuid : str = ""

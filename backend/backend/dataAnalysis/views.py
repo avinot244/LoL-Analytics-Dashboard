@@ -1,18 +1,16 @@
-from django.shortcuts import render
 from django.db.models import Q
 
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
 from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
-from .serializer import GameMetadataSerializer
 
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide, getPlayerTeam
+from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide
 from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
 from .packages.utils_stuff.stats import getProximityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -23,7 +21,8 @@ from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
-from .packages.utils_stuff.plots.densityPlot import getPositionsMultipleGames, getPositionsSingleGame, densityPlot
+from .packages.utils_stuff.plots.densityPlot import getPositionsSingleGame, densityPlot
+from dataAnalysis.request_models.PlayerPositionRequest import PlayerPositionRequest
 
 
 from Draft.models import DraftPlayerPick
@@ -798,155 +797,8 @@ def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonner
         return response
 
 @api_view(['GET'])
-def computePlayerDensityPlotTournament(request, tournament : str, sumonnerName : str, time : int, side : str):
-    img_name : str = "{}-{}-{}_side".format(tournament, sumonnerName, side)
-    # Checking if the user passed a sumonnerName that played the given tournament
-    playerPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament)
-    sumonnerNameList : list = list()
-    for temp in playerPicks:
-        if not(temp.sumonnerName in sumonnerNameList):
-            sumonnerNameList.append(temp.sumonnerName)
-    if not(sumonnerName in sumonnerNameList):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    
-    # Getting the pairs of (seriesId, gameNumber) corresponding to the latest limit games that sumonnerName played
-    draftPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, sumonnerName__exact=sumonnerName)
-    gameMetadataList : list[tuple] = list()
-    for temp in draftPicks:
-        gameMetadataList.append((temp.seriesId, temp.gameNumber))
-    
-    # Computing the position list for games played in red and blue side
-    dataLstBlue : list[SeparatedData] = list()
-    dataLstRed : list[SeparatedData] = list()
-    for (seriesId, gameNumber) in tqdm(gameMetadataList):
-        # Getting the data of the wanted interval
-        gameMetadata = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
-        (data, gameDuration, _, _) = getData(gameMetadata.seriesId, gameMetadata.gameNumber)
-        splitList : list[int] = [120, time, gameDuration]
-        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
-        dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-        
-        # Filtering if the game was played in blue or red side
-        teamName = getPlayerTeam(dataBeforeTime, sumonnerName, gameMetadata.seriesId)
-        if gameMetadata.teamBlue == teamName:
-            dataLstBlue.append(dataBeforeTime)
-        else:
-            dataLstRed.append(dataBeforeTime)
-    
-    participantPositionBlue = getPositionsMultipleGames([sumonnerName], dataLstBlue)
-    participantPositionRed = getPositionsMultipleGames([sumonnerName], dataLstRed)
-    
-    # Computing the position density
-    if side == "Blue":
-        densityPlot(participantPositionBlue, img_name, DATA_PATH + "plots/position/")
-    elif side == "Red":
-        densityPlot(participantPositionRed, img_name, DATA_PATH + "plots/position/")
-    
-    
-    try:
-        with open(DATA_PATH + "plots/position/" + img_name + ".png", "rb") as f:
-            image = f.read()
-            return HttpResponse(image, content_type="image/png")
-    except IOError:
-        red = Image.new('RGBA', (1, 1), (255,0,0,0))
-        response = HttpResponse(content_type="image/png")
-        red.save(response, "PNG")
-        return response
+def getPlayerPosition(request : PlayerPositionRequest):
+    data = json.loads(request.body)
+    print(json.dumps(data))
+    return Response(status=status.HTTP_200_OK)
 
-@api_view(['GET'])
-def computePlayerDensityPlotPatch(request, patch : str, sumonnerName : str, time : int, side : str):
-    img_name : str = "{}-{}-{}_side".format(patch, sumonnerName, side)
-    # Checking if the user passed a sumonnerName that played the given patch
-    playerPicks = DraftPlayerPick.objects.filter(patch__contains=patch)
-    sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
-    if not(sumonnerName in sumonnerNameList):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    
-    draftPicks = DraftPlayerPick.objects.filter(patch__contains=patch, sumonnerName__exact=sumonnerName)
-    gameMetadataList : list[tuple] = list()
-    for temp in draftPicks:
-        gameMetadataList.append((temp.seriesId, temp.gameNumber))
-    
-    # Computing the position list for games played in red and blue side
-    dataLstBlue : list[SeparatedData] = list()
-    dataLstRed : list[SeparatedData] = list()
-    for (seriesId, gameNumber) in tqdm(gameMetadataList):
-        # Getting the data of the wanted interval
-        gameMetadata = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
-        (data, gameDuration, _, _) = getData(gameMetadata.seriesId, gameMetadata.gameNumber)
-        splitList : list[int] = [120, time, gameDuration]
-        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
-        dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-        
-        # Filtering if the game was played in blue or red side
-        teamName = getPlayerTeam(dataBeforeTime, sumonnerName, gameMetadata.seriesId)
-        if gameMetadata.teamBlue == teamName:
-            dataLstBlue.append(dataBeforeTime)
-        else:
-            dataLstRed.append(dataBeforeTime)
-    
-    participantPositionBlue = getPositionsMultipleGames([sumonnerName], dataLstBlue)
-    participantPositionRed = getPositionsMultipleGames([sumonnerName], dataLstRed)
-    
-    # Computing the position density
-    if side == "Blue":
-        densityPlot(participantPositionBlue, img_name, DATA_PATH + "plots/position/")
-    elif side == "Red":
-        densityPlot(participantPositionRed, img_name, DATA_PATH + "plots/position/")
-    
-    try:
-        with open(DATA_PATH + "plots/position/" + img_name + ".png", "rb") as f:
-            image = f.read()
-            return HttpResponse(image, content_type="image/png")
-    except IOError:
-        red = Image.new('RGBA', (1, 1), (255,0,0,0))
-        response = HttpResponse(content_type="image/png")
-        red.save(response, "PNG")
-        return response
-    
-@api_view(['GET'])
-def computePlayerDensityPlotLatest(request,  patch : str, tournament : str, limit : int, sumonnerName : str, time : int, side : str):
-    img_name : str = "{}-{}-{}_side".format(patch, sumonnerName, side)
-    # Getting the pairs of (seriesId, gameNumber) corresponding to the latest limit games that sumonnerName played
-    draftPicks = DraftPlayerPick.objects.filter(tournament__exact=tournament, patch__contains=patch, sumonnerName__exact=sumonnerName).order_by("-date")[:int(limit)]
-    gameMetadataList : list[tuple] = list()
-    for temp in draftPicks:
-        gameMetadataList.append((temp.seriesId, temp.gameNumber))
-    
-    # Computing the position list for games played in red and blue side
-    dataLstBlue : list[SeparatedData] = list()
-    dataLstRed : list[SeparatedData] = list()
-    for (seriesId, gameNumber) in tqdm(gameMetadataList):
-        # Getting the data of the wanted interval
-        gameMetadata = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
-        (data, gameDuration, _, _) = getData(seriesId, gameMetadata.gameNumber)
-        splitList : list[int] = [120, time, gameDuration]
-        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
-        dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-        
-        # Filtering if the game was played in blue or red side
-        teamName = getPlayerTeam(dataBeforeTime, sumonnerName, gameMetadata.seriesId)
-        if gameMetadata.teamBlue == teamName:
-            dataLstBlue.append(dataBeforeTime)
-        else:
-            dataLstRed.append(dataBeforeTime)
-    
-    participantPositionBlue = getPositionsMultipleGames([sumonnerName], dataLstBlue)
-    participantPositionRed = getPositionsMultipleGames([sumonnerName], dataLstRed)
-    
-    # Computing the position density
-    if side == "Blue":
-        densityPlot(participantPositionBlue, img_name, DATA_PATH + "plots/position/")
-    elif side == "Red":
-        densityPlot(participantPositionRed, img_name, DATA_PATH + "plots/position/")
-    
-    
-    try:
-        with open(DATA_PATH + "plots/position/" + img_name + ".png", "rb") as f:
-            image = f.read()
-            return HttpResponse(image, content_type="image/png")
-    except IOError:
-        red = Image.new('RGBA', (1, 1), (255,0,0,0))
-        response = HttpResponse(content_type="image/png")
-        red.save(response, "PNG")
-        return response
