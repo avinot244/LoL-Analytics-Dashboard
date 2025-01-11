@@ -1,4 +1,5 @@
 from tqdm import tqdm
+import re
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
@@ -52,7 +53,8 @@ def getWardTriggers(data : SeparatedData):
         result["redTeam"][player.playerName] = []
     
     for event in data.eventList:
-        if event.event_type == "ward_placed":
+        event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+        if event_name == "ward_placed":
             event : WardPlacedEvent
             participantID : int = event.placer
             

@@ -23,7 +23,7 @@ from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
 from .packages.utils_stuff.plots.densityPlot import getPositionsSingleGame, densityPlot
-from dataAnalysis.request_models.PlayerPositionRequest import PlayerPositionRequest
+from dataAnalysis.request_models import PlayerPositionRequest, WardPlacedRequest
 
 
 from Draft.models import DraftPlayerPick
@@ -762,47 +762,12 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
     return Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-def computePlayerDensityPlot(request, seriesId : int, gameNumber : int, sumonnerName : str, time : int):
-    # Checking if the user passed a sumonnerName that played the given game
-    playerPicks = DraftPlayerPick.objects.filter(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
-    sumonnerNameList = [playerPick.sumonnerName for playerPick in playerPicks]
-    if not(sumonnerName in sumonnerNameList):
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    # Getting the list of position of the given player
-    # Getting the corresponding separated data
-    (data, gameDuration, _, _) = getData(seriesId, gameNumber)
-    splitList : list[int] = [120, time, gameDuration]
-    splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
-    dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-    
-    
-    # Get the player side
-    side = getPlayerSide(dataBeforeTime, seriesId, gameNumber, sumonnerName)
-    
-    # Building the participant position density
-    participantPosition = getPositionsSingleGame([sumonnerName], dataBeforeTime)
-    densityPlot(participantPosition, "{}-{} side".format(sumonnerName, side), DATA_PATH)
-    img_path : str = DATA_PATH + "{}-{} side.png".format(sumonnerName, side)
-    
-    try:
-        with open(img_path, "rb") as f:
-            image = f.read()
-            os.remove(img_path)
-            return HttpResponse(image, content_type="image/jpeg")
-    except IOError:
-        red = Image.new('RGBA', (1, 1), (255,0,0,0))
-        response = HttpResponse(content_type="image/jpeg")
-        red.save(response, "JPEG")
-        return response
-
-@api_view(['GET'])
 def getPlayerPosition(request):
-    data_ : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
-    (data, gameDuration, _, _) = getData(int(data_.seriesId), data_.gameNumber)
+    o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
+    (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
     
-    participantID = data.getPlayerID(data_.playerName)
-    playerPosition = data.getPlayerPositionHistoryTimeFramed(gameDuration, participantID, data_.begTime, data_.endTime)
+    participantID = data.getPlayerID(o.playerName)
+    playerPosition = data.getPlayerPositionHistoryTimeFramed(gameDuration, participantID, o.begTime, o.endTime)
     
     # Building the response
     res : list[list] = [pos.toList() for pos in playerPosition]
@@ -821,9 +786,28 @@ def getPlayerResetPositions(request):
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    resetTriggers = data.getResetTriggers(gameDuration)[team][o.playerName]
+    resetTriggers = getResetTriggers(data, gameDuration)[team][o.playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
+    
+    return Response(res)
+
+@api_view(['GET'])
+def getWardPlacedPositions(request):
+    o : WardPlacedRequest = WardPlacedRequest(**json.loads(request.body))
+    (data, _, _, _) = getData(int(o.seriesId), o.gameNumber)
+    
+    participantID = data.getPlayerID(o.playerName)
+    team : str = ""
+    if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+        team = "blueTeam"
+    elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+        team = "redTeam"
+    
+    wardTriggers = getWardTriggers(data)[team][o.playerName]
+    
+    # Building the response
+    res : list[list] = [(d["position"]["x"], d["position"]["z"]) for d in wardTriggers]
     
     return Response(res)
