@@ -18,7 +18,6 @@ import SelectComp from "../utils/SelectComp";
 import SearchComp from "../utils/SearchComp";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
-import PlayerOverviewDensity from "./PlayerOverviewDensity";
 import { API_URL, roleList} from "../../constants";
 import "../../styles/PlayerOverview.css"
 
@@ -419,17 +418,7 @@ function PlayerOverview(){
                             <Divider
                                 style={{ background: 'white', borderWidth: 1}}
                                 variant="middle"
-                            />   
-
-
-                            <PlayerOverviewDensity
-                                summonnerName={selectedPlayer1}
-                                patch={activePatch1}
-                                tournament={tournament1}
-                                limit={activeLimit1}
-                            />
-
-
+                            /> 
                         </Stack>
                     ) : (
                         <div className="playerOverview-placeholder"></div>

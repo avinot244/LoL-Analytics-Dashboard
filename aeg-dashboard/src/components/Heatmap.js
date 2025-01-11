@@ -27,7 +27,6 @@ function calculateKDE(points, bandwidth, resolution) {
                 totalDensity += gaussianKernel(distance, bandwidth);  // Gaussian kernel density
             }
         });
-        console.log(totalDensity)
         // Add the density information to the list
         densityPoints.push({
             ...point,
@@ -50,7 +49,7 @@ const Heatmap = ({ data, bandwidth, resolution, backgroundImage }) => {
         const heatmap = h337.create({
             container: heatmapContainerRef.current,
             radius: 10, // Adjust for smoother points
-            maxOpacity: 0.6,
+            maxOpacity: 0.5,
             minOpacity: 0,
             blur: 0.75,
             gradient: {

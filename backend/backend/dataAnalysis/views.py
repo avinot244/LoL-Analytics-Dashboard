@@ -761,7 +761,7 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
 
     return Response(status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getPlayerPosition(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
     (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
@@ -774,7 +774,7 @@ def getPlayerPosition(request):
     
     return Response(res)
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getPlayerResetPositions(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
     (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
@@ -793,7 +793,7 @@ def getPlayerResetPositions(request):
     
     return Response(res)
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getWardPlacedPositions(request):
     o : WardPlacedRequest = WardPlacedRequest(**json.loads(request.body))
     (data, _, _, _) = getData(int(o.seriesId), o.gameNumber)
