@@ -3,7 +3,8 @@ from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import ward_typ
 
 @dataclass
 class WardPlacedRequest:
-    playerName : str
+    role : str
+    side : str
     seriesId : int
     gameNumber : int
     wardType : list[ward_types]

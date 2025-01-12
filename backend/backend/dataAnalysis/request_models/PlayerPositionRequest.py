@@ -2,7 +2,8 @@ from dataclasses import dataclass
 
 @dataclass
 class PlayerPositionRequest:
-    playerName : str
+    role : str
+    side : str
     seriesId : int
     gameNumber : int
     begTime : int

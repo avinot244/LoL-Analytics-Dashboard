@@ -8,7 +8,7 @@ from rest_framework import status
 from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
 
 
-from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
+from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST, SIDES
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide
 from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
@@ -766,7 +766,9 @@ def getPlayerPosition(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
     (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
     
-    participantID = data.getPlayerID(o.playerName)
+    participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+    
+    # get participant ID from o.side and o.role
     playerPosition = data.getPlayerPositionHistoryTimeFramed(gameDuration, participantID, o.begTime, o.endTime)
     
     # Building the response
@@ -779,14 +781,16 @@ def getPlayerResetPositions(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
     (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
     
-    participantID = data.getPlayerID(o.playerName)
+    participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+    playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
+    
     team : str = ""
     if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
         team = "blueTeam"
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    resetTriggers = getResetTriggers(data, gameDuration)[team][o.playerName]
+    resetTriggers = getResetTriggers(data, gameDuration)[team][playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
@@ -798,14 +802,16 @@ def getWardPlacedPositions(request):
     o : WardPlacedRequest = WardPlacedRequest(**json.loads(request.body))
     (data, _, _, _) = getData(int(o.seriesId), o.gameNumber)
     
-    participantID = data.getPlayerID(o.playerName)
+    participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+    playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
+    
     team : str = ""
     if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
         team = "blueTeam"
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    wardTriggers = getWardTriggers(data)[team][o.playerName]
+    wardTriggers = getWardTriggers(data)[team][playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["z"]) for d in wardTriggers]

@@ -2,6 +2,8 @@ API_URL = "http://localhost:8000/"
 
 ROLE_LIST = ["Top" ,"Jungle", "Mid", "ADC", "Support"]
 
+SIDES = ["Blue", "Red"]
+
 DATA_PATH = "./databases/"
 
 DATE_LIMIT = "2024-04-08"
@@ -66,6 +68,14 @@ factorsPerRole : dict = {
         "Mid" : 8,
         "ADC" : 4,
         "Support" : 7
+}
+
+roleMapping : dict = {
+        "Top": 0,
+        "Jungle": 1,
+        "Midlane": 2,
+        "ADC": 3,
+        "Support": 4
 }
 
 factorNamePerRole : dict = {
