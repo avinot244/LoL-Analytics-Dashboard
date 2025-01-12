@@ -4,8 +4,9 @@ import Heatmap from "./utils/Heatmap"
 import ScatterPlot from "./utils/ScatterPlot"
 import minimapImage from "../assets/2dlevelminimap_base_baron1.png"
 import AuthContext from "./context/AuthContext"
+import TimeFrameSelecter from "./utils/TimeFrameSelecter"
 
-import { Typography, Button } from "@mui/material"
+import { Typography, Button, Stack } from "@mui/material"
 import { useState, useEffect, useContext } from "react"
 import { API_URL, MAP_HEIGHT } from "../constants"
 
@@ -18,10 +19,8 @@ function TestComp() {
     // Example data
     const [datasetPosition, setDatasetPosition] = useState([])
     const [datasetReset, setDatasetReset] = useState([])
-
-    // const [dataset, setDataset] = useState([
-    // ]);
-    
+    const [datasetWardPlaced, setDatasetWardPlaced] = useState([])
+    const [value, setValue] = useState([60, 840])   
     
     const fetchPlayerPosition = async () => {
         const data = {
@@ -68,7 +67,6 @@ function TestComp() {
         })
 
         let newDataset = []
-        console.log(result)
         result.json().then(data => {
             data.forEach(element => {
                 newDataset.push({
@@ -76,8 +74,33 @@ function TestComp() {
                     y: Math.ceil(500 - (element[1] * 10/295))
                 })
             });
-            console.log(newDataset)
             setDatasetReset(newDataset)
+        })
+    }
+
+    const fetchWardPlaced = async () => {
+        const data = {
+            "role": "Jungle",
+            "side": "Blue",
+            "seriesId": 2729017,
+            "gameNumber": 1,
+            "wardType": ["yellowTrinket", "unknown", "control", "sight"]
+        }
+        const result = await fetch(API_URL + `dataAnalysis/getWardPositions/`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        let newDataset = []
+        result.json().then(data => {
+            data.forEach(element => {
+                newDataset.push({
+                    x: Math.ceil(element[0] * 10/295),
+                    y: Math.ceil(500 - (element[1] * 10/295))
+                })
+            })
+            setDatasetWardPlaced(newDataset)
         })
     }
 
@@ -85,13 +108,15 @@ function TestComp() {
     // KDE bandwidth (controls smoothing)
     const bandwidth = 7;  // Adjust this value to change the kernel's spread
 
-    // Resolution (density resolution, e.g., number of density estimates)
     return (
         <div className="wrapper-Test">
             <NavBarComp/>
             <Typography id="title-Test" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
                 Test page
             </Typography>
+            <TimeFrameSelecter gameDuration={1626} value={value} setValue={setValue}/>
+
+
             <Button
                 variant="contained"
                 onClick={() => fetchPlayerPosition()}
@@ -100,12 +125,23 @@ function TestComp() {
             </Button>
             <Button
                 variant="contained"
-                onClick={() => fetchResetPositions([])}
+                onClick={() => fetchResetPositions()}
             >
                 Get Data Reset   
             </Button>
-            <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} />
-            <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"}/>
+            <Button
+                variant="contained"
+                onClick={() => fetchWardPlaced()}
+            >
+                Get Data Ward Placed
+            </Button>
+
+            <Stack spacing={2} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 10, ml: 10}}>
+                <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} />
+                <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"}/>
+                <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"}/>
+            </Stack>
+            
         </div>
     )
 }

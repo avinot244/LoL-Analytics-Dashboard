@@ -48,7 +48,7 @@ const Heatmap = ({ data, bandwidth, resolution, backgroundImage }) => {
         const heatmap = h337.create({
             container: heatmapContainerRef.current,
             radius: 10, // Adjust for smoother points
-            maxOpacity: 0.5,
+            maxOpacity: 0.6,
             minOpacity: 0,
             blur: 0.75,
             gradient: {
