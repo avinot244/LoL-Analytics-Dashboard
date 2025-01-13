@@ -20,16 +20,17 @@ function TestComp() {
     const [datasetPosition, setDatasetPosition] = useState([])
     const [datasetReset, setDatasetReset] = useState([])
     const [datasetWardPlaced, setDatasetWardPlaced] = useState([])
-    const [value, setValue] = useState([60, 840])   
+    const [value, setValue] = useState([60, 840])
+    const [flagDisplayHeatmaps, setFlagDisplayHeatmaps] = useState(true)
     
     const fetchPlayerPosition = async () => {
         const data = {
-            "role": "Jungle",
+            "role": "Support",
             "side": "Blue",
             "seriesId": 2729017,
             "gameNumber": 1,
-            "begTime": 60,
-            "endTime": 840
+            "begTime": value[0],
+            "endTime": value[1]
         }
 
         const result = await fetch(API_URL + `dataAnalysis/getPlayerPosition/`, {
@@ -53,12 +54,12 @@ function TestComp() {
 
     const fetchResetPositions = async () => {
         const data = {
-            "role": "Jungle",
+            "role": "Support",
             "side": "Blue",
             "seriesId": 2729017,
             "gameNumber": 1,
-            "begTime": 60,
-            "endTime": 840
+            "begTime": value[0],
+            "endTime": value[1]
         }
         const result = await fetch(API_URL + `dataAnalysis/getResetPositions/`, {
             method: "PATCH",
@@ -80,10 +81,12 @@ function TestComp() {
 
     const fetchWardPlaced = async () => {
         const data = {
-            "role": "Jungle",
+            "role": "Support",
             "side": "Blue",
             "seriesId": 2729017,
             "gameNumber": 1,
+            "begTime": value[0],
+            "endTime": value[1],
             "wardType": ["yellowTrinket", "unknown", "control", "sight"]
         }
         const result = await fetch(API_URL + `dataAnalysis/getWardPositions/`, {
@@ -102,6 +105,14 @@ function TestComp() {
             })
             setDatasetWardPlaced(newDataset)
         })
+    }
+
+    const handleReset = () => {
+        setFlagDisplayHeatmaps(false)
+        setDatasetPosition([])
+        setDatasetReset([])
+        setDatasetWardPlaced([])
+        setFlagDisplayHeatmaps(true)
     }
 
     
@@ -134,6 +145,12 @@ function TestComp() {
                 onClick={() => fetchWardPlaced()}
             >
                 Get Data Ward Placed
+            </Button>
+            <Button
+                variant="contained"
+                onClick={() => handleReset()}
+            >
+                Reset
             </Button>
 
             <Stack spacing={2} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 10, ml: 10}}>
