@@ -7,4 +7,6 @@ class WardPlacedRequest:
     side : str
     seriesId : int
     gameNumber : int
+    begTime : int
+    endTime : int
     wardType : list[ward_types]

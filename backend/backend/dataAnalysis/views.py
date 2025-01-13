@@ -10,11 +10,11 @@ from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, Behavio
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST, SIDES
 from .packages.api_calls.GRID.api_calls import *
-from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries, getPlayerSide
+from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries
 from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
 from .packages.utils_stuff.stats import getProximityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
-from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers
+from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
@@ -22,7 +22,6 @@ from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
-from .packages.utils_stuff.plots.densityPlot import getPositionsSingleGame, densityPlot
 from dataAnalysis.request_models import PlayerPositionRequest, WardPlacedRequest
 
 
@@ -769,7 +768,7 @@ def getPlayerPosition(request):
     participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
     
     # get participant ID from o.side and o.role
-    playerPosition = data.getPlayerPositionHistoryTimeFramed(gameDuration, participantID, o.begTime, o.endTime)
+    playerPosition = getPlayerPositionHistoryTimeFramed(data, gameDuration, participantID, o.begTime, o.endTime)
     
     # Building the response
     res : list[list] = [pos.toList() for pos in playerPosition]
@@ -790,7 +789,7 @@ def getPlayerResetPositions(request):
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    resetTriggers = getResetTriggers(data, gameDuration)[team][playerName]
+    resetTriggers = getResetTriggers(data, gameDuration, o.begTime, o.endTime)[team][playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
@@ -800,7 +799,7 @@ def getPlayerResetPositions(request):
 @api_view(['PATCH'])
 def getWardPlacedPositions(request):
     o : WardPlacedRequest = WardPlacedRequest(**json.loads(request.body))
-    (data, _, _, _) = getData(int(o.seriesId), o.gameNumber)
+    (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
     
     participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
     playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
@@ -811,7 +810,7 @@ def getWardPlacedPositions(request):
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    wardTriggers = getWardTriggers(data)[team][playerName]
+    wardTriggers = getWardTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime)[team][playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["z"]) for d in wardTriggers]

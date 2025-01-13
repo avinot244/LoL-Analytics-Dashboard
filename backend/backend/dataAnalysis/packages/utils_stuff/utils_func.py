@@ -218,3 +218,6 @@ def splitPlayerNameListPerTeam(data : SeparatedData, playerNameList : list[str])
         elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(playerID):
             playerNameListTeamTwo.append(playerName)
     return [playerNameListTeamOne, playerNameListTeamTwo]
+
+def convertTime(gameTime : int, gameDuration : int, endGameTime : int):
+    return int(gameTime*gameDuration/endGameTime)

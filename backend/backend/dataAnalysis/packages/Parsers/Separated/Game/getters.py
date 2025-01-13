@@ -1,12 +1,33 @@
 from tqdm import tqdm
 import re
 
+from dataAnalysis.packages.utils_stuff.utils_func import convertTime
+from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
 from dataAnalysis.packages.utils_stuff.reset_trigger import didPlayerReset
 from dataAnalysis.packages.Parsers.Separated.Events.EventTypes import *
 
-def getResetTriggers(data : SeparatedData , gameDuration : int):
+def getPlayerPositionHistoryTimeFramed(data : SeparatedData , gameDuration: int, participantID : int, begTime : int, endTime : int) -> list[Position]:
+    positionList : list[Position] = list()
+    
+    splitList : list[int] = [begTime, endTime]    
+    data : SeparatedData = data.splitData(gameDuration, splitList)[1]
+    
+    for gameSnapshot in data.gameSnapshotList:
+        if gameSnapshot.teams[0].isPlayerInTeam(participantID):
+            playerIdx : int = gameSnapshot.teams[0].getPlayerIdx(participantID)
+            if gameSnapshot.teams[0].players[playerIdx].isAlive():
+                positionPlayer : Position = gameSnapshot.teams[0].getPlayerPosition(playerIdx)
+                positionList.append(positionPlayer)
+        else:
+            playerIdx : int = gameSnapshot.teams[1].getPlayerIdx(participantID)
+            if gameSnapshot.teams[1].players[playerIdx].isAlive():
+                positionPlayer : Position = gameSnapshot.teams[1].getPlayerPosition(playerIdx)
+                positionList.append(positionPlayer)
+    return positionList
+
+def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, endTime : int):
     result : dict = {
         "blueTeam": {},
         "redTeam": {}
@@ -19,7 +40,7 @@ def getResetTriggers(data : SeparatedData , gameDuration : int):
     for player in firstSnapshot.teams[1].players:
         result["redTeam"][player.playerName] = []
     
-    for time in tqdm(range(gameDuration + 1)):
+    for time in tqdm(range(begTime, endTime + 1)):
         currentSnapshot : Snapshot = data.getSnapShotByTime(time, gameDuration)
         dataWindow : list[Snapshot] = [data.getSnapShotByTime(t, gameDuration) for t in range(time, time+2, 1)]
         
@@ -39,12 +60,12 @@ def getResetTriggers(data : SeparatedData , gameDuration : int):
     
     return result
 
-def getWardTriggers(data : SeparatedData):
+def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
     result : dict = {
         "blueTeam": {},
         "redTeam": {}
     }
-    
+        
     firstSnapshot : Snapshot = data.gameSnapshotList[0]
     for player in firstSnapshot.teams[0].players:
         result["blueTeam"][player.playerName] = []
@@ -54,23 +75,26 @@ def getWardTriggers(data : SeparatedData):
     
     for event in data.eventList:
         event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
-        if event_name == "ward_placed":
-            event : WardPlacedEvent
-            participantID : int = event.placer
-            
-            team : str = ""
-            playerName : str = ""
-            if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
-                team = "blueTeam"
-                playerName = data.gameSnapshotList[0].teams[0].getPlayerNameFromID(participantID)
-            elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
-                team = "redTeam"
-                playerName = data.gameSnapshotList[0].teams[1].getPlayerNameFromID(participantID)
+        
+        if event_name == "ward_placed": # also check if the event time is within begTime and endTime
+            time = convertTime(event.gameTime, gameDuration, endGameTime)
+            if time <= endTime and time >= begTime:
+                event : WardPlacedEvent
+                participantID : int = event.placer
                 
-            result[team][playerName].append({
-                "time": event.gameTime,
-                "position": event.position,
-                "wardType": event.wardType
-            })
+                team : str = ""
+                playerName : str = ""
+                if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+                    team = "blueTeam"
+                    playerName = data.gameSnapshotList[0].teams[0].getPlayerNameFromID(participantID)
+                elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+                    team = "redTeam"
+                    playerName = data.gameSnapshotList[0].teams[1].getPlayerNameFromID(participantID)
+                
+                result[team][playerName].append({
+                    "time": time,
+                    "position": event.position,
+                    "wardType": event.wardType
+                })
             
     return result
