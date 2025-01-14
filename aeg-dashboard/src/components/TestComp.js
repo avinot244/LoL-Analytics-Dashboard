@@ -4,7 +4,7 @@ import Heatmap from "./utils/Heatmap"
 import ScatterPlot from "./utils/ScatterPlot"
 import minimapImage from "../assets/2dlevelminimap_base_baron1.png"
 import AuthContext from "./context/AuthContext"
-import TimeFrameSelecter from "./utils/TimeFrameSelecter"
+import TimeFrameSelecter from "./utils/TimeFrameSelecter/TimeFrameSelecter"
 
 import { Typography, Button, Stack } from "@mui/material"
 import { useState, useEffect, useContext } from "react"

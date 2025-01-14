@@ -1,7 +1,5 @@
 import { Box, Slider } from '@mui/material'
-import { useState } from 'react'
-
-
+import { CustomMark } from './CustomMark'
 
 
 function TimeFrameSelecter({gameDuration, value, setValue}) {
@@ -46,6 +44,9 @@ function TimeFrameSelecter({gameDuration, value, setValue}) {
                     '& .MuiSlider-markLabel': {
                         color: 'white',
                     },
+                }}
+                slots={{
+                    markLabel: CustomMark
                 }}
             />
         </Box>
