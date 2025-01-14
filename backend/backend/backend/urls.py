@@ -196,10 +196,11 @@ urlpatterns = [
     path('api/dataAnalysis/getProximityMatrix/<int:seriesId>/<int:gameNumber>/<int:time>/', dataAnalysisViews.getProximityMatrix),
     
     
-    #
-    path('api/dataAnalysis/getPlayerPosition/', teamAnalysisViews.getPlayerPosition),
-    path('api/dataAnalysis/getResetPositions/', teamAnalysisViews.getPlayerResetPositions),
-    path('api/dataAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),
+    # Team Analysis
+    path('api/teamAnalysis/getPlayerPosition/', teamAnalysisViews.getPlayerPosition),
+    path('api/teamAnalysis/getResetPositions/', teamAnalysisViews.getPlayerResetPositions),
+    path('api/teamAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),
+    path('api/teamAnalysis/getGrubsDrakesStats/', teamAnalysisViews.getGrubsDrakeStats),
 
 
     # Draft

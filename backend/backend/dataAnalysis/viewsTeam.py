@@ -1,11 +1,16 @@
 import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 
-from dataAnalysis.globals import SIDES, ROLE_LIST
-from dataAnalysis.packages.utils_stuff.utils_func import getData
+from django.db.models import Q
+
+from .models import GameMetadata
+from .serializer import GameMetadataSerializer
+from .globals import SIDES, ROLE_LIST
+from .packages.utils_stuff.utils_func import getData
 from .request_models import PlayerPositionRequest, WardPlacedRequest, KillEventsRequest, GrubsDrakeStatsRequest
-from dataAnalysis.packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
+from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
 @api_view(['PATCH'])
 def getPlayerPosition(request):
@@ -77,4 +82,42 @@ def getKillEvents(request):
 def getGrubsDrakeStats(request):
     o : GrubsDrakeStatsRequest = GrubsDrakeStatsRequest(**json.loads(request.body))
     
-    # allObjects = 
+    if len(o.tournamentList) == 0:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName)
+    else:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, tournament__in=o.tournamentList)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, tournament__in=o.tournamentList)
+    
+    response : list[dict] = list()
+    
+    for nGrubs in range(0, 7):
+        for nDrake in range(0, 5):
+            # For blue side
+            blueData = allObjectsBlueSide.filter(voidGrubsBlueKills=nGrubs, dragonBlueKills=nDrake)
+            nbGamesBlue : int = len(blueData)
+            nbWinBlue = len(blueData.filter(winningTeam=0))
+            
+            # For red side
+            redData = allObjectsRedSide.filter(voidGrubsRedKills=nGrubs, dragonRedKills=nDrake)
+            nbGamesRed : int = len(redData)
+            nbWinRed = len(redData.filter(winningTeam=1))
+            
+            if nbGamesRed + nbGamesRed == 0:
+                response.append({
+                    "nGrubs": nGrubs,
+                    "nDrake": nDrake,
+                    "winRate": -1,
+                    "nbGames": nbGamesBlue + nbGamesRed
+                })
+            else:
+                response.append({
+                    "nGrubs": nGrubs,
+                    "nDrake": nDrake,
+                    "winrate": (nbWinBlue + nbWinRed)/(nbGamesBlue+ nbGamesRed),
+                    "nbGames": nbGamesBlue + nbGamesRed
+                })
+    
+    # We want a list of triples [nGrubs, nDrakes, winRate, nbGames]
+    
+    return Response(response)
