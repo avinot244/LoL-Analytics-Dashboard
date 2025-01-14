@@ -8,6 +8,29 @@ from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
 from dataAnalysis.packages.utils_stuff.reset_trigger import didPlayerReset
 from dataAnalysis.packages.Parsers.Separated.Events.EventTypes import *
 
+def getKillTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
+    result : dict = {
+        "blueTeam": [],
+        "redTeam": []
+    }
+    for event in data.eventList:
+        event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+        if event_name == "champion_kill":
+            event : ChampionKillEvent
+            time = convertTime(event.gameTime, gameDuration, endGameTime)
+            if time <= endTime and time >= begTime:
+                if event.killerTeamID == 100:
+                    result["blueTeam"].append({
+                        "time": time,
+                        "position": event.position
+                    })
+                else: 
+                    result["redTeam"].append({
+                        "time": time,
+                        "position": event.position
+                    })
+    return result
+
 def getPlayerPositionHistoryTimeFramed(data : SeparatedData , gameDuration: int, participantID : int, begTime : int, endTime : int) -> list[Position]:
     positionList : list[Position] = list()
     
@@ -77,9 +100,9 @@ def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int,
         event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
         
         if event_name == "ward_placed": # also check if the event time is within begTime and endTime
+            event : WardPlacedEvent
             time = convertTime(event.gameTime, gameDuration, endGameTime)
             if time <= endTime and time >= begTime:
-                event : WardPlacedEvent
                 participantID : int = event.placer
                 
                 team : str = ""

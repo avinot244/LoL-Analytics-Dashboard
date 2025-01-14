@@ -31,6 +31,7 @@ from dataAnalysis import views as dataAnalysisViews
 from Draft import views as draftViews
 from authentication import views as authenticationViews
 from Monitoring import views as monitoringViews
+from teamAnalysis import views as teamAnalysisViews
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -193,9 +194,11 @@ urlpatterns = [
 
     path('api/dataAnalysis/getProximityMatrix/<int:seriesId>/<int:gameNumber>/<int:time>/', dataAnalysisViews.getProximityMatrix),
     
-    path('api/dataAnalysis/getPlayerPosition/', dataAnalysisViews.getPlayerPosition),
-    path('api/dataAnalysis/getResetPositions/', dataAnalysisViews.getPlayerResetPositions),
-    path('api/dataAnalysis/getWardPositions/', dataAnalysisViews.getWardPlacedPositions),
+    
+    # Team Analysis
+    path('api/dataAnalysis/getPlayerPosition/', teamAnalysisViews.getPlayerPosition),
+    path('api/dataAnalysis/getResetPositions/', teamAnalysisViews.getPlayerResetPositions),
+    path('api/dataAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),
 
 
     # Draft

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Draft',
     'authentication',
     'Monitoring',
+    'teamAnalysis',
     'django_extensions',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
