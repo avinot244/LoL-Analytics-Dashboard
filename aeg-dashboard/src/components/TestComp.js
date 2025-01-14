@@ -33,7 +33,7 @@ function TestComp() {
             "endTime": value[1]
         }
 
-        const result = await fetch(API_URL + `dataAnalysis/getPlayerPosition/`, {
+        const result = await fetch(API_URL + `teamAnalysis/getPlayerPosition/`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: header
@@ -61,7 +61,7 @@ function TestComp() {
             "begTime": value[0],
             "endTime": value[1]
         }
-        const result = await fetch(API_URL + `dataAnalysis/getResetPositions/`, {
+        const result = await fetch(API_URL + `teamAnalysis/getResetPositions/`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: header
@@ -89,7 +89,7 @@ function TestComp() {
             "endTime": value[1],
             "wardType": ["yellowTrinket", "unknown", "control", "sight"]
         }
-        const result = await fetch(API_URL + `dataAnalysis/getWardPositions/`, {
+        const result = await fetch(API_URL + `teamAnalysis/getWardPositions/`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: header
