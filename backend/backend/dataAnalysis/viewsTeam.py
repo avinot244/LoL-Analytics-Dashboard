@@ -9,7 +9,7 @@ from .models import GameMetadata
 from .serializer import GameMetadataSerializer
 from .globals import SIDES, ROLE_LIST
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, KillEventsRequest, GrubsDrakeStatsRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
 @api_view(['PATCH'])
@@ -71,7 +71,7 @@ def getWardPlacedPositions(request):
 
 @api_view(['PATCH'])
 def getKillEvents(request):
-    o : KillEventsRequest = KillEventsRequest(**json.loads(request.body))
+    o : GameTimeFrameRequest = GameTimeFrameRequest(**json.loads(request.body))
     (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
 
     killEvents = getKillTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime)[o.team]
@@ -80,7 +80,7 @@ def getKillEvents(request):
 
 @api_view(['GET'])
 def getGrubsDrakeStats(request):
-    o : GrubsDrakeStatsRequest = GrubsDrakeStatsRequest(**json.loads(request.body))
+    o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
     
     if len(o.tournamentList) == 0:
         allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName)
@@ -103,21 +103,112 @@ def getGrubsDrakeStats(request):
             nbGamesRed : int = len(redData)
             nbWinRed = len(redData.filter(winningTeam=1))
             
-            if nbGamesRed + nbGamesRed == 0:
+            if nbGamesRed + nbGamesBlue == 0:
                 response.append({
                     "nGrubs": nGrubs,
                     "nDrake": nDrake,
-                    "winRate": -1,
-                    "nbGames": nbGamesBlue + nbGamesRed
+                    "totalWins": nbWinBlue + nbWinRed,
+                    "totalGames": nbGamesBlue + nbGamesRed,
+                    "winRate": -1
                 })
             else:
                 response.append({
                     "nGrubs": nGrubs,
                     "nDrake": nDrake,
-                    "winrate": (nbWinBlue + nbWinRed)/(nbGamesBlue+ nbGamesRed),
-                    "nbGames": nbGamesBlue + nbGamesRed
+                    "totalWins": nbWinBlue + nbWinRed,
+                    "totalGames": nbGamesBlue + nbGamesRed,
+                    "winrate": (nbWinBlue + nbWinRed)/(nbGamesBlue + nbGamesRed)
                 })
     
     # We want a list of triples [nGrubs, nDrakes, winRate, nbGames]
     
     return Response(response)
+
+
+@api_view(['GET'])
+def getFirstTowerHeraldStats(request):
+    o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
+    if len(o.tournamentList) == 0:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, firstTower=1, heraldBlueKills__gt=0)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, firstTower=0, heraldRedKills__gt=0)
+    else:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, tournament__in=o.tournamentList, firstTower=1, heraldBlueKills__gt=0)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, tournament__in=o.tournamentList, firstTower=0, heraldRedKills__gt=0)
+    
+    firstTowerHeraldDataBlue = allObjectsBlueSide.filter(winningTeam=0)
+    firstTowerHeraldDataRed = allObjectsRedSide.filter(winningTeam=1)
+    
+    totalGamesBlueSide = len(allObjectsBlueSide)
+    totalGamesRedSide = len(allObjectsRedSide)
+    
+    if totalGamesBlueSide == 0:
+        if totalGamesRedSide == 0:
+            return Response(-1)
+        else:
+            return Response({
+                "totalWins": len(firstTowerHeraldDataRed),
+                "totalGames": totalGamesRedSide,
+                "winRate": len(firstTowerHeraldDataRed)/totalGamesRedSide
+            })
+    else:
+        if totalGamesRedSide == 0:
+            return Response({
+                "totalWins": len(firstTowerHeraldDataBlue),
+                "totalGames": totalGamesBlueSide,
+                "winRate": len(firstTowerHeraldDataBlue)/totalGamesBlueSide
+            })
+        else:
+            winRate = (len(firstTowerHeraldDataBlue) + len(firstTowerHeraldDataRed))/(totalGamesBlueSide + totalGamesRedSide)
+            return Response({
+                "totalWins": len(firstTowerHeraldDataBlue) + len(firstTowerHeraldDataRed),
+                "totalGames": totalGamesRedSide + totalGamesBlueSide,
+                "winRate": winRate
+            })
+            
+@api_view(['GET'])
+def getHeraldData(request):
+    o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
+    if len(o.tournamentList) == 0:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, heraldBlueKills__gt=0)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, heraldRedKills__gt=0)
+    else:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, tournament__in=o.tournamentList, heraldBlueKills__gt=0)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, tournament__in=o.tournamentList, heraldRedKills__gt=0)
+        
+    winsBlueSide = allObjectsBlueSide.filter(winningTeam=0)
+    winsRedSide = allObjectsRedSide.filter(winningTeam=1)
+    
+    nbWinsBlueSide = len(winsBlueSide)
+    nbwinsRedSide = len(winsRedSide)
+    
+    totalGamesBlueSide = len(allObjectsBlueSide)
+    totalGamesRedSide = len(allObjectsRedSide)
+    return Response({
+        "totalWins": nbWinsBlueSide + nbwinsRedSide,
+        "totalGames": totalGamesBlueSide + totalGamesRedSide,
+        "winRate": (nbWinsBlueSide + nbwinsRedSide)/(totalGamesBlueSide + totalGamesRedSide)
+    })
+    
+@api_view(['GET'])
+def getFirstTowerData(request):
+    o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
+    if len(o.tournamentList) == 0:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, firstTower=0)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, firstTower=1)
+    else:
+        allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, tournament__in=o.tournamentList, firstTower=0)
+        allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, tournament__in=o.tournamentList, firstTower=1)
+        
+    winsBlueSide = allObjectsBlueSide.filter(winningTeam=0)
+    winsRedSide = allObjectsRedSide.filter(winningTeam=1)
+    
+    nbWinsBlueSide = len(winsBlueSide)
+    nbwinsRedSide = len(winsRedSide)
+    
+    totalGamesBlueSide = len(allObjectsBlueSide)
+    totalGamesRedSide = len(allObjectsRedSide)
+    return Response({
+        "totalWins": nbWinsBlueSide + nbwinsRedSide,
+        "totalGames": totalGamesBlueSide + totalGamesRedSide,
+        "winRate": (nbWinsBlueSide + nbwinsRedSide)/(totalGamesBlueSide + totalGamesRedSide)
+    })

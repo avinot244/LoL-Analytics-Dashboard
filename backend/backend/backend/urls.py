@@ -186,7 +186,6 @@ urlpatterns = [
 
     path('api/dataAnalysis/updateDatabase/<str:tournamentList>/', dataAnalysisViews.updateDatabase),
 
-    
     path('api/dataAnalysis/getGameList/<str:tournament>/', dataAnalysisViews.getGameList),
 
     path('api/dataAnalysis/getGamePositionDensity/', dataAnalysisViews.getGamePositionDensity),
@@ -194,13 +193,16 @@ urlpatterns = [
     path('api/dataAnalysis/gameAnalysis/teams/<int:seriesId>/<int:gameNumber>/', dataAnalysisViews.getGameStatsTeams),
 
     path('api/dataAnalysis/getProximityMatrix/<int:seriesId>/<int:gameNumber>/<int:time>/', dataAnalysisViews.getProximityMatrix),
-    
+    path('api/dataAnalaysis/getGameEvents/', dataAnalysisViews.getGameEvents),
     
     # Team Analysis
     path('api/teamAnalysis/getPlayerPosition/', teamAnalysisViews.getPlayerPosition),
     path('api/teamAnalysis/getResetPositions/', teamAnalysisViews.getPlayerResetPositions),
     path('api/teamAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),
     path('api/teamAnalysis/getGrubsDrakesStats/', teamAnalysisViews.getGrubsDrakeStats),
+    path('api/teamAnalysis/getFirstTowerHeraldData/', teamAnalysisViews.getFirstTowerHeraldStats),
+    path('api/teamAnalysis/getHeraldData/', teamAnalysisViews.getHeraldData),
+    path('api/teamAnalysis/getFirstTowerData/', teamAnalysisViews.getFirstTowerData),
 
 
     # Draft

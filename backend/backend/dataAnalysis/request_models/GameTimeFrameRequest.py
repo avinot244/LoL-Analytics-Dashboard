@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class KillEventsRequest:
+class GameTimeFrameRequest:
     seriesId : int
     gameNumber : int
     begTime : int

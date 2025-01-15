@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
 @dataclass
-class GrubsDrakeStatsRequest:
+class TeamStatsRequest:
     teamName : str
     tournamentList : list[str]

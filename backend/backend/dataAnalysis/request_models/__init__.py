@@ -1,7 +1,8 @@
 from .PlayerPositionRequest import PlayerPositionRequest
 from .WardPlacedRequest import WardPlacedRequest
-from .KillEventsRequest import KillEventsRequest
-from .GrubsDrakeStatsRequest import GrubsDrakeStatsRequest
+from .GameTimeFrameRequest import GameTimeFrameRequest
+from .TeamStatsRequest import TeamStatsRequest
+from .GameStatsRequest import GameStatsRequest
 
 
-__all__ = [PlayerPositionRequest, WardPlacedRequest, KillEventsRequest, GrubsDrakeStatsRequest]
+__all__ = [PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GameStatsRequest]
