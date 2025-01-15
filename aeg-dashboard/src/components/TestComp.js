@@ -21,7 +21,6 @@ function TestComp() {
     const [datasetReset, setDatasetReset] = useState([])
     const [datasetWardPlaced, setDatasetWardPlaced] = useState([])
     const [value, setValue] = useState([60, 840])
-    const [flagDisplayHeatmaps, setFlagDisplayHeatmaps] = useState(true)
     
     const fetchPlayerPosition = async () => {
         const data = {
@@ -107,13 +106,6 @@ function TestComp() {
         })
     }
 
-    const handleReset = () => {
-        setFlagDisplayHeatmaps(false)
-        setDatasetPosition([])
-        setDatasetReset([])
-        setDatasetWardPlaced([])
-        setFlagDisplayHeatmaps(true)
-    }
 
     
     // KDE bandwidth (controls smoothing)
@@ -148,7 +140,6 @@ function TestComp() {
             </Button>
             <Button
                 variant="contained"
-                onClick={() => handleReset()}
             >
                 Reset
             </Button>
