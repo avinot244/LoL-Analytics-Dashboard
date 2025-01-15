@@ -5,15 +5,19 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
+from typing import get_args
+from dataclasses import asdict
 
+from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
 
 from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries
-from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData
+from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData, convertTime
 from .packages.utils_stuff.stats import getProximityMatrix
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
+from .packages.Parsers.Separated.Events.EventTypes import *
+from .packages.Parsers.Separated.Events.LiteralTypes import epic_monster_types_parsed
 from .packages.AreaMapping.AreaMapping import AreaMapping
 from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
@@ -21,6 +25,7 @@ from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
+from .request_models import GameStatsRequest
 
 
 
@@ -759,3 +764,31 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
 
     return Response(status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def getGameEvents(request):
+    o : GameStatsRequest = GameStatsRequest(**json.loads(request.body))
+    (data, gameDuration, _, endGameTime) = getData(o.seriesId, o.gameNumber)
+    
+    eventList : list[dict] = list()
+
+    for event in data.eventList:
+        event_name : str = re.sub(r'([a-z0-9])([A-Z])', r'\1_\2', event.__class__.__name__.replace("Event", "")).lower()
+        if event_name == "epic_monster_kill":
+            event : EpicMonsterKillEvent
+            if event.monsterType in get_args(epic_monster_types_parsed):
+                eventList.append({
+                    "event_type": event_name,
+                    "info": event.monsterType,
+                    "team": "blueTeam" if event.killerTeamID == 100 else "redTeam",
+                    "time": convertTime(event.gameTime, gameDuration, endGameTime)
+                })
+        elif event_name == "building_destroyed":
+            event : BuildingDestroyedEvent
+            eventList.append({
+                "event_type": event_name,
+                "info": event.buildingType,
+                "team": "blueTeam" if event.teamID == 100 else "redTeam",
+                "time": convertTime(event.gameTime, gameDuration, endGameTime)
+            })
+    
+    return Response(eventList)
