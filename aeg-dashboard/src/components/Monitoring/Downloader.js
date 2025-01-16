@@ -18,7 +18,7 @@ import '../../styles/Monitoring.css'
 
 import NavBarComp from '../utils/NavbarComp.js';
 import { API_URL } from '../../constants/index.js';
-import RedirectPage from '../Home/RedirectPage.js';
+import MultipleSearchComp from '../utils/MultipleSearchComp.js';
 import Loading from '../utils/Loading.js';
 import AuthContext from '../context/AuthContext.js';
 
@@ -199,74 +199,6 @@ function TextAdder({selectedTournaments, setSelectedTournaments, tournamentList,
     );
 }
 
-
-function TournamentFilter({tournamentFilterList, selectedFilters, setSelectedFilters}) {
-    const handleChange = (list) => {
-        const newFilters = list
-        setSelectedFilters(newFilters)
-        console.log(selectedFilters)
-    }
-    const theme = createTheme ({
-        palette: {
-            primary : {
-                main: '#fff',
-            },
-            text : {
-                disabled: '#fff'
-            }
-            
-        },
-        action: {
-            active: '#fff'
-        }
-    })
-
-    return (
-        <>	
-            <ThemeProvider theme={theme}>
-                <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
-                    <Autocomplete
-                        multiple
-                        clearIcon={<ClearIcon color="error"/>}
-                        popupIcon={<ArrowDropDownIcon color="primary"/>}
-                        className="searchComp"
-                        options={tournamentFilterList}
-                        renderInput={(params) => (
-                            <TextField 
-                                {...params} 
-                                className='textField-searchComp'
-                                label={"Tournament Filter"}
-                                focused
-                                sx={{ 
-                                        input: { color: 'white'},
-                                        borderColor: 'white'
-                                    }}
-                                
-                            />
-                        )}
-                        renderTags={(value, getTagProps) => 
-                            value.map((option, index) => (
-                                <Chip
-                                    color="primary"
-                                    variant='outlined'
-                                    label={option}
-                                    {...getTagProps({index})}
-                                />
-                            ))
-                        }
-                        onChange={(_, value) => {handleChange(value)}}
-                        sx={{color: 'primary.main', borderColor: 'primary.main', width: 200}}
-                        fullWidth={true}
-                    />
-                </Box>
-                
-            </ThemeProvider>
-        </>
-	);
-}
-
-
-
 export default function Downloader() {
     const [tournamentList, setTournamentList] = React.useState([]);
     const [selectedTournaments, setSelectedTournaments] = React.useState([]);
@@ -381,7 +313,7 @@ export default function Downloader() {
                     <>
                         <h2>Select the tournament filter</h2>
                         <Stack spacing={2} direction="row" justifyContent="center" alignItems="center" sx={{pb: 2}}>
-                            <TournamentFilter
+                            <MultipleSearchComp
                                 tournamentFilterList={tournamentListShortended}
                                 selectedFilters={selectedFilters}
                                 setSelectedFilters={setSelectedFilters}
