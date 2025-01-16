@@ -196,6 +196,8 @@ urlpatterns = [
     path('api/dataAnalaysis/getGameEvents/', dataAnalysisViews.getGameEvents),
     
     # Team Analysis
+    path('api/teamAnalysis/getAllTeams/', teamAnalysisViews.getTeamList),
+    path('api/teamAnalysis/getTournamentsFromTeam/<str:team>/', teamAnalysisViews.getTournamentsFromTeam),
     path('api/teamAnalysis/getPlayerPosition/', teamAnalysisViews.getPlayerPosition),
     path('api/teamAnalysis/getResetPositions/', teamAnalysisViews.getPlayerResetPositions),
     path('api/teamAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),

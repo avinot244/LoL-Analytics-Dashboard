@@ -12,6 +12,26 @@ from .packages.utils_stuff.utils_func import getData
 from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
+@api_view(['GET'])
+def getTeamList(request):
+    teamList : list[str] = list()
+    allData = GameMetadata.objects.all()
+    for gameMetadataobject in allData:
+        if not(gameMetadataobject.teamBlue in teamList):
+            teamList.append(gameMetadataobject.teamBlue)
+        elif not(gameMetadataobject.teamRed in teamList):
+            teamList.append(gameMetadataobject.teamRed)
+    return Response(teamList)
+
+@api_view(['GET'])
+def getTournamentsFromTeam(request, team : str):
+    tournamentList : list[str] = list()
+    allData = GameMetadata.objects.filter(Q(teamRed=team) | Q(teamBlue=team))
+    for gameMetadataObject in allData:
+        if not(gameMetadataObject.tournament in tournamentList):
+            tournamentList.append(gameMetadataObject.tournament)
+    return Response(tournamentList)
+
 @api_view(['PATCH'])
 def getPlayerPosition(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))

@@ -317,6 +317,7 @@ export default function Downloader() {
                                 tournamentFilterList={tournamentListShortended}
                                 selectedFilters={selectedFilters}
                                 setSelectedFilters={setSelectedFilters}
+                                width={200}
                             />
                             <Button
                                 endIcon={<SearchIcon/>}

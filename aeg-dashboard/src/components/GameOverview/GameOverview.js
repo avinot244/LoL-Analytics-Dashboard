@@ -3,6 +3,7 @@ import "../../styles/GameOverview.css"
 import SearchComp from "../utils/SearchComp"
 import { API_URL } from "../../constants"
 import GameOverviewStat from "./GameOverviewStat"
+import MultipleSearchComp from "../utils/MultipleSearchComp"
 
 import { ThemeProvider, createTheme, Typography } from "@mui/material";
 import { Autocomplete } from '@mui/material';

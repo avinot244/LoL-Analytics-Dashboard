@@ -8,7 +8,7 @@ import ClearIcon from '@mui/icons-material/Clear'
 import '../../styles/Monitoring.css'
 
 
-function MultipleSearchComp({tournamentFilterList, selectedFilters, setSelectedFilters}) {
+function MultipleSearchComp({tournamentFilterList, selectedFilters, setSelectedFilters, width}) {
     const handleChange = (list) => {
         const newFilters = list
         setSelectedFilters(newFilters)
@@ -62,7 +62,7 @@ function MultipleSearchComp({tournamentFilterList, selectedFilters, setSelectedF
                             ))
                         }
                         onChange={(_, value) => {handleChange(value)}}
-                        sx={{color: 'primary.main', borderColor: 'primary.main', width: 200}}
+                        sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
                         fullWidth={true}
                     />
                 </Box>
