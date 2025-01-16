@@ -12,6 +12,8 @@ import PCAModelOverview from './Monitoring/PCAModelOverview';
 import PCADocumentation from './PlayerOverview/Documentation'
 import RefreshDBComp from './Monitoring/RefreshDBComp';
 import ScoutingPlayer from './PlayerOverview/Scouting'
+import TeamAnalysisOverall from './TeamAnalysis/TeamAnalysisOverall';
+import TeamAnalysisDetails from './TeamAnalysis/TeamAnalysisDetails';
 import TestComp from './TestComp';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -72,6 +74,12 @@ function App() {
 					</Route>
 					<Route element={<PrivateRoute />}>
 						<Route element={<TestComp/>} path="/Monitoring/TestComp" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<TeamAnalysisOverall/>} path="/teamAnalysisOverall" exact/>
+					</Route>
+					<Route element={<PrivateRoute />}>
+						<Route element={<TeamAnalysisDetails/>} path="/teamAnalysisDetails" exact/>
 					</Route>
 					
 				</Routes>

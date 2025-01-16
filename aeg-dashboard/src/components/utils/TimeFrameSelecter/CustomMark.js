@@ -9,7 +9,6 @@ import baronIcon from "../../../assets/objectives/baron.png"
 
 
 export const CustomMark = (props) => {
-    console.log(props)
     const index = props["data-index"];
     const mark = props.ownerState.marks[index]
 

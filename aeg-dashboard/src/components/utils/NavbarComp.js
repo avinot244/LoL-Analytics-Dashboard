@@ -43,6 +43,10 @@ function NavBarComp() {
 							<NavDropdown.Item as={Link} to='/GameOverview/Scrims'>Scrims</NavDropdown.Item>
 							<NavDropdown.Item as={Link} to='/GameOverview/Esports'>Esports</NavDropdown.Item>
 						</NavDropdown>
+						<NavDropdown title="Team Analysis">
+							<NavDropdown.Item as={Link} to="/teamAnalysisOverall">Overall</NavDropdown.Item>
+							<NavDropdown.Item as={Link} to="/teamAnalysisDetails">Details</NavDropdown.Item>
+						</NavDropdown>
 
 						<NavDropdown title="Monitoring">
 							<NavDropdown.Item as={Link} to='/Monitoring/Download'>Download Games</NavDropdown.Item>
