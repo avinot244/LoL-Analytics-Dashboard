@@ -21,6 +21,8 @@ function TestComp() {
     const [datasetReset, setDatasetReset] = useState([])
     const [datasetWardPlaced, setDatasetWardPlaced] = useState([])
     const [value, setValue] = useState([60, 840])
+    const [gameEvents, setGameEvents] = useState([])
+    const [dataAvailable, setDataAvailable] = useState(false)
     
     const fetchPlayerPosition = async () => {
         const data = {
@@ -106,7 +108,29 @@ function TestComp() {
         })
     }
 
+    const fetchGameEvents = async() => {
+        const data = {
+            "seriesId": 2729017,
+            "gameNumber": 1
+        }
+        const result = await fetch(API_URL + `dataAnalaysis/getGameEvents/`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+        let newGameEvents = []
+        result.json().then(data => {
+            data.forEach(element => {
+                newGameEvents.push(element)
+            })
+        })
+        setGameEvents(newGameEvents)
+        setDataAvailable(true)
+    }
 
+    useEffect(() => {
+        fetchGameEvents()
+    }, [])
     
     // KDE bandwidth (controls smoothing)
     const bandwidth = 7;  // Adjust this value to change the kernel's spread
@@ -117,39 +141,36 @@ function TestComp() {
             <Typography id="title-Test" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
                 Test page
             </Typography>
-            <TimeFrameSelecter gameDuration={1626} value={value} setValue={setValue}/>
+            {
+                dataAvailable &&
+                <>
+                    <TimeFrameSelecter gameDuration={1626} value={value} setValue={setValue} gameEvents={gameEvents}/>
+                    <Button
+                        variant="contained"
+                        onClick={() => fetchPlayerPosition()}
+                    >
+                        Get Data Position  
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => fetchResetPositions()}
+                    >
+                        Get Data Reset   
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => fetchWardPlaced()}
+                    >
+                        Get Data Ward Placed
+                    </Button>
 
-
-            <Button
-                variant="contained"
-                onClick={() => fetchPlayerPosition()}
-            >
-                Get Data Position  
-            </Button>
-            <Button
-                variant="contained"
-                onClick={() => fetchResetPositions()}
-            >
-                Get Data Reset   
-            </Button>
-            <Button
-                variant="contained"
-                onClick={() => fetchWardPlaced()}
-            >
-                Get Data Ward Placed
-            </Button>
-            <Button
-                variant="contained"
-            >
-                Reset
-            </Button>
-
-            <Stack spacing={2} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 10, ml: 10}}>
-                <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} />
-                <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"}/>
-                <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"}/>
-            </Stack>
-            
+                    <Stack spacing={2} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 10, ml: 10}}>
+                        <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} />
+                        <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"}/>
+                        <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"}/>
+                    </Stack>
+                </>
+            }
         </div>
     )
 }

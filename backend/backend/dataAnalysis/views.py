@@ -764,7 +764,7 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
 
     return Response(status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getGameEvents(request):
     o : GameStatsRequest = GameStatsRequest(**json.loads(request.body))
     (data, gameDuration, _, endGameTime) = getData(o.seriesId, o.gameNumber)
