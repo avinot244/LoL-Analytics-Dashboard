@@ -14,9 +14,8 @@ import AuthContext from "../context/AuthContext"
 import MultipleSearchComp from "../utils/MultipleSearchComp";
 
 
-
 import "../../styles/TeamAnalysisDetails.css"
-
+import TeamAnalysisOverallData from "./TeamAnalysisOverallData";
 
 function MultipleGameSearch({tournamentFilterList, selectedFilters, setSelectedFilters, width}) {
     const handleChange = (list) => {
@@ -66,7 +65,7 @@ function MultipleGameSearch({tournamentFilterList, selectedFilters, setSelectedF
                         renderTags={(value, getTagProps) => 
                             value.map((option, index) => (
                                 <Chip
-                                    color="primary"
+                                    color="primary" 
                                     variant='outlined'
                                     label={option.str}
                                     {...getTagProps({index})}
@@ -103,6 +102,7 @@ function TeamAnalysisDetails() {
     const [displayData, setDisplayData] = useState(false)
 
 
+
     const fetchTeamList = async () => {
         const result = await fetch(API_URL + `teamAnalysis/getAllTeams/`, {
             method: "GET",
@@ -110,6 +110,7 @@ function TeamAnalysisDetails() {
         })
         result.json().then(data => {
             let newTeamList = data
+            newTeamList.sort()
             setTeamList(newTeamList)
         })
     }
@@ -146,9 +147,11 @@ function TeamAnalysisDetails() {
             setGameList(newGameList)
         })
     }
+
+    
     
     const handleAnalyze = (team, tournamentList) => {
-        setDisplayGameSelecter(true)
+        setDisplayData(true)
         console.log(team)
         console.log(tournamentList)
     }
@@ -252,7 +255,7 @@ function TeamAnalysisDetails() {
             {
                 displayData && 
                 <>
-                    <span>prout</span>
+                    <TeamAnalysisOverallData/>
                 </>
             }
             

@@ -1,4 +1,4 @@
-import { Typography, Stack, Button } from "@mui/material"
+import { Typography, Stack, Button, ClickAwayListener } from "@mui/material"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -10,6 +10,8 @@ import SearchComp from "../utils/SearchComp"
 import { API_URL } from "../../constants"
 import AuthContext from "../context/AuthContext"
 import MultipleSearchComp from "../utils/MultipleSearchComp";
+
+import TeamAnalysisOverallData from "./TeamAnalysisOverallData";
 
 import "../../styles/TeamAnalysisOverall.css"
 
@@ -27,6 +29,12 @@ function TeamAnalysisOverall() {
 
     const [displayData, setDisplayData] = useState(false)
 
+    const [dataGrubsDrakeStats, setDataGrubsDrakeStats] = useState([])
+    const [dataFirstTowerHeraldStats, setDataFirstTowerHeraldData] = useState({})
+    const [dataHeraldStats, setDataHeraldStats] = useState({})
+    const [dataFirstTowerStats, setDataFirstTowerStats] = useState({})
+    
+
 
     const fetchTeamList = async () => {
         const result = await fetch(API_URL + `teamAnalysis/getAllTeams/`, {
@@ -34,7 +42,7 @@ function TeamAnalysisOverall() {
             headers: header
         })
         result.json().then(data => {
-            let newTeamList = data
+            let newTeamList = data.sort()
             setTeamList(newTeamList)
         })
     }
@@ -50,9 +58,86 @@ function TeamAnalysisOverall() {
             setDisplayTournamentSelecter(true)
         })
     }
+
+    const fetchGrubsDrakeStats = async (team, tournamentList) => {
+        const data = {
+            "teamName": team,
+            "tournamentList": tournamentList
+        }
+
+        const result = await fetch(API_URL + 'teamAnalysis/getGrubsDrakesStats/', {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        result.json().then(data => {
+            const newData = data
+            setDataGrubsDrakeStats(newData)
+        })
+    }
+
+    const fetchFirstTowerHeraldData = async (team, tournamentList) => {
+        const data = {
+            "teamName": team,
+            "tournamentList": tournamentList
+        }
+
+        const result = await fetch(API_URL + `teamAnalysis/getFirstTowerHeraldData/`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        result.json().then(data => {
+            const newData = data
+            setDataFirstTowerHeraldData(newData)
+        })
+    }
     
+    const fetchHeraldData = async (team, tournamentList) => {
+        const data = {
+            "teamName": team,
+            "tournamentList": tournamentList
+        }
+
+        const result = await fetch(API_URL + `teamAnalysis/getHeraldData/`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        result.json().then(data => {
+            const newData = data
+            setDataHeraldStats(newData)
+        })
+    }
+
+    const fetchFirstTowerData = async (team, tournamentList) => {
+        const data = {
+            "teamName": team,
+            "tournamentList": tournamentList
+        }
+
+        const result = await fetch(API_URL + `teamAnalysis/getFirstTowerData/`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        result.json().then(data => {
+            const newData = data
+            setDataFirstTowerStats(newData)
+            console.log(newData)
+        })
+    }
+
     const handleAnalyze = (team, tournamentList) => {
         setDisplayData(true)
+        fetchGrubsDrakeStats(team, tournamentList)
+        fetchFirstTowerHeraldData(team, tournamentList)
+        fetchHeraldData(team, tournamentList)
+        fetchFirstTowerData(team, tournamentList)
     }
 
     useEffect(() => {
@@ -121,9 +206,12 @@ function TeamAnalysisOverall() {
             </Stack>
             {
                 displayData && 
-                <>
-                    <span>prout</span>
-                </>
+                <TeamAnalysisOverallData
+                    dataFirstTower={dataFirstTowerStats}
+                    dataFirstTowerHerald={dataFirstTowerHeraldStats}
+                    dataGrubsDrakes={dataGrubsDrakeStats}
+                    dataHerald={dataHeraldStats}
+                />
             }
             
         </div>

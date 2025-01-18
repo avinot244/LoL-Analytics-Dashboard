@@ -116,7 +116,7 @@ def getKillEvents(request):
     
     return Response(killEvents)
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getGrubsDrakeStats(request):
     o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
     
@@ -163,7 +163,7 @@ def getGrubsDrakeStats(request):
     return Response(response)
 
 
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getFirstTowerHeraldStats(request):
     o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
     if len(o.tournamentList) == 0:
@@ -203,7 +203,7 @@ def getFirstTowerHeraldStats(request):
                 "winRate": winRate
             })
             
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getHeraldData(request):
     o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
     if len(o.tournamentList) == 0:
@@ -227,7 +227,7 @@ def getHeraldData(request):
         "winRate": (nbWinsBlueSide + nbwinsRedSide)/(totalGamesBlueSide + totalGamesRedSide)
     })
     
-@api_view(['GET'])
+@api_view(['PATCH'])
 def getFirstTowerData(request):
     o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
     if len(o.tournamentList) == 0:
