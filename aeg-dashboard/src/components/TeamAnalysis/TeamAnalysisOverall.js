@@ -53,8 +53,6 @@ function TeamAnalysisOverall() {
     
     const handleAnalyze = (team, tournamentList) => {
         setDisplayData(true)
-        console.log(team)
-        console.log(tournamentList)
     }
 
     useEffect(() => {

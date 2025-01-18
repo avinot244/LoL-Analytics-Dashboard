@@ -9,7 +9,7 @@ from .models import GameMetadata
 from .serializer import GameMetadataSerializer
 from .globals import SIDES, ROLE_LIST
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
 @api_view(['GET'])
@@ -31,6 +31,24 @@ def getTournamentsFromTeam(request, team : str):
         if not(gameMetadataObject.tournament in tournamentList):
             tournamentList.append(gameMetadataObject.tournament)
     return Response(tournamentList)
+
+@api_view(['PATCH'])
+def getGames(request):
+    o : GetGameRequest = GetGameRequest(**json.loads(request.body))
+    gameList : list[str] = list()
+    allData = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournaments)
+    for gameMetadata in allData:
+        temp_dict : dict = dict()
+        game_str = "{} {} vs {} Game {} {}".format(gameMetadata.tournament, gameMetadata.teamBlue, gameMetadata.teamRed, gameMetadata.gameNumber, gameMetadata.date)
+        temp_dict["str"] = game_str
+        temp_dict["seriesId"] = gameMetadata.seriesId
+        temp_dict["gameNumber"] = gameMetadata.gameNumber
+        temp_dict["tournament"] = gameMetadata.tournament
+        
+        gameList.append(temp_dict)
+        
+    return Response(gameList)
+    
 
 @api_view(['PATCH'])
 def getPlayerPosition(request):

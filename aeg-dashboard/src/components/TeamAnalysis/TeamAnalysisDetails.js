@@ -1,6 +1,8 @@
-import { Typography, Stack, Button } from "@mui/material"
+import { Typography, Stack, Button, Box, Autocomplete, Chip, ThemeProvider, createTheme, TextField } from "@mui/material"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear'
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 import { useState, useEffect, useContext } from "react"
@@ -11,7 +13,76 @@ import { API_URL } from "../../constants"
 import AuthContext from "../context/AuthContext"
 import MultipleSearchComp from "../utils/MultipleSearchComp";
 
+
+
 import "../../styles/TeamAnalysisDetails.css"
+
+
+function MultipleGameSearch({tournamentFilterList, selectedFilters, setSelectedFilters, width}) {
+    const handleChange = (list) => {
+        const newFilters = list
+        console.log(newFilters)
+        setSelectedFilters(newFilters)
+    }
+    const theme = createTheme ({
+        palette: {
+            primary : {
+                main: '#fff',
+            },
+            text : {
+                disabled: '#fff'
+            }
+            
+        },
+        action: {
+            active: '#fff'
+        }
+    })
+
+    return (
+        <>	
+            <ThemeProvider theme={theme}>
+                <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+                    <Autocomplete
+                        multiple
+                        clearIcon={<ClearIcon color="error"/>}
+                        popupIcon={<ArrowDropDownIcon color="primary"/>}
+                        className="searchComp"
+                        options={tournamentFilterList}
+                        getOptionLabel={option => option.str}
+                        renderInput={(params) => (
+                            <TextField 
+                                {...params} 
+                                className='textField-searchComp'
+                                label={"Tournament Filter"}
+                                focused
+                                sx={{ 
+                                        input: { color: 'white'},
+                                        borderColor: 'white'
+                                    }}
+                                
+                            />
+                        )}
+                        renderTags={(value, getTagProps) => 
+                            value.map((option, index) => (
+                                <Chip
+                                    color="primary"
+                                    variant='outlined'
+                                    label={option.str}
+                                    {...getTagProps({index})}
+                                />
+                            ))
+                        }
+                        onChange={(_, value) => {handleChange(value)}}
+                        sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
+                        fullWidth={true}
+                    />
+                </Box>
+                
+            </ThemeProvider>
+        </>
+	);
+}
 
 function TeamAnalysisDetails() {
     let {authTokens} = useContext(AuthContext)
@@ -27,6 +98,7 @@ function TeamAnalysisDetails() {
 
     const [displayGameSelecter, setDisplayGameSelecter] = useState(false)
     const [gameList, setGameList] = useState([])
+    const [selectedGames, setSelectedGames] = useState([])
 
     const [displayData, setDisplayData] = useState(false)
 
@@ -56,6 +128,23 @@ function TeamAnalysisDetails() {
 
     const fetchGames = async (team, tournamentList) => {
         console.log(`fetching games for team ${team} in tournaments ${tournamentList}`)
+        
+        const data = {
+            "team": team,
+            "tournaments": tournamentList
+        }
+
+        const result = await fetch(API_URL + `teamAnalysis/getGames/`, {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        result.json().then(data => {
+            console.log(data)
+            const newGameList = data
+            setGameList(newGameList)
+        })
     }
     
     const handleAnalyze = (team, tournamentList) => {
@@ -142,7 +231,12 @@ function TeamAnalysisDetails() {
                         pt:2
                     }}
                 >
-                    <span>gameSelecter</span>
+                    <MultipleGameSearch
+                        tournamentFilterList={gameList}
+                        selectedFilters={selectedGames}
+                        setSelectedFilters={setSelectedGames}
+                        width={500}
+                    />
                     <Button
                         variant="contained"
                         endIcon={<ArrowForwardIosIcon/>}
