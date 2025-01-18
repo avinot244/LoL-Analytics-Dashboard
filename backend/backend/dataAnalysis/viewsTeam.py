@@ -127,10 +127,11 @@ def getGrubsDrakeStats(request):
         allObjectsBlueSide = GameMetadata.objects.filter(teamBlue=o.teamName, tournament__in=o.tournamentList)
         allObjectsRedSide = GameMetadata.objects.filter(teamRed=o.teamName, tournament__in=o.tournamentList)
     
-    response : list[dict] = list()
+    response : list[list] = list()
     
-    for nGrubs in range(0, 7):
-        for nDrake in range(0, 5):
+    for nDrake in range(0, 5):
+        tempList : list = list()
+        for nGrubs in range(0, 7):
             # For blue side
             blueData = allObjectsBlueSide.filter(voidGrubsBlueKills=nGrubs, dragonBlueKills=nDrake)
             nbGamesBlue : int = len(blueData)
@@ -141,23 +142,24 @@ def getGrubsDrakeStats(request):
             nbGamesRed : int = len(redData)
             nbWinRed = len(redData.filter(winningTeam=1))
             
+            
             if nbGamesRed + nbGamesBlue == 0:
-                response.append({
+                tempList.append({
                     "nGrubs": nGrubs,
                     "nDrake": nDrake,
                     "totalWins": nbWinBlue + nbWinRed,
                     "totalGames": nbGamesBlue + nbGamesRed,
-                    "winRate": -1
+                    "winRate": None
                 })
             else:
-                response.append({
+                tempList.append({
                     "nGrubs": nGrubs,
                     "nDrake": nDrake,
                     "totalWins": nbWinBlue + nbWinRed,
                     "totalGames": nbGamesBlue + nbGamesRed,
-                    "winrate": (nbWinBlue + nbWinRed)/(nbGamesBlue + nbGamesRed)
+                    "winRate": (nbWinBlue + nbWinRed)/(nbGamesBlue + nbGamesRed)
                 })
-    
+        response.append(tempList)
     # We want a list of triples [nGrubs, nDrakes, winRate, nbGames]
     
     return Response(response)

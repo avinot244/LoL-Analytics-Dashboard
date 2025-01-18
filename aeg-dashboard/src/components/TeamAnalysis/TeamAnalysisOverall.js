@@ -128,7 +128,6 @@ function TeamAnalysisOverall() {
         result.json().then(data => {
             const newData = data
             setDataFirstTowerStats(newData)
-            console.log(newData)
         })
     }
 

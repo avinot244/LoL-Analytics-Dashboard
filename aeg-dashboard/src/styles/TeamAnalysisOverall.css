@@ -4,3 +4,9 @@
 	color: white;
 	overflow: auto;
 }
+
+.wrapper-heatmap-teamAnalysisOverall{
+	background-color: rgb(43,48,53);
+	width: fit-content;
+	margin: 40px auto
+}
