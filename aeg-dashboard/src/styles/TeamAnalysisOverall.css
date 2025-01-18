@@ -10,3 +10,7 @@
 	width: fit-content;
 	margin: 40px auto
 }
+
+#y-label div{
+	position: static !important;
+}
