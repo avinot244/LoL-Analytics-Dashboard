@@ -15,14 +15,8 @@ import MultipleSearchComp from "../utils/MultipleSearchComp";
 
 
 import "../../styles/TeamAnalysisDetails.css"
-import TeamAnalysisOverallData from "./TeamAnalysisOverallData";
 
-function MultipleGameSearch({tournamentFilterList, selectedFilters, setSelectedFilters, width}) {
-    const handleChange = (list) => {
-        const newFilters = list
-        console.log(newFilters)
-        setSelectedFilters(newFilters)
-    }
+function SearchGameComp({setSelectedElement, elementList, label, width, multiple, defaultValue}) {
     const theme = createTheme ({
         palette: {
             primary : {
@@ -36,50 +30,48 @@ function MultipleGameSearch({tournamentFilterList, selectedFilters, setSelectedF
         action: {
             active: '#fff'
         }
+        
     })
-
-    return (
-        <>	
-            <ThemeProvider theme={theme}>
-                <Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
-                    <Autocomplete
-                        multiple
-                        clearIcon={<ClearIcon color="error"/>}
-                        popupIcon={<ArrowDropDownIcon color="primary"/>}
-                        className="searchComp"
-                        options={tournamentFilterList}
+    
+    const handleChange = (value) => {
+		if (value != null) {
+			setSelectedElement(value)
+		}
+	}
+	return (	
+		<>
+			<ThemeProvider theme={theme}>
+				<Box sx={{ color: 'primary.main' , borderColor: 'white'}}>
+					<Autocomplete
+						defaultValue={defaultValue}
+						multiple={multiple}
+						clearIcon={<ClearIcon color="error"/>}
+						popupIcon={<ArrowDropDownIcon color="primary"/>}
+						className="searchComp"
+						options={elementList}
                         getOptionLabel={option => option.str}
-                        renderInput={(params) => (
-                            <TextField 
-                                {...params} 
-                                className='textField-searchComp'
-                                label={"Tournament Filter"}
-                                focused
-                                sx={{ 
-                                        input: { color: 'white'},
-                                        borderColor: 'white'
-                                    }}
-                                
-                            />
-                        )}
-                        renderTags={(value, getTagProps) => 
-                            value.map((option, index) => (
-                                <Chip
-                                    color="primary" 
-                                    variant='outlined'
-                                    label={option.str}
-                                    {...getTagProps({index})}
-                                />
-                            ))
-                        }
-                        onChange={(_, value) => {handleChange(value)}}
-                        sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
-                        fullWidth={true}
-                    />
-                </Box>
-                
-            </ThemeProvider>
-        </>
+						renderInput={(params) => (
+							<TextField 
+								className='textField-searchComp'
+								{...params} 
+								label={label}
+								sx={{ 
+									input: { color: 'white'},
+									borderColor: 'white'
+								}}
+								focused
+								fullWidth={true}
+							/>
+							
+						)}
+						onChange={(_, value) => {handleChange(value)}}
+						sx={{color: 'primary.main', borderColor: 'primary.main', width: width}}
+						fullWidth={true}
+					/>
+				</Box>
+				
+			</ThemeProvider>
+		</>
 	);
 }
 
@@ -97,7 +89,7 @@ function TeamAnalysisDetails() {
 
     const [displayGameSelecter, setDisplayGameSelecter] = useState(false)
     const [gameList, setGameList] = useState([])
-    const [selectedGames, setSelectedGames] = useState([])
+    const [selectedGame, setSelectedGame] = useState("")
 
     const [displayData, setDisplayData] = useState(false)
 
@@ -127,9 +119,7 @@ function TeamAnalysisDetails() {
         })
     }
 
-    const fetchGames = async (team, tournamentList) => {
-        console.log(`fetching games for team ${team} in tournaments ${tournamentList}`)
-        
+    const fetchGames = async (team, tournamentList) => {        
         const data = {
             "team": team,
             "tournaments": tournamentList
@@ -142,7 +132,6 @@ function TeamAnalysisDetails() {
         })
 
         result.json().then(data => {
-            console.log(data)
             const newGameList = data
             setGameList(newGameList)
         })
@@ -150,10 +139,9 @@ function TeamAnalysisDetails() {
 
     
     
-    const handleAnalyze = (team, tournamentList) => {
+    const handleAnalyze = () => {
         setDisplayData(true)
-        console.log(team)
-        console.log(tournamentList)
+        console.log(selectedGame)
     }
 
     useEffect(() => {
@@ -233,12 +221,12 @@ function TeamAnalysisDetails() {
                     sx={{
                         pt:2
                     }}
-                >
-                    <MultipleGameSearch
-                        tournamentFilterList={gameList}
-                        selectedFilters={selectedGames}
-                        setSelectedFilters={setSelectedGames}
-                        width={500}
+                >   
+                    <SearchGameComp
+                        elementList={gameList}
+                        setSelectedElement={setSelectedGame}
+                        label={"Game"}
+                        width={550}
                     />
                     <Button
                         variant="contained"
@@ -253,10 +241,9 @@ function TeamAnalysisDetails() {
             }
             
             {
-                displayData && 
-                <>
-                    <TeamAnalysisOverallData/>
-                </>
+                displayData && (
+                    <span>{selectedGame.str}</span>
+                )
             }
             
         </div>

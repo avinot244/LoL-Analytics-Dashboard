@@ -137,7 +137,6 @@ function GameOverview(){
                     setSelectedElement={setActiveTournament}
                     label={"Tournament"}
                     width={550}
-
                 />
 
                 <Button
