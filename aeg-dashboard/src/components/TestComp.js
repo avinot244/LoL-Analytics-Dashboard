@@ -7,7 +7,7 @@ import AuthContext from "./context/AuthContext"
 import TimeFrameSelecter from "./utils/TimeFrameSelecter/TimeFrameSelecter"
 
 import { Typography, Button, Stack } from "@mui/material"
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useRef } from "react"
 import { API_URL, MAP_HEIGHT } from "../constants"
 
 
@@ -16,6 +16,8 @@ function TestComp() {
     const header = {
         Authorization: "Bearer " + authTokens.access
     }
+
+    const size = 350
     // Example data
     const [datasetPosition, setDatasetPosition] = useState([])
     const [datasetReset, setDatasetReset] = useState([])
@@ -23,7 +25,14 @@ function TestComp() {
     const [value, setValue] = useState([60, 840])
     const [gameEvents, setGameEvents] = useState([])
     const [dataAvailable, setDataAvailable] = useState(false)
-    
+    const heatmapRef = useRef(null);
+
+    const handleClearHeatmap = () => {
+        if (heatmapRef.current) {
+          heatmapRef.current.clearData(); // Call the exposed method
+        }
+    };
+
     const fetchPlayerPosition = async () => {
         const data = {
             "role": "Support",
@@ -44,8 +53,8 @@ function TestComp() {
         result.json().then(data => {
             data.forEach(element => {
                 newDataset.push({
-                    x: Math.ceil(element[0] * 10/295),
-                    y: Math.ceil(500 - (element[1] * 10/295))
+                    x: Math.ceil(element[0] * size/14750),
+                    y: Math.ceil(size - (element[1] * size/14750))
                 })
             });
             console.log(newDataset)
@@ -72,8 +81,8 @@ function TestComp() {
         result.json().then(data => {
             data.forEach(element => {
                 newDataset.push({
-                    x: Math.ceil(element[0] * 10/295),
-                    y: Math.ceil(500 - (element[1] * 10/295))
+                    x: Math.ceil(element[0] * size/14750),
+                    y: Math.ceil(size - (element[1] * size/14750))
                 })
             });
             setDatasetReset(newDataset)
@@ -100,8 +109,8 @@ function TestComp() {
         result.json().then(data => {
             data.forEach(element => {
                 newDataset.push({
-                    x: Math.ceil(element[0] * 10/295),
-                    y: Math.ceil(500 - (element[1] * 10/295))
+                    x: Math.ceil(element[0] * size/14750),
+                    y: Math.ceil(size - (element[1] * size/14750))
                 })
             })
             setDatasetWardPlaced(newDataset)
@@ -113,7 +122,7 @@ function TestComp() {
             "seriesId": 2729017,
             "gameNumber": 1
         }
-        const result = await fetch(API_URL + `dataAnalaysis/getGameEvents/`, {
+        const result = await fetch(API_URL + `dataAnalysis/getGameEvents/`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: header
@@ -163,11 +172,23 @@ function TestComp() {
                     >
                         Get Data Ward Placed
                     </Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => handleClearHeatmap()}
+                    >
+                        Clear
+                    </Button>
 
-                    <Stack spacing={2} direction="row" justifyContent="space-between" alignItems="center" sx={{mr: 10, ml: 10}}>
-                        <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} />
-                        <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"}/>
-                        <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"}/>
+                    <Stack direction={"row"}
+                        spacing={2}
+                        alignItems={"center"}
+                        justifySelf={"center"}
+                    >
+                        <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} size={size} ref={heatmapRef} />
+                        <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"} size={size} />
+                        <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"} size={size} />
+                        <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"} size={size}/>
+                        <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"} size={size} />
                     </Stack>
                 </>
             }

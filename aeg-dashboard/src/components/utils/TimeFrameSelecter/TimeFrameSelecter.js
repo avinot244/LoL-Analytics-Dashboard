@@ -27,9 +27,13 @@ function TimeFrameSelecter({gameDuration, value, setValue, gameEvents}) {
     
 
     return (
-        <Box sx={{ width: "100vh", ml: 10, pb: 10}}>
-            <Stack direction={"row"} spacing={5}>
-                <Typography>
+        <Box sx={{ width: "100%"}} alignSelf={"center"}>
+            <Stack direction={"row"} spacing={5} alignSelf={"center"} alignItems={"center"}>
+                <Typography
+                    sx={{
+                        width: "100px"
+                    }}
+                >
                     begTime : {valuetext(value[0])}
                 </Typography>
                 <Slider
@@ -52,7 +56,13 @@ function TimeFrameSelecter({gameDuration, value, setValue, gameEvents}) {
                     }}
                     objectivesTimeStamp={gameEvents}
                 />
-                <Typography>endTime : {valuetext(value[1])}</Typography>
+                <Typography
+                    x={{
+                        width: "100px"
+                    }}
+                >
+                    endTime : {valuetext(value[1])}
+                </Typography>
             </Stack>
         </Box>
     )

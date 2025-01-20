@@ -12,6 +12,7 @@ import SearchComp from "../utils/SearchComp"
 import { API_URL } from "../../constants"
 import AuthContext from "../context/AuthContext"
 import MultipleSearchComp from "../utils/MultipleSearchComp";
+import TeamAnalysisDetailsData from "./TeamAnalysisDetailsData";
 
 
 import "../../styles/TeamAnalysisDetails.css"
@@ -239,10 +240,15 @@ function TeamAnalysisDetails() {
                     </Button>
                 </Stack>
             }
-            
+            <br/>
+            <br/>
             {
                 displayData && (
-                    <span>{selectedGame.str}</span>
+                    <TeamAnalysisDetailsData 
+                        seriesId={selectedGame.seriesId} 
+                        gameNumber={selectedGame.gameNumber}
+                        team={activeTeam}
+                    />
                 )
             }
             

@@ -792,3 +792,9 @@ def getGameEvents(request):
             })
     
     return Response(eventList)
+
+@api_view(['PATCH'])
+def getGameDuration(request):
+    o : GameStatsRequest = GameStatsRequest(**json.loads(request.body))
+    data = GameMetadata.objects.get(seriesId__exact=o.seriesId, gameNumber__exact=o.gameNumber)
+    return Response(data.gameDuration)

@@ -9,7 +9,7 @@ from .models import GameMetadata
 from .serializer import GameMetadataSerializer
 from .globals import SIDES, ROLE_LIST
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
 @api_view(['GET'])
@@ -252,3 +252,12 @@ def getFirstTowerData(request):
         "totalGames": totalGamesBlueSide + totalGamesRedSide,
         "winRate": (nbWinsBlueSide + nbwinsRedSide)/(totalGamesBlueSide + totalGamesRedSide)
     })
+    
+@api_view(['PATCH'])
+def getTeamSide(request):
+    o : TeamSideRequest = TeamSideRequest(**json.loads(request.body))
+    data = GameMetadata.objects.get(seriesId__exact=o.seriesId, gameNumber__exact=o.gameNumber)
+    if data.teamBlue == o.team:
+        return Response("Blue")
+    elif data.teamRed == o.team:
+        return Response("Red")

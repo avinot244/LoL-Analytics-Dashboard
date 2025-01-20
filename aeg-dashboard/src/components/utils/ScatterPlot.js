@@ -1,11 +1,11 @@
 import "../../styles/ScatterPlot.css"
 
-import React, { useEffect, useRef } from 'react';
+import React, { forwardRef, useEffect, useRef, useImperativeHandle } from 'react';
 import h337 from 'heatmap.js';
 
 import { Button, Stack } from '@mui/material';
 
-const ScatterPlot = ({data, backgroundImage, side}) => {
+const ScatterPlot = forwardRef(({data, backgroundImage, side, size}, ref) => {
 
     const heatmapContainerRef = useRef(null);
     const heatmapInstanceRef = useRef(null);
@@ -47,11 +47,15 @@ const ScatterPlot = ({data, backgroundImage, side}) => {
     const clearData = () => {
         if (heatmapInstanceRef.current) {
             heatmapInstanceRef.current.setData({
-            max: 0,
-            data: [], // Pass an empty dataset
+                max: 0,
+                data: [], // Pass an empty dataset
             });
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        clearData,
+    }));
 
     return (
         <Stack
@@ -62,23 +66,17 @@ const ScatterPlot = ({data, backgroundImage, side}) => {
         >
             <div ref={heatmapContainerRef} style={{ 
                 position: 'relative', // Relative positioning
-                height: '500px', // 10/295 ratio original size : 14750px
-                width: '500px',
+                height: `${size}px`, // 10/295 ratio original size : 14750px
+                width: `${size}px`,
                 backgroundImage: `url(${backgroundImage})`, // Local image as background
                 backgroundSize: 'cover', // Adjust image size
                 backgroundPosition: 'center', // Center the image
                 backgroundRepeat: 'no-repeat', // Avoid repeating the image
                 margin: '0px auto'
             }} />
-            <Button
-                variant='contained'
-                onClick={() => clearData()}
-            >
-                Clear Data
-            </Button>
         </Stack>
     );
-}
+})
 
 
 export default ScatterPlot
