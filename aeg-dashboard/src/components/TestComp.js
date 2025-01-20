@@ -8,7 +8,7 @@ import TimeFrameSelecter from "./utils/TimeFrameSelecter/TimeFrameSelecter"
 
 import { Typography, Button, Stack } from "@mui/material"
 import { useState, useEffect, useContext, useRef } from "react"
-import { API_URL, MAP_HEIGHT } from "../constants"
+import { API_URL } from "../constants"
 
 
 function TestComp() {
@@ -184,7 +184,13 @@ function TestComp() {
                         alignItems={"center"}
                         justifySelf={"center"}
                     >
-                        <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} size={size} ref={heatmapRef} />
+                        <Stack direction={"column"}>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
+                                Top
+                            </Typography>
+                            <Heatmap data={datasetPosition} bandwidth={bandwidth} backgroundImage={minimapImage} size={size} ref={heatmapRef} />
+                        </Stack>
+                        
                         <ScatterPlot data={datasetReset} backgroundImage={minimapImage} side={"Blue"} size={size} />
                         <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"} size={size} />
                         <ScatterPlot data={datasetWardPlaced} backgroundImage={minimapImage} side={"Blue"} size={size}/>

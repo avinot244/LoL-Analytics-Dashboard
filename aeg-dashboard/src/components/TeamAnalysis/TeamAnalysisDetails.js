@@ -152,7 +152,7 @@ function TeamAnalysisDetails() {
         <div className="wrapper-teamAnalysisDetails">
             <NavBarComp />
             <Typography id="teamAnalysisDetails-title" variant="h2" component="h1" align="center" sx={{mt: 10, fontWeight: "bold", mb: 10}}>
-                Team Analysis Overall
+                Team Analysis Details
             </Typography>
             <Stack 
                 direction={"row"}

@@ -1,29 +1,22 @@
 import { API_URL } from "../../constants";
 import AuthContext from "../context/AuthContext";
-import Heatmap from "../utils/Heatmap";
-import ScatterPlot from "../utils/ScatterPlot";
+import TeamAnalysisDetailsDataPosition from "./TeamAnalysisDetailsDataPosition";
+import TeamAnalysisDetailsDataReset from "./TeamAnalysisDetailsDataReset";
+import TeamAnalysisDetailsDataWard from "./TeamAnalysisDetailsDataWard";
 import TimeFrameSelecter from "../utils/TimeFrameSelecter/TimeFrameSelecter";
-import { Divider, Typography } from "@mui/material";
+
+import { Divider, Typography, Button, Stack } from "@mui/material";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { useEffect, useContext, useState } from "react";
 
 function TeamAnalysisDetailsData({seriesId, gameNumber, team}) {
-    // Position Heatmap Top | Position Heatmap Jungle | Position Heatmap Mid | Position Heatmap ADC | Position Heatmap Support
-    // Reset Heatmap Top | Reset Heatmap Jungle | Reset Heatmap Mid | Reset Heatmap ADC | Reset Heatmap Support
-    // Ward Heatmap Top | Ward Heatmap Jungle | Ward Heatmap Mid | Ward Heatmap ADC | Ward Heatmap Support
-
-    // role : all role will be displayed 
-    // side : we do an API request to get the side of the team in the game in the useEffect
-    // seriesId : in props
-    // gameNumber : in props
-    // begTime : selected with the TimeFrameSelecter
-    // endTime : selected with the TimeFrameSelected
-    // wardTypes : all by default --> add a MultipleSearchComp for it
     const [side, setSide] = useState("")
     const [value, setValue] = useState([60, 840])
     const [gameEventsAvailable, setGameEventsAvailable] = useState(false)
     const [gameEvents, setGameEvents] = useState([])
     const [gameDuration, setGameDuration] = useState(0)
+    const [heatmapsVisible, setHeatmapsVisible] = useState(false)
 
     let {authTokens} = useContext(AuthContext)
     const header = {
@@ -37,7 +30,7 @@ function TeamAnalysisDetailsData({seriesId, gameNumber, team}) {
             "team": team
         }
         
-        const result = await fetch(API_URL + `teamAnalysis/getTeamSide`, {
+        const result = await fetch(API_URL + `teamAnalysis/getTeamSide/`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: header
@@ -96,30 +89,55 @@ function TeamAnalysisDetailsData({seriesId, gameNumber, team}) {
             {
                 gameEventsAvailable && 
                 <>
-                    <TimeFrameSelecter gameDuration={gameDuration} value={value} setValue={setValue} gameEvents={gameEvents}/>
-                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
-                        Player Position
-                    </Typography>
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1}}
-                        variant="middle"
-                    />
+                    <Stack
+                        direction={"row"}
+                        spacing={2}
+                        alignItems={"center"}
+                        justifySelf={"center"}
+                        width={"100%"}
+                    >
+                        <TimeFrameSelecter gameDuration={gameDuration} value={value} setValue={setValue} gameEvents={gameEvents}/>
+                        <Button
+                            variant="contained"
+                            endIcon={<ArrowForwardIosIcon/>}
+                            onClick={() => setHeatmapsVisible(true)}
+                        >
+                            Get Data
+                        </Button>
+                    </Stack>
 
-                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
-                        Reset Position
-                    </Typography>
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1}}
-                        variant="middle"
-                    />
+                    {
+                        heatmapsVisible &&
+                        <>
+                            <Typography variant="h3" component="h3" align="center" sx={{mt: 10, mb:1}}>
+                                Player Position
+                            </Typography>
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />
+                            <TeamAnalysisDetailsDataPosition timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
 
-                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
-                        Ward Position
-                    </Typography>
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1}}
-                        variant="middle"
-                    />
+
+                            <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                Reset Position
+                            </Typography>
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />
+                            <TeamAnalysisDetailsDataReset timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+
+                            <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                Ward Position
+                            </Typography>
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />
+                            <TeamAnalysisDetailsDataWard timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                        </>
+                    }
                 </>
             }
         </>
