@@ -75,31 +75,31 @@ function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Top
                         </Typography>
-                        <ScatterPlot data={dataTop} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
+                        <ScatterPlot data={dataTop} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Jungle
                         </Typography>
-                        <ScatterPlot data={dataJungle} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
+                        <ScatterPlot data={dataJungle} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Mid
                         </Typography>
-                        <ScatterPlot data={dataMid} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
+                        <ScatterPlot data={dataMid} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             ADC
                         </Typography>
-                        <ScatterPlot data={dataADC} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
+                        <ScatterPlot data={dataADC} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Support
                         </Typography>
-                        <ScatterPlot data={dataSupport} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
+                        <ScatterPlot data={dataSupport} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 </div>
             }
