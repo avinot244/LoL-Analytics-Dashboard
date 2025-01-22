@@ -167,4 +167,4 @@ temp.py
 test[0-9]*.py
 events_2729017_[0-9]_riot.jsonl
 temp.json
-
+env/*
