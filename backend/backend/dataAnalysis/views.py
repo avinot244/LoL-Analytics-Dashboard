@@ -41,7 +41,6 @@ import re
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
 
 
 @api_view(['DELETE'])
