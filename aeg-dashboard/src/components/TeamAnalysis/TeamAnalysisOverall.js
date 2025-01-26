@@ -33,6 +33,7 @@ function TeamAnalysisOverall() {
     const [dataFirstTowerHeraldStats, setDataFirstTowerHeraldData] = useState({})
     const [dataHeraldStats, setDataHeraldStats] = useState({})
     const [dataFirstTowerStats, setDataFirstTowerStats] = useState({})
+    const [gameDurationOverall, setGameDurationOverall] = useState()
     
 
 
@@ -131,12 +132,31 @@ function TeamAnalysisOverall() {
         })
     }
 
+    const fetchOverallGameDuration = async (team, tournamentList) => {
+        const data = {
+            "tournamentList": tournamentList,
+            "teamName": team
+        }
+
+        const result = await fetch(API_URL + "dataAnalysis/getGameDurationOverall/", {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: header
+        })
+
+        result.json().then(data => {
+            const newData = data
+            setGameDurationOverall(newData)
+        })
+    }
+
     const handleAnalyze = (team, tournamentList) => {
-        setDisplayData(true)
         fetchGrubsDrakeStats(team, tournamentList)
         fetchFirstTowerHeraldData(team, tournamentList)
         fetchHeraldData(team, tournamentList)
         fetchFirstTowerData(team, tournamentList)
+        fetchOverallGameDuration(team, tournamentList)
+        setDisplayData(true)
     }
 
     useEffect(() => {
@@ -204,12 +224,15 @@ function TeamAnalysisOverall() {
                 }
             </Stack>
             {
-                displayData && 
+                displayData & gameDurationOverall !== null && 
                 <TeamAnalysisOverallData
+                    team={activeTeam}
+                    tournamentList={tournamentFilters}
                     dataFirstTower={dataFirstTowerStats}
                     dataFirstTowerHerald={dataFirstTowerHeraldStats}
                     dataGrubsDrakes={dataGrubsDrakeStats}
                     dataHerald={dataHeraldStats}
+                    gameDurationOverall={gameDurationOverall}
                 />
             }
             

@@ -86,7 +86,8 @@ function TopMetaPicksPanel(props) {
                         <SelectComp
                             elementList={side}
                             defaultValue={activeSide}
-                            setActive={setActiveSide}/>
+                            setActive={setActiveSide}
+                        />
                     </li>
                     <li>
                         <Button 

@@ -1,13 +1,26 @@
 import ObjectiveCard from "./ObjectiveCard"
+import TimeFrameSelecterNoEvent from "../utils/TimeFrameSelecter/TimeFrameSelecterNoEvents";
+import TeamAnalysisOverallDataReset from "./TeamAnalysisOverallDataReset";
+import SelectComp from "../utils/SelectComp";
+import { API_URL } from "../../constants";
 
-import { Stack } from "@mui/material"
+import { Button, Stack } from "@mui/material"
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+
+import { useState } from "react";
+
 import HeatMap from "react-heatmap-grid";
 
 import "../../styles/TeamAnalysisOverall.css"
 
 
 
-function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHerald, dataFirstTower}) {
+function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHerald, dataFirstTower, gameDurationOverall, team, tournamentList}) {
+    const [value, setValue] = useState([90, 840])
+    const [visible, setVisible] = useState(false)
+    const [activeSide, setActiveSide] = useState("Blue")
+    const side = ["Blue", "Red", "Both"];
     let yLabels = []
     for (let i = 0 ; i < 5 ; i++) {
         yLabels.push(`${i} drakes`)
@@ -75,6 +88,53 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                     />
                 }
             </div>
+            <Stack direction={"row"} spacing={5} justifyContent="center" alignItems="center" sx={{mt: 5}}>
+                <TimeFrameSelecterNoEvent
+                    value={value}
+                    setValue={setValue}
+                    gameDuration={gameDurationOverall}
+                />
+                <Button
+                    variant="contained"
+                    endIcon={<ArrowForwardIosIcon/>}
+                    onClick={() => {
+                        setVisible(true)
+                    }}
+                >
+                    Analyze
+                </Button>
+                <Button
+                    variant="contained"
+                    endIcon={<RestartAltIcon/>}
+                    onClick={() => {
+                        setVisible(false)
+                    }}
+                >
+                    Reset
+                </Button>
+            </Stack>
+            
+            {
+                visible && 
+                <>
+                    <TeamAnalysisOverallDataReset
+                        team={team}
+                        tournamentList={tournamentList}
+                        side={"Blue"}
+                        timeFrame={value}
+                        
+                    />
+                    {/* <TeamAnalysisOverallDataReset
+                        team={team}
+                        tournamentList={tournamentList}
+                        side={"Red"}
+                        begTime={value[0]}
+                        endTime={value[1]}
+                    /> */}
+                </>
+                
+            }
+            
         </div>
     )
 }

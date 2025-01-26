@@ -6,7 +6,7 @@ import h337 from 'heatmap.js';
 import { Button, Stack } from '@mui/material';
 
 const ScatterPlot = forwardRef(({data, backgroundImage, side, size}, ref) => {
-
+    console.log(data)
     const heatmapContainerRef = useRef(null);
     const heatmapInstanceRef = useRef(null);
     

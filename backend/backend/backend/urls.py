@@ -195,6 +195,7 @@ urlpatterns = [
     path('api/dataAnalysis/getProximityMatrix/<int:seriesId>/<int:gameNumber>/<int:time>/', dataAnalysisViews.getProximityMatrix),
     path('api/dataAnalysis/getGameEvents/', dataAnalysisViews.getGameEvents),
     path('api/dataAnalysis/getGameDuration/', dataAnalysisViews.getGameDuration),
+    path('api/dataAnalysis/getGameDurationOverall/', dataAnalysisViews.getGameDurationOverall),
     
     # Team Analysis
     path('api/teamAnalysis/getAllTeams/', teamAnalysisViews.getTeamList),
@@ -202,7 +203,7 @@ urlpatterns = [
     path('api/teamAnalysis/getGames/', teamAnalysisViews.getGames),
     path('api/teamAnalysis/getPlayerPosition/', teamAnalysisViews.getPlayerPosition),
     path('api/teamAnalysis/getResetPositions/', teamAnalysisViews.getPlayerResetPositions),
-    path('api/teamAnalysis/getResetPositionsGlobal', teamAnalysisViews.getPlayerResetPositionsGlobal),
+    path('api/teamAnalysis/getResetPositionsGlobal/', teamAnalysisViews.getPlayerResetPositionsGlobal),
     path('api/teamAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),
     path('api/teamAnalysis/getGrubsDrakesStats/', teamAnalysisViews.getGrubsDrakeStats),
     path('api/teamAnalysis/getFirstTowerHeraldData/', teamAnalysisViews.getFirstTowerHeraldStats),

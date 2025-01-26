@@ -1,4 +1,6 @@
 import json
+from tqdm import tqdm
+
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -91,13 +93,9 @@ def getPlayerResetPositions(request):
 def getPlayerResetPositionsGlobal(request):
     o : PlayerPositionGlobalRequest = PlayerPositionGlobalRequest(**json.loads(request.body))
     result : list[dict] = list()
-
-    temp = GameMetadata.objects.filter(tournament__in=o.tournamentList)
-    print(temp)
     
     metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
-    for gameMetadata in metadataList:
-        print(gameMetadata)
+    for gameMetadata in tqdm(metadataList):
         data : SeparatedData
         (data,_ , _, _) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
         participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
@@ -109,7 +107,7 @@ def getPlayerResetPositionsGlobal(request):
         elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
             team = "redTeam"
         
-        resetTriggers = getResetTriggers(data, gameMetadata.gameDuration, o.begTime, o.endTime)[team][playerName]
+        resetTriggers = getResetTriggers(data, gameMetadata.gameDuration, o.begTime, o.endTime, verbose=False)[team][playerName]
         result += resetTriggers
         
     return Response(result)

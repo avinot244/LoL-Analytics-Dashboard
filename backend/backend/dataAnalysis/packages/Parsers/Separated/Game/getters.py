@@ -50,7 +50,7 @@ def getPlayerPositionHistoryTimeFramed(data : SeparatedData , gameDuration: int,
                 positionList.append(positionPlayer)
     return positionList
 
-def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, endTime : int):
+def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, endTime : int, verbose : bool = True):
     result : dict = {
         "blueTeam": {},
         "redTeam": {}
@@ -63,7 +63,7 @@ def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, e
     for player in firstSnapshot.teams[1].players:
         result["redTeam"][player.playerName] = []
     
-    for time in tqdm(range(begTime, endTime + 1)):
+    for time in tqdm(range(begTime, endTime + 1), disable=not(verbose)):
         currentSnapshot : Snapshot = data.getSnapShotByTime(time, gameDuration)
         dataWindow : list[Snapshot] = [data.getSnapShotByTime(t, gameDuration) for t in range(time, time+2, 1)]
         

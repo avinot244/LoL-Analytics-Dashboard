@@ -25,7 +25,7 @@ from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
-from .request_models import GameStatsRequest
+from .request_models import GameStatsRequest, TeamStatsRequest
 
 
 
@@ -797,3 +797,17 @@ def getGameDuration(request):
     o : GameStatsRequest = GameStatsRequest(**json.loads(request.body))
     data = GameMetadata.objects.get(seriesId__exact=o.seriesId, gameNumber__exact=o.gameNumber)
     return Response(data.gameDuration)
+
+@api_view(['PATCH'])
+def getGameDurationOverall(request):
+    o : TeamStatsRequest = TeamStatsRequest(**json.loads(request.body))
+    data = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList)
+    
+    max = data[0].gameDuration
+    for gameMetadata in data:
+        if gameMetadata.gameDuration > max:
+            max = gameMetadata.gameDuration
+    
+    return Response(max)
+        
+    
