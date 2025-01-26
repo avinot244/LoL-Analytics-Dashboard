@@ -11,7 +11,7 @@ from dataAnalysis.globals import DATA_PATH,DATE_LIMIT
 
 def get_last_games(amount : int, gameType : str) -> list[str]:
     assert gameType == "SCRIM" or gameType == "COMPETITIVE" or gameType == "ESPORTS"
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
     {
@@ -55,7 +55,7 @@ def get_last_games(amount : int, gameType : str) -> list[str]:
     return idList
 
 def get_all_download_links(seriesId):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/file-download/list/{}".format(seriesId)
     token = get_token()
     headers = {
@@ -114,7 +114,7 @@ def download_from_link(url : str, fileName : str, path : str, fileType : str):
             os.remove(path + fileName + "/" + fileName + ".jsonl")
 
 def get_download_link_end_summary(seriesId : str, games : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/file-download/end-state/riot/series/{}/games/{}/summary".format(seriesId, games)
     token = get_token()
     headers = {
@@ -128,7 +128,7 @@ def get_download_link_end_summary(seriesId : str, games : int):
         json.dump(response.json(), file)
 
 def get_tournament_ids_from_page(cursor : str):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     if cursor != "":
         body = """
@@ -218,7 +218,7 @@ def get_tournament_ids_from_page(cursor : str):
     return tournamentMapping, cursorPreviousPage
 
 def get_all_tournament_ids(fromCursor : str):
-    time.sleep(1)
+    # time.sleep(1)
     if fromCursor == "":
         res, cursorPreviousPage = get_tournament_ids_from_page("")
     else:
@@ -233,7 +233,7 @@ def get_all_tournament_ids(fromCursor : str):
     return res
 
 def get_all_games_seriesId_scrims(amount : int, date : str, fromCursor : str = ""):
-    time.sleep(1)
+    # time.sleep(1)
     tournamentId : int = 0
     with open(DATA_PATH + "tournament_mapping.json", "r") as file:
         tournament_dict : dict = json.load(file)
@@ -272,7 +272,7 @@ def get_all_games_seriesId_scrims(amount : int, date : str, fromCursor : str = "
         return seriesIdList
 
 def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         {
@@ -325,7 +325,7 @@ def get_game_seriesId_from_page_scrims(cursor : str, amount : int, tournamentId 
     return idList, cursorNextPage
 
 def get_all_games_seriesId_tournament(tournamentId : int, amount : int, fromCursor : str = ""):
-    time.sleep(1)
+    # time.sleep(1)
     seriesIdList : list = list()
 
     nbPage : int = amount // 50
@@ -360,7 +360,7 @@ def get_all_games_seriesId_tournament(tournamentId : int, amount : int, fromCurs
         return seriesIdList
 
 def get_game_seriesId_from_page_tournament(cursor : str, amount : int, tournamentId : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         {
@@ -421,7 +421,7 @@ def get_game_seriesId_from_page_tournament(cursor : str, amount : int, tournamen
     return idList, cursorNextPage
 
 def get_nb_games_seriesId(seriesId : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/live-data-feed/series-state/graphql"
     body = """
         {
@@ -454,7 +454,7 @@ def get_nb_games_seriesId(seriesId : int):
         return -1
 
 def get_tournament_from_seriesId(seriesId : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         query Series {
@@ -480,7 +480,7 @@ def get_tournament_from_seriesId(seriesId : int):
     return result["data"]["series"]["tournament"]["name"]
 
 def get_date_from_seriesId(seriesId : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         query Series {
@@ -503,7 +503,7 @@ def get_date_from_seriesId(seriesId : int):
     return result["data"]["series"]["startTimeScheduled"]
 
 def get_dates_tournament(tournamentId : int):
-    time.sleep(1)
+    # time.sleep(1)
     url = "https://api.grid.gg/central-data/graphql"
     body = """
         query Tournament {
@@ -526,7 +526,7 @@ def get_dates_tournament(tournamentId : int):
     return result["data"]["tournament"]["startDate"], result["data"]["tournament"]["endDate"]
 
 def get_team_info_from_seriesId(seriesId : int):
-    time.sleep(1)
+    # time.sleep(1)
     token = get_token()
     headers = {
         "x-api-key": token
@@ -557,7 +557,7 @@ def get_team_info_from_seriesId(seriesId : int):
     return teamDict
 
 def get_team_members_from_id(id : int):
-    time.sleep(1)
+    # time.sleep(1)
     token = get_token()
     headers = {
         "x-api-key": token

@@ -9,10 +9,13 @@ from dataAnalysis.packages.utils_stuff.utils_func import getData, getSummaryData
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 
 def getTeamName(df, seriesId, gameNumber, side):
-    if side == 0:
-        return df[(df['SeriesId'] == seriesId) & (df['gameNumber'] == gameNumber)]['teamBlue'].iloc[0]
-    elif side == 1:
-        return df[(df['SeriesId'] == seriesId) & (df['gameNumber'] == gameNumber)]['teamRed'].iloc[0]
+    try:
+        if side == 0:
+            return df[(df['SeriesId'] == seriesId) & (df['gameNumber'] == gameNumber)]['teamBlue'].iloc[0]
+        elif side == 1:
+            return df[(df['SeriesId'] == seriesId) & (df['gameNumber'] == gameNumber)]['teamRed'].iloc[0]
+    except Exception as e:
+        print(seriesId, gameNumber, e)
 
 
 with open("databases/games/data_metadata_copy.csv", "r") as f:
