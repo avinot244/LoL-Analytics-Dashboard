@@ -5,11 +5,12 @@ from rest_framework import status
 
 from django.db.models import Q
 
+from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .models import GameMetadata
 from .serializer import GameMetadataSerializer
 from .globals import SIDES, ROLE_LIST
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
 @api_view(['GET'])
@@ -85,6 +86,35 @@ def getPlayerResetPositions(request):
     res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
     
     return Response(res)
+
+@api_view(['PATCH'])
+def getPlayerResetPositionsGlobal(request):
+    o : PlayerPositionGlobalRequest = PlayerPositionGlobalRequest(**json.loads(request.body))
+    result : list[dict] = list()
+
+    temp = GameMetadata.objects.filter(tournament__in=o.tournamentList)
+    print(temp)
+    
+    metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
+    for gameMetadata in metadataList:
+        print(gameMetadata)
+        data : SeparatedData
+        (data,_ , _, _) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
+        participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+        playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
+        
+        team : str = ""
+        if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+            team = "blueTeam"
+        elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+            team = "redTeam"
+        
+        resetTriggers = getResetTriggers(data, gameMetadata.gameDuration, o.begTime, o.endTime)[team][playerName]
+        result += resetTriggers
+        
+    return Response(result)
+        
+        
 
 @api_view(['PATCH'])
 def getWardPlacedPositions(request):
@@ -163,7 +193,6 @@ def getGrubsDrakeStats(request):
     # We want a list of triples [nGrubs, nDrakes, winRate, nbGames]
     
     return Response(response)
-
 
 @api_view(['PATCH'])
 def getFirstTowerHeraldStats(request):
