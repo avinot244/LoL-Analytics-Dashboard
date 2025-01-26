@@ -108,7 +108,7 @@ def getPlayerResetPositionsGlobal(request):
             team = "redTeam"
         
         resetTriggers = getResetTriggers(data, gameMetadata.gameDuration, o.begTime, o.endTime, verbose=False)[team][playerName]
-        result += resetTriggers
+        result += [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
         
     return Response(result)
         
