@@ -1,6 +1,7 @@
 import ObjectiveCard from "./ObjectiveCard"
 import TimeFrameSelecterNoEvent from "../utils/TimeFrameSelecter/TimeFrameSelecterNoEvents";
 import TeamAnalysisOverallDataReset from "./TeamAnalysisOverallDataReset";
+import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
 import SelectComp from "../utils/SelectComp";
 import { API_URL } from "../../constants";
 
@@ -117,7 +118,7 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
             {
                 visible && 
                 <>
-                    <TeamAnalysisOverallDataReset
+                    <TeamAnalysisOverallDataPosition
                         team={team}
                         tournamentList={tournamentList}
                         side={"Blue"}

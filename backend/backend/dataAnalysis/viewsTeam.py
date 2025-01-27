@@ -69,6 +69,28 @@ def getPlayerPosition(request):
     return Response(res)
 
 @api_view(['PATCH'])
+def getPlayerPositionGlobal(request):
+    o : PlayerPositionGlobalRequest = PlayerPositionGlobalRequest(**json.loads(request.body))
+    result : list[dict] = list()
+    
+    metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
+    
+    for gameMetadata in tqdm(metadataList):
+        data : SeparatedData
+        (data, gameDuration, _, _) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
+    
+        participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+        
+        # get participant ID from o.side and o.role
+        playerPosition = getPlayerPositionHistoryTimeFramed(data, gameDuration, participantID, o.begTime, o.endTime)
+        
+        # Building the response
+        res : list[list] = [pos.toList() for pos in playerPosition]
+        
+        result += res
+    
+    return Response(result)
+@api_view(['PATCH'])
 def getPlayerResetPositions(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
     (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
