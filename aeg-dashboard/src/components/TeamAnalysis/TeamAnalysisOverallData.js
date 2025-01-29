@@ -5,7 +5,7 @@ import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
 import SearchComp from "../utils/SearchComp";
 import { API_URL } from "../../constants";
 
-import { Button, Stack } from "@mui/material"
+import { Button, Divider, Stack, Typography } from "@mui/material"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
@@ -44,6 +44,9 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
 
     return (
         <div className="teamAnalysisOverallData">
+            <Typography variant="h3" component="h2" align="center" sx={{mb: 1}}>
+                Objective Data
+            </Typography>
             <Stack direction={"row"} spacing={5} justifyContent="center" alignItems="center" sx={{mt: 5}}>
                 <ObjectiveCard 
                     objectiveName={"First Tower Winrate"}
@@ -89,7 +92,14 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                     />
                 }
             </div>
-            <Stack direction={"row"} spacing={5} justifyContent="center" alignItems="center" sx={{mt: 5}}>
+            <Divider
+                style={{ background: 'white', borderWidth: 1, mt: 5}}
+                variant="middle"
+            />
+            <Typography variant="h3" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                Heatmap Data
+            </Typography>
+            <Stack direction={"row"} spacing={5} justifyContent="center" alignItems="center" justifySelf="center" sx={{mt: 5, width: "80%"}}>
                 <TimeFrameSelecterNoEvent
                     value={value}
                     setValue={setValue}
@@ -104,6 +114,13 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                 >
                     Analyze
                 </Button>
+                <SearchComp
+                    defaultValue={side[0]}
+                    elementList={side}
+                    setSelectedElement={setActiveSide}
+                    label={"Side"}
+                    width={120}
+                />
                 <Button
                     variant="contained"
                     endIcon={<RestartAltIcon/>}
@@ -118,20 +135,29 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
             {
                 visible && 
                 <>
+                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                        Reset Position
+                    </Typography>
+                    <TeamAnalysisOverallDataReset
+                        team={team}
+                        tournamentList={tournamentList}
+                        side={activeSide}
+                        timeFrame={value}
+                    />
+                    <Divider
+                        style={{ background: 'white', borderWidth: 1, mt: 5}}
+                        variant="middle"
+                    />
+                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                        Position
+                    </Typography>
                     <TeamAnalysisOverallDataPosition
                         team={team}
                         tournamentList={tournamentList}
-                        side={"Blue"}
+                        side={activeSide}
                         timeFrame={value}
                         
                     />
-                    {/* <TeamAnalysisOverallDataReset
-                        team={team}
-                        tournamentList={tournamentList}
-                        side={"Red"}
-                        begTime={value[0]}
-                        endTime={value[1]}
-                    /> */}
                 </>
                 
             }
