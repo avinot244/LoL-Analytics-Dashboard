@@ -13,10 +13,9 @@ import ClearIcon from '@mui/icons-material/Clear'
 import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
 import Stack from '@mui/material/Stack';
 
-import SelectComp from "../utils/SelectComp.js";
-
 import { API_URL, roleList } from '../../constants/index.js';
 import AuthContext from "../context/AuthContext.js";
+import SearchComp from "../utils/SearchComp.js";
 
 function TournamentSelecter({onRemove, onSelectChange, tournamentList, tournamentDict, flagOverflow, setFlagOverflow}) {
     const [selectedTournament, setSelectedTournament] = React.useState({"League of Legends Scrims": 0})
@@ -310,10 +309,13 @@ export default function PCAModelMaker() {
                 <div className="PCAMaker-roleSelected-wrapper">
                     <h3>Select a role</h3>
                     <div className="PCAMaker-roleSelecter">
-                        <SelectComp
+                        <SearchComp
                             elementList={roleList}
                             defaultValue={"-- Role --"}
-                            setActive={setActiveRole}/>
+                            setSelectedElement={setActiveRole}
+                            label={"Role"}
+                            width={150}
+                        />
 
                     </div>
                 </div>

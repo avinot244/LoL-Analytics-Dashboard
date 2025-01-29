@@ -1,7 +1,7 @@
 import NavBarComp from "../utils/NavbarComp";
 import ChampionOverviewPanel from "./ChampionOverviewPanel"
 import "../../styles/ChampionOverview.css"
-import SelectComp from "../utils/SelectComp";
+import SearchComp from "../utils/SearchComp";
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -82,16 +82,21 @@ function ChampionOverviewScrim() {
             <div className="dashboard-champOverview-controlPannel">
                 <ul className="dashboard-champOverview-controlPannel-list">
                     <li>
-                        <SelectComp
+                        <SearchComp
+                            defaultValue={""}
                             elementList={side}
-                            defaultValue={activeSide}
-                            setActive={setActiveSide}/>
+                            setSelectedElement={setActiveSide}
+                            label={"side"}
+                            width={120}
+                        />
                     </li>
                     <li>
-                        <SelectComp 
+                        <SearchComp
                             elementList={patchList}
                             defaultValue={activePatch}
-                            setActive={setActivePatch}
+                            setSelectedElement={setActivePatch}
+                            label={"patch"}
+                            width={140}
                         />
                     </li>
                     <li>

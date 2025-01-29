@@ -1,4 +1,3 @@
-import SelectComp from "../utils/SelectComp";
 import { useState, useEffect, useContext } from "react";
 import { API_URL } from "../../constants";
 import ChampionOverviewListPanel from "../ChampionOverview/championOverviewListPanel";
@@ -7,6 +6,7 @@ import Button from "@mui/material/Button"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { Stack } from "@mui/material";
 import SearchComp from "../utils/SearchComp";
 import AuthContext from "../context/AuthContext";
 
@@ -70,39 +70,46 @@ function TopMetaPicksPanel(props) {
             className={`simple-tabpanel-${panelIndex}`}
             aria-labelledby={`simple-tab-${panelIndex}`}
         >
-            <div className="dashboard-champOverview-controlPannel">
-                <ul className="dashboard-champOverview-controlPannel-list">
-                    <li>
-                        <SearchComp
-                            defaultValue={activeTournament}
-                            elementList={tournamentList}
-                            setSelectedElement={setActiveTournament}
-                            label={"Tournament"}
-                            width={550}
-                        />
+            <Stack
+                direction={"row"}
+                sx = {{
+                    alignItems: "center",
+                    alignSelf: "center",
+                    alignmentBaseline: "middle",
+                    alignContent: "center",
+                    justifyContent: "center",
+                    justifySelf: "center"
+                }}
+                spacing={3}
+            >
+
+                <SearchComp
+                    defaultValue={activeTournament}
+                    elementList={tournamentList}
+                    setSelectedElement={setActiveTournament}
+                    label={"Tournament"}
+                    width={550}
+                />
+                
+                <SearchComp
+                    defaultValue={""}
+                    elementList={side}
+                    setSelectedElement={setActiveSide}
+                    label={"side"}
+                    width={120}
+                />
+                <Button 
+                    variant="contained" 
+                    endIcon={<SearchIcon />}
+                    onClick={() => {
+                        fetchPatchListFromTournament(activeTournament)
+                        setDisplayPatchFlag(true)
+                    }}    
+                >
+                    Search Patches
+                </Button>
+            </Stack>
                         
-                    </li>
-                    <li>
-                        <SelectComp
-                            elementList={side}
-                            defaultValue={activeSide}
-                            setActive={setActiveSide}
-                        />
-                    </li>
-                    <li>
-                        <Button 
-                            variant="contained" 
-                            endIcon={<SearchIcon />}
-                            onClick={() => {
-                                fetchPatchListFromTournament(activeTournament)
-                                setDisplayPatchFlag(true)
-                            }}    
-                        >
-                            Search Patches
-                        </Button>
-                    </li>
-                </ul>
-            </div>
 
             {
                 displayPatchFlag &&
@@ -111,19 +118,23 @@ function TopMetaPicksPanel(props) {
                     <ul>
                         <li>
                             <li>
-                                <SelectComp
+                                <SearchComp
                                     elementList={patchList}
                                     defaultValue={activePatch}
-                                    setActive={setActivePatch}
+                                    setSelectedElement={setActivePatch}
+                                    label={"patch"}
+                                    width={140}
                                 />
                             </li>
                         </li>
                         <li>Sort by</li>
                         <li>
-                            <SelectComp 
+                            <SearchComp 
                                 elementList={filterList}
                                 defaultValue={activeFilter}
-                                setActive={setActiveFilter}
+                                setSelectedElement={setActiveFilter}
+                                label={"Filter"}
+                                width={180}
                             />
                         </li>
                         <li>

@@ -1,6 +1,5 @@
 import NavBarComp from "../utils/NavbarComp"
 import "../../styles/PlayerOverview.css"
-import SelectComp from "../utils/SelectComp";
 import { useState, useEffect } from "react";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import { API_URL, roleList} from "../../constants";
@@ -93,16 +92,20 @@ function PlayerOverviewScrim(){
             <div className="dashboard-playerOverview-controlPannel">
                 <ul className="dashboard-playerOverview-controlPannel-list">
                     <li>
-                        <SelectComp
+                        <SearchComp
                             elementList={patchList}
                             defaultValue={"-- Patch --"}
-                            setActive={setActivePatch}/>
+                            setActive={setActivePatch}
+                            width={160}
+                        />
                     </li>
                     <li>
-                        <SelectComp
+                        <SearchComp
                             elementList={roleList}
                             defaultValue={"-- Role --"}
-                            setActive={setActiveRole}/>
+                            setActive={setActiveRole}
+                            width={160}
+                        />
                     </li>
                     <li>
                         <Button

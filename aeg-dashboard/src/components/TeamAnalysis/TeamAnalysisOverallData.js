@@ -2,7 +2,7 @@ import ObjectiveCard from "./ObjectiveCard"
 import TimeFrameSelecterNoEvent from "../utils/TimeFrameSelecter/TimeFrameSelecterNoEvents";
 import TeamAnalysisOverallDataReset from "./TeamAnalysisOverallDataReset";
 import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
-import SelectComp from "../utils/SelectComp";
+import SearchComp from "../utils/SearchComp";
 import { API_URL } from "../../constants";
 
 import { Button, Stack } from "@mui/material"

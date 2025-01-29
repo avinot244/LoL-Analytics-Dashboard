@@ -14,7 +14,6 @@ import { useContext } from "react";
 
 import AuthContext from "../context/AuthContext";
 import NavBarComp from "../utils/NavbarComp"
-import SelectComp from "../utils/SelectComp";
 import SearchComp from "../utils/SearchComp";
 import PlayerOverviewStat from "./PlayerOverviewStat";
 import PlayerOverviewChampPool from "./PlayerOverviewChampPool";
@@ -131,16 +130,21 @@ function PlayerOverview(){
                     <div className="dashboard-playerOverview-controlPannel">
                         <ul className="dashboard-playerOverview-controlPannel-list">
                             <li>
-                                <SelectComp
+                                <SearchComp
                                     elementList={patchList}
                                     defaultValue={"-- Patch --"}
-                                    setActive={setActivePatch1}/>
+                                    setSelectedElement={setActivePatch1}
+                                    width={160}
+                                />
+                                    
                             </li>
                             <li>
-                                <SelectComp
+                                <SearchComp
                                     elementList={roleList}
                                     defaultValue={"-- Role --"}
-                                    setActive={setActiveRole1}/>
+                                    setSelectedElement={setActiveRole1}
+                                    width={160}
+                                />
                             </li>
                             <li>
                                 <Button
@@ -198,10 +202,11 @@ function PlayerOverview(){
                         <div className="playerOverview-searchTournament">
                             <ul className="dashboard-playerOverview-searchTournament-list">
                                 <li>
-                                    <SelectComp 
+                                    <SearchComp 
                                         elementList={tournamentList1}
                                         defaultValue={"-- Tournament --"}
-                                        setActive={setActiveTournament1}
+                                        setSelectedElement={setActiveTournament1}
+                                        width={230}
                                     />
                                 </li>
 
@@ -262,16 +267,20 @@ function PlayerOverview(){
                     <div className="dashboard-playerOverview-controlPannel">
                         <ul className="dashboard-playerOverview-controlPannel-list">
                             <li>
-                                <SelectComp
+                                <SearchComp
                                     elementList={patchList}
                                     defaultValue={"-- Patch --"}
-                                    setActive={setActivePatch2}/>
+                                    setSelectedElement={setActivePatch2}
+                                    width={160}
+                                />
                             </li>
                             <li>
-                                <SelectComp
+                                <SearchComp
                                     elementList={roleList}
                                     defaultValue={"-- Role --"}
-                                    setActive={setActiveRole2}/>
+                                    setSelectedElement={setActiveRole2}
+                                    width={160}
+                                />
                             </li>
                             <li>
                                 <Button
@@ -329,10 +338,11 @@ function PlayerOverview(){
                         <div className="playerOverview-searchTournament">
                             <ul className="dashboard-playerOverview-searchTournament-list">
                                 <li>
-                                    <SelectComp 
+                                    <SearchComp 
                                         elementList={tournamentList2}
                                         defaultValue={"-- Tournament --"}
-                                        setActive={setActiveTournament2}
+                                        setSelectedElement={setActiveTournament2}
+                                        width={230}
                                     />
                                 </li>
 
