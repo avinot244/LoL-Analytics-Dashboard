@@ -88,7 +88,7 @@ def getJungleProximity(data : SeparatedData, team : int):
     
     return jungleProximitySummary
 
-def getProximityMatrix(data : SeparatedData, team : int):
+def getProximityMatrixRunner(data : SeparatedData, team : int):
     proximityMatrix : list[list] = list()
     for _ in range(5):
         proximityMatrix.append([0, 0, 0, 0, 0])

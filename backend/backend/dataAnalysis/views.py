@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from typing import get_args
+import json
 from dataclasses import asdict
 
 from behaviorADC.models import BehaviorTop, BehaviorJungle, BehaviorMid, BehaviorADC, BehaviorSupport
@@ -14,7 +15,7 @@ from .globals import DATA_PATH, BLACKLIST, API_URL, ROLE_LIST
 from .packages.api_calls.GRID.api_calls import *
 from .utils import isGameDownloaded, import_Behavior, convertDate, isDateValid, checkSeries, getNbGamesSeries
 from .packages.utils_stuff.utils_func import getData, getRole, getSummaryData, convertTime
-from .packages.utils_stuff.stats import getProximityMatrix
+from .packages.utils_stuff.stats import getProximityMatrixRunner
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.Parsers.Separated.Events.EventTypes import *
 from .packages.Parsers.Separated.Events.LiteralTypes import epic_monster_types_parsed
@@ -25,7 +26,7 @@ from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
-from .request_models import GameStatsRequest, TeamStatsRequest
+from .request_models import GameStatsRequest, TeamStatsRequest, GetGameRequest
 
 
 
@@ -738,8 +739,8 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
     splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
 
     dataBeforeTime : SeparatedData = splittedDataset[1] # Getting the wanted interval
-    proximityMatrixBlue : list[list] = getProximityMatrix(dataBeforeTime, 0)
-    proximityMatrixRed : list[list] = getProximityMatrix(dataBeforeTime, 1)
+    proximityMatrixBlue : list[list] = getProximityMatrixRunner(dataBeforeTime, 0)
+    proximityMatrixRed : list[list] = getProximityMatrixRunner(dataBeforeTime, 1)
 
     teamBlue : Team = dataBeforeTime.gameSnapshotList[0].teams[0]
     teamRed : Team = dataBeforeTime.gameSnapshotList[0].teams[1]
@@ -750,7 +751,8 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
     for (i, j), z in np.ndenumerate(proximityMatrixBlue):
         axes.text(j, i, str(round(z, 2)), ha="center", va="center")
     
-    axes.set_title("Proximity Matrix {}".format(teamBlue.getTeamName(seriesId)))
+    gameMetadata = GameMetadata.objects.get(seriesId__exact=seriesId, gameNumber__exact=gameNumber)
+    axes.set_title("Proximity Matrix {}".format(gameMetadata.teamBlue))
     axes.set_xticks(np.arange(5))
     axes.set_yticks(np.arange(5))
     axes.set_xticklabels(teamBlue.getPlayerList())
@@ -760,8 +762,59 @@ def getProximityMatrix(request, seriesId : int, gameNumber : int, time : int):
     cb = fig.colorbar(im, ax=axes, location='right', label="proximity")
     plt.savefig(DATA_PATH)
     
+    return Response(proximityMatrixBlue)
 
-    return Response(status=status.HTTP_200_OK)
+@api_view(['PATCH'])
+def getProximityMatrixOverall(request):
+    o : GetGameRequest = GetGameRequest(**json.loads(request.body))
+    
+    dataList : list[list[list]] = list()
+    
+    allData = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournaments)
+    
+    for gameMetadata in allData:
+        (data, gameDuration, _, _) = getData(gameMetadata.seriesId, gameMetadata.gameNumber)
+        splitList : list[int] = [120, 840, gameDuration]
+        splittedDataset : list[SeparatedData] = data.splitData(gameDuration, splitList)
+        
+        dataBeforeTime : SeparatedData = splittedDataset[2] # Getting the wanted interval
+        if gameMetadata.teamBlue == o.team:
+            proximityMatrix : list[list] = getProximityMatrixRunner(dataBeforeTime, 0)
+            team : Team = dataBeforeTime.gameSnapshotList[0].teams[0]
+        elif gameMetadata.teamRed == o.team:
+            proximityMatrix : list[list] = getProximityMatrixRunner(dataBeforeTime, 1)
+            team : Team = dataBeforeTime.gameSnapshotList[0].teams[1]
+        
+        dataList.append(proximityMatrix)
+
+    resultMatrix : list[list] = dataList[0]
+    for matrix in dataList[1:]:
+        for i in range(len(resultMatrix)):
+            for j in range(len(resultMatrix[i])):
+                resultMatrix[i][j] += matrix[i][j]
+                
+    n = len(allData)
+    for i in range(len(resultMatrix)):
+        for j in range(len(resultMatrix[i])):
+            resultMatrix[i][j] /= n
+    
+    fig, axes = plt.subplots(ncols=1, figsize=(8,6))
+
+    im = axes.imshow(resultMatrix, cmap="RdBu_r", vmax=1, vmin=0, aspect='auto')
+    for (i, j), z in np.ndenumerate(resultMatrix):
+        axes.text(j, i, str(round(z, 2)), ha="center", va="center")
+    
+    axes.set_title("Proximity Matrix {} during {}".format(o.team, o.tournaments))
+    axes.set_xticks(np.arange(5))
+    axes.set_yticks(np.arange(5))
+    axes.set_xticklabels(team.getPlayerList())
+    axes.set_yticklabels(team.getPlayerList())
+
+    plt.tight_layout()
+    cb = fig.colorbar(im, ax=axes, location='right', label="proximity")
+    plt.savefig(f"{DATA_PATH}/{o.team}")
+    return Response(status=status.HTTP_200_OK)  
+        
 
 @api_view(['PATCH'])
 def getGameEvents(request):
