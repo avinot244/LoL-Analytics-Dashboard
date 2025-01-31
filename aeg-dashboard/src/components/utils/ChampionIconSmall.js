@@ -3,6 +3,7 @@ import "../../styles/ChampionIconSmall.css"
 import AuthContext from "../context/AuthContext";
 
 function ChampionIconSmall({championName, width, height}) {
+    console.log(championName)
     let {patch} = useContext(AuthContext)
     const apiURL = `https://ddragon.leagueoflegends.com/cdn/${patch}/img/champion/${championName}.png`
     const [img, setImg] = useState();

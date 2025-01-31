@@ -20,25 +20,4 @@ const interpolateColor = (color1, color2, t) => {
     return `rgb(${r}, ${g}, ${b})`;
 };
 
-/**
- * Returns a color based on the value (0-100).
- * 0 -> Green (#4caf50)
- * 50 -> Orange (#ff9800)
- * 100 -> Red (#f44336)
- */
-const getColorForValue = (value) => {
-    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-    value = clamp(value, 0, 100); // Ensure value is between 0 and 100.
-
-    if (value <= 50) {
-    // Transition from Green to Orange
-    const t = value / 50; // Normalize to range [0, 1]
-    return interpolateColor("#4caf50", "#ff9800", t);
-    } else {
-    // Transition from Orange to Red
-    const t = (value - 50) / 50; // Normalize to range [0, 1]
-    return interpolateColor("#ff9800", "#f44336", t);
-    }
-};
-
-export default getColorForValue
+export default interpolateColor
