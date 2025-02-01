@@ -19,11 +19,12 @@ function TestComp() {
     }
 
     useEffect(() => {
-        const fetchChampionsDraftStats = async (teamName, tournamentList, side) => {
+        const fetchChampionsDraftStats = async (teamName, tournamentList, side, patch) => {
             const data = {
                 "teamName": teamName,
                 "tournamentList": tournamentList,
-                "side": side
+                "side": side,
+                "patch": patch
             }
             const result = await fetch(API_URL + `teamAnalysis/getDraftStats/`, {
                 method: "PATCH",
@@ -47,7 +48,7 @@ function TestComp() {
             })
         }
         
-        fetchChampionsDraftStats("FNC", ["LEC - Winter 2025 (Regular Season: Regular Season)"], "Both")
+        fetchChampionsDraftStats("FNC", ["LEC - Winter 2025 (Regular Season: Regular Season)"], "Blue", "15.1")
     }, [])
     
 

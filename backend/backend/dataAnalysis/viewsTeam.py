@@ -325,6 +325,7 @@ def getDraftData(request):
     seriesIdList : list[int] = list()
     querySeriesId = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList, patch__contains=o.patch)
     
+    
     # Get the list of players
     tempGameMetadata = querySeriesId[0]
     tempSide : int
@@ -349,11 +350,11 @@ def getDraftData(request):
     
     # Getting the overall data of the champions picked by the players from the team o.teamName during the tournaments in o.tournamentList
     if o.side in ["Blue", "Red"]:
-        queryChampionDraftStats = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList)
+        queryChampionDraftStats = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList, patch__contains=o.patch)
         serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
         return Response(serializer.data)
     else: 
-        queryBlue = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Blue", championName__in=playedChampionList)
-        queryRed = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Red", championName__in=playedChampionList)
+        queryBlue = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Blue", championName__in=playedChampionList, patch__contains=o.patch)
+        queryRed = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Red", championName__in=playedChampionList, patch__contains=o.patch)
         
         return Response(fuseQueriesChampionDraftStats(queryRed, queryBlue))
