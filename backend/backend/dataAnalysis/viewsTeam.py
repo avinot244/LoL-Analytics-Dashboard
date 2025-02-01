@@ -323,7 +323,7 @@ def getDraftData(request):
     
     playedChampionList : list[str] = list()
     seriesIdList : list[int] = list()
-    querySeriesId = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList)
+    querySeriesId = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList, patch__contains=o.patch)
     
     # Get the list of players
     tempGameMetadata = querySeriesId[0]
@@ -333,7 +333,7 @@ def getDraftData(request):
     elif tempGameMetadata.teamRed == o.teamName:
         tempSide = 1
     
-    (data, _, _, _) = getData(querySeriesId[0].seriesId, querySeriesId[0].seriesId)
+    (data, _, _, _) = getData(querySeriesId[0].seriesId, querySeriesId[0].gameNumber)
     playerList : list [str]= [player.playerName for player in data.gameSnapshotList[0].teams[tempSide].players]
 
     # Get the list of seriesId where the team played

@@ -87,7 +87,7 @@ function DraftGrid({ rows }) {
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
-        <Paper sx={{ height: 370, width: 1600, justifySelf: "center"}}>
+        <Paper sx={{ height: 370, width: 1615, justifySelf: "center"}}>
             <DataGrid
                 rows={rows}
                 columns={columns}

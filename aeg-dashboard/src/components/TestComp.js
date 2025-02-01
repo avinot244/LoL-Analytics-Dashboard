@@ -19,10 +19,16 @@ function TestComp() {
     }
 
     useEffect(() => {
-        const fetchChampionsDraftStats = async (tournament, patch, side) => {
-            const result = await fetch(API_URL + `draft/championStats/getStats/${patch}/${side}/${tournament}/`, {
-                method: "GET",
-                headers:header
+        const fetchChampionsDraftStats = async (teamName, tournamentList, side) => {
+            const data = {
+                "teamName": teamName,
+                "tournamentList": tournamentList,
+                "side": side
+            }
+            const result = await fetch(API_URL + `teamAnalysis/getDraftStats/`, {
+                method: "PATCH",
+                headers: header,
+                body: JSON.stringify(data)
             })
             result.json().then(result => {
                 const newData = result;
@@ -41,7 +47,7 @@ function TestComp() {
             })
         }
         
-        fetchChampionsDraftStats("LEC - Winter 2025 (Regular Season: Regular Season)", "15.2", "Blue")
+        fetchChampionsDraftStats("FNC", ["LEC - Winter 2025 (Regular Season: Regular Season)"], "Both")
     }, [])
     
 
