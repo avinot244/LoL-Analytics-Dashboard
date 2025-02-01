@@ -10,10 +10,16 @@ from django.db.models import Q
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .models import GameMetadata
 from .serializer import GameMetadataSerializer
-from .globals import SIDES, ROLE_LIST
+from .globals import SIDES, ROLE_LIST, DATE_LIMIT
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
+
+
+from Draft.utils import fuseQueriesChampionDraftStats
+from Draft.serializer import ChampionDraftStatsSerializer, DraftPlayerPick
+from Draft.models import ChampionDraftStats
+
 
 @api_view(['GET'])
 def getTeamList(request):
@@ -310,3 +316,44 @@ def getTeamSide(request):
         return Response("Blue")
     elif data.teamRed == o.team:
         return Response("Red")
+    
+@api_view(['PATCH'])
+def getDraftData(request):
+    o : TeamDraftDataRequest = TeamDraftDataRequest(**json.loads(request.body))
+    
+    playedChampionList : list[str] = list()
+    seriesIdList : list[int] = list()
+    querySeriesId = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList)
+    
+    # Get the list of players
+    tempGameMetadata = querySeriesId[0]
+    tempSide : int
+    if tempGameMetadata.teamBlue == o.teamName:
+        tempSide = 0,
+    elif tempGameMetadata.teamRed == o.teamName:
+        tempSide = 1
+    
+    (data, _, _, _) = getData(querySeriesId[0].seriesId, querySeriesId[0].seriesId)
+    playerList : list [str]= [player.playerName for player in data.gameSnapshotList[0].teams[tempSide].players]
+
+    # Get the list of seriesId where the team played
+    for temp in querySeriesId:
+        if not(temp.seriesId in seriesIdList):
+            seriesIdList.append(temp.seriesId)
+    
+    # Get the champions picked by the players in the list of seriesId
+    championRequest = DraftPlayerPick.objects.filter(seriesId__in=seriesIdList)
+    for temp in championRequest:
+        if not(temp.championName in playedChampionList) and (temp.sumonnerName in playerList) :
+            playedChampionList.append(temp.championName)
+    
+    # Getting the overall data of the champions picked by the players from the team o.teamName during the tournaments in o.tournamentList
+    if o.side in ["Blue", "Red"]:
+        queryChampionDraftStats = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList)
+        serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
+        return Response(serializer.data)
+    else: 
+        queryBlue = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Blue", championName__in=playedChampionList)
+        queryRed = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Red", championName__in=playedChampionList)
+        
+        return Response(fuseQueriesChampionDraftStats(queryRed, queryBlue))

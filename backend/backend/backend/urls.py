@@ -212,6 +212,7 @@ urlpatterns = [
     path('api/teamAnalysis/getHeraldData/', teamAnalysisViews.getHeraldData),
     path('api/teamAnalysis/getFirstTowerData/', teamAnalysisViews.getFirstTowerData),
     path('api/teamAnalysis/getTeamSide/', teamAnalysisViews.getTeamSide),
+    path('api/teamAnalysis/getDraftStats/', teamAnalysisViews.getDraftData),
 
 
     # Draft
