@@ -12,7 +12,6 @@ import DraftGrid from "./utils/DraftGrid"
 
 function TestComp() {
     const [rows, setRows] = useState([])
-    // const [columns, setColumns] = useState([])
 
     let {authTokens} = useContext(AuthContext)
     const header = {
@@ -31,7 +30,7 @@ function TestComp() {
                     let updatedFields = Object.fromEntries(
                         Object.entries(rest).map(([key, value]) => [key, parseFloat((value * 100).toFixed(2))])
                     );
-                    
+
                     return {
                         id: pk,
                         championName,
@@ -39,7 +38,6 @@ function TestComp() {
                     };
                 });
                 setRows(newRows)
-                console.log(typeof newRows[0].winRate)
             })
         }
         

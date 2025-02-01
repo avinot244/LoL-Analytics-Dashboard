@@ -136,19 +136,6 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                 visible && 
                 <>
                     <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
-                        Reset Position
-                    </Typography>
-                    <TeamAnalysisOverallDataReset
-                        team={team}
-                        tournamentList={tournamentList}
-                        side={activeSide}
-                        timeFrame={value}
-                    />
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1, mt: 5}}
-                        variant="middle"
-                    />
-                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
                         Position
                     </Typography>
                     <TeamAnalysisOverallDataPosition
@@ -158,8 +145,22 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                         timeFrame={value}
                         
                     />
+
+                    <Divider
+                        style={{ background: 'white', borderWidth: 1, mt: 5}}
+                        variant="middle"
+                    />
+
+                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                        Reset Position
+                    </Typography>
+                    <TeamAnalysisOverallDataReset
+                        team={team}
+                        tournamentList={tournamentList}
+                        side={activeSide}
+                        timeFrame={value}
+                    />
                 </>
-                
             }
             
         </div>
