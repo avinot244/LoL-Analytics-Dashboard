@@ -352,6 +352,7 @@ def getDraftData(request):
     if o.side in ["Blue", "Red"]:
         queryChampionDraftStats = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList, patch__contains=o.patch)
         serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
+        print(json.dumps(serializer.data, indent=4))
         return Response(serializer.data)
     else: 
         queryBlue = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Blue", championName__in=playedChampionList, patch__contains=o.patch)

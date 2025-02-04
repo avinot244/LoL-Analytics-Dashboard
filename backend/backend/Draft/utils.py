@@ -432,3 +432,108 @@ def fuseQueriesChampionBansStats(query1 : QuerySet, query2 : QuerySet):
                 "banRate2Rota": object2.banRate2Rota
             })
     return res
+
+def fuseDataChampionsDraftStats(data1 : list[dict], data2 : list[dict]):
+    
+    championNameList1 : list = [d["championName"] for d in data1]
+    championNameList2 : list = [d["championName"] for d in data2]
+    
+    mapping : dict = computeFusedMapping(championNameList1, championNameList2)
+    
+    res : list = list()
+    
+    for champion_name, distsribution in mapping.items():
+        if distsribution == 0:
+            object1 : dict
+            for d in data1:
+                if d["championName"] == champion_name:
+                    object1 = d
+                    
+            object2 : dict
+            for d in data2:
+                if d["championName"] == champion_name:
+                    object2 = d
+                    
+            fusedObject = ChampionDraftStats(
+                championName = object1["championName"],
+                patch = object1["patch"],
+                tournament = object1["tournament"],
+                side = "Both",
+                winRate = (object1["winRate"] + object2["winRate"]) / 2,
+                globalPickRate = (object1["globalPickRate"] + object2["globalPickRate"]) / 2,
+                pickRate1Rota = (object1["pickRate1Rota"] + object2["pickRate1Rota"]) / 2,
+                pickRate2Rota = (object1["pickRate2Rota"] + object2["pickRate2Rota"]) / 2,
+                globalBanRate = (object1["globalBanRate"] + object2["globalBanRate"]) / 2,
+                banRate1Rota = (object1["banRate1Rota"] + object2["banRate1Rota"]) / 2,
+                banRate2Rota = (object1["banRate2Rota"] + object2["banRate2Rota"]) / 2,
+                draftPresence = (object1["draftPresence"] + object2["draftPresence"]) / 2,
+                mostPopularPickOrder = (object1["mostPopularPickOrder"] + object2["mostPopularPickOrder"]) / 2,
+                blindPick = (object1["blindPick"] + object2["blindPick"]) / 2,
+                mostPopularRole = object1["mostPopularRole"]
+            )
+            
+            res.append({
+                "pk": fusedObject.pk,
+                "championName": fusedObject.championName,
+                "patch": fusedObject.patch,
+                "tournament": fusedObject.tournament,
+                "side": fusedObject.side,
+                "mostPopularRole": fusedObject.mostPopularRole,
+                "winRate": fusedObject.winRate,
+                "globalPickRate": fusedObject.globalPickRate,
+                "pickRate1Rota": fusedObject.pickRate1Rota,
+                "pickRate2Rota": fusedObject.pickRate2Rota,
+                "globalBanRate": fusedObject.globalBanRate,
+                "banRate1Rota": fusedObject.banRate1Rota,
+                "banRate2Rota": fusedObject.banRate2Rota,
+                "draftPresence": fusedObject.draftPresence,
+                "mostPopularPickOrder": fusedObject.mostPopularPickOrder,
+                "blindPick": fusedObject.blindPick
+            })
+        elif distsribution == 1:
+            for d in data1:
+                if d["championName"] == champion_name:
+                    object1 = d
+            res.append({
+                "pk": object1["pk"],
+                "championName": object1["championName"],
+                "patch": object1["patch"],
+                "tournament": object1["tournament"],
+                "side": object1["side"],
+                "mostPopularRole": object1["mostPopularRole"],
+                "winRate": object1["winRate"],
+                "globalPickRate": object1["globalPickRate"],
+                "pickRate1Rota": object1["pickRate1Rota"],
+                "pickRate2Rota": object1["pickRate2Rota"],
+                "globalBanRate": object1["globalBanRate"],
+                "banRate1Rota": object1["banRate1Rota"],
+                "banRate2Rota": object1["banRate2Rota"],
+                "draftPresence": object1["draftPresence"],
+                "mostPopularPickOrder": object1["mostPopularPickOrder"],
+                "blindPick": object1["blindPick"]
+            })
+        elif distsribution == 2:
+            object2 : dict
+            for d in data2:
+                if d["championName"] == champion_name:
+                    object2 = d
+            res.append({
+                "pk": object2["pk"],
+                "championName": object2["championName"],
+                "patch": object2["patch"],
+                "tournament": object2["tournament"],
+                "side": object2["side"],
+                "mostPopularRole": object2["mostPopularRole"],
+                "winRate": object2["winRate"],
+                "globalPickRate": object2["globalPickRate"],
+                "pickRate1Rota": object2["pickRate1Rota"],
+                "pickRate2Rota": object2["pickRate2Rota"],
+                "globalBanRate": object2["globalBanRate"],
+                "banRate1Rota": object2["banRate1Rota"],
+                "banRate2Rota": object2["banRate2Rota"],
+                "draftPresence": object2["draftPresence"],
+                "mostPopularPickOrder": object2["mostPopularPickOrder"],
+                "blindPick": object2["blindPick"]
+            })
+                
+    return res
