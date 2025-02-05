@@ -442,7 +442,7 @@ def fuseDataChampionsDraftStats(data1 : list[dict], data2 : list[dict]):
     
     res : list = list()
     
-    for champion_name, distsribution in mapping.items():
+    for i, (champion_name, distsribution) in enumerate(mapping.items()):
         if distsribution == 0:
             object1 : dict
             for d in data1:
@@ -473,7 +473,7 @@ def fuseDataChampionsDraftStats(data1 : list[dict], data2 : list[dict]):
             )
             
             res.append({
-                "pk": fusedObject.pk,
+                "pk": i,
                 "championName": fusedObject.championName,
                 "patch": fusedObject.patch,
                 "tournament": fusedObject.tournament,
@@ -495,7 +495,7 @@ def fuseDataChampionsDraftStats(data1 : list[dict], data2 : list[dict]):
                 if d["championName"] == champion_name:
                     object1 = d
             res.append({
-                "pk": object1["pk"],
+                "pk": i,
                 "championName": object1["championName"],
                 "patch": object1["patch"],
                 "tournament": object1["tournament"],
@@ -518,7 +518,7 @@ def fuseDataChampionsDraftStats(data1 : list[dict], data2 : list[dict]):
                 if d["championName"] == champion_name:
                     object2 = d
             res.append({
-                "pk": object2["pk"],
+                "pk": i,
                 "championName": object2["championName"],
                 "patch": object2["patch"],
                 "tournament": object2["tournament"],

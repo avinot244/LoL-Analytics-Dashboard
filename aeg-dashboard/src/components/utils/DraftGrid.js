@@ -18,6 +18,13 @@ function RenderDraftData(props) {
     )
 }
 
+function RenderStr(props) {
+    const {_, value} = props
+    return (
+        <span>{value}</span>
+    )
+}
+
 function DraftGrid({ rows }) {
     const columns = [
         {
@@ -25,6 +32,12 @@ function DraftGrid({ rows }) {
             headerName: 'Champion',
             width: 150,
             renderCell: RenderChampion
+        },
+        {
+            field: 'mostPopularRole',
+            headerName: "Role",
+            width: 100,
+            renderCell: RenderStr
         },
         {
             field: 'winRate',
@@ -87,7 +100,7 @@ function DraftGrid({ rows }) {
     const paginationModel = { page: 0, pageSize: 5 };
 
     return (
-        <Paper sx={{ height: 370, width: 1615, justifySelf: "center"}}>
+        <Paper sx={{ height: 370, width: 1700, justifySelf: "center"}}>
             <DataGrid
                 rows={rows}
                 columns={columns}

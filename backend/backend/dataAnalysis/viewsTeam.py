@@ -16,7 +16,7 @@ from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFr
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
 
 
-from Draft.utils import fuseQueriesChampionDraftStats
+from Draft.utils import fuseQueriesChampionDraftStats, fuseDataChampionsDraftStats
 from Draft.serializer import ChampionDraftStatsSerializer, DraftPlayerPick
 from Draft.models import ChampionDraftStats
 
@@ -323,7 +323,7 @@ def getDraftData(request):
     
     playedChampionList : list[str] = list()
     seriesIdList : list[int] = list()
-    querySeriesId = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList, patch__contains=o.patch)
+    querySeriesId = GameMetadata.objects.filter(Q(teamRed=o.teamName) | Q(teamBlue=o.teamName), tournament__in=o.tournamentList)
     
     
     # Get the list of players
@@ -348,14 +348,37 @@ def getDraftData(request):
         if not(temp.championName in playedChampionList) and (temp.sumonnerName in playerList) :
             playedChampionList.append(temp.championName)
     
-    # Getting the overall data of the champions picked by the players from the team o.teamName during the tournaments in o.tournamentList
+    # Get the list of patches
+    patchList : list = list()
+    for temp in querySeriesId:
+        patch : str = ".".join([temp.patch.split(".")[0], temp.patch.split(".")[1]])
+        if not(patch in patchList):
+            patchList.append(patch)
+    
+    # Gettint the overall draft data
     if o.side in ["Blue", "Red"]:
-        queryChampionDraftStats = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList, patch__contains=o.patch)
-        serializer = ChampionDraftStatsSerializer(queryChampionDraftStats, context={"request": request}, many=True)
-        print(json.dumps(serializer.data, indent=4))
-        return Response(serializer.data)
-    else: 
-        queryBlue = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Blue", championName__in=playedChampionList, patch__contains=o.patch)
-        queryRed = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Red", championName__in=playedChampionList, patch__contains=o.patch)
+        queryChampionDraftStats = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList)
         
-        return Response(fuseQueriesChampionDraftStats(queryRed, queryBlue))
+        res : list[dict] = ChampionDraftStatsSerializer(queryChampionDraftStats.filter(patch__contains=patchList[0]), context={"request": request}, many=True).data
+        for patch in patchList[1:]:
+            newData : list[dict] = ChampionDraftStatsSerializer(queryChampionDraftStats.filter(patch__contains=patch), context={"request": request}, many=True).data
+            res = fuseDataChampionsDraftStats(res, newData)
+        
+        return Response(res)
+    else:
+        queryChampionDraftStatsBlue = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact="Blue", championName__in=playedChampionList)
+        
+        resBlue : list[dict] = ChampionDraftStatsSerializer(queryChampionDraftStatsBlue.filter(patch__contains=patchList[0]), context={"request": request}, many=True).data
+        for patch in patchList[1:]:
+            newData : list[dict] = ChampionDraftStatsSerializer(queryChampionDraftStatsBlue.filter(patch__contains=patch), context={"request": request}, many=True).data
+            resBlue = fuseDataChampionsDraftStats(resBlue, newData)
+            
+        queryChampionDraftStatsRed = ChampionDraftStats.objects.filter(tournament__in=o.tournamentList, side__exact=o.side, championName__in=playedChampionList)
+        
+        resRed : list[dict] = ChampionDraftStatsSerializer(queryChampionDraftStatsRed.filter(patch__contains=patchList[0]), context={"request": request}, many=True).data
+        for patch in patchList[1:]:
+            newData : list[dict] = ChampionDraftStatsSerializer(queryChampionDraftStatsRed.filter(patch__contains=patch), context={"request": request}, many=True).data
+            resRed = fuseDataChampionsDraftStats(resRed, newData)
+        
+        res = fuseDataChampionsDraftStats(resBlue, resRed)
+        return Response(res)

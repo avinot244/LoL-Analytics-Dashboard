@@ -19,12 +19,11 @@ function TestComp() {
     }
 
     useEffect(() => {
-        const fetchChampionsDraftStats = async (teamName, tournamentList, side, patch) => {
+        const fetchChampionsDraftStats = async (teamName, tournamentList, side) => {
             const data = {
                 "teamName": teamName,
                 "tournamentList": tournamentList,
-                "side": side,
-                "patch": patch
+                "side": side
             }
             const result = await fetch(API_URL + `teamAnalysis/getDraftStats/`, {
                 method: "PATCH",
@@ -41,14 +40,14 @@ function TestComp() {
                     return {
                         id: pk,
                         championName,
+                        mostPopularRole,
                         ...updatedFields
                     };
                 });
                 setRows(newRows)
             })
         }
-        
-        fetchChampionsDraftStats("FNC", ["LEC - Winter 2025 (Regular Season: Regular Season)"], "Blue", "15.1")
+        fetchChampionsDraftStats("FNC", ["LEC - Winter 2025 (Regular Season: Regular Season)"], "Both")
     }, [])
     
 
