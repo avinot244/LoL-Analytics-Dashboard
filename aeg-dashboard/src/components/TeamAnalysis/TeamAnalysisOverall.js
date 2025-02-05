@@ -20,8 +20,12 @@ function TeamAnalysisOverall() {
     const header = {
         Authorization: "Bearer " + authTokens.access
     }
+
+    const side = ["Blue", "Red", "Both"]
+
     const [activeTeam, setActiveTeam] = useState("")
     const [teamList, setTeamList] = useState([])
+    const [activeSide, setActiveSide] = useState("")
 
     const [displayTournamentSelecter, setDisplayTournamentSelecter] = useState(false)
     const [tournamentList, setTournamentList] = useState([])
@@ -33,6 +37,7 @@ function TeamAnalysisOverall() {
     const [dataFirstTowerHeraldStats, setDataFirstTowerHeraldData] = useState({})
     const [dataHeraldStats, setDataHeraldStats] = useState({})
     const [dataFirstTowerStats, setDataFirstTowerStats] = useState({})
+    const [dataDraft, setDataDraft] = useState([])
     const [gameDurationOverall, setGameDurationOverall] = useState()
     
 
@@ -150,13 +155,44 @@ function TeamAnalysisOverall() {
         })
     }
 
-    const handleAnalyze = (team, tournamentList) => {
+    const fetchDraftData = async (team, tournamentList, side) => {
+        const data = {
+            "tournamentList": tournamentList,
+            "teamName": team,
+            "side": side
+        }
+
+        const result = await fetch(API_URL + `teamAnalysis/getDraftStats/`, {
+            method: "PATCH",
+            headers: header,
+            body: JSON.stringify(data)
+        })
+        result.json().then(result => {
+            const newData = result;
+            let newRows = newData.map(({ pk, championName, patch, side, mostPopularRole, mostPopularPickOrder, tournament, ...rest }) => {
+                let updatedFields = Object.fromEntries(
+                    Object.entries(rest).map(([key, value]) => [key, parseFloat((value * 100).toFixed(2))])
+                );
+
+                return {
+                    id: pk,
+                    championName,
+                    mostPopularRole,
+                    ...updatedFields
+                };
+            });
+            setDataDraft(newRows)
+        })
+    }
+
+    const handleAnalyze = (team, tournamentList, side) => {
         fetchGrubsDrakeStats(team, tournamentList)
         fetchFirstTowerHeraldData(team, tournamentList)
         fetchHeraldData(team, tournamentList)
         fetchFirstTowerData(team, tournamentList)
         fetchOverallGameDuration(team, tournamentList)
         setDisplayData(true)
+        fetchDraftData(team, tournamentList, side)
     }
 
     useEffect(() => {
@@ -179,6 +215,14 @@ function TeamAnalysisOverall() {
                     elementList={teamList}
                     setSelectedElement={setActiveTeam}
                     label={"Team"}
+                    width={120}
+                />
+
+                <SearchComp
+                    defaultValue={side[0]}
+                    elementList={side}
+                    setSelectedElement={setActiveSide}
+                    label={"Side"}
                     width={120}
                 />
 
@@ -205,7 +249,7 @@ function TeamAnalysisOverall() {
                             variant="contained"
                             endIcon={<ArrowForwardIosIcon/>}
                             onClick={() => {
-                                handleAnalyze(activeTeam, tournamentFilters)
+                                handleAnalyze(activeTeam, tournamentFilters, activeSide)
                             }}
                         >
                             Analyze
@@ -233,6 +277,7 @@ function TeamAnalysisOverall() {
                     dataGrubsDrakes={dataGrubsDrakeStats}
                     dataHerald={dataHeraldStats}
                     gameDurationOverall={gameDurationOverall}
+                    rows={dataDraft}
                 />
             }
             

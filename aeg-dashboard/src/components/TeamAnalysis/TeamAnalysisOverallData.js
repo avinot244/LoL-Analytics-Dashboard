@@ -14,10 +14,11 @@ import { useState } from "react";
 import HeatMap from "react-heatmap-grid";
 
 import "../../styles/TeamAnalysisOverall.css"
+import DraftGrid from "../utils/DraftGrid";
 
 
 
-function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHerald, dataFirstTower, gameDurationOverall, team, tournamentList}) {
+function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHerald, dataFirstTower, gameDurationOverall, team, tournamentList, rows}) {
     const [value, setValue] = useState([90, 840])
     const [visible, setVisible] = useState(false)
     const [activeSide, setActiveSide] = useState("Blue")
@@ -44,7 +45,7 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
 
     return (
         <div className="teamAnalysisOverallData">
-            <Typography variant="h3" component="h2" align="center" sx={{mb: 1}}>
+            <Typography variant="h3" component="h2" align="center" sx={{mb: 1, mt: 1}}>
                 Objective Data
             </Typography>
             <Stack direction={"row"} spacing={5} justifyContent="center" alignItems="center" sx={{mt: 5}}>
@@ -96,6 +97,18 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                 style={{ background: 'white', borderWidth: 1, mt: 5}}
                 variant="middle"
             />
+
+            <Typography variant="h3" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                Draft Data
+            </Typography>
+            <DraftGrid
+                rows={rows}
+            />
+            <Divider
+                style={{ background: 'white', borderWidth: 1, mt: 5}}
+                variant="middle"
+            />
+
             <Typography variant="h3" component="h2" align="center" sx={{mb: 1, mt: 1}}>
                 Heatmap Data
             </Typography>
