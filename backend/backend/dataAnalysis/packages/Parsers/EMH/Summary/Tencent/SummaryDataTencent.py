@@ -132,7 +132,6 @@ class SummaryDataTencent:
                 isFirstDragon=teamDict["isFirstDragon"],
                 dragonSpirit=teamDict["dragonSpirit"],
                 dragonSpiritType=teamDict["dragonSpiritType"],
-                playerInfos=players
             ))
             
     def getDrakeCount(self, side : int) -> int:

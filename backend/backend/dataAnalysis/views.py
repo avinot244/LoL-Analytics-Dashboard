@@ -133,10 +133,7 @@ def download_latest(request, rawTournamentList : str):
                                 # print("saving to db")
                                 # Getting relative information about the game
                                 (data, gameDuration, _, _) = getData(int(seriesId), gameNumberIt)
-                                if "LPL" in tournament_name:
-                                    summaryData : SummaryDataTencent = getSummaryData(seriesId, gameNumber, "tencent")
-                                else:
-                                    summaryData : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
+                                summaryData : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
                                 # Saving game metadata to SQLite datbase
                                 gameMetadata : GameMetadata = GameMetadata(
                                     date=convertDate(get_date_from_seriesId(seriesId)), 
