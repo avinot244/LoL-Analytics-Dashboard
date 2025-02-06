@@ -11,6 +11,7 @@ from typing import Union
 from dataAnalysis.packages.utils_stuff.globals import *
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryData import SummaryData
 from dataAnalysis.packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
+from dataAnalysis.packages.Parsers.EMH.Summary.Tencent.SummaryDataTencent import SummaryDataTencent
 from dataAnalysis.globals import DATA_PATH
 
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
@@ -64,6 +65,8 @@ def getGameDuration(seriesId : int, gameNumber : int):
             res : dict = json.load(json_file)
             return res["gameDuration"]
 
+
+
 def getSummaryData(seriesId : int, gameNumber : int, type_s : str) -> Union[SummaryData, SummaryDataGrid]:
     match : str = "{}_ESPORTS_{}".format(seriesId, gameNumber)
     if type_s == "riot":
@@ -72,7 +75,10 @@ def getSummaryData(seriesId : int, gameNumber : int, type_s : str) -> Union[Summ
     elif type_s == "grid":
         pathSummaryData : str = f"{DATA_PATH}games/bin/{match}/end_state_{seriesId}_grid.json"
         summaryData : SummaryDataGrid = SummaryDataGrid(pathSummaryData, gameNumber)
-        
+    elif type_s == "tencent":
+        pathSummaryData : str = f"{DATA_PATH}games/bin/{match}/end_state_tencent_{seriesId}_{gameNumber}.json"
+        summaryData : SummaryDataTencent = SummaryDataTencent(pathSummaryData, gameNumber)
+    
     return summaryData
 
 def getData(

@@ -71,18 +71,7 @@ class SummaryDataGrid:
                     players
                 )
             )
-            
     
-    def getObjectiveCount(self, side : int, objectiveId : str) -> int:
-        # Blue side : 0, red side : 1
-        objectiveObject : ObjectiveGrid
-        if len(self.teams[side].objectives) == 0:
-            return 0
-        else:
-            for objectiveObject in self.teams[side].objectives:
-                if objectiveObject.id == objectiveId:
-                    return objectiveObject.completionCount
-            return 0
     def getDrakeCount(self, side : int) -> int:
         # Blue side : 0, red side : 1
         objectiveObject : ObjectiveGrid

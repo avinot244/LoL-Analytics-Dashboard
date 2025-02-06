@@ -24,6 +24,7 @@ from .packages.GameStat import GameStat
 from .packages.BehaviorAnalysisRunner.behaviorAnalysis import getBehaviorData, saveToDataBase
 from .packages.runners.pathing_runners import makeDensityPlot, getDataPathing
 from .packages.Parsers.EMH.Summary.SummaryDataGrid import SummaryDataGrid
+from .packages.Parsers.EMH.Summary.Tencent.SummaryDataTencent import SummaryDataTencent
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .packages.Parsers.Separated.Game.Team import Team
 from .request_models import GameStatsRequest, TeamStatsRequest, GetGameRequest
@@ -132,8 +133,10 @@ def download_latest(request, rawTournamentList : str):
                                 # print("saving to db")
                                 # Getting relative information about the game
                                 (data, gameDuration, _, _) = getData(int(seriesId), gameNumberIt)
-                                
-                                summaryDataGrid : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
+                                if "LPL" in tournament_name:
+                                    summaryData : SummaryDataTencent = getSummaryData(seriesId, gameNumber, "tencent")
+                                else:
+                                    summaryData : SummaryDataGrid = getSummaryData(seriesId, gameNumber, "grid")
                                 # Saving game metadata to SQLite datbase
                                 gameMetadata : GameMetadata = GameMetadata(
                                     date=convertDate(get_date_from_seriesId(seriesId)), 
@@ -146,10 +149,10 @@ def download_latest(request, rawTournamentList : str):
                                     winningTeam=data.winningTeam, 
                                     gameNumber=gameNumberIt,
                                     gameDuration=gameDuration,
-                                    dragonBlueKills=summaryDataGrid.getDrakeCount(0),
-                                    dragonRedKills=summaryDataGrid.getDrakeCount(1),
-                                    voidGrubsBlueKills=summaryDataGrid.getGrubsCount(0),
-                                    voidGrubsRedKills=summaryDataGrid.getGrubsCount(1),
+                                    dragonBlueKills=summaryData.getDrakeCount(0),
+                                    dragonRedKills=summaryData.getDrakeCount(1),
+                                    voidGrubsBlueKills=summaryData.getGrubsCount(0),
+                                    voidGrubsRedKills=summaryData.getGrubsCount(1),
                                     heraldBlueKills=data.getHeraldKills(0),
                                     heraldRedKills=data.getHeraldKills(1),
                                     baronBlueKills=data.getBaronKills(0),
