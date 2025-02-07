@@ -24,7 +24,7 @@ from dataAnalysis.packages.Parsers.Separated.Events.EventTypes import *
 
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.utils_stuff.converter.champion import convertToChampionName, convertToChampionID
-from dataAnalysis.packages.utils_stuff.reset_trigger import didPlayerReset
+from dataAnalysis.packages.utils_stuff.triggers import didPlayerReset
 
 
 class SeparatedData:

@@ -5,7 +5,7 @@ from dataAnalysis.packages.utils_stuff.utils_func import convertTime
 from dataAnalysis.packages.utils_stuff.Position import Position
 from dataAnalysis.packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from dataAnalysis.packages.Parsers.Separated.Game.Snapshot import Snapshot
-from dataAnalysis.packages.utils_stuff.reset_trigger import didPlayerReset
+from dataAnalysis.packages.utils_stuff.triggers import didPlayerReset
 from dataAnalysis.packages.Parsers.Separated.Events.EventTypes import *
 
 def getKillTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
@@ -82,6 +82,9 @@ def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, e
                 })
     
     return result
+
+def getTPTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
+    pass
 
 def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
     result : dict = {

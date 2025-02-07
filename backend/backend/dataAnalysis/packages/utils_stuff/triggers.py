@@ -18,3 +18,6 @@ def didPlayerReset(playerName : str, dataWindow : list[Snapshot], team : int):
         return not(gridBlueBase.containsPoint(positionFirstSecond)) and gridBlueBase.containsPoint(positionSecondSecond)
     elif team == 1:
         return not(gridRedBase.containsPoint(positionFirstSecond)) and gridRedBase.containsPoint(positionSecondSecond)
+    
+def didPlayerTP(playerName : str):
+    pass
