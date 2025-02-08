@@ -3,6 +3,7 @@ import AuthContext from "../context/AuthContext";
 import TeamAnalysisDetailsDataPosition from "./TeamAnalysisDetailsDataPosition";
 import TeamAnalysisDetailsDataReset from "./TeamAnalysisDetailsDataReset";
 import TeamAnalysisDetailsDataWard from "./TeamAnalysisDetailsDataWard";
+import TeamAnalysisDetailsDataTP from "./TeamAnalysisDetailsDataTP";
 import TimeFrameSelecter from "../utils/TimeFrameSelecter/TimeFrameSelecter";
 
 import { Divider, Typography, Button, Stack } from "@mui/material";
@@ -136,6 +137,15 @@ function TeamAnalysisDetailsData({seriesId, gameNumber, team}) {
                                 variant="middle"
                             />
                             <TeamAnalysisDetailsDataWard timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+
+                            <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                TP Position
+                            </Typography>
+                            <Divider
+                                style={{ background: 'white', borderWidth: 1}}
+                                variant="middle"
+                            />
+                            <TeamAnalysisDetailsDataTP timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
                         </>
                     }
                 </>

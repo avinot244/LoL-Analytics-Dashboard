@@ -23,7 +23,7 @@ const ScatterPlot = forwardRef(({data, backgroundImage, side, size}, ref) => {
         // Initialize the heatmap.js
         heatmapInstanceRef.current = h337.create({
             container: heatmapContainerRef.current,
-            radius: 4, // Adjust for smoother points
+            radius: 6, // Adjust for smoother points
             maxOpacity: 1,
             minOpacity: 0,
             blur: 0.75,
