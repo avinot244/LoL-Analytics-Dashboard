@@ -50,7 +50,6 @@ function TeamAnalysisOverallDataReset({timeFrame, team, tournamentList, side}) {
                     y: Math.ceil(size - (element[1] * size/MAP_HEIGHT))
                 })
             });
-            // console.log(position, newDataset)
             if (position === "Top") setDataTop(newDataset)
             if (position === "Jungle") setDataJungle(newDataset)
             if (position === "Mid") setDataMid(newDataset)

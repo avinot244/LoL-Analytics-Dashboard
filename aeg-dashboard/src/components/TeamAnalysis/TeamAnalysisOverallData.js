@@ -2,6 +2,7 @@ import ObjectiveCard from "./ObjectiveCard"
 import TimeFrameSelecterNoEvent from "../utils/TimeFrameSelecter/TimeFrameSelecterNoEvents";
 import TeamAnalysisOverallDataReset from "./TeamAnalysisOverallDataReset";
 import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
+import TeamAnalysisOverallDataTP from "./TeamAnalysisOverallDataTP";
 import SearchComp from "../utils/SearchComp";
 import { API_URL } from "../../constants";
 
@@ -168,6 +169,22 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                         Reset Position
                     </Typography>
                     <TeamAnalysisOverallDataReset
+                        team={team}
+                        tournamentList={tournamentList}
+                        side={activeSide}
+                        timeFrame={value}
+                    />
+
+                    <Divider
+                        style={{ background: 'white', borderWidth: 1, mt: 5}}
+                        variant="middle"
+                    />
+                    
+                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                        TP Position
+                    </Typography>
+
+                    <TeamAnalysisOverallDataTP
                         team={team}
                         tournamentList={tournamentList}
                         side={activeSide}
