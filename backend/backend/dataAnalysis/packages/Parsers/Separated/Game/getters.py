@@ -115,14 +115,7 @@ def getTPTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, b
                     teamIdx = 1
                     playerName = data.gameSnapshotList[0].teams[1].getPlayerNameFromID(participantID)
                     
-                # Get the snapshopt at the time where he finished teleporting
-                gameSnapshot : Snapshot = data.gameSnapshotList[0]
-                seqIdx : int = event.sequenceIndex
-                minDelta : int = abs(data.gameSnapshotList[0].seqIdx - seqIdx)
-                for snapshot in data.gameSnapshotList:
-                    delta = abs(snapshot.seqIdx - seqIdx)
-                    if delta < minDelta:
-                        gameSnapshot = snapshot
+                gameSnapshot : Snapshot = data.getSnapShotByTime(time + 1, gameDuration) # Adding a small time offset to guaratee that we wait until the end of the TP to get his position
                 
                 # Get the TP target position
                 playerIdx : int = gameSnapshot.teams[teamIdx].getPlayerIdx(participantID)
