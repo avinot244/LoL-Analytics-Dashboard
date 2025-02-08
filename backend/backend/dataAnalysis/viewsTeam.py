@@ -401,3 +401,27 @@ def getTPPosition(request):
     res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in tpTriggers[team][playerName]]
     
     return Response(res)
+
+@api_view(['PATCH'])
+def getTPPositionGlobal(request):
+    o : PlayerPositionGlobalRequest = PlayerPositionGlobalRequest(**json.loads(request.body))
+    result : list[dict] = list()
+    
+    metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
+    for gameMetadata in tqdm(metadataList):
+        data : SeparatedData
+        (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
+        participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+        playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
+        
+        team : str = ""
+        if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+            team = "blueTeam"
+        elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+            team = "redTeam"
+            
+        tpTriggers = getTPTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime)
+        
+        result += [(d["position"]["x"], d["position"]["y"]) for d in tpTriggers[team][playerName]]
+    
+    return Response(result)
