@@ -1,5 +1,6 @@
 from tqdm import tqdm
 import re
+import json
 
 from dataAnalysis.packages.utils_stuff.utils_func import convertTime
 from dataAnalysis.packages.utils_stuff.Position import Position
@@ -84,7 +85,56 @@ def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, e
     return result
 
 def getTPTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
-    pass
+    result : dict = {
+        "blueTeam": {},
+        "redTeam": {}
+    }
+    firstSnapshot : Snapshot = data.gameSnapshotList[0]
+    for player in firstSnapshot.teams[0].players:
+        result["blueTeam"][player.playerName] = []
+        
+    for player in firstSnapshot.teams[1].players:
+        result["redTeam"][player.playerName] = []
+    
+    for event in data.eventList:
+        if isinstance(event, ChannelingEndedEvent):
+            time = convertTime(event.gameTime, gameDuration, endGameTime)
+            if time <= endTime and time >= begTime and event.channelingType == "summonerSpell":
+                participantID : int = event.participantID
+                
+                # Get the player name and team info
+                team : str = ""
+                teamIdx : int = 0
+                playerName : str = ""
+                if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+                    team = "blueTeam"
+                    teamIdx = 0
+                    playerName = data.gameSnapshotList[0].teams[0].getPlayerNameFromID(participantID)
+                elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+                    team = "redTeam"
+                    teamIdx = 1
+                    playerName = data.gameSnapshotList[0].teams[1].getPlayerNameFromID(participantID)
+                    
+                # Get the snapshopt at the time where he finished teleporting
+                gameSnapshot : Snapshot = data.gameSnapshotList[0]
+                seqIdx : int = event.sequenceIndex
+                minDelta : int = abs(data.gameSnapshotList[0].seqIdx - seqIdx)
+                for snapshot in data.gameSnapshotList:
+                    delta = abs(snapshot.seqIdx - seqIdx)
+                    if delta < minDelta:
+                        gameSnapshot = snapshot
+                
+                # Get the TP target position
+                playerIdx : int = gameSnapshot.teams[teamIdx].getPlayerIdx(participantID)
+                position = gameSnapshot.teams[teamIdx].players[playerIdx].position.__dict__
+                
+                
+                result[team][playerName].append({
+                    "time": time,
+                    "position": position
+                })
+    return result
+        
 
 def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
     result : dict = {

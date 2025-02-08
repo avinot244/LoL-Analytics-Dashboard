@@ -13,7 +13,7 @@ from .serializer import GameMetadataSerializer
 from .globals import SIDES, ROLE_LIST, DATE_LIMIT
 from .packages.utils_stuff.utils_func import getData
 from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
-from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers
+from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers, getTPTriggers
 
 
 from Draft.utils import fuseQueriesChampionDraftStats, fuseDataChampionsDraftStats
@@ -382,3 +382,22 @@ def getDraftData(request):
         
         res = fuseDataChampionsDraftStats(resBlue, resRed)
         return Response(res)
+    
+@api_view(['PATCH'])
+def getTPPosition(request):
+    o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
+    (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
+    participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+    playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
+    
+    team : str = ""
+    if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+        team = "blueTeam"
+    elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+        team = "redTeam"
+        
+    tpTriggers = getTPTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime)
+    # Building the response
+    res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in tpTriggers[team][playerName]]
+    
+    return Response(res)

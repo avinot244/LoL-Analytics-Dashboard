@@ -157,6 +157,7 @@ class ChannelingEndedEvent(Event):
     participantID : int
     sequenceIndex : int
     inventorySlot : int = None
+    summonerSpellName : summoner_spell_name_types = None
     
 @dataclass
 class NeutralMinionSpawnEvent(Event):
