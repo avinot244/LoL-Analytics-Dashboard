@@ -208,7 +208,7 @@ urlpatterns = [
     path('api/teamAnalysis/getResetPositionsGlobal/', teamAnalysisViews.getPlayerResetPositionsGlobal),
     path('api/teamAnalysis/getWardPositions/', teamAnalysisViews.getWardPlacedPositions),
     path('api/teamAnalysis/getTPPositions/', teamAnalysisViews.getTPPosition),
-    path('api/teamAnalysis/getTPoPositionGlobal', teamAnalysisViews.getTPPositionGlobal),
+    path('api/teamAnalysis/getTPPositionGlobal', teamAnalysisViews.getTPPositionGlobal),
     path('api/teamAnalysis/getGrubsDrakesStats/', teamAnalysisViews.getGrubsDrakeStats),
     path('api/teamAnalysis/getFirstTowerHeraldData/', teamAnalysisViews.getFirstTowerHeraldStats),
     path('api/teamAnalysis/getHeraldData/', teamAnalysisViews.getHeraldData),
