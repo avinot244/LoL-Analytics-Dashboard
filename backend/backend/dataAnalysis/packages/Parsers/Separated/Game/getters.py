@@ -148,7 +148,7 @@ def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int,
         if event_name == "ward_placed": # also check if the event time is within begTime and endTime
             event : WardPlacedEvent
             time = convertTime(event.gameTime, gameDuration, endGameTime)
-            if time <= endTime and time >= begTime:
+            if time <= endTime and time >= begTime and event.wardType != "unknown":
                 participantID : int = event.placer
                 
                 team : str = ""

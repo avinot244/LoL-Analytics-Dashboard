@@ -6,6 +6,7 @@ import { API_URL, roleList } from "../../constants";
 import AuthContext from "../context/AuthContext";
 import minimapImage from "../../assets/2dlevelminimap_base_baron1.png";
 import ScatterPlot from "../utils/ScatterPlot";
+import Heatmap from "../utils/Heatmap";
 import "../../styles/TeamAnalysisDetailsDataPosition.css";
 
 import { Typography } from "@mui/material";
@@ -76,30 +77,35 @@ function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
                             Top
                         </Typography>
                         <ScatterPlot data={dataTop} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataTop} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Jungle
                         </Typography>
                         <ScatterPlot data={dataJungle} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataJungle} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Mid
                         </Typography>
                         <ScatterPlot data={dataMid} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataMid} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             ADC
                         </Typography>
                         <ScatterPlot data={dataADC} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataADC} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Support
                         </Typography>
                         <ScatterPlot data={dataSupport} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataSupport} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 </div>
             }
