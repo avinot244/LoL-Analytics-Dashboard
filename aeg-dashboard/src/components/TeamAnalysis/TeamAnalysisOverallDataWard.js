@@ -11,7 +11,7 @@ import "../../styles/TeamAnalysisDetailsDataPosition.css";
 
 import { Typography } from "@mui/material";
 
-function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
+function TeamAnalysisOverallDataWard({timeFrame, team, tournamentList, side}){
     const [dataTop, setDataTop] = useState([])
     const [dataJungle, setDataJungle] = useState([])
     const [dataMid, setDataMid] = useState([])
@@ -30,15 +30,15 @@ function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
     const fetchPlayerWard = async (position) => {
         const data = {
             "role": position,
+            "team": team,
             "side": side,
-            "seriesId": seriesId,
-            "gameNumber": gameNumber,
+            "tournamentList": tournamentList,
             "begTime": timeFrame[0],
             "endTime": timeFrame[1],
             "wardTypes": ["yellowTrinket", "control", "sight"]
         }
 
-        const result = await fetch(API_URL + `teamAnalysis/getWardPositions/`, {
+        const result = await fetch(API_URL + `teamAnalysis/getWardPosiitonsGlobal/`, {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: header
@@ -58,6 +58,7 @@ function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
             if (position === "ADC") setDataADC(newDataset)
             if (position === "Support") setDataSupport(newDataset)
         })
+
     }
 
     useEffect(() => {
@@ -113,4 +114,4 @@ function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
     )
 }
 
-export default TeamAnalysisDetailsDataWard
+export default TeamAnalysisOverallDataWard

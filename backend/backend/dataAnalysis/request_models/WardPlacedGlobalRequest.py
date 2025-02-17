@@ -5,6 +5,7 @@ from dataAnalysis.packages.Parsers.Separated.Events.LiteralTypes import ward_typ
 class WardPlacedGlobalRequest:
     role : str
     team : str
+    side : str
     tournamentList : list[str]
     begTime : int
     endTime : int

@@ -3,6 +3,7 @@ import TimeFrameSelecterNoEvent from "../utils/TimeFrameSelecter/TimeFrameSelect
 import TeamAnalysisOverallDataReset from "./TeamAnalysisOverallDataReset";
 import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
 import TeamAnalysisOverallDataTP from "./TeamAnalysisOverallDataTP";
+import TeamAnalysisOverallDataWard from "./TeamAnalysisOverallDataWard.js"
 import SearchComp from "../utils/SearchComp";
 import { API_URL } from "../../constants";
 
@@ -174,7 +175,21 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                         side={activeSide}
                         timeFrame={value}
                     />
+                    
+                    <Divider
+                        style={{ background: 'white', borderWidth: 1, mt: 5}}
+                        variant="middle"
+                    />
 
+                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                        Ward Position
+                    </Typography>
+                    <TeamAnalysisOverallDataWard
+                        timeFrame={value}
+                        team={team}
+                        tournamentList={tournamentList}
+                        side={activeSide}
+                    />
                     <Divider
                         style={{ background: 'white', borderWidth: 1, mt: 5}}
                         variant="middle"
