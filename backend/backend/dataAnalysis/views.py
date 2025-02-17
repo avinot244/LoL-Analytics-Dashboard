@@ -36,8 +36,6 @@ from Draft.models import DraftPlayerPick
 
 from .models import GameMetadata
 
-import json
-from json import JSONEncoder
 from datetime import datetime
 import re
 from tqdm import tqdm
@@ -800,7 +798,7 @@ def getProximityMatrixOverall(request):
     
     fig, axes = plt.subplots(ncols=1, figsize=(8,6))
 
-    im = axes.imshow(resultMatrix, cmap="RdBu_r", vmax=1, vmin=0, aspect='auto')
+    im = axes.imshow(resultMatrix, cmap="RdPu", vmax=1, vmin=0, aspect='auto')
     for (i, j), z in np.ndenumerate(resultMatrix):
         axes.text(j, i, str(round(z, 2)), ha="center", va="center")
     

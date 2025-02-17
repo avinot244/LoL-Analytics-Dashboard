@@ -330,7 +330,7 @@ def getDraftData(request):
     tempGameMetadata = querySeriesId[0]
     tempSide : int
     if tempGameMetadata.teamBlue == o.teamName:
-        tempSide = 0,
+        tempSide = 0
     elif tempGameMetadata.teamRed == o.teamName:
         tempSide = 1
     
