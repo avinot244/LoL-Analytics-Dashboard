@@ -35,7 +35,7 @@ function TeamAnalysisDetailsDataWard({timeFrame, seriesId, gameNumber, side}) {
             "gameNumber": gameNumber,
             "begTime": timeFrame[0],
             "endTime": timeFrame[1],
-            "wardType": ["yellowTrinket", "unknown", "control", "sight"]
+            "wardType": ["yellowTrinket", "control", "sight"]
         }
 
         const result = await fetch(API_URL + `teamAnalysis/getWardPositions/`, {

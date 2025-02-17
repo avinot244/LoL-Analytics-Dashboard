@@ -12,7 +12,7 @@ from .models import GameMetadata
 from .serializer import GameMetadataSerializer
 from .globals import SIDES, ROLE_LIST, DATE_LIMIT
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers, getTPTriggers
 
 
@@ -156,12 +156,36 @@ def getWardPlacedPositions(request):
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    wardTriggers = getWardTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime)[team][playerName]
+    wardTriggers = getWardTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime, o.wardTypes)[team][playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["z"]) for d in wardTriggers]
     
     return Response(res)
+
+@api_view(['PATCH'])
+def getWardPlacedPositionsGlobal(request):
+    o : WardPlacedGlobalRequest = WardPlacedGlobalRequest(**json.loads(request.body))
+    result : list[dict] = list()
+    
+    metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
+    for gameMetadata in tqdm(metadataList):
+        data : SeparatedData
+        (data, gameDuration, _, endGameTime) = getData(int(gameMetadata.seriesId, gameMetadata.gameNumber))
+        
+        participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+        playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
+        
+        team : str = ""
+        if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+            team = "blueTeam"
+        elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+            team = "redTeam"
+        
+        wardTriggers = getWardTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime, o.wardTypes)[team][playerName]
+        result += [(d["position"]["x"], d["position"]["z"]) for d in wardTriggers]
+    return Response(result)
+        
 
 @api_view(['PATCH'])
 def getKillEvents(request):

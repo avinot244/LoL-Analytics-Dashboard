@@ -129,7 +129,7 @@ def getTPTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, b
     return result
         
 
-def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int):
+def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int, begTime : int, endTime : int, wardTypes : list[str]):
     result : dict = {
         "blueTeam": {},
         "redTeam": {}
@@ -148,7 +148,7 @@ def getWardTriggers(data : SeparatedData, gameDuration : int, endGameTime : int,
         if event_name == "ward_placed": # also check if the event time is within begTime and endTime
             event : WardPlacedEvent
             time = convertTime(event.gameTime, gameDuration, endGameTime)
-            if time <= endTime and time >= begTime and event.wardType != "unknown":
+            if time <= endTime and time >= begTime and event.wardType in wardTypes:
                 participantID : int = event.placer
                 
                 team : str = ""

@@ -9,4 +9,4 @@ class WardPlacedRequest:
     gameNumber : int
     begTime : int
     endTime : int
-    wardType : list[ward_types]
+    wardTypes : list[ward_types]
