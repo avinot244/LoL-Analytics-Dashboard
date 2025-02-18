@@ -462,7 +462,7 @@ def getMapOpeningsGlobal(request):
         for event in data.eventList:
             if isinstance(event, ChannelingEndedEvent):
                 time = convertTime(event.gameTime, gameDuration, endGameTime)
-                if event.gameTime >= o.begTime and event.gameTime <= o.endTime and event.channelingType == "recall":
+                if time >= o.begTime and time <= o.endTime and event.channelingType == "recall":
                     participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
                     position_list = getPlayerPositionHistoryTimeFramed(data, gameMetadata.gameDuration, participantID, time, time + 15)
                     res : list[list] = [pos.toList() for pos in position_list]
@@ -482,7 +482,7 @@ def getMapOpenings(request):
     for event in data.eventList:
         if isinstance(event, ChannelingEndedEvent):
             time = convertTime(event.gameTime, gameDuration, endGameTime)
-            if event.gameTime >= o.begTime and event.gameTime <= o.endTime and event.channelingType == "recall":
+            if time >= o.begTime and time <= o.endTime and event.channelingType == "recall":
                 position_list = getPlayerPositionHistoryTimeFramed(data, gameDuration, participantID, time, time + 15)
                 res : list[list] = [pos.toList() for pos in position_list]
                 
