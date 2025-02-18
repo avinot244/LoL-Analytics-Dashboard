@@ -4,6 +4,7 @@ import TeamAnalysisDetailsDataPosition from "./TeamAnalysisDetailsDataPosition";
 import TeamAnalysisDetailsDataReset from "./TeamAnalysisDetailsDataReset";
 import TeamAnalysisDetailsDataWard from "./TeamAnalysisDetailsDataWard";
 import TeamAnalysisDetailsDataTP from "./TeamAnalysisDetailsDataTP";
+import TeamAnalysisDetailsMapOpenings from "./TeamAnalysisDetailsMapOpenings";
 import TimeFrameSelecter from "../utils/TimeFrameSelecter/TimeFrameSelecter";
 
 import { Divider, Typography, Button, Stack } from "@mui/material";
@@ -134,6 +135,7 @@ function TeamAnalysisDetailsData({seriesId, gameNumber, team, selectedVisual}) {
                                         style={{ background: 'white', borderWidth: 1}}
                                         variant="middle"
                                     />
+                                    <TeamAnalysisDetailsMapOpenings timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side} />
                                 </>
                             }
 

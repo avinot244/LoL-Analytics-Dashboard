@@ -4,6 +4,7 @@ import TeamAnalysisOverallDataReset from "./TeamAnalysisOverallDataReset";
 import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
 import TeamAnalysisOverallDataTP from "./TeamAnalysisOverallDataTP";
 import TeamAnalysisOverallDataWard from "./TeamAnalysisOverallDataWard.js"
+import TeamAnalysisOverallMapOpenings from "./TeamAnalysisOverallMapOpenings.js";
 import SearchComp from "../utils/SearchComp";
 import { API_URL } from "../../constants";
 
@@ -166,6 +167,22 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                                 Position
                             </Typography>
                             <TeamAnalysisOverallDataPosition
+                                team={team}
+                                tournamentList={tournamentList}
+                                side={activeSide}
+                                timeFrame={value}
+                                
+                            />
+                        </>
+                    }
+
+                    { 
+                        selectedVisual === "Map Openings" &&
+                        <>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                                Position
+                            </Typography>
+                            <TeamAnalysisOverallMapOpenings
                                 team={team}
                                 tournamentList={tournamentList}
                                 side={activeSide}
