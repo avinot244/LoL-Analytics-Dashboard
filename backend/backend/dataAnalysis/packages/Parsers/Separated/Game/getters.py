@@ -51,7 +51,7 @@ def getPlayerPositionHistoryTimeFramed(data : SeparatedData , gameDuration: int,
                 positionList.append(positionPlayer)
     return positionList
 
-def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, endTime : int, verbose : bool = True):
+def getResetTriggers(data : SeparatedData , gameDuration : int, endGameTime : int, begTime : int, endTime : int, verbose : bool = True):
     result : dict = {
         "blueTeam": {},
         "redTeam": {}
@@ -64,22 +64,34 @@ def getResetTriggers(data : SeparatedData , gameDuration : int, begTime : int, e
     for player in firstSnapshot.teams[1].players:
         result["redTeam"][player.playerName] = []
     
-    for time in tqdm(range(begTime, endTime + 1), disable=not(verbose)):
-        currentSnapshot : Snapshot = data.getSnapShotByTime(time, gameDuration)
-        dataWindow : list[Snapshot] = [data.getSnapShotByTime(t, gameDuration) for t in range(time, time+2, 1)]
-        
-        for player in currentSnapshot.teams[0].players:
-            if didPlayerReset(player.playerName, dataWindow, 0):
-                result["blueTeam"][player.playerName].append({
-                    "time": time,
-                    "position": player.position.__dict__
-                })
+    for event in data.eventList:
+        if isinstance(event, ChannelingEndedEvent):
+            time = convertTime(event.gameTime, gameDuration, endGameTime)
+            if time <= endTime and time >= begTime and event.channelingType == "recall":
+                participantID : int = event.participantID
                 
-        for player in currentSnapshot.teams[1].players:
-            if didPlayerReset(player.playerName, dataWindow, 1):
-                result["redTeam"][player.playerName].append({
+                # Get the player name and team info
+                team : str = ""
+                teamIdx : int = 0
+                playerName : str = ""
+                if data.gameSnapshotList[0].teams[0].isPlayerInTeam(participantID):
+                    team = "blueTeam"
+                    teamIdx = 0
+                    playerName = data.gameSnapshotList[0].teams[0].getPlayerNameFromID(participantID)
+                elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
+                    team = "redTeam"
+                    teamIdx = 1
+                    playerName = data.gameSnapshotList[0].teams[1].getPlayerNameFromID(participantID)
+                    
+                gameSnapshot : Snapshot = data.getSnapShotByTime(time - 1, gameDuration) # We take the snapshot 1s before the channeling of back ended
+                
+                # Get the Reset position
+                playerIdx : int = gameSnapshot.teams[teamIdx].getPlayerIdx(participantID)
+                position = gameSnapshot.teams[teamIdx].players[playerIdx].position.__dict__
+                
+                result[team][playerName].append({
                     "time": time,
-                    "position": player.position.__dict__
+                    "position": position
                 })
     
     return result

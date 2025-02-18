@@ -99,7 +99,7 @@ def getPlayerPositionGlobal(request):
 @api_view(['PATCH'])
 def getPlayerResetPositions(request):
     o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
-    (data, gameDuration, _, _) = getData(int(o.seriesId), o.gameNumber)
+    (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
     
     participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
     playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
@@ -110,7 +110,7 @@ def getPlayerResetPositions(request):
     elif data.gameSnapshotList[0].teams[1].isPlayerInTeam(participantID):
         team = "redTeam"
     
-    resetTriggers = getResetTriggers(data, gameDuration, o.begTime, o.endTime)[team][playerName]
+    resetTriggers = getResetTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime)[team][playerName]
     
     # Building the response
     res : list[list] = [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
