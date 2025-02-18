@@ -14,7 +14,8 @@ from .globals import SIDES, ROLE_LIST, DATE_LIMIT
 from .packages.utils_stuff.utils_func import getData
 from .request_models import PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers, getTPTriggers
-
+from .packages.Parsers.Separated.Events.EventTypes import ChannelingEndedEvent
+from .packages.utils_stuff.utils_func import convertTime
 
 from Draft.utils import fuseQueriesChampionDraftStats, fuseDataChampionsDraftStats
 from Draft.serializer import ChampionDraftStatsSerializer, DraftPlayerPick
@@ -449,3 +450,43 @@ def getTPPositionGlobal(request):
         result += [(d["position"]["x"], d["position"]["y"]) for d in tpTriggers[team][playerName]]
     
     return Response(result)
+
+@api_view(['PATCH'])
+def getMapOpeningsGlobal(request):
+    o : PlayerPositionGlobalRequest = PlayerPositionGlobalRequest(**json.loads(request.body))
+    result : list[dict] = list()
+    metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
+    for gameMetadata in tqdm(metadataList):
+        data : SeparatedData
+        (data, gameDuration, _, endGameTime) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
+        for event in data.eventList:
+            if isinstance(event, ChannelingEndedEvent):
+                time = convertTime(event.gameTime, gameDuration, endGameTime)
+                if event.gameTime >= o.begTime and event.gameTime <= o.endTime and event.channelingType == "recall":
+                    participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+                    position_list = getPlayerPositionHistoryTimeFramed(data, gameMetadata.gameDuration, participantID, time, time + 15)
+                    res : list[list] = [pos.toList() for pos in position_list]
+                    
+                    result += res
+                    
+    return Response(result)
+
+@api_view(['PATCH'])
+def getMapOpenings(request):
+    o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
+    result : list[list] = list()
+    (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
+    
+    participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
+    
+    for event in data.eventList:
+        if isinstance(event, ChannelingEndedEvent):
+            time = convertTime(event.gameTime, gameDuration, endGameTime)
+            if event.gameTime >= o.begTime and event.gameTime <= o.endTime and event.channelingType == "recall":
+                position_list = getPlayerPositionHistoryTimeFramed(data, gameDuration, participantID, time, time + 15)
+                res : list[list] = [pos.toList() for pos in position_list]
+                
+                result += res
+                    
+    return Response(result)
+    

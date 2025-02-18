@@ -24,7 +24,9 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
     const [value, setValue] = useState([90, 840])
     const [visible, setVisible] = useState(false)
     const [activeSide, setActiveSide] = useState("Blue")
+    const [selectedVisual, setSelectedVisual] = useState("Position")
     const side = ["Blue", "Red", "Both"];
+    const visualList = ["Position", "Map Openings", "Reset Position", "Ward Position", "TP Position"]
     let yLabels = []
     for (let i = 0 ; i < 5 ; i++) {
         yLabels.push(`${i} drakes`)
@@ -114,11 +116,25 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
             <Typography variant="h3" component="h2" align="center" sx={{mb: 1, mt: 1}}>
                 Heatmap Data
             </Typography>
-            <Stack direction={"row"} spacing={5} justifyContent="center" alignItems="center" justifySelf="center" sx={{mt: 5, width: "80%"}}>
+            <Stack direction={"row"} spacing={2} justifyContent="center" alignItems="center" justifySelf="center" sx={{mt: 5, width: "98%"}}>
                 <TimeFrameSelecterNoEvent
                     value={value}
                     setValue={setValue}
                     gameDuration={gameDurationOverall}
+                />
+                <SearchComp
+                    defaultValue={side[0]}
+                    elementList={side}
+                    setSelectedElement={setActiveSide}
+                    label={"Side"}
+                    width={120}
+                />
+                <SearchComp
+                    defaultValue={"Position"}
+                    elementList={visualList}
+                    setSelectedElement={setSelectedVisual}
+                    label={"Visual"}
+                    width={188}
                 />
                 <Button
                     variant="contained"
@@ -129,13 +145,6 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                 >
                     Analyze
                 </Button>
-                <SearchComp
-                    defaultValue={side[0]}
-                    elementList={side}
-                    setSelectedElement={setActiveSide}
-                    label={"Side"}
-                    width={120}
-                />
                 <Button
                     variant="contained"
                     endIcon={<RestartAltIcon/>}
@@ -150,61 +159,67 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
             {
                 visible && 
                 <>
-                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
-                        Position
-                    </Typography>
-                    <TeamAnalysisOverallDataPosition
-                        team={team}
-                        tournamentList={tournamentList}
-                        side={activeSide}
-                        timeFrame={value}
-                        
-                    />
+                    {
+                        selectedVisual === "Position" && 
+                        <>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                                Position
+                            </Typography>
+                            <TeamAnalysisOverallDataPosition
+                                team={team}
+                                tournamentList={tournamentList}
+                                side={activeSide}
+                                timeFrame={value}
+                                
+                            />
+                        </>
+                    }
 
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1, mt: 5}}
-                        variant="middle"
-                    />
-
-                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
-                        Reset Position
-                    </Typography>
-                    <TeamAnalysisOverallDataReset
-                        team={team}
-                        tournamentList={tournamentList}
-                        side={activeSide}
-                        timeFrame={value}
-                    />
+                    {
+                        selectedVisual === "Reset Position" && 
+                        <>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                                Reset Position
+                            </Typography>
+                            <TeamAnalysisOverallDataReset
+                                team={team}
+                                tournamentList={tournamentList}
+                                side={activeSide}
+                                timeFrame={value}
+                            />
+                        </>
+                    }
                     
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1, mt: 5}}
-                        variant="middle"
-                    />
+                    { 
+                        selectedVisual === "Ward Position" && 
+                        <>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                                Ward Position
+                            </Typography>
+                            <TeamAnalysisOverallDataWard
+                                timeFrame={value}
+                                team={team}
+                                tournamentList={tournamentList}
+                                side={activeSide}
+                            />
+                        </>
+                    }
 
-                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
-                        Ward Position
-                    </Typography>
-                    <TeamAnalysisOverallDataWard
-                        timeFrame={value}
-                        team={team}
-                        tournamentList={tournamentList}
-                        side={activeSide}
-                    />
-                    <Divider
-                        style={{ background: 'white', borderWidth: 1, mt: 5}}
-                        variant="middle"
-                    />
-                    
-                    <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
-                        TP Position
-                    </Typography>
+                    {
+                        selectedVisual === "TP Position" && 
+                        <>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                                TP Position
+                            </Typography>
 
-                    <TeamAnalysisOverallDataTP
-                        team={team}
-                        tournamentList={tournamentList}
-                        side={activeSide}
-                        timeFrame={value}
-                    />
+                            <TeamAnalysisOverallDataTP
+                                team={team}
+                                tournamentList={tournamentList}
+                                side={activeSide}
+                                timeFrame={value}
+                            />
+                        </>
+                    }
                 </>
             }
             

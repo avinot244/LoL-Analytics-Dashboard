@@ -93,6 +93,8 @@ function TeamAnalysisDetails() {
     const [selectedGame, setSelectedGame] = useState("")
 
     const [displayData, setDisplayData] = useState(false)
+    const [selectedVisual, setSelectedVisual] = useState("Position")
+    const visualList = ["Position", "Map Openings", "Reset Position", "Ward Position", "TP Position"]
 
 
 
@@ -229,6 +231,14 @@ function TeamAnalysisDetails() {
                         label={"Game"}
                         width={550}
                     />
+
+                    <SearchComp
+                        defaultValue={"Position"}
+                        elementList={visualList}
+                        setSelectedElement={setSelectedVisual}
+                        label={"Visual"}
+                        width={188}
+                    />
                     <Button
                         variant="contained"
                         endIcon={<ArrowForwardIosIcon/>}
@@ -248,6 +258,7 @@ function TeamAnalysisDetails() {
                         seriesId={selectedGame.seriesId} 
                         gameNumber={selectedGame.gameNumber}
                         team={activeTeam}
+                        selectedVisual={selectedVisual}
                     />
                 )
             }

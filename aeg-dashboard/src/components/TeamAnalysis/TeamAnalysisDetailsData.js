@@ -11,7 +11,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { useEffect, useContext, useState } from "react";
 
-function TeamAnalysisDetailsData({seriesId, gameNumber, team}) {
+function TeamAnalysisDetailsData({seriesId, gameNumber, team, selectedVisual}) {
     const [side, setSide] = useState("")
     const [value, setValue] = useState([60, 840])
     const [gameEventsAvailable, setGameEventsAvailable] = useState(false)
@@ -110,42 +110,74 @@ function TeamAnalysisDetailsData({seriesId, gameNumber, team}) {
                     {
                         heatmapsVisible &&
                         <>
-                            <Typography variant="h3" component="h3" align="center" sx={{mt: 10, mb:1}}>
-                                Player Position
-                            </Typography>
-                            <Divider
-                                style={{ background: 'white', borderWidth: 1}}
-                                variant="middle"
-                            />
-                            <TeamAnalysisDetailsDataPosition timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                            {
+                                selectedVisual === "Position" && 
+                                <>
+                                    <Typography variant="h3" component="h3" align="center" sx={{mt: 10, mb:1}}>
+                                        Player Position
+                                    </Typography>
+                                    <Divider
+                                        style={{ background: 'white', borderWidth: 1}}
+                                        variant="middle"
+                                    />
+                                    <TeamAnalysisDetailsDataPosition timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                                </>
+                            }
 
+                            {
+                                selectedVisual === "Map Openings" && 
+                                <>
+                                    <Typography variant="h3" component="h3" align="center" sx={{mt: 10, mb:1}}>
+                                        Map Opening
+                                    </Typography>
+                                    <Divider
+                                        style={{ background: 'white', borderWidth: 1}}
+                                        variant="middle"
+                                    />
+                                </>
+                            }
 
-                            <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
-                                Reset Position
-                            </Typography>
-                            <Divider
-                                style={{ background: 'white', borderWidth: 1}}
-                                variant="middle"
-                            />
-                            <TeamAnalysisDetailsDataReset timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                            {
+                                selectedVisual === "Reset Position" &&
+                                <>
+                                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                        Reset Position
+                                    </Typography>
+                                    <Divider
+                                        style={{ background: 'white', borderWidth: 1}}
+                                        variant="middle"
+                                    />
+                                    <TeamAnalysisDetailsDataReset timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                                </>
+                            }
 
-                            <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
-                                Ward Position
-                            </Typography>
-                            <Divider
-                                style={{ background: 'white', borderWidth: 1}}
-                                variant="middle"
-                            />
-                            <TeamAnalysisDetailsDataWard timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
-
-                            <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
-                                TP Position
-                            </Typography>
-                            <Divider
-                                style={{ background: 'white', borderWidth: 1}}
-                                variant="middle"
-                            />
-                            <TeamAnalysisDetailsDataTP timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                            {
+                                selectedVisual === "Ward Position" && 
+                                <>
+                                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                        Ward Position
+                                    </Typography>
+                                    <Divider
+                                        style={{ background: 'white', borderWidth: 1}}
+                                        variant="middle"
+                                    />
+                                    <TeamAnalysisDetailsDataWard timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                                </>
+                            }
+                            
+                            {
+                                selectedVisual === "TP Position" && 
+                                <>
+                                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                        TP Position
+                                    </Typography>
+                                    <Divider
+                                        style={{ background: 'white', borderWidth: 1}}
+                                        variant="middle"
+                                    />
+                                    <TeamAnalysisDetailsDataTP timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
+                                </>
+                            }
                         </>
                     }
                 </>
