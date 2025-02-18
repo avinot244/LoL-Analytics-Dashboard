@@ -6,7 +6,7 @@ SIDES = ["Blue", "Red"]
 
 DATA_PATH = "./databases/"
 
-DATE_LIMIT = "2024-04-08"
+DATE_LIMIT = "2025-01-15"
 
 BLACKLIST = [
         "2620486", # bugged game
