@@ -106,7 +106,7 @@ def getProximityMatrixRunner(data : SeparatedData, team : int):
     for i in range(len(proximityMatrix)):
         for j in range(len(proximityMatrix)):
             if i==j:
-                proximityMatrix[i][j] = 1
+                proximityMatrix[i][j] = 0
 
     return proximityMatrix
 

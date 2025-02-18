@@ -171,7 +171,7 @@ def getWardPlacedPositionsGlobal(request):
     metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
     for gameMetadata in tqdm(metadataList):
         data : SeparatedData
-        (data, gameDuration, _, endGameTime) = getData(int(gameMetadata.seriesId, gameMetadata.gameNumber))
+        (data, gameDuration, _, endGameTime) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
         
         participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
         playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
@@ -434,7 +434,7 @@ def getTPPositionGlobal(request):
     metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
     for gameMetadata in tqdm(metadataList):
         data : SeparatedData
-        (data, gameDuration, _, endGameTime) = getData(int(o.seriesId), o.gameNumber)
+        (data, gameDuration, _, endGameTime) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
         participantID = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].participantID
         playerName = data.gameSnapshotList[0].teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)].playerName
         
