@@ -5,6 +5,7 @@ import { useState, useEffect, useContext } from "react";
 import { API_URL, roleList, MAP_HEIGHT } from "../../constants";
 import AuthContext from "../context/AuthContext";
 import ScatterPlot from "../utils/ScatterPlot";
+import Heatmap from "../utils/Heatmap";
 import minimapImage from "../../assets/2dlevelminimap_base_baron1.png";
 import "../../styles/TeamAnalysisOverallDataReset.css"
 
@@ -75,6 +76,7 @@ function TeamAnalysisOverallDataReset({timeFrame, team, tournamentList, side}) {
                             Top
                         </Typography>
                         <ScatterPlot data={dataTop} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataTop} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 }
                 {
@@ -84,6 +86,7 @@ function TeamAnalysisOverallDataReset({timeFrame, team, tournamentList, side}) {
                             Jungle
                         </Typography>
                         <ScatterPlot data={dataJungle} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataJungle} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 }
                 {
@@ -93,6 +96,7 @@ function TeamAnalysisOverallDataReset({timeFrame, team, tournamentList, side}) {
                             Mid
                         </Typography>
                         <ScatterPlot data={dataMid} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataMid} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 }
                 {
@@ -102,6 +106,7 @@ function TeamAnalysisOverallDataReset({timeFrame, team, tournamentList, side}) {
                             ADC
                         </Typography>
                         <ScatterPlot data={dataADC} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataADC} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 }
                 {
@@ -111,6 +116,7 @@ function TeamAnalysisOverallDataReset({timeFrame, team, tournamentList, side}) {
                             Support
                         </Typography>
                         <ScatterPlot data={dataSupport} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
+                        <Heatmap data={dataSupport} bandwidth={bandwidth} size={size} side={side} backgroundImage={minimapImage} />
                     </Stack>
                 }
             </div>
