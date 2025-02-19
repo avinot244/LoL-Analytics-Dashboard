@@ -180,7 +180,7 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                         selectedVisual === "Map Openings" &&
                         <>
                             <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
-                                Position
+                                Map Openings
                             </Typography>
                             <TeamAnalysisOverallMapOpenings
                                 team={team}
