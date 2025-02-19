@@ -17,7 +17,7 @@ function TeamAnalysisOverallMapOpenings ({timeFrame, team, tournamentList, side}
     const [dataSupport, setDataSupport] = useState([])
     const [visible, setVisible] = useState(false)
 
-    const bandwidth = 7;  // Adjust this value to change the kernel's spread
+    const bandwidth = 2;  // Adjust this value to change the kernel's spread
     const size = 350
 
     let {authTokens} = useContext(AuthContext)
