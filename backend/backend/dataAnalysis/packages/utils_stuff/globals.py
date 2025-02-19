@@ -29,6 +29,17 @@ botLaneBoundary = [Position(10109, 728), Position(12309, 745), Position(13438, 1
                    Position(11905, 4261), Position(11080, 3296), Position(10788, 3226), Position(10577, 2957),
                    Position(10056, 2138), Position(10109, 1740)]
 
+entireTopLaneBoundary = [Position(773, 5638), Position(773, 11000), Position(918, 11725), Position(1243, 12436), Position(1038, 12653),
+                         Position(966, 13123), Position(1062, 13364), Position(1364, 13569), Position(1629, 13605), Position(1761, 13557),
+                         Position(2087, 13352), Position(2918, 13798), Position(3774, 14015), Position(9198, 14027), Position(9173, 13087),
+                         Position(3750, 13062), Position(308, 12785), Position(1942, 11315), Position(1725, 10724), Position(1701, 5614)]
+
+entireBotLaneBoundary = [Position(5686, 722), Position(10898, 722), Position(11537, 857), Position(12201, 1115), Position(12643, 1373), 
+                         Position(12987, 1177), Position(13282, 1140), Position(13614, 1287), Position(13799, 1558), Position(13774, 1902),
+                         Position(13504, 2246), Position(13786, 2836), Position(13897, 3242), Position(13995, 3746), Position(14008, 9154),
+                         Position(13012, 9203), Position(13024, 4262), Position(13061, 3647), Position(12619, 3106), Position(1125, 1840),
+                         Position(10738, 1693), Position(5662, 1705)]
+
 jungleEntry1Blue = [Position(3403, 9768), Position(2871, 9584), Position(2941, 9235), Position(3551, 9538)]
 
 jungleEntry2Blue = [Position(4824, 8707), Position(4338, 8319), Position(4505, 7564), Position(4913, 7380), Position(5342, 7303),
