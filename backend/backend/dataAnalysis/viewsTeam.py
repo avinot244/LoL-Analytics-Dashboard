@@ -8,16 +8,20 @@ from rest_framework import status
 from django.db.models import Q
 
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
+from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .models import GameMetadata
-from .serializer import GameMetadataSerializer
-from .globals import SIDES, ROLE_LIST, DATE_LIMIT
+from .globals import SIDES, ROLE_LIST
 from .packages.utils_stuff.utils_func import getData
 from .request_models import PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers, getTPTriggers
 from .packages.Parsers.Separated.Events.EventTypes import ChannelingEndedEvent
 from .packages.utils_stuff.utils_func import convertTime
+from .packages.AreaMapping.Zone import Zone
+from .packages.AreaMapping.Grid import Grid
+from .packages.utils_stuff.globals import entireBotLaneBoundary, entireTopLaneBoundary
+from .packages.utils_stuff.Position import Position
 
-from Draft.utils import fuseQueriesChampionDraftStats, fuseDataChampionsDraftStats
+from Draft.utils import fuseDataChampionsDraftStats
 from Draft.serializer import ChampionDraftStatsSerializer, DraftPlayerPick
 from Draft.models import ChampionDraftStats
 
@@ -58,7 +62,6 @@ def getGames(request):
         gameList.append(temp_dict)
         
     return Response(gameList)
-    
 
 @api_view(['PATCH'])
 def getPlayerPosition(request):
@@ -139,9 +142,7 @@ def getPlayerResetPositionsGlobal(request):
         resetTriggers = getResetTriggers(data, gameMetadata.gameDuration, endGameTime, o.begTime, o.endTime, verbose=False)[team][playerName]
         result += [(d["position"]["x"], d["position"]["y"]) for d in resetTriggers]
         
-    return Response(result)
-        
-        
+    return Response(result)   
 
 @api_view(['PATCH'])
 def getWardPlacedPositions(request):
@@ -186,7 +187,6 @@ def getWardPlacedPositionsGlobal(request):
         wardTriggers = getWardTriggers(data, gameDuration, endGameTime, o.begTime, o.endTime, o.wardTypes)[team][playerName]
         result += [(d["position"]["x"], d["position"]["z"]) for d in wardTriggers]
     return Response(result)
-        
 
 @api_view(['PATCH'])
 def getKillEvents(request):
@@ -489,4 +489,51 @@ def getMapOpenings(request):
                 result += res
                     
     return Response(result)
+
+@api_view(['PATCH'])
+def getSideWaveCatch(request):
+    o : PlayerPositionRequest = PlayerPositionRequest(**json.loads(request.body))
     
+    result : list[list] = list()
+    (data, gameDuration, begGameTime, endGameTime) = getData(int(o.seriesId), o.gameNumber)
+    topLane : Grid = Grid([Zone(entireTopLaneBoundary)])
+    botLane : Grid = Grid([Zone(entireBotLaneBoundary)])
+    
+    for t in range(o.begTime, o.endTime + 1):
+        lowerBound : Snapshot = data.getSnapShotByTime(t)
+        upperBound : Snapshot = data.getSnapShotByTime(t + 8)
+        
+        print(lowerBound.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime), upperBound.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime))
+        
+        playerT = lowerBound.teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)]
+        playerT1 = upperBound.teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)]
+        
+        if (topLane.containsPoint(playerT.position) or botLane.containsPoint(playerT.position)) and playerT1.totalGold - playerT.totalGold > 120:
+            result.append(playerT.position.toList())
+    
+    return Response(result)
+
+@api_view(['PATCH'])
+def getSideWaveCatchGlobal(request):
+    o : PlayerPositionGlobalRequest = PlayerPositionGlobalRequest(**json.loads(request.body))
+    result : list[list] = list()
+    metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
+    for gameMetadata in tqdm(metadataList):
+        data : SeparatedData
+        (data, _, _, _) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
+        topLane : Grid = Grid([Zone(entireTopLaneBoundary)])
+        botLane : Grid = Grid([Zone(entireBotLaneBoundary)])
+        
+        res : list[list] = list()
+        for t in range(o.begTime, o.endTime + 1):
+            lowerBound : Snapshot = data.getSnapShotByTime(t)
+            upperBound : Snapshot = data.getSnapShotByTime(t + 8)
+            
+            playerT = lowerBound.teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)]
+            playerT1 = upperBound.teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)]
+            
+            if (topLane.containsPoint(playerT.position) or botLane.containsPoint(playerT.position)) and playerT1.totalGold - playerT.totalGold > 120:
+                res.append(playerT.position.toList())
+        
+        result += res
+    return Response(result)

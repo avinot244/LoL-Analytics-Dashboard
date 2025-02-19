@@ -218,6 +218,8 @@ urlpatterns = [
     path('api/teamAnalysis/getDraftStats/', teamAnalysisViews.getDraftData),
     path('api/teamAnalysis/getMapOpening/', teamAnalysisViews.getMapOpenings),
     path('api/teamAnalysis/getMapOpeningGlobal/', teamAnalysisViews.getMapOpeningsGlobal),
+    path('api/teamAnalysis/getSideWaveCatch/', teamAnalysisViews.getSideWaveCatch),
+    path('api/teamAnalysis/getSideWaveCatchGlobal/', teamAnalysisViews.getSideWaveCatchGlobal),
     
 
 
