@@ -2,7 +2,7 @@ import { Stack } from "react-bootstrap";
 
 import { useState, useEffect, useContext } from "react";
 
-import { API_URL, roleList } from "../../constants";
+import { API_URL, MAP_HEIGHT } from "../../constants";
 import AuthContext from "../context/AuthContext";
 import minimapImage from "../../assets/2dlevelminimap_base_baron1.png";
 import Heatmap from "../utils/Heatmap";
@@ -20,6 +20,8 @@ function TeamAnalysisOverallWaveCatch({timeFrame, team, tournamentList, side}) {
 
     const bandwidth = 2;  // Adjust this value to change the kernel's spread
     const size = 350
+
+    const roleList = ["Top", "Mid"]
 
     let {authTokens} = useContext(AuthContext)
     const header = {

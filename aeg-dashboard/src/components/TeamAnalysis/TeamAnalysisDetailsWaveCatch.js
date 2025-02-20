@@ -2,7 +2,7 @@ import { Stack } from "react-bootstrap";
 
 import { useState, useEffect, useContext } from "react";
 
-import { API_URL, roleList } from "../../constants";
+import { API_URL, MAP_HEIGHT } from "../../constants";
 import AuthContext from "../context/AuthContext";
 import minimapImage from "../../assets/2dlevelminimap_base_baron1.png";
 import Heatmap from "../utils/Heatmap";
@@ -20,6 +20,8 @@ function TeamAnalysisDetailWaveCatch({timeFrame, seriesId, gameNumber, side}){
 
     const bandwidth = 2;  // Adjust this value to change the kernel's spread
     const size = 350
+
+    const roleList = ["Top", "Mid"]
 
     let {authTokens} = useContext(AuthContext)
     const header = {
@@ -46,8 +48,8 @@ function TeamAnalysisDetailWaveCatch({timeFrame, seriesId, gameNumber, side}){
         result.json().then(data => {
             data.forEach(element => {
                 newDataset.push({
-                    x: Math.ceil(element[0] * size/14750),
-                    y: Math.ceil(size - (element[1] * size/14750))
+                    x: Math.ceil(element[0] * size/MAP_HEIGHT),
+                    y: Math.ceil(size - (element[1] * size/MAP_HEIGHT))
                 })
             });
             if (position === "Top") setDataTop(newDataset)
