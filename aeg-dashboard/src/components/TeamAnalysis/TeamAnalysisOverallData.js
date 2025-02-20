@@ -5,8 +5,8 @@ import TeamAnalysisOverallDataPosition from "./TeamAnalysisOverallDataPosition";
 import TeamAnalysisOverallDataTP from "./TeamAnalysisOverallDataTP";
 import TeamAnalysisOverallDataWard from "./TeamAnalysisOverallDataWard.js"
 import TeamAnalysisOverallMapOpenings from "./TeamAnalysisOverallMapOpenings.js";
+import TeamAnalysisOverallWaveCatch from "./TeamAnalysisOverallWaveCatch.js";
 import SearchComp from "../utils/SearchComp";
-import { API_URL } from "../../constants";
 
 import { Button, Divider, Stack, Typography } from "@mui/material"
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -27,7 +27,7 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
     const [activeSide, setActiveSide] = useState("Blue")
     const [selectedVisual, setSelectedVisual] = useState("Position")
     const side = ["Blue", "Red", "Both"];
-    const visualList = ["Position", "Map Openings", "Reset Position", "Ward Position", "TP Position"]
+    const visualList = ["Position", "Map Openings", "Wave Catch", "Reset Position", "Ward Position", "TP Position"]
     let yLabels = []
     for (let i = 0 ; i < 5 ; i++) {
         yLabels.push(`${i} drakes`)
@@ -188,6 +188,22 @@ function TeamAnalysisOverallData ({dataGrubsDrakes, dataFirstTowerHerald, dataHe
                                 side={activeSide}
                                 timeFrame={value}
                                 
+                            />
+                        </>
+                    }
+
+
+                    {
+                        selectedVisual === "Wave Catch" &&
+                        <>
+                            <Typography variant="h4" component="h2" align="center" sx={{mb: 1, mt: 1}}>
+                                Wave Catch
+                            </Typography>
+                            <TeamAnalysisOverallWaveCatch
+                                team={team}
+                                tournamentList={tournamentList}
+                                side={activeSide}
+                                timeFrame={value}
                             />
                         </>
                     }

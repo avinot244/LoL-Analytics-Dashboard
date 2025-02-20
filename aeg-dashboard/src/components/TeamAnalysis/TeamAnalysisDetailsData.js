@@ -5,6 +5,7 @@ import TeamAnalysisDetailsDataReset from "./TeamAnalysisDetailsDataReset";
 import TeamAnalysisDetailsDataWard from "./TeamAnalysisDetailsDataWard";
 import TeamAnalysisDetailsDataTP from "./TeamAnalysisDetailsDataTP";
 import TeamAnalysisDetailsMapOpenings from "./TeamAnalysisDetailsMapOpenings";
+import TeamAnalysisDetailWaveCatch from "./TeamAnalysisDetailsWaveCatch";
 import TimeFrameSelecter from "../utils/TimeFrameSelecter/TimeFrameSelecter";
 
 import { Divider, Typography, Button, Stack } from "@mui/material";
@@ -136,6 +137,20 @@ function TeamAnalysisDetailsData({seriesId, gameNumber, team, selectedVisual}) {
                                         variant="middle"
                                     />
                                     <TeamAnalysisDetailsMapOpenings timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side} />
+                                </>
+                            }
+
+                            {
+                                selectedVisual === "Wave Catch" &&
+                                <>
+                                    <Typography variant="h3" component="h1" align="center" sx={{mt: 10, mb:1}}>
+                                        Wave Catch
+                                    </Typography>
+                                    <Divider
+                                        style={{ background: 'white', borderWidth: 1}}
+                                        variant="middle"
+                                    />
+                                    <TeamAnalysisDetailWaveCatch timeFrame={value} seriesId={seriesId} gameNumber={gameNumber} side={side}/>
                                 </>
                             }
 

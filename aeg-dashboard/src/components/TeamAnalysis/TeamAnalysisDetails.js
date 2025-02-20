@@ -94,7 +94,7 @@ function TeamAnalysisDetails() {
 
     const [displayData, setDisplayData] = useState(false)
     const [selectedVisual, setSelectedVisual] = useState("Position")
-    const visualList = ["Position", "Map Openings", "Reset Position", "Ward Position", "TP Position"]
+    const visualList = ["Position", "Map Openings", "Wave Catch", "Reset Position", "Ward Position", "TP Position"]
 
 
 
