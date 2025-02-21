@@ -500,8 +500,8 @@ def getSideWaveCatch(request):
     botLane : Grid = Grid([Zone(entireBotLaneBoundary)])
     
     for t in range(o.begTime, o.endTime + 1):
-        lowerBound : Snapshot = data.getSnapShotByTime(t)
-        upperBound : Snapshot = data.getSnapShotByTime(t + 8)
+        lowerBound : Snapshot = data.getSnapShotByTime(t, gameDuration)
+        upperBound : Snapshot = data.getSnapShotByTime(t + 8, gameDuration)
         
         print(lowerBound.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime), upperBound.convertGameTimeToSeconds(gameDuration, begGameTime, endGameTime))
         
@@ -520,14 +520,14 @@ def getSideWaveCatchGlobal(request):
     metadataList = GameMetadata.objects.filter(Q(teamRed=o.team) | Q(teamBlue=o.team), tournament__in=o.tournamentList)
     for gameMetadata in tqdm(metadataList):
         data : SeparatedData
-        (data, _, _, _) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
+        (data, gameDuration, _, _) = getData(int(gameMetadata.seriesId), gameMetadata.gameNumber)
         topLane : Grid = Grid([Zone(entireTopLaneBoundary)])
         botLane : Grid = Grid([Zone(entireBotLaneBoundary)])
         
         res : list[list] = list()
         for t in range(o.begTime, o.endTime + 1):
-            lowerBound : Snapshot = data.getSnapShotByTime(t)
-            upperBound : Snapshot = data.getSnapShotByTime(t + 8)
+            lowerBound : Snapshot = data.getSnapShotByTime(t, gameDuration)
+            upperBound : Snapshot = data.getSnapShotByTime(t + 8, gameDuration)
             
             playerT = lowerBound.teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)]
             playerT1 = upperBound.teams[SIDES.index(o.side)].players[ROLE_LIST.index(o.role)]

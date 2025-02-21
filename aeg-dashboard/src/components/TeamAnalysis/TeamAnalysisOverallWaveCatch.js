@@ -80,27 +80,9 @@ function TeamAnalysisOverallWaveCatch({timeFrame, team, tournamentList, side}) {
                     </Stack>
                     <Stack direction={"column"}>
                         <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
-                            Jungle
-                        </Typography>
-                        <Heatmap data={dataJungle} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
-                    </Stack>
-                    <Stack direction={"column"}>
-                        <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
                             Mid
                         </Typography>
                         <Heatmap data={dataMid} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
-                    </Stack>
-                    <Stack direction={"column"}>
-                        <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
-                            ADC
-                        </Typography>
-                        <Heatmap data={dataADC} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
-                    </Stack>
-                    <Stack direction={"column"}>
-                        <Typography variant="h4" component="h2" align="center" sx={{mb: 1}}>
-                            Support
-                        </Typography>
-                        <Heatmap data={dataSupport} bandwidth={bandwidth} size={size} backgroundImage={minimapImage} />
                     </Stack>
                 </div>
             }
