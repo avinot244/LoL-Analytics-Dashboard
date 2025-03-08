@@ -13,7 +13,7 @@ from django.db.models import Q
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .models import GameMetadata
-from .globals import SIDES, ROLE_LIST, API_URL
+from .globals import SIDES, ROLE_LIST, API_URL, DATE_LIMIT
 from .packages.utils_stuff.utils_func import getData
 from .request_models import PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest, TournamentListRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers, getTPTriggers
@@ -252,7 +252,12 @@ def getGrubsDrakeStats(request):
 def getGrubsDrakeStatsGlobal(request):
     o : TournamentListRequest = TournamentListRequest(**json.loads(request.body))
     if len(o.tournamentList) == 0:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        tournamentListRequest = GameMetadata.objects.filter(date__gte=DATE_LIMIT)
+        for element in tournamentListRequest:
+            if not(element.tournament in o.tournamentList):
+                o.tournamentList.append(element.tournament)
+        # print(o.tournamentList)
+        # return Response(status=status.HTTP_400_BAD_REQUEST)
     
     # Get all the teams that played in the given tournaments
     teamList : list[str] = list()
