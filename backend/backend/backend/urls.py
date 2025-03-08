@@ -211,6 +211,7 @@ urlpatterns = [
     path('api/teamAnalysis/getTPPositions/', teamAnalysisViews.getTPPosition),
     path('api/teamAnalysis/getTPPositionsGlobal/', teamAnalysisViews.getTPPositionGlobal),
     path('api/teamAnalysis/getGrubsDrakesStats/', teamAnalysisViews.getGrubsDrakeStats),
+    path('api/teamAnalysis/getGrubsDrakesStatsGLobal/', teamAnalysisViews.getGrubsDrakeStatsGlobal),
     path('api/teamAnalysis/getFirstTowerHeraldData/', teamAnalysisViews.getFirstTowerHeraldStats),
     path('api/teamAnalysis/getHeraldData/', teamAnalysisViews.getHeraldData),
     path('api/teamAnalysis/getFirstTowerData/', teamAnalysisViews.getFirstTowerData),

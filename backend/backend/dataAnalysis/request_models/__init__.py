@@ -8,6 +8,7 @@ from .TeamSideRequest import TeamSideRequest
 from .WardPlacedGlobalRequest import WardPlacedGlobalRequest
 from .PlayerPositionGlobalRequest import PlayerPositionGlobalRequest
 from .TeamDraftDataRequest import TeamDraftDataRequest
+from .TournamentListRequest import TournamentListRequest
 
 
-__all__ = [PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GameStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest]
+__all__ = [PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GameStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest, TournamentListRequest]

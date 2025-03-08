@@ -1,5 +1,8 @@
 import json
 from tqdm import tqdm
+import requests
+import numpy as np
+import matplotlib.pyplot as plt
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -10,9 +13,9 @@ from django.db.models import Q
 from .packages.Parsers.Separated.Game.SeparatedData import SeparatedData
 from .packages.Parsers.Separated.Game.Snapshot import Snapshot
 from .models import GameMetadata
-from .globals import SIDES, ROLE_LIST
+from .globals import SIDES, ROLE_LIST, API_URL
 from .packages.utils_stuff.utils_func import getData
-from .request_models import PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest
+from .request_models import PlayerPositionRequest, WardPlacedRequest, WardPlacedGlobalRequest, GameTimeFrameRequest, TeamStatsRequest, GetGameRequest, TeamSideRequest, PlayerPositionGlobalRequest, TeamDraftDataRequest, TournamentListRequest
 from .packages.Parsers.Separated.Game.getters import getResetTriggers, getWardTriggers, getPlayerPositionHistoryTimeFramed, getKillTriggers, getTPTriggers
 from .packages.Parsers.Separated.Events.EventTypes import ChannelingEndedEvent
 from .packages.utils_stuff.utils_func import convertTime
@@ -24,6 +27,7 @@ from .packages.utils_stuff.Position import Position
 from Draft.utils import fuseDataChampionsDraftStats
 from Draft.serializer import ChampionDraftStatsSerializer, DraftPlayerPick
 from Draft.models import ChampionDraftStats
+
 
 
 @api_view(['GET'])
@@ -242,8 +246,85 @@ def getGrubsDrakeStats(request):
                 })
         response.append(tempList)
     # We want a list of triples [nGrubs, nDrakes, winRate, nbGames]
-    
     return Response(response)
+
+@api_view(['PATCH'])
+def getGrubsDrakeStatsGlobal(request):
+    o : TournamentListRequest = TournamentListRequest(**json.loads(request.body))
+    if len(o.tournamentList) == 0:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    # Get all the teams that played in the given tournaments
+    teamList : list[str] = list()
+    teamListRequest = GameMetadata.objects.filter(tournament__in=o.tournamentList)
+    for element in teamListRequest:
+        if not(element.teamBlue in teamList):
+            teamList.append(element.teamBlue)
+        if not(element.teamRed in teamList):
+            teamList.append(element.teamRed)
+    
+    # Compute the grubs/drake heatmap for each team
+    heatMapList : list[list[list[dict]]] = list()
+    for teamName in teamList:
+        data = requests.patch(url=f"{API_URL}api/teamAnalysis/getGrubsDrakesStats/", data=json.dumps({
+            "teamName": teamName,
+            "tournamentList": o.tournamentList
+        }))
+        heatMapList.append(data.json())
+    
+    # Make the average of it
+    resultHeatmap = [[{"nGrubs": i, "nDrake": j, "totalWins": 0, "totalGames": 0, "winRate": 0} for i in range(7)] for j in range(5)]
+    print(len(resultHeatmap))
+    print(len(resultHeatmap[0]))
+    for heatmapData in heatMapList:
+        for heatmapData in heatMapList:
+            for i in range(5):
+                for j in range(7):
+                    resultHeatmap[i][j]["totalWins"] += heatmapData[i][j]["totalWins"]
+                    resultHeatmap[i][j]["totalGames"] += heatmapData[i][j]["totalGames"]
+        
+        for i in range(5):
+            for j in range(7):
+                if resultHeatmap[i][j]["totalGames"] > 0:
+                    resultHeatmap[i][j]["winRate"] = resultHeatmap[i][j]["totalWins"] / resultHeatmap[i][j]["totalGames"]
+                else:
+                    resultHeatmap[i][j]["winRate"] = None
+    
+    
+
+    # Create a heatmap from the resultHeatmap data
+    heatmap_data = np.zeros((5, 7))
+    for i in range(5):
+        for j in range(7):
+            if resultHeatmap[i][j]["winRate"] is not None:
+                heatmap_data[i, j] = resultHeatmap[i][j]["winRate"]
+
+    plt.figure(figsize=(10, 8))
+    plt.imshow(heatmap_data, cmap='Oranges', interpolation='nearest')
+    plt.colorbar(label='Win Rate')
+    plt.xlabel('Number of Grubs')
+    plt.ylabel('Number of Drakes')
+    plt.title('Heatmap of Win Rate by Number of Grubs and Drakes')
+    plt.xticks(np.arange(7), np.arange(7))
+    plt.yticks(np.arange(5), np.arange(5))
+    # Add text annotations for each tile
+    for i in range(5):
+        for j in range(7):
+            totalGames = resultHeatmap[i][j]["totalGames"]
+            totalWins = resultHeatmap[i][j]["totalWins"]
+            totalLosses = totalGames - totalWins
+            totalWinRate = resultHeatmap[i][j]["winRate"]
+            if totalWinRate is not None:
+                totalWinRate = f'{totalWinRate * 100:.0f}'
+                text = f'W: {totalWins}\nL: {totalLosses}\nG: {totalGames}\n WR: {totalWinRate}%'
+                plt.text(j, i, text, ha='center', va='center', color='black')
+            else:
+                plt.gca().add_patch(plt.Rectangle((j - 0.5, i - 0.5), 1, 1, color='black'))
+
+    plt.savefig('./databases/grubs_drakes_heatmap.png')
+    plt.close()
+    return Response(resultHeatmap)
+    
 
 @api_view(['PATCH'])
 def getFirstTowerHeraldStats(request):
