@@ -163,9 +163,12 @@ class SeparatedData:
                     elif df["rfc461Schema"][0] == "champ_select":
                         # Parsing bans
                         tempBanList : list[Ban] = list()
-                        for ban_dict in df["bannedChampions"][0]:
-                            tempBanList.append(Ban(ban_dict["championID"],
-                                                   ban_dict["teamID"]))
+                        
+                        # The first draft snapshot doesn't contain the bannedChampions key
+                        if "bannedChampions" in list(df.keys()):
+                            for ban_dict in df["bannedChampions"][0]:
+                                tempBanList.append(Ban(ban_dict["championID"],
+                                                    ban_dict["teamID"]))
                         
                         # Parsing team/player picks
                         tempTeamDraft : list[TeamDraft] = list()
