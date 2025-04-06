@@ -15,6 +15,8 @@ class SummaryDataGrid:
             data = json.loads(f.read())
         
         # Parsing global info
+        if list(data.keys())[0] == "seriesState" and len(list(data.keys())) == 1:
+            data = data["seriesState"]
         self.seriesType = data["format"]
         
         # Parsing global team info

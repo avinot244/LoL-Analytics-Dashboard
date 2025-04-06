@@ -58,6 +58,9 @@ def getGameDuration(seriesId : int, gameNumber : int):
         path = rootdir + "/end_state_" + str(seriesId) + "_grid.json"
         with open(path, "r") as json_file:
             res : dict = json.load(json_file)
+            if not("games" in list(res.keys())):
+                duration_str : str = res["seriesState"]["games"][gameNumber-1]["duration"]
+                return int(duration_str.split("M")[0].split("PT")[1])*60 + int(duration_str.split("M")[1].split(".")[0])
             return res["games"][gameNumber-1]["clock"]["currentSeconds"]
     if flagOld:
         path = rootdir + "/end_state_summary_riot_" + str(seriesId) + "_" + str(gameNumber) + ".json"
